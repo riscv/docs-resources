@@ -1,6 +1,8 @@
+extends: default
 font:
   catalog:
-    merge: false
+    merge: true
+#        sans-serif: GEM_FONTS_DIR/mplus1p-regular-fallback.ttf 
     #Petrona
     body:
       normal: Petrona-Light.ttf
@@ -32,11 +34,16 @@ font:
       bold_italic: mplus-1p-regular-fallback.ttf
     Droid Fallback:
       normal: droid-sans-fallback.ttf
+      italic: droid-sans-fallback.ttf
+      bold: droid-sans-fallback.ttf
+      bold_italic: droid-sans-fallback.ttf
     # M+ 1p supports Latin, Latin-1 Supplement, Latin Extended, Greek, Cyrillic, Vietnamese, Japanese & an assortment of symbols
     # It also provides arrows for ->, <-, => and <= replacements in case these glyphs are missing from font
   fallbacks:
     - M+ 1p Fallback
     - Droid Fallback
+  svg:
+    fallback-font-family: M+ 1mn
 page:
   background_color: ffffff
   layout: portrait
@@ -56,16 +63,19 @@ base:
   border_radius: 3
   border_width: 0.25
 vertical_rhythm: $base_line_height_length
-horizontal_rhythm:
-  $base_line_height_length
+horizontal_rhythm: $base_line_height_length
   # QUESTION should vertical_spacing be block_spacing instead?
 vertical_spacing: $vertical_rhythm
 link:
   font_color: 428bca
-  # literal is currently used for inline monospaced in prose and table cells
-literal:
-  font_color: b12146
-  font_family: code
+ # codespan is currently used for inline monospaced in prose and table cells
+codespan:  
+    font-color: 000000
+    #font_family: code
+    #font_family: Droid Fallback
+    font_family: M+ 1mn
+    font_style: normal
+    font-size: 11.5
 menu_caret_content: " <font size=\"1.15em\"><color rgb=\"b12146\">\u203a</color></font> "
 heading:
   align: left
@@ -211,7 +221,7 @@ description_list:
   term_font_style: bold
   term_spacing: $vertical_rhythm / 4
   description_indent: $horizontal_rhythm * 1.25
-outline_list:
+list:
   indent: $horizontal_rhythm * 1.5
   #marker_font_color: 404040
   # NOTE outline_list_item_spacing applies to list items that do not have complex content
