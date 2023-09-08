@@ -231,6 +231,7 @@ table:
   #head_background_color: <hex value>
   #head_font_color: $base_font_color
   head_font_style: bold
+  font-size: 9.5
   #body_background_color: <hex value>
   body_stripe_background_color: d7d7d7
   foot_background_color: f0f0f0
