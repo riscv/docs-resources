@@ -237,6 +237,11 @@ table:
   border_color: dddddd
   border_width: $base_border_width
   cell_padding: 3
+  caption:
+    end: bottom
+    align: center
+    text-align: center
+    max-width: none
 toc:
   indent: $horizontal_rhythm
   line_height: 1.4
@@ -304,3 +309,7 @@ footer:
       content: $footer_recto_right_content
       #center: '{page-number}'
     #content: '{page-number}'
+#Custom roles
+role:
+  small-font-table:
+    font-size: 8
