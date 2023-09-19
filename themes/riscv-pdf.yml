@@ -185,7 +185,7 @@ code:
   font_color: $base_font_color
   font_family: $literal_font_family
   #font_size: ceil($base_font_size)
-  font-size: 11
+  font-size:  9
   padding: $code_font_size
   line_height: 1.15
   # line_gap is an experimental property to control how a background color is applied to an inline block element
