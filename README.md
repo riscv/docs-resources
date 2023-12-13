@@ -99,7 +99,7 @@ To build using the RISC-V template, this statement needs to look like this:
 asciidoctor-pdf \
   -a toc \
   -a compress \
-  -a pdf-style=docs-resources/themes/riscv-pdf.yml \
+  -a pdf-theme=docs-resources/themes/riscv-pdf.yml \
   -a pdf-fontsdir=docs-resources/fonts \
   -o $@ $<
 ```
