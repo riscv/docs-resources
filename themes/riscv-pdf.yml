@@ -150,7 +150,7 @@ sidebar-title:
   align: left
 admonition:
   font-style: italic
-  column_rule_color: $base_border_color
+  #column_rule_color: $base_border_color
   column_rule_width: $base_border_width
   padding: [0, $horizontal_rhythm, 0, $horizontal_rhythm]
   icon:
@@ -182,8 +182,8 @@ admonition:
 #  cite_font_color: 51278d
 # code is used for source blocks (perhaps change to source or listing?)
 code:
-  font_color: $base_font_color
-  font_family: $literal_font_family
+#  font_color: $base_font_color
+  font_family: $codespan_font_family
   #font_size: ceil($base_font_size)
   font-size:  9
   padding: $code_font_size
@@ -196,11 +196,11 @@ code:
   border_width: 0.2
 conum:
   font_family: M+ 1mn
-  font_color: $literal_font_color
+  font_color: $codespan_font_color
   font_size: $base_font_size
   line_height: 4 / 3
 example:
-  border_color: $base_border_color
+#  border_color: $base_border_color
   border_radius: $base_border_radius
   border_width: 0.2
   background_color: ffffff
@@ -212,7 +212,7 @@ prose:
   margin_top: $block_margin_top
   margin_bottom: $block_margin_bottom
 thematic_break:
-  border_color: $base_border_color
+#  border_color: $base_border_color
   border_style: solid
   border_width: $base_border_width
   margin_top: $vertical_rhythm * 0.5
