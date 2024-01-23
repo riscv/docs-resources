@@ -1,8 +1,9 @@
+---
 extends: default
 font:
   catalog:
     merge: true
-#        sans-serif: GEM_FONTS_DIR/mplus1p-regular-fallback.ttf 
+#        sans-serif: GEM_FONTS_DIR/mplus1p-regular-fallback.ttf
     #Petrona
     body:
       normal: Petrona-Light.ttf
@@ -69,14 +70,14 @@ vertical_spacing: $vertical_rhythm
 link:
   font_color: 428bca
  # codespan is currently used for inline monospaced in prose and table cells
-codespan:  
-    font-color: 000000
+codespan:
+  font-color: 000000
     #font_family: code
     #font_family: Droid Fallback
-    font_family: M+ 1mn
-    font_style: normal
-    font-size: 11.5
-menu_caret_content: " <font size=\"1.15em\"><color rgb=\"b12146\">\u203a</color></font> "
+  font_family: M+ 1mn
+  font_style: normal
+  font-size: 11.5
+menu_caret_content: ' <font size="1.15em"><color rgb="b12146">›</color></font> '
 heading:
   align: left
   font_color: 3e058e
@@ -90,7 +91,7 @@ heading:
   h5_font_size: $base_font_size
   h6_font_size: $base_font_size_small
 title_page:
-  align: center 
+  align: center
   logo:
     top: 10%
   title:
@@ -185,7 +186,7 @@ code:
 #  font_color: $base_font_color
   font_family: $codespan_font_family
   #font_size: ceil($base_font_size)
-  font-size:  9
+  font-size: 9
   padding: $code_font_size
   line_height: 1.15
   # line_gap is an experimental property to control how a background color is applied to an inline block element
@@ -271,10 +272,10 @@ header:
   # * {section-or-chapter-title}
   recto:
     right:
-      content: "{section-or-chapter-title} | Page {page-number}"
+      content: '{section-or-chapter-title} | Page {page-number}'
   verso:
     left:
-      content: "{section-or-chapter-title} | Page {page-number}"
+      content: '{section-or-chapter-title} | Page {page-number}'
   # left: 'Page {page-number} | {section-or-chapter-title}'
 footer:
   font_size: $base_font_size_small
@@ -300,7 +301,7 @@ footer:
     #columns: "<50% =0% >50%"
     right:
       #content: '{page-number}'
-      content: "{document-title} | © RISC-V"
+      content: '{document-title} | © RISC-V'
       #content: '{document-title} | © RISC-V'
       #center: '{page-number}'
       #content: '{revdate}'

@@ -1,8 +1,8 @@
 # RISC-V Documentation Resources
 This repository (repo) contains the resources needed to build docs with the RISC-V themes, fonts, and logos.
 
-Specification repos created after January 2022 are generally created from the 
-[docs-spec-template](https://github.com/riscv/docs-spec-template) repository and will 
+Specification repos created after January 2022 are generally created from the
+[docs-spec-template](https://github.com/riscv/docs-spec-template) repository and will
 have all the requisites parts included in a basic document.
 
 Older repos can be updated with 3 basic steps:
@@ -13,13 +13,13 @@ Older repos can be updated with 3 basic steps:
 
 ## Updating the directory structure
 The three main directories in this repo contain various components of the RISC-V documentation
-template. The `docs-resources/images/` directory has artwork like the RISC-V logo. The `docs-resources/fonts/` 
-directory contains the necessary fonts.  And, the `docs-resources/themes/` directory contains the YAML file 
+template. The `docs-resources/images/` directory has artwork like the RISC-V logo. The `docs-resources/fonts/`
+directory contains the necessary fonts.  And, the `docs-resources/themes/` directory contains the YAML file
 for configuring the document.
 
-In order to be able to link a repo with this project, you must use 
-[Git Submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules).  While there are many ways to do this, 
-we will take the simplest approach and use the submodule defaults, 
+In order to be able to link a repo with this project, you must use
+[Git Submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules).  While there are many ways to do this,
+we will take the simplest approach and use the submodule defaults,
 placing a `docs-resources/` directory in the repo head.  This can be accomplished by executing
 the following command in the top project directory (assuming http access):
 
@@ -27,14 +27,14 @@ the following command in the top project directory (assuming http access):
 git submodule add https://github.com/riscv/docs-resources.git
 ```
 
-This command will create a `docs-resources/` directory when completed.  Additionally, the `git status` 
-command should show new files of `docs-resources` and either a new or modified file of `.gitmodules` 
+This command will create a `docs-resources/` directory when completed.  Additionally, the `git status`
+command should show new files of `docs-resources` and either a new or modified file of `.gitmodules`
 depending upon whether Git Submodules are already in use in the project.
 
-**Note:** The use of Submodules creates a “link” in Git between projects that are tied to 
-specific commit id.  This provides “safety” for the including projects by making sure that 
-they don’t inadvertently get broken.  However, it creates an additional maintenance responsibility 
-to intermittently rebase the link and verify that nothing has been broken.  Project maintainers need to 
+**Note:** The use of Submodules creates a “link” in Git between projects that are tied to
+specific commit id.  This provides “safety” for the including projects by making sure that
+they don’t inadvertently get broken.  However, it creates an additional maintenance responsibility
+to intermittently rebase the link and verify that nothing has been broken.  Project maintainers need to
 understand this and plan accordingly.
 
 ## Updating the main AsciiDoc source file
@@ -77,12 +77,12 @@ endif::[]
 :hide-uri-scheme:
 :stem: latexmath
 :footnote:
-:xrefstyle: short 
+:xrefstyle: short
 ```
 
 The variables in the first section above should be visited and updated as appropriate.
-Additionally, any variables which already exist in the document should be evaluated 
-for the better value, which most likely is the template value specified above for anything 
+Additionally, any variables which already exist in the document should be evaluated
+for the better value, which most likely is the template value specified above for anything
 in the document.
 
 ## Updating the `Makefile`
@@ -104,8 +104,8 @@ asciidoctor-pdf \
   -o $@ $<
 ```
 
-**Note:** if you want to include a bibliography, you can include a 
-“-r asciidoctor-bibtex” statement.  Likewise, to use various diagramming 
+**Note:** if you want to include a bibliography, you can include a
+“-r asciidoctor-bibtex” statement.  Likewise, to use various diagramming
 capabilities, you can include “-r asciidoctor-diagram”.
 
 ## Additional items to consider for the document
@@ -122,14 +122,14 @@ This work is licensed under a
 link:http://creativecommons.org/licenses/by/4.0/[Creative Commons Attribution 4.0 International License].
 
 This work is Copyright 2022 by RISC-V International.
-==== 
+====
 ```
 
 ### Document state markings
-Document state should be reflected in the `:revmark:` variable and be contained in 
+Document state should be reflected in the `:revmark:` variable and be contained in
 an in-document admonition statement near the front of the document (Preface or Preamble).  
 
-The recommended values for `:revmark:` and the front matter admonition based on the document 
+The recommended values for `:revmark:` and the front matter admonition based on the document
 state are as follows:
 
 * For **Discussion Document** state, use:
@@ -139,7 +139,7 @@ state are as follows:
     [WARNING]
     .This document is in the link:http://riscv.org/spec-state[Discussion state]
     ====
-    Assume everything can change. This document is not complete yet and was created only 
+    Assume everything can change. This document is not complete yet and was created only
     for the purpose of conversation outside of the document.
     ====
     ```
@@ -150,8 +150,8 @@ state are as follows:
     [WARNING]
     .This document is in the link:http://riscv.org/spec-state[Development state]
     ====
-    Assume everything can change. This draft specification will change before being accepted 
-    as standard, so implementations made to this draft specification will likely not conform 
+    Assume everything can change. This draft specification will change before being accepted
+    as standard, so implementations made to this draft specification will likely not conform
     to the future standard.
     ====
     ```
@@ -172,9 +172,9 @@ state are as follows:
     [WARNING]
     .This document is in the link:http://riscv.org/spec-state[Frozen state]
     ====
-    Change is extremely unlikely. A high threshold will be used, and a change 
-    will only occur because of some truly critical issue being identified during 
-    the public review cycle. Any other desired or needed changes can be the subject 
+    Change is extremely unlikely. A high threshold will be used, and a change
+    will only occur because of some truly critical issue being identified during
+    the public review cycle. Any other desired or needed changes can be the subject
     of a follow-on new extension.
     ====
     ```
@@ -185,11 +185,11 @@ state are as follows:
     [WARNING]
     .This document is in the link:http://riscv.org/spec-state[Ratified state]
     ====
-    No changes are allowed. Any desired or needed changes can be the subject 
+    No changes are allowed. Any desired or needed changes can be the subject
     of a follow-on new extension. Ratified extensions are never revised.
     ====
     ```
-  
+
  # Additional information
- For additional information, see the [docs-dev-guide/example.pdf](https://github.com/riscv/docs-dev-guide/blob/main/example.pdf) or reach out to 
+ For additional information, see the [docs-dev-guide/example.pdf](https://github.com/riscv/docs-dev-guide/blob/main/example.pdf) or reach out to
  help@riscv.org.
