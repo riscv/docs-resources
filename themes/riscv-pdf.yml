@@ -156,7 +156,7 @@ admonition:
   padding: [0, $horizontal_rhythm, 0, $horizontal_rhythm]
   icon:
     note:
-      name: pencil-square-o
+      name: far-edit
       stroke_color: 6489b3
     tip:
       name: comments-o
