@@ -2,7 +2,7 @@ extends: default
 font:
   catalog:
     merge: true
-        sans-serif: GEM_FONTS_DIR/mplus1p-regular-fallback.ttf
+    sans-serif: GEM_FONTS_DIR/mplus1p-regular-fallback.ttf
     #Petrona
     body:
       normal: Petrona-Light.ttf
@@ -170,8 +170,8 @@ admonition:
     tip:
   #    name: comments-o
        name: far-comments
-      stroke_color: 646b74
-      size: 24
+    stroke_color: 646b74
+    size: 24
     important:
       #name: info
       name: fas-info-circle
