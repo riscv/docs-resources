@@ -265,7 +265,7 @@ toc:
   indent: $horizontal_rhythm
   line_height: 1.4
   dot_leader:
-  content: ' ' 
+  content: ". " 
   font_color: a9a9a9
   font-style: bold
     #levels: 2 3
