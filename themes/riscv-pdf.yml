@@ -1,9 +1,8 @@
----
 extends: default
 font:
   catalog:
     merge: true
-#        sans-serif: GEM_FONTS_DIR/mplus1p-regular-fallback.ttf
+        sans-serif: GEM_FONTS_DIR/mplus1p-regular-fallback.ttf
     #Petrona
     body:
       normal: Petrona-Light.ttf
@@ -76,19 +75,28 @@ codespan:
     #font_family: Droid Fallback
   font_family: M+ 1mn
   font_style: normal
-  font-size: 11.5
+#  font-size: 11.5
 menu_caret_content: ' <font size="1.15em"><color rgb="b12146">›</color></font> '
 heading:
   align: left
-  font_color: 3e058e
+  margin_bottom: $block_margin_bottom
+  #margin_top: 0.25in
+  margin_top: $block_margin_bottom
+  min_height_after: auto
+  #font_color: 3e058e
+  font_color: 000000
   font_family: headings
-  font_style: light
+  font_style: bold
   h1_font_size: floor($base_font_size * 2.8)
   # h2 is used for chapter titles (book doctype only)
-  h2_font_size: floor($base_font_size * 2.15)
-  h3_font_size: round($base_font_size * 1.7)
-  h4_font_size: $base_font_size_large
-  h5_font_size: $base_font_size
+  # h2_font_size: floor($base_font_size * 2.15)
+  h2-font-size: 11.5
+  #h3_font_size: round($base_font_size * 1.7)
+  h3-font-size: 11.5
+  #h4_font_size: $base_font_size_large
+  h4-font-size: 11.5
+  #h5_font_size: $base_font_size
+  h5-font-size: 11.5
   h6_font_size: $base_font_size_small
 title_page:
   align: center
@@ -104,6 +112,7 @@ title_page:
     font_family: headings
     font_style: light
     font_size: floor($base_font_size * 1.2)
+    margin-top: 25
   authors:
     font_family: headings
     font_color: 3e058e
@@ -151,7 +160,7 @@ sidebar-title:
   align: left
 admonition:
   font-style: italic
-  #column_rule_color: $base_border_color
+#  column_rule_color: $base_border_color
   column_rule_width: $base_border_width
   padding: [0, $horizontal_rhythm, 0, $horizontal_rhythm]
   icon:
@@ -159,11 +168,13 @@ admonition:
       name: far-edit
       stroke_color: 6489b3
     tip:
-      name: comments-o
+  #    name: comments-o
+       name: far-comments
       stroke_color: 646b74
       size: 24
     important:
-      name: info
+      #name: info
+      name: fas-info-circle
       stroke_color: 5f8c8b
     warning:
       stroke_color: 9c4d4b
@@ -184,17 +195,21 @@ admonition:
 # code is used for source blocks (perhaps change to source or listing?)
 code:
 #  font_color: $base_font_color
+  font-color: 000000
   font_family: $codespan_font_family
   #font_size: ceil($base_font_size)
-  font-size: 9
+  font-size: 11
   padding: $code_font_size
   line_height: 1.15
   # line_gap is an experimental property to control how a background color is applied to an inline block element
   line_gap: 3.8
-  background_color: f4f4fb
-  border_color: cccccc
-  border_radius: $base_border_radius
-  border_width: 0.2
+  #background_color: f4f4fb
+  fackgroud_color: ffffff
+  #border_color: cccccc
+  #border_radius: $base_border_radius
+  #border_width: 0.2
+  caption:
+    end: bottom
 conum:
   font_family: M+ 1mn
   font_color: $codespan_font_color
@@ -209,6 +224,8 @@ example:
   padding: [$vertical_rhythm, $horizontal_rhythm, 0, $horizontal_rhythm]
 image:
   align: left
+  caption:
+    align: center
 prose:
   margin_top: $block_margin_top
   margin_bottom: $block_margin_bottom
@@ -232,7 +249,7 @@ table:
   #head_background_color: <hex value>
   #head_font_color: $base_font_color
   head_font_style: bold
-  font-size: 11.5
+  font-size: 9
   #body_background_color: <hex value>
   body_stripe_background_color: d7d7d7
   foot_background_color: f0f0f0
@@ -248,43 +265,33 @@ toc:
   indent: $horizontal_rhythm
   line_height: 1.4
   dot_leader:
-    #content: ". "
+    content: " "
     font_color: a9a9a9
+    font-style: bold
     #levels: 2 3
+    h2-font-style: bold
 # NOTE in addition to footer, header is also supported
 header:
   font_size: $base_font_size_small
-  # NOTE if background_color is set, background and border will span width of page
   border_color: dddddd
   border_width: 0.35
   height: $base_line_height_length * 2.6
   line_height: 1
-  padding: [$base_line_height_length / 1.3, 1, 0, 1]
+  padding: [$base_line_height_length / 1, 1, .5, 1]
   vertical_align: margin_inside
-  #image_vertical_align: <alignment> or <number>
-  # additional attributes for content:
-  # * {page-count}
-  # * {page-number}
-  # * {document-title}
-  # * {document-subtitle}
-  # * {chapter-title}
-  # * {section-title}
-  # * {section-or-chapter-title}
   recto:
     right:
       content: '{section-or-chapter-title} | Page {page-number}'
   verso:
     left:
       content: '{section-or-chapter-title} | Page {page-number}'
-  # left: 'Page {page-number} | {section-or-chapter-title}'
 footer:
   font_size: $base_font_size_small
-  # NOTE if background_color is set, background and border will span width of page
   border_color: dddddd
-  border_width: 0.25
-  height: $base_line_height_length * 2.5
+  border_width: 0.35
+  height: $base_line_height_length * 2.6
   line_height: 1
-  padding: [$base_line_height_length / 2, 1, 0, 1]
+  padding: [$base_line_height_length / 1, 1, .5, 1]
   vertical_align: top
   #image_vertical_align: <alignment> or <number>
   # additional attributes for content:
