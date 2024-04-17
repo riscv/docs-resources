@@ -169,7 +169,7 @@ admonition:
       stroke_color: 6489b3
     tip:
   #    name: comments-o
-       name: far-comments
+      name: far-comments
     stroke_color: 646b74
     size: 24
     important:
