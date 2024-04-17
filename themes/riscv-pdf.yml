@@ -265,11 +265,11 @@ toc:
   indent: $horizontal_rhythm
   line_height: 1.4
   dot_leader:
-    content: " "
-    font_color: a9a9a9
-    font-style: bold
+  content: " "
+  font_color: a9a9a9
+  font-style: bold
     #levels: 2 3
-    h2-font-style: bold
+  h2-font-style: bold
 # NOTE in addition to footer, header is also supported
 header:
   font_size: $base_font_size_small
