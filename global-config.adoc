@@ -1,0 +1,3 @@
+:company: RISC-V
+:url-riscv: https://riscv.org
+:doctype: book
