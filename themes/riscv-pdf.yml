@@ -3,7 +3,7 @@ extends: default
 font:
   catalog:
     merge: true
-#        sans-serif: GEM_FONTS_DIR/mplus1p-regular-fallback.ttf
+    sans-serif: GEM_FONTS_DIR/mplus1p-regular-fallback.ttf
     #Petrona
     body:
       normal: Petrona-Light.ttf
