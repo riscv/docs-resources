@@ -249,7 +249,7 @@ list:
   item_spacing: $vertical_rhythm / 2
 ulist:
   marker:
-    font-size: 10
+    font-size: 15
     font-style: bold
 figure:
   caption:
