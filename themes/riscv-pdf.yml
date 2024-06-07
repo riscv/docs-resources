@@ -247,10 +247,10 @@ list:
   #marker_font_color: 404040
   # NOTE outline_list_item_spacing applies to list items that do not have complex content
   item_spacing: $vertical_rhythm / 2
-ulist:
-  marker:
-    font-size: 15
-    font-style: bold
+#ulist:
+#  marker:
+#    font-size: 10
+#    font-style: bold
 figure:
   caption:
     end: bottom
