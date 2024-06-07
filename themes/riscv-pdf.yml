@@ -167,8 +167,9 @@ admonition:
   icon:
     note:
   #    name: pencil-square-o
-      name: far-edit
-      stroke_color: 6489b3
+  #    name: far-edit
+       name: fas-info-circle
+       stroke_color: 6489b3
     tip:
       #name: comments-o
       name: far-comments
@@ -246,6 +247,10 @@ list:
   #marker_font_color: 404040
   # NOTE outline_list_item_spacing applies to list items that do not have complex content
   item_spacing: $vertical_rhythm / 2
+ulist:
+  marker:
+    font-size: 10
+    font-style: bold
 figure:
   caption:
     end: bottom
@@ -271,7 +276,7 @@ toc:
   indent: $horizontal_rhythm
   line_height: 1.4
   dot-leader:
-    content: ' '
+    content: '.'
     font_color: a9a9a9
     font-style: bold
      #levels: 2
