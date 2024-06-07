@@ -242,11 +242,30 @@ description_list:
   term_font_style: bold
   term_spacing: $vertical_rhythm / 4
   description_indent: $horizontal_rhythm * 1.25
-list:
-  indent: $horizontal_rhythm * 1.5
+#list:
+#  indent: $horizontal_rhythm * 1.5
   #marker_font_color: 404040
   # NOTE outline_list_item_spacing applies to list items that do not have complex content
-  item_spacing: $vertical_rhythm / 2
+#  item_spacing: $vertical_rhythm / 2
+  # List settings
+list:
+  indent: '$horizontal_rhythm * 1.5'
+  item_spacing: '$vertical_rhythm / 2'
+  bullet:
+    font_size: 'round($base_font_size * 1.5)'
+    content: '•'
+# List of figures settings
+lof:
+  label_width: '3em'  # Adjust the width for figure labels
+  align: left
+  caption:
+    indent: '4em'  # Ensure captions align consistently
+# List of tables settings
+lot:
+  label_width: '3em'  # Adjust the width for table labels
+  align: left
+  caption:
+    indent: '4em'  # Ensure captions align consistently
 #ulist:
 #  marker:
 #    font-size: 10
