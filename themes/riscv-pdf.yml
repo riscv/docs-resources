@@ -254,6 +254,10 @@ list:
   bullet:
     font_size: 'round($base_font_size * 1.5)'
     content: '•'
+ulist:
+  marker:
+    disc:
+      content: "\u26ab"
 # List of figures settings
 lof:
   label_width: '3em'  # Adjust the width for figure labels
