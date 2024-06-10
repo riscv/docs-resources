@@ -258,6 +258,10 @@ ulist:
   marker:
     disc:
       content: "\u26ab"
+    circle:
+      content: "\u26ab"
+    square:
+      content: "\u25a0"
 # List of figures settings
 lof:
   label_width: '3em'  # Adjust the width for figure labels
