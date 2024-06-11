@@ -38,6 +38,11 @@ font:
       italic: droid-sans-fallback.ttf
       bold: droid-sans-fallback.ttf
       bold_italic: droid-sans-fallback.ttf
+    JetBrainsMono:
+      normal: JetBrainsMono-Regular.ttf
+      italic: JetBrainsMono-Italic.ttf
+      bold: JetBrainsMono-Bold.ttf
+      bold_italic: JetBrainsMono-BoldItalic.ttf
     # M+ 1p supports Latin, Latin-1 Supplement, Latin Extended, Greek, Cyrillic, Vietnamese, Japanese & an assortment of symbols
     # It also provides arrows for ->, <-, => and <= replacements in case these glyphs are missing from font
   fallbacks:
@@ -75,7 +80,7 @@ codespan:
   font-color: 000000
     #font_family: code
     #font_family: Droid Fallback
-  font_family: M+ 1mn
+  font_family: JetBrainsMono
   font_style: normal
 #    font-size: 11.5
 menu_caret_content: ' <font size="1.15em"><color rgb="000000">›</color></font> '
@@ -167,8 +172,9 @@ admonition:
   icon:
     note:
   #    name: pencil-square-o
-      name: far-edit
-      stroke_color: 6489b3
+  #    name: far-edit
+       name: fas-info-circle
+       stroke_color: 6489b3
     tip:
       #name: comments-o
       name: far-comments
@@ -241,11 +247,47 @@ description_list:
   term_font_style: bold
   term_spacing: $vertical_rhythm / 4
   description_indent: $horizontal_rhythm * 1.25
-list:
-  indent: $horizontal_rhythm * 1.5
+#list:
+#  indent: $horizontal_rhythm * 1.5
   #marker_font_color: 404040
   # NOTE outline_list_item_spacing applies to list items that do not have complex content
-  item_spacing: $vertical_rhythm / 2
+#  item_spacing: $vertical_rhythm / 2
+  # List settings
+list:
+  indent: '$horizontal_rhythm * 1.5'
+  item_spacing: '$vertical_rhythm / 2'
+  bullet:
+    font_size: 'round($base_font_size * 1.5)'
+    content: '•'
+  marker:
+    font-family: JetBrainsMono
+ulist:
+  marker:
+    disc:
+      content: "\u26ab"
+    circle:
+      content: "\u26ab"
+    square:
+      content: "\u25a0"
+    font-family: JetBrainsMono
+# List of figures settings
+lof:
+  label_width: '3em'  # Adjust the width for figure labels
+  align: left
+  caption:
+    indent: '4em'  # Ensure captions align consistently
+  font-family: JetBrainsMono
+# List of tables settings
+lot:
+  label_width: '3em'  # Adjust the width for table labels
+  align: left
+  caption:
+    indent: '4em'  # Ensure captions align consistently
+  font-family: JetBrainsMono
+#ulist:
+#  marker:
+#    font-size: 10
+#    font-style: bold
 figure:
   caption:
     end: bottom
@@ -271,7 +313,7 @@ toc:
   indent: $horizontal_rhythm
   line_height: 1.4
   dot-leader:
-    content: ' '
+    content: '.'
     font_color: a9a9a9
     font-style: bold
      #levels: 2
