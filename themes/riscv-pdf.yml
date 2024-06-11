@@ -38,6 +38,11 @@ font:
       italic: droid-sans-fallback.ttf
       bold: droid-sans-fallback.ttf
       bold_italic: droid-sans-fallback.ttf
+    JetBrainsMono:
+      normal: JetBrainsMono-Regular.ttf
+      italic: JetBrainsMono-Italic.ttf
+      bold: JetBrainsMono-Bold.ttf
+      bold_italic: JetBrainsMono-BoldItalic.ttf
     # M+ 1p supports Latin, Latin-1 Supplement, Latin Extended, Greek, Cyrillic, Vietnamese, Japanese & an assortment of symbols
     # It also provides arrows for ->, <-, => and <= replacements in case these glyphs are missing from font
   fallbacks:
@@ -75,7 +80,7 @@ codespan:
   font-color: 000000
     #font_family: code
     #font_family: Droid Fallback
-  font_family: M+ 1mn
+  font_family: JetBrainsMono
   font_style: normal
 #    font-size: 11.5
 menu_caret_content: ' <font size="1.15em"><color rgb="000000">›</color></font> '
