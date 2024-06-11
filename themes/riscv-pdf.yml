@@ -173,8 +173,8 @@ admonition:
     note:
   #    name: pencil-square-o
   #    name: far-edit
-       name: fas-info-circle
-       stroke_color: 6489b3
+      name: fas-info-circle
+      stroke_color: 6489b3
     tip:
       #name: comments-o
       name: far-comments
@@ -254,35 +254,35 @@ description_list:
 #  item_spacing: $vertical_rhythm / 2
   # List settings
 list:
-  indent: '$horizontal_rhythm * 1.5'
-  item_spacing: '$vertical_rhythm / 2'
+  indent: $horizontal_rhythm * 1.5
+  item_spacing: $vertical_rhythm / 2
   bullet:
-    font_size: 'round($base_font_size * 1.5)'
-    content: '•'
+    font_size: round($base_font_size * 1.5)
+    content: •
   marker:
     font-family: JetBrainsMono
 ulist:
   marker:
     disc:
-      content: "\u26ab"
+      content: ⚫
     circle:
-      content: "\u26ab"
+      content: ⚫
     square:
-      content: "\u25a0"
+      content: ■
     font-family: JetBrainsMono
 # List of figures settings
 lof:
-  label_width: '3em'  # Adjust the width for figure labels
+  label_width: 3em    # Adjust the width for figure labels
   align: left
   caption:
-    indent: '4em'  # Ensure captions align consistently
+    indent: 4em    # Ensure captions align consistently
   font-family: JetBrainsMono
 # List of tables settings
 lot:
-  label_width: '3em'  # Adjust the width for table labels
+  label_width: 3em    # Adjust the width for table labels
   align: left
   caption:
-    indent: '4em'  # Ensure captions align consistently
+    indent: 4em    # Ensure captions align consistently
   font-family: JetBrainsMono
 #ulist:
 #  marker:
@@ -313,7 +313,7 @@ toc:
   indent: $horizontal_rhythm
   line_height: 1.4
   dot-leader:
-    content: '.'
+    content: .
     font_color: a9a9a9
     font-style: bold
      #levels: 2
