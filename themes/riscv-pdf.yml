@@ -294,7 +294,7 @@ figure:
     align: center
 table:
   background_color: $page_background_color
-  font-size: 9
+  font-size: $base_font_size * 0.9em
   #head_background_color: #2596be
   #head_font_color: $base_font_color
   head_font_style: bold
