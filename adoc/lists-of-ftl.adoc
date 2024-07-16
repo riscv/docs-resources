@@ -1,0 +1,12 @@
+// Lists of lists to be included in specs
+[preface]
+== List of figures
+list-of::image[hide_empty_section=true, enhanced_rendering=true]
+
+[preface]
+== List of tables
+list-of::table[hide_empty_section=true, enhanced_rendering=true]
+
+[preface]
+== List of listings
+list-of::listing[hide_empty_section=true, enhanced_rendering=true]
