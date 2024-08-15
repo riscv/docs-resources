@@ -60,12 +60,12 @@ page:
   size: A4
 base:
   font-family: body
-  font_size: 11.5
+  font_size: 11
   line_height_length: 12
   font_style: normal
   font_size_large: round($base_font_size * 1.25)
   font_size_small: round($base_font_size * 0.85)
-  font_size_min: $base_font_size * 0.75
+  font_size_min: 0.75em
   border_radius: 3
   border_width: 0.25
   border_color: EEEEEE
@@ -82,7 +82,7 @@ codespan:
     #font_family: Droid Fallback
   font_family: JetBrainsMono
   font_style: normal
-#    font-size: 11.5
+  font-size: $base_font_size_min
 menu_caret_content: ' <font size="1.15em"><color rgb="000000">›</color></font> '
 heading:
   align: left
@@ -93,17 +93,12 @@ heading:
   font_color: 000000
   font_family: headings
   font_style: bold
-  h1_font_size: floor($base_font_size * 2.8)
-    # h2 is used for chapter titles (book doctype only)
-    #h2_font_size: floor($base_font_size * 2.0)
-  h2-font-size: 11.5
-    #h3_font_size: round($base_font_size * 1.7)
-  h3-font-size: 11.5
-    #h4_font_size: $base_font_size_large
-  h4-font-size: 11.5
-    #h5_font_size: $base_font_size
-  h5-font-size: 11.5
-  h6_font_size: $base_font_size_small
+  h1_font_size: 2em
+  h2-font-size: 1.5em
+  h3-font-size: 1.17em
+  h4-font-size: 1em
+  h5-font-size: .83em
+  h6_font_size: .67em
 title_page:
   align: center
   logo:
@@ -206,7 +201,7 @@ code:
   font-color: 000000
   font_family: $codespan_font_family
   #font_size: ceil($base_font_size)
-  font-size: 11
+  font-size: 10
   padding: $code_font_size
   line_height: 1.15
   # line_gap is an experimental property to control how a background color is applied to an inline block element
