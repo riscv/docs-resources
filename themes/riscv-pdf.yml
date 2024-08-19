@@ -201,13 +201,13 @@ code:
   font-color: 000000
   font_family: $codespan_font_family
   #font_size: ceil($base_font_size)
-  font-size: 10
+  font-size: 9
   padding: $code_font_size
   line_height: 1.15
   # line_gap is an experimental property to control how a background color is applied to an inline block element
   line_gap: 3.8
-  #background_color: f4f4fb
-  background_color: ffffff
+  background_color: fefcff
+  #background_color: ffffff
   #border_color: cccccc
   #border_radius: $base_border_radius
   #border_width: 0.2
