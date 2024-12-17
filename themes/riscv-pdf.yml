@@ -66,7 +66,7 @@ base:
   font_style: normal
   font_size_large: round($base_font_size * 1.25)
   font_size_small: round($base_font_size * 0.85)
-  font_size_min: round($base_font_size * 0.75)
+  font_size_min: round($base_font_size * 0.86)
   border_radius: 3
   border_width: 0.25
   border_color: EEEEEE
