@@ -126,14 +126,14 @@ This work is Copyright 2022 by RISC-V International.
 ```
 
 ### Document state markings
-Document state should be reflected in the `:revmark:` variable and be contained in
+Document state should be reflected in the `:revremark:` variable and be contained in
 an in-document admonition statement near the front of the document (Preface or Preamble).  
 
-The recommended values for `:revmark:` and the front matter admonition based on the document
+The recommended values for `:revremark:` and the front matter admonition based on the document
 state are as follows:
 
 * For **Discussion Document** state, use:
-  * `:revmark: This document is in Discussion state.  Change should be expected.`
+  * `:revremark: This document is in Discussion state.  Change should be expected.`
   * Formal admonition text:
     ```
     [WARNING]
@@ -144,7 +144,7 @@ state are as follows:
     ====
     ```
 * For **Development** state, use:
-  * `:revmark: This document is in Development state.  Change should be expected.`
+  * `:revremark: This document is in Development state.  Change should be expected.`
   * Formal admonition text:
     ```
     [WARNING]
@@ -156,7 +156,7 @@ state are as follows:
     ====
     ```
 * For **Stable** state, use:
-  * `:revmark: This document is in Stable state.  Assume it may change.`
+  * `:revremark: This document is in Stable state.  Assume it may change.`
   * Formal admonition text:
     ```
     [WARNING]
@@ -166,7 +166,7 @@ state are as follows:
     ====
     ```
 * For **Frozen** state, use:
-  * `:revmark: This document is in Frozen state.  Change is extremely unlikely.`
+  * `:revremark: This document is in Frozen state.  Change is extremely unlikely.`
   * Formal admonition text:
     ```
     [WARNING]
@@ -179,7 +179,7 @@ state are as follows:
     ====
     ```
 * For **Ratified** state, use:
-  * `:revmark: This document is in Ratified state.  No changes are allowed.`
+  * `:revremark: This document is in Ratified state.  No changes are allowed.`
   * Formal admonition text:
     ```
     [WARNING]
