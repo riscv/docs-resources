@@ -3,26 +3,25 @@ extends: default
 font:
   catalog:
     merge: true
-    sans-serif: Atkinson-Hyperlegible-Regular-102.ttf
- #Atkinson Hyperlegible
+    sans-serif: GEM_FONTS_DIR/mplus1p-regular-fallback.ttf
+ #Petrona
     body:
-      normal: Atkinson-Hyperlegible-Regular-102.ttf
-      bold: Atkinson-Hyperlegible-Bold-102.ttf
-      italic: Atkinson-Hyperlegible-Italic-102.ttf
-      bold_italic: Atkinson-Hyperlegible-BoldItalic-102.ttf
-      header_thin: Atkinson-Hyperlegible-Regular-102.ttf
+      normal: Petrona-Light.ttf
+      bold: Petrona-Medium.ttf
+      italic: Petrona-LightItalic.ttf
+      bold_italic: Petrona-MediumItalic.ttf
+      header_thin: Petrona-Thin.ttf
+  #Montserrat
     headings:
-      normal: Atkinson-Hyperlegible-Regular-102.ttf
-      bold: Atkinson-Hyperlegible-Bold-102.ttf
-      italic: Atkinson-Hyperlegible-Italic-102.ttf
-      bold_italic: Atkinson-Hyperlegible-BoldItalic-102.ttf
-      light: Atkinson-Hyperlegible-Regular-102.ttf
-    # Fira Code
+      normal: Montserrat-Regular.ttf
+      italic: Montserrat-Italic.ttf
+      bold: Montserrat-Medium.ttf
+      light: Montserrat-Light.ttf
     code:
-      normal: FiraCode-Regular.ttf
-      bold: FiraCode-Bold.ttf
-      italic: FiraCode-Medium.ttf
-      bold_italic: FiraCode-SemiBold.ttf
+      normal: cmunbtl.ttf
+      bold: cmunbtl.ttf
+      italic: cmunbto.ttf
+      bold_italic: cmunbto.ttf
     # M+ 1mn supports ASCII and the circled numbers used for conums
     M+ 1mn:
       normal: mplus-1mn-regular.ttf
