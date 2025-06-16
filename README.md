@@ -38,7 +38,7 @@ to intermittently rebase the link and verify that nothing has been broken.  Proj
 understand this and plan accordingly.
 
 ## Updating the main AsciiDoc source file
-From the `Makefile`, find the main AsciiDoc file that is used to build the project.  
+From the `Makefile`, find the main AsciiDoc file that is used to build the project.
 It usually has the same base name as the .pdf which is generated.
 
 Open this file and ensure that the following variables are added to top the document:
@@ -127,7 +127,7 @@ This work is Copyright 2022 by RISC-V International.
 
 ### Document state markings
 Document state should be reflected in the `:revremark:` variable and be contained in
-an in-document admonition statement near the front of the document (Preface or Preamble).  
+an in-document admonition statement near the front of the document (Preface or Preamble).
 
 The recommended values for `:revremark:` and the front matter admonition based on the document
 state are as follows:
