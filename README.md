@@ -11,6 +11,10 @@ Older repos can be updated with 3 basic steps:
 2. Update the main AsciiDoc source file to include new variables needed for build.
 3. Update the `Makefile` to build using the new resources.
 
+## Contributing
+
+For guidelines on how to contribute, refer to the [CONTRIBUTING.md](/CONTRIBUTING.md) file.
+
 ## Updating the directory structure
 The three main directories in this repo contain various components of the RISC-V documentation
 template. The `docs-resources/images/` directory has artwork like the RISC-V logo. The `docs-resources/fonts/`
