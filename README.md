@@ -141,7 +141,7 @@ state are as follows:
   * Formal admonition text:
     ```
     [WARNING]
-    .This document is in the link:https://lf-riscv.atlassian.net/wiki/display/HOME/Specification+States[Discussion state]
+    .This document is in the link:https://riscv.org/specifications/ratified/[Discussion state]
     ====
     Assume everything can change. This document is not complete yet and was created only
     for the purpose of conversation outside of the document.
@@ -152,7 +152,7 @@ state are as follows:
   * Formal admonition text:
     ```
     [WARNING]
-    .This document is in the link:https://lf-riscv.atlassian.net/wiki/display/HOME/Specification+States[Development state]
+    .This document is in the link:https://riscv.org/specifications/ratified/[Development state]
     ====
     Assume everything can change. This draft specification will change before being accepted
     as standard, so implementations made to this draft specification will likely not conform
@@ -164,7 +164,7 @@ state are as follows:
   * Formal admonition text:
     ```
     [WARNING]
-    .This document is in the link:https://lf-riscv.atlassian.net/wiki/display/HOME/Specification+States[Stable state]
+    .This document is in the link:https://riscv.org/specifications/ratified/[Stable state]
     ====
     Assume anything could still change, but limited change should be expected.
     ====
@@ -174,7 +174,7 @@ state are as follows:
   * Formal admonition text:
     ```
     [WARNING]
-    .This document is in the link:https://lf-riscv.atlassian.net/wiki/display/HOME/Specification+States[Frozen state]
+    .This document is in the link:https://riscv.org/specifications/ratified/[Frozen state]
     ====
     Change is extremely unlikely. A high threshold will be used, and a change
     will only occur because of some truly critical issue being identified during
@@ -187,7 +187,7 @@ state are as follows:
   * Formal admonition text:
     ```
     [WARNING]
-    .This document is in the link:https://lf-riscv.atlassian.net/wiki/display/HOME/Specification+States[Ratified state]
+    .This document is in the link:https://riscv.org/specifications/ratified/[Ratified state]
     ====
     No changes are allowed. Any desired or needed changes can be the subject
     of a follow-on new extension. Ratified extensions are never revised.
