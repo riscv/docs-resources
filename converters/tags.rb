@@ -9,9 +9,10 @@ class TagsConverter
 
   def initialize(backend, opts = {})
     super
-    outfilesuffix(".tags.json")
-    # Pass `-a tags-prefix=qx_` to only include tags starting with `qx_`.
-    @prefix = opts[:document].attributes.fetch("tags-prefix", "")
+    # Pass `-a tags-output-suffix=.foo` to set suffix of generated output JSON file to ".foo"
+    outfilesuffix(opts[:document].attributes.fetch("tags-output-suffix", ".tags.json"))
+    # Pass `-a tags-match-prefix=foo` to only include tags starting with `foo`.
+    @prefix = opts[:document].attributes.fetch("tags-match-prefix", "")
   end
 
   # `node` is an `AbstractNode`.
