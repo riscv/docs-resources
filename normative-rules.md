@@ -1,4 +1,4 @@
-# How to Tag Normative Rules in RISC-V International Standard
+# How to Tag Normative Rules in RISC-V International Standards
 
 ## What is a Normative Rule?
 
