@@ -52,9 +52,9 @@ AsciiDoc supports several styles of anchors:
 
 Naming restrictions:
 * Start anchor names with a letter and use `:` to separate fields in the anchor name. No spaces allowed in name.
-* Use underscores to separate lists of items between colons (e.g., `:insts:add_sub`) since RISC-V 
+* Use underscores to separate lists of items between colons (e.g., `:insts:add_sub`) since RISC-V
 uses `-` in some names (e.g., `R-type`).
-* Replace `.` in items with `-` (e.g., `fence.tso` becomes `fence-tso`) so all anchors types used 
+* Replace `.` in items with `-` (e.g., `fence.tso` becomes `fence-tso`) so all anchors types used
 work properly (see https://docs.asciidoctor.org/asciidoc/latest/attributes/id/#block-assignment for details).
 
 If you'd like to get more detailed AsciiDoc information on anchors, please read:
