@@ -23,8 +23,8 @@ class NormativeTags
   # param filename [String] Name of the tag file
   # param tags [Hash<String,String>] Hash key is tag name (AKA anchor name) and value is tag text.
   def add_tags(filename, tags)
-    raise ArgumentError, "Need String for filename but was passed a #{filename.String}" unless filename.is_a?(String)
-    raise ArgumentError, "Need Hash for tags but was passed a #{tags.String}" unless tags.is_a?(Hash)
+    raise ArgumentError, "Need String for filename but was passed a #{filename.class}" unless filename.is_a?(String)
+    raise ArgumentError, "Need Hash for tags but was passed a #{tags.class}" unless tags.is_a?(Hash)
 
     tags.each do |tag_name, tag_text|
       unless @tag_map[tag_name].nil?
@@ -38,6 +38,9 @@ class NormativeTags
   # @param [String] Normative rule tag name
   # @return [NormativeTag] Normative rule tag object corresponding to tag name. Returns nil if not found.
   def get_tag(tag_name) = @tag_map[tag_name]
+
+  # @return [Array<NormativeTag>] All normative tags for the standard.
+  def get_tags() = @tag_map.values
 end
 
 # Holds all information for one tag.
@@ -58,7 +61,17 @@ class NormativeTag
     @tag_name = tag_name
     @filename = filename
     @tag_text = tag_text
+
+    # Used to find tags without any references to them.
+    @ref_to_me = false
   end
+
+  def normative_rule_references_me
+    @ref_to_me = true
+  end
+
+  # No normative rule has referencing me.
+  def unreferenced? = !@ref_to_me
 end
 
 ########################################
@@ -299,8 +312,8 @@ end
 
 # Returns an Array of Hashes containing the curated normative rules ready to be serialized into a YAML file.
 def create_curated_rules(tags, curations)
-    raise ArgumentError, "Need NormativeTags for tags but was passed a #{tags.String}" unless tags.is_a?(NormativeTags)
-    raise ArgumentError, "Need NormativeCurations for curations but was passed a #{curations.String}" unless curations.is_a?(NormativeCurations)
+    raise ArgumentError, "Need NormativeTags for tags but was passed a #{tags.class}" unless tags.is_a?(NormativeTags)
+    raise ArgumentError, "Need NormativeCurations for curations but was passed a #{curations.class}" unless curations.is_a?(NormativeCurations)
 
     info("Creating curated normative rules")
 
@@ -340,6 +353,9 @@ def create_curated_rules(tags, curations)
             }
 
             hash["tags"].append(resolved_tag)
+
+            # Used to track which tags don't have any normative rules referencing them.
+            tag.normative_rule_references_me()
           end
         end
       end
@@ -352,12 +368,32 @@ def create_curated_rules(tags, curations)
     return ret
 end
 
+# Report any tags not referenced by any normative rule.
+# Must be called after curated_rules are created so pass them in
+# to this method but don't use them.
+def detect_unreferenced_tags(tags, curated_rules)
+  raise ArgumentError, "Need NormativeTags for tags but was passed a #{tags.class}" unless tags.is_a?(NormativeTags)
+  raise ArgumentError, "Need Array<Hash> for curated_rules but passed a #{curated_rules.class}" unless curated_rules.is_a?(Array)
+
+  unref_cnt = 0
+
+  tags.get_tags.each do |tag|
+    if tag.unreferenced?
+      info("Tag #{tag.tag_name} not referenced by any normative rule. Did you forget to create a normative rule?")
+      unref_cnt = unref_cnt + 1
+    end
+  end
+
+  # TODO: Make this a fatal_error() instead of an info().
+  info("#{unref_cnt} tag#{unref_cnt == 1 ? "" : "s"} have no normative rules referencing them") if unref_cnt > 0
+end
+
 # Store curated rules in JSON output file
 def store_curated_rules(filename, curated_rules)
   raise ArgumentError, "Need String for filename but passed a #{filename.class}" unless filename.is_a?(String)
   raise ArgumentError, "Need Array<Hash> for curated_rules but passed a #{curated_rules.class}" unless curated_rules.is_a?(Array)
 
-  info("Storing curated normative rules into file #{filename}")
+  info("Storing #{curated_rules.count} curated normative rules into file #{filename}")
 
   # Serialize curated_rules Array to JSON format String.
   # Shouldn't throw exceptions since we created the data being serialized.
@@ -390,6 +426,7 @@ info("Output filename = #{output_fname}")
 tags = load_tags(tag_fnames)
 curations = load_curations(curation_fnames)
 curated_rules = create_curated_rules(tags, curations)
+detect_unreferenced_tags(tags, curated_rules)
 store_curated_rules(output_fname, curated_rules)
 
 exit 0
