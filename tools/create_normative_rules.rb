@@ -28,7 +28,7 @@ class NormativeTags
 
     tags.each do |tag_name, tag_text|
       unless @tag_map[tag_name].nil?
-        fatal_error("NormativeTag name #{tag_name} in file #{filename} already defined in file #{@tag_map[tag_name].filename}") 
+        fatal_error("NormativeTag name #{tag_name} in file #{filename} already defined in file #{@tag_map[tag_name].filename}")
       end
 
       @tag_map[tag_name] = NormativeTag.new(tag_name, filename, tag_text)
@@ -94,10 +94,10 @@ class NormativeCurations
     array_data.each do |data|
       fatal_error("File #{filename} entry isn't a hash: #{data}") unless data.is_a?(Hash)
 
-      if !data["name"].nil? 
+      if !data["name"].nil?
         # Add one curation object
         add_curation(data["name"], filename, data)
-      elsif !data["names"].nil? 
+      elsif !data["names"].nil?
         # Add one curation object for each name in array
         names = data["names"]
         names.each do |name|
@@ -115,7 +115,7 @@ class NormativeCurations
     raise ArgumentError, "Need Hash for data but passed a #{data.class}" unless data.is_a?(Hash)
 
     unless @hash[name].nil?
-      fatal_error("Normative rule curation #{name} in file #{filename} already defined in file #{@hash[name].filename}") 
+      fatal_error("Normative rule curation #{name} in file #{filename} already defined in file #{@hash[name].filename}")
     end
 
     # Create curation object and store reference to it in array (to maintain order) and hash (for convenient lookup by name).
@@ -182,14 +182,14 @@ end
 # Exits program on error.
 def parse_argv
   usage(0) if ARGV.count == 1 && (ARGV[0] == "-h" || ARGV[0] == "--help")
-  
+
   usage if ARGV.count == 0
-  
+
   # Return values
   curation_fnames=[]
   tag_fnames=[]
   output_fname=
-  
+
   i = 0
   while i < ARGV.count
     arg = ARGV[i]
@@ -219,20 +219,20 @@ def parse_argv
         usage
       end
     end
-  
+
     i=i+1
   end
-  
+
   if curation_fnames.empty?
     info("Missing normative rule curation filename(s)")
     usage
   end
-  
+
   if tag_fnames.empty?
     info("Missing normative tag filename(s)")
     usage
   end
-  
+
   if output_fname.nil?
     info("Missing output filename")
     usage
@@ -295,7 +295,7 @@ def load_curations(curation_fnames)
 
     # Convert String in YAML format to a Ruby hash.
     # Note that YAML is an alias for Pysch in Ruby.
-    begin 
+    begin
       yaml_hash = YAML.load(file_contents)
     rescue Psych::SyntaxError => e
       fatal_error("File #{filename} YAML syntax error - #{e.message}")
@@ -416,7 +416,7 @@ end
 #main()
 
 info("Passed #{ARGV.join(' ')}")
-  
+
 curation_fnames, tag_fnames, output_fname = parse_argv()
 
 info("Normative rule curation filenames = #{curation_fnames}")
