@@ -357,7 +357,7 @@ def create_curated_rules(tags, curations)
 
           if tag.nil?
             missing_tag_cnt = missing_tag_cnt + 1
-            info("Normative rule #{curation.name} references non-existant tag #{tag_ref_name}")
+            info("Normative rule #{curation.name} in file #{curation.filename} references non-existant tag #{tag_ref_name}")
           else
             resolved_tag = {
               "tag_name" => tag.tag_name,
