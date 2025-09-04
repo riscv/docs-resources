@@ -23,10 +23,19 @@ class NormativeTags
   # param filename [String] Name of the tag file
   # param tags [Hash<String,String>] Hash key is tag name (AKA anchor name) and value is tag text.
   def add_tags(filename, tags)
-    raise ArgumentError, "Need String for filename but was passed a #{filename.class}" unless filename.is_a?(String)
-    raise ArgumentError, "Need Hash for tags but was passed a #{tags.class}" unless tags.is_a?(Hash)
+    fatal_error("Need String for filename but was passed a #{filename.class}") unless filename.is_a?(String)
+    fatal_error("Need Hash for tags but was passed a #{tags.class}") unless tags.is_a?(Hash)
 
     tags.each do |tag_name, tag_text|
+      unless tag_name.is_a?(String)
+        fatal_error("NormativeTag name #{tag_name} in file #{filename} is a #{tag_name.class} instead of a String")
+      end
+
+      unless tag_text.is_a?(String)
+        fatal_error("NormativeTag name #{tag_name} in file #{filename} is a #{tag_text.class} instead of a String
+#{PN}:   If the AsciiDoc anchor for #{tag_name} is before an AsciiDoc 'Description List' term, move to after term on its own line.")
+      end
+
       unless @tag_map[tag_name].nil?
         fatal_error("NormativeTag name #{tag_name} in file #{filename} already defined in file #{@tag_map[tag_name].filename}")
       end
@@ -58,6 +67,10 @@ class NormativeTag
   # @param filename [String]
   # @param tag_text [String]
   def initialize(tag_name, filename, tag_text)
+    fatal_error("Need String for tag_name but passed a #{tag_name.class}") unless tag_name.is_a?(String)
+    fatal_error("Need String for filename but passed a #{filename.class}") unless filename.is_a?(String)
+    fatal_error("Need String for tag_text but passed a #{tag_text.class}") unless tag_text.is_a?(String)
+
     @tag_name = tag_name
     @filename = filename
     @tag_text = tag_text
@@ -88,8 +101,8 @@ class NormativeCurations
   end
 
   def add_file_contents(filename, array_data)
-    raise ArgumentError, "Need String for filename but passed a #{filename.class}" unless filename.is_a?(String)
-    raise ArgumentError, "Need Array for array_data but passed a #{array_data.class}" unless array_data.is_a?(Array)
+    fatal_error("Need String for filename but passed a #{filename.class}") unless filename.is_a?(String)
+    fatal_error("Need Array for array_data but passed a #{array_data.class}") unless array_data.is_a?(Array)
 
     array_data.each do |data|
       fatal_error("File #{filename} entry isn't a hash: #{data}") unless data.is_a?(Hash)
@@ -110,9 +123,9 @@ class NormativeCurations
   end
 
   def add_curation(name, filename, data)
-    raise ArgumentError, "Need String for name but passed a #{name.class}" unless name.is_a?(String)
-    raise ArgumentError, "Need String for filename but passed a #{filename.class}" unless filename.is_a?(String)
-    raise ArgumentError, "Need Hash for data but passed a #{data.class}" unless data.is_a?(Hash)
+    fatal_error("Need String for name but passed a #{name.class}") unless name.is_a?(String)
+    fatal_error("Need String for filename but passed a #{filename.class}") unless filename.is_a?(String)
+    fatal_error("Need Hash for data but passed a #{data.class}") unless data.is_a?(Hash)
 
     unless @hash[name].nil?
       fatal_error("Normative rule curation #{name} in file #{filename} already defined in file #{@hash[name].filename}")
@@ -153,7 +166,7 @@ class NormativeTagRef
 
   # Currently NormativeTag is just a String but could potentially be passed a Hash if metadata gets added to a tag.
   def initialize(tag_data)
-    raise ArgumentError, "Need String for tag_data but passed a #{tag_data.class}" unless tag_data.is_a?(String)
+    fatal_error("Need String for tag_data but passed a #{tag_data.class}") unless tag_data.is_a?(String)
 
     @name = tag_data
   end
@@ -244,7 +257,7 @@ end
 # Load the contents of all normative rule tag files in JSON format.
 # Returns a NormativeTag class with all the contents.
 def load_tags(tag_fnames)
-  raise ArgumentError, "Need Array<String> for tag_fnames but passed a #{tag_fnames.class}" unless tag_fnames.is_a?(Array)
+  fatal_error("Need Array<String> for tag_fnames but passed a #{tag_fnames.class}") unless tag_fnames.is_a?(Array)
 
   tags = NormativeTags.new()
 
@@ -279,7 +292,7 @@ end
 # Load the contents of all normative rule curation files in YAML format.
 # Returns a NormativeCuration class with all the contents.
 def load_curations(curation_fnames)
-  raise ArgumentError, "Need Array<String> for curation_fnames but passed a #{curation_fnames.class}" unless curation_fnames.is_a?(Array)
+  fatal_error("Need Array<String> for curation_fnames but passed a #{curation_fnames.class}") unless curation_fnames.is_a?(Array)
 
   curations = NormativeCurations.new()
 
@@ -312,8 +325,8 @@ end
 
 # Returns an Array of Hashes containing the curated normative rules ready to be serialized into a YAML file.
 def create_curated_rules(tags, curations)
-    raise ArgumentError, "Need NormativeTags for tags but was passed a #{tags.class}" unless tags.is_a?(NormativeTags)
-    raise ArgumentError, "Need NormativeCurations for curations but was passed a #{curations.class}" unless curations.is_a?(NormativeCurations)
+    fatal_error("Need NormativeTags for tags but was passed a #{tags.class}") unless tags.is_a?(NormativeTags)
+    fatal_error("Need NormativeCurations for curations but was passed a #{curations.class}") unless curations.is_a?(NormativeCurations)
 
     info("Creating curated normative rules")
 
@@ -324,7 +337,7 @@ def create_curated_rules(tags, curations)
       # Create hash with mandatory curation arguments.
       hash = {
         "name" => curation.name,
-        "source" => curation.filename
+        "filename" => curation.filename
       }
 
       # Now add optional arguments.
@@ -349,7 +362,7 @@ def create_curated_rules(tags, curations)
             resolved_tag = {
               "tag_name" => tag.tag_name,
               "tag_text" => tag.tag_text,
-              "source" => tag.filename
+              "filename" => tag.filename
             }
 
             hash["tags"].append(resolved_tag)
@@ -372,8 +385,8 @@ end
 # Must be called after curated_rules are created so pass them in
 # to this method but don't use them.
 def detect_unreferenced_tags(tags, curated_rules)
-  raise ArgumentError, "Need NormativeTags for tags but was passed a #{tags.class}" unless tags.is_a?(NormativeTags)
-  raise ArgumentError, "Need Array<Hash> for curated_rules but passed a #{curated_rules.class}" unless curated_rules.is_a?(Array)
+  fatal_error("Need NormativeTags for tags but was passed a #{tags.class}") unless tags.is_a?(NormativeTags)
+  fatal_error("Need Array<Hash> for curated_rules but passed a #{curated_rules.class}") unless curated_rules.is_a?(Array)
 
   unref_cnt = 0
 
@@ -390,8 +403,8 @@ end
 
 # Store curated rules in JSON output file
 def store_curated_rules(filename, curated_rules)
-  raise ArgumentError, "Need String for filename but passed a #{filename.class}" unless filename.is_a?(String)
-  raise ArgumentError, "Need Array<Hash> for curated_rules but passed a #{curated_rules.class}" unless curated_rules.is_a?(Array)
+  fatal_error("Need String for filename but passed a #{filename.class}") unless filename.is_a?(String)
+  fatal_error("Need Array<Hash> for curated_rules but passed a #{curated_rules.class}") unless curated_rules.is_a?(Array)
 
   info("Storing #{curated_rules.count} curated normative rules into file #{filename}")
 
