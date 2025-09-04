@@ -139,12 +139,13 @@ class NormativeCurations
 end # class NormativeCurations
 
 class NormativeCuration
-  attr_reader :filename     # String        (mandatory)
-  attr_reader :name         # String        (mandatory)
-  attr_reader :type         # String        (optional)
-  attr_reader :summary      # String        (optional - a few words)
-  attr_reader :description  # String        (optional - sentence, paragraph, or more)
-  attr_reader :tag_refs     # Array<NormativeTagRef> (optional - can be empty)
+  attr_reader :filename               # String (mandatory)
+  attr_reader :name                   # String (mandatory)
+  attr_reader :type                   # String (optional)
+  attr_reader :summary                # String (optional - a few words)
+  attr_reader :description            # String (optional - sentence, paragraph, or more)
+  attr_reader :tag_refs               # Array<NormativeTagRef> (optional - can be empty)
+  attr_reader :tag_refs_without_text  # Array<NormativeTagRef> (optional - can be empty - like tag_refs but no tag text)
 
   def initialize(filename, name, data)
     @filename = filename
@@ -156,6 +157,11 @@ class NormativeCuration
     @tag_refs = []
     data["tags"]&.each do |tag_data|
       @tag_refs.append(NormativeTagRef.new(tag_data))
+    end
+
+    @tag_refs_without_text = []
+    data["tags_without_text"]&.each do |tag_data|
+      @tag_refs_without_text.append(NormativeTagRef.new(tag_data))
     end
   end
 end # class NormativeCuration
@@ -345,10 +351,12 @@ def create_curated_rules(tags, curations)
       hash["summary"] = curation.summary unless curation.summary.nil?
       hash["description"] = curation.description unless curation.description.nil?
 
-      # Now go through tag reference array if it has any entries and look those up.
-      unless curation.tag_refs.nil?
+      unless curation.tag_refs.nil? && curation.tag_refs_without_text.nil?
         hash["tags"] = []
+      end
 
+      # Add tag entries for those that should have tag text.
+      unless curation.tag_refs.nil?
         curation.tag_refs.each do |tag_ref|
           tag_ref_name = tag_ref.name
 
@@ -369,6 +377,27 @@ def create_curated_rules(tags, curations)
 
             # Used to track which tags don't have any normative rules referencing them.
             tag.normative_rule_references_me()
+          end
+        end
+      end
+
+      # Add tag entries for those that shouldn't have tag text.
+      unless curation.tag_refs_without_text.nil?
+        curation.tag_refs_without_text.each do |tag_ref|
+          tag_ref_name = tag_ref.name
+
+          # Lookup tag. Should be nil.
+          tag = tags.get_tag(tag_ref_name)
+
+          if tag.nil?
+            resolved_tag = {
+              "tag_name" => tag_ref_name,
+            }
+
+            hash["tags"].append(resolved_tag)
+          else
+            fatal_error("Normative rule #{curation.name} in file #{curation.filename} has
+#{PN}: tag #{tag_ref_name} tag text but shouldn't")
           end
         end
       end
