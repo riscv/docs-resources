@@ -143,8 +143,8 @@ class NormativeRuleDef
   attr_reader :name                   # String (mandatory)
   attr_reader :summary                # String (optional - a few words)
   attr_reader :description            # String (optional - sentence, paragraph, or more)
-  attr_reader :type                   # String (optional, can be nil, extension, instruction, csr, csr_field)
-  attr_reader :instances              # Array<String> (optional only if type defined, nil if type nil, otherwise an array)
+  attr_reader :kind                   # String (optional, can be nil, extension, instruction, csr, csr_field)
+  attr_reader :instances              # Array<String> (optional only if kind defined, nil if kind nil, otherwise an array)
   attr_reader :tag_refs               # Array<NormativeTagRef> (optional - can be empty)
   attr_reader :tag_refs_without_text  # Array<NormativeTagRef> (optional - can be empty - like tag_refs but no tag text)
 
@@ -166,18 +166,18 @@ class NormativeRuleDef
       fatal_error("Provided #{@description.class} class for description in normative rule #{name} but need a String") unless @description.is_a?(String)
     end
 
-    @type = data["type"]
-    unless @type.nil?
-      fatal_error("Provided #{@type.class} class for type in normative rule #{name} but need a String") unless @type.is_a?(String)
-      check_allowed_types(@type, @name, nil)
+    @kind = data["kind"]
+    unless @kind.nil?
+      fatal_error("Provided #{@kind.class} class for kind in normative rule #{name} but need a String") unless @kind.is_a?(String)
+      check_allowed_types(@kind, @name, nil)
     end
 
     @instances = data["instances"]
-    if @type.nil?
-      # Not allowed to have instances without a type.
-      fatal_error("Normative rule #{name} defines instances but no type") unless @instances.nil?
+    if @kind.nil?
+      # Not allowed to have instances without a kind.
+      fatal_error("Normative rule #{name} defines instances but no kind") unless @instances.nil?
     else
-      fatal_error("Provided #{@type.class} class for type in normative rule #{name} but need a String") unless @type.is_a?(String)
+      fatal_error("Provided #{@kind.class} class for kind in normative rule #{name} but need a String") unless @kind.is_a?(String)
 
       if @instances.nil?
         @instances = []
@@ -201,8 +201,8 @@ end # class NormativeRuleDef
 # Holds one reference to a tag by a rule definition.
 class NormativeTagRef
   attr_reader :name               # String (mandatory)
-  attr_reader :type               # String (optional, can be nil, extension, instruction, csr, csr_field)
-  attr_reader :instances          # Array<String> (optional only if type defined, nil if type nil, otherwise an array)
+  attr_reader :kind               # String (optional, can be nil, extension, instruction, csr, csr_field)
+  attr_reader :instances          # Array<String> (optional only if kind defined, nil if kind nil, otherwise an array)
 
   # The nr_name is the name of the normative rule
   # The data can either be a String (so just the tag name provided) or a hash if more info passed.
@@ -218,19 +218,19 @@ class NormativeTagRef
       fatal_error("Provided #{@name.class} class for tag name #{@name} in normative rule #{nr_name} but need a String") unless @name.is_a?(String)
 
       # Handle optional values
-      @type = data["type"]
-      unless @type.nil?
-        fatal_error("Provided #{@type.class} class for type in tag #{@name} in normative rule #{name} but need a String") unless @type.is_a?(String)
-        check_allowed_types(@type, nr_name, @name)
+      @kind = data["kind"]
+      unless @kind.nil?
+        fatal_error("Provided #{@kind.class} class for kind in tag #{@name} in normative rule #{name} but need a String") unless @kind.is_a?(String)
+        check_allowed_types(@kind, nr_name, @name)
       end
 
       @instances = data["instances"]
 
-      if @type.nil?
-        # Not allowed to have instances without a type.
-        fatal_error("Tag #{@name} referenced in normative rule #{nr_name} defines instances but no type") unless @instances.nil?
+      if @kind.nil?
+        # Not allowed to have instances without a kind.
+        fatal_error("Tag #{@name} referenced in normative rule #{nr_name} defines instances but no kind") unless @instances.nil?
       else
-        fatal_error("Provided #{@type.class} class for type in tag #{name} in normative rule #{nr_name} but need a String") unless @type.is_a?(String)
+        fatal_error("Provided #{@kind.class} class for kind in tag #{name} in normative rule #{nr_name} but need a String") unless @kind.is_a?(String)
 
         if @instances.nil?
           @instances = []
@@ -244,14 +244,14 @@ class NormativeTagRef
   end
 end # class NormativeTagRef
 
-# Create fatal_error if type not recognized. The name is nil if this is called in the normative rule definition.
-def check_allowed_types(type, nr_name, name)
+# Create fatal_error if kind not recognized. The name is nil if this is called in the normative rule definition.
+def check_allowed_types(kind, nr_name, name)
   allowed_types = ["extension", "instruction", "csr", "csr_field"]
 
-  unless allowed_types.include?(type)
+  unless allowed_types.include?(kind)
     tag_str = name.nil? ? "" : "tag #{name} in "
     allowed_str = allowed_types.join(",")
-    fatal_error("Don't recognize type '#{type}' for #{tag_str}normative rule #{nr_name}\n#{PN}: Allowed types are: #{allowed_str}")
+    fatal_error("Don't recognize kind '#{kind}' for #{tag_str}normative rule #{nr_name}\n#{PN}: Allowed types are: #{allowed_str}")
   end
 end
 
@@ -427,7 +427,7 @@ def create_normative_rules(tags, defs)
       }
 
       # Now add optional arguments.
-      hash["type"] = d.type unless d.type.nil?
+      hash["kind"] = d.kind unless d.kind.nil?
       hash["instances"] = d.instances unless d.instances.nil?
       hash["summary"] = d.summary unless d.summary.nil?
       hash["description"] = d.description unless d.description.nil?
@@ -455,7 +455,7 @@ def create_normative_rules(tags, defs)
             }
 
             # Add optional info from tag reference.
-            resolved_tag["type"] = tag_ref.type unless tag_ref.type.nil?
+            resolved_tag["kind"] = tag_ref.kind unless tag_ref.kind.nil?
             resolved_tag["instances"] = tag_ref.instances unless tag_ref.instances.nil?
 
             hash["tags"].append(resolved_tag)
@@ -480,7 +480,7 @@ def create_normative_rules(tags, defs)
             }
 
             # Add optional info from tag reference.
-            resolved_tag["type"] = tag_ref.type unless tag_ref.type.nil?
+            resolved_tag["kind"] = tag_ref.kind unless tag_ref.kind.nil?
             resolved_tag["instances"] = tag_ref.instances unless tag_ref.instances.nil?
 
             hash["tags"].append(resolved_tag)
