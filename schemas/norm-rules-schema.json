@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Schema for norm-rules.json in build directory. Created by build-norm-rules Makefile target.",
+  "type": "object",
+
+  "properties": {
+    "normative_rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+           "$ref": "common-schema.json#/ruleName",
+           "description": "Normative rule name"
+          },
+          "def_filename": {
+            "type": "string",
+            "description": "Normative rule definition file that defines this rule"
+          },
+          "summary": {
+            "type": "string",
+            "description": "Short summary of the normative rule (just a few words)"
+          },
+          "description": {
+            "type": "string",
+            "description": "Complete description of the normative rule (sentence, paragraph, or longer)"
+          },
+          "kind": {
+            "$ref": "common-schema.json#/isaObjectKind",
+            "description": "The kind of ISA object associated with this normative rule"
+          },
+          "instances": {
+            "$ref": "common-schema.json#/stringArray",
+            "description": "The names of ISA object instances of the specified kind associated with this normative rule"
+          },
+          "tags": {
+            "type": "array",
+            "description": "List of normative rule tags that reference the ISA manuals",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "$ref": "common-schema.json#/tagName",
+                  "description": "Name of the tag (an anchor in the ISA manual adoc files)"
+                },
+                "text": {
+                  "type": "string",
+                  "description": "The text from the ISA manual associated with this tag (optional)"
+                },
+                "tag_filename": {
+                  "type": "string",
+                  "description": "Tag file that contains maps tag names to tag text (optional)"
+                }
+              },
+              "required": ["name"]
+            }
+          }
+        },
+        "required": ["name", "def_filename"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["normative_rules"],
+  "additionalProperties": false
+}
