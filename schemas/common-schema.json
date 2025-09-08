@@ -3,19 +3,31 @@
 
   "title": "Common content used by multiple schemas (reduces copy & paste)",
 
+  "summaryDesc": {
+    "description": "Short summary of the normative rule (just a few words)"
+  },
+  "descriptionDesc": {
+    "description": "Complete description of the normative rule (sentence, paragraph, or longer)"
+  },
+  "kindRuleDesc": {
+    "description": "The kind of ISA object associated with this normative rule"
+  },
+  "instancesRuleDesc": {
+    "description": "The names of ISA object instances of the specified kind associated with this normative rule"
+  },
   "stringArray": {
     "type": "array",
     "items": { "type": "string" }
-  },
-  "isaObjectKind":  {
-    "type": "string",
-    "enum": ["extension", "instruction", "csr", "csr_field"]
   },
   "ruleNamePattern" : {
     "pattern": "^[a-zA-z][a-zA-z0-9_-]+$"
   },
   "tagNamePattern" : {
     "pattern": "^[a-zA-z][:a-zA-z0-9_-]+$"
+  },
+  "isaObjectKind":  {
+    "type": "string",
+    "enum": ["extension", "instruction", "csr", "csr_field"]
   },
   "ruleName": {
     "type": "string",

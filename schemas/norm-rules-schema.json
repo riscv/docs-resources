@@ -19,37 +19,41 @@
           },
           "summary": {
             "type": "string",
-            "description": "Short summary of the normative rule (just a few words)"
+            "$ref": "common-schema.json#/summaryDesc"
           },
           "description": {
             "type": "string",
-            "description": "Complete description of the normative rule (sentence, paragraph, or longer)"
+            "$ref": "common-schema.json#/descriptionDesc"
           },
           "kind": {
-            "$ref": "common-schema.json#/isaObjectKind",
-            "description": "The kind of ISA object associated with this normative rule"
+            "allOf": [
+              { "$ref": "common-schema.json#/isaObjectKind" },
+              { "$ref": "common-schema.json#/kindRuleDesc" }
+            ]
           },
           "instances": {
-            "$ref": "common-schema.json#/stringArray",
-            "description": "The names of ISA object instances of the specified kind associated with this normative rule"
+            "allOf": [
+              { "$ref": "common-schema.json#/stringArray" },
+              { "$ref": "common-schema.json#/instancesRuleDesc" }
+            ]
           },
           "tags": {
             "type": "array",
-            "description": "List of normative rule tags that reference the ISA manuals",
+            "description": "List of normative rule tags that reference the standard",
             "items": {
               "type": "object",
               "properties": {
                 "name": {
                   "$ref": "common-schema.json#/tagName",
-                  "description": "Name of the tag (an anchor in the ISA manual adoc files)"
+                  "description": "Name of the tag (an anchor in the standard's adoc files)"
                 },
                 "text": {
                   "type": "string",
-                  "description": "The text from the ISA manual associated with this tag (optional)"
+                  "description": "The text from the standard associated with this tag"
                 },
                 "tag_filename": {
                   "type": "string",
-                  "description": "Tag file that contains maps tag names to tag text (optional)"
+                  "description": "Tag file that maps tag names to tag text"
                 }
               },
               "required": ["name"]

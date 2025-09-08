@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Schema for Normative Rule Definitions - *.yaml files in this directory",
+  "title": "Schema for normative rule definitions input files",
   "type": "object",
 
   "properties": {
@@ -19,19 +19,23 @@
           },
           "summary": {
             "type": "string",
-            "description": "Short summary of the normative rule (just a few words)"
+            "$ref": "common-schema.json#/summaryDesc"
           },
           "description": {
             "type": "string",
-            "description": "Complete description of the normative rule (sentence, paragraph, or longer)"
+            "$ref": "common-schema.json#/descriptionDesc"
           },
           "kind": {
-            "$ref": "common-schema.json#/isaObjectKind",
-            "description": "The kind of ISA object associated with this normative rule"
+            "allOf": [
+              { "$ref": "common-schema.json#/isaObjectKind" },
+              { "$ref": "common-schema.json#/kindRuleDesc" }
+            ]
           },
           "instances": {
-            "$ref": "common-schema.json#/stringArray",
-            "description": "The names of ISA object instances of the specified kind associated with this normative rule"
+            "allOf": [
+              { "$ref": "common-schema.json#/stringArray" },
+              { "$ref": "common-schema.json#/instancesRuleDesc" }
+            ]
           },
           "tags": {
             "$ref": "common-schema.json#/tagArray",
