@@ -7,7 +7,7 @@
     "description": "Short summary of the normative rule (just a few words)"
   },
   "descriptionDesc": {
-    "description": "Complete description of the normative rule (sentence, paragraph, or longer)"
+    "description": "Comprehensive description of the normative rule (sentence, paragraph, or longer)"
   },
   "kindRuleDesc": {
     "description": "The kind of ISA object associated with this normative rule"
