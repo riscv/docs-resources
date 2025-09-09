@@ -20,24 +20,33 @@ class NormativeTags
 
   # Add tags for specified standards document.
   #
-  # param filename [String] Name of the tag file
+  # param tag_filename [String] Name of the tag file
   # param tags [Hash<String,String>] Hash key is tag name (AKA anchor name) and value is tag text.
-  def add_tags(filename, tags)
-    raise ArgumentError, "Need String for filename but was passed a #{filename.class}" unless filename.is_a?(String)
-    raise ArgumentError, "Need Hash for tags but was passed a #{tags.class}" unless tags.is_a?(Hash)
+  def add_tags(tag_filename, tags)
+    fatal_error("Need String for tag_filename but was passed a #{tag_filename.class}") unless tag_filename.is_a?(String)
+    fatal_error("Need Hash for tags but was passed a #{tags.class}") unless tags.is_a?(Hash)
 
-    tags.each do |tag_name, tag_text|
-      unless @tag_map[tag_name].nil?
-        fatal_error("NormativeTag name #{tag_name} in file #{filename} already defined in file #{@tag_map[tag_name].filename}")
+    tags.each do |name, text|
+      unless name.is_a?(String)
+        fatal_error("Tag name #{name} in file #{tag_filename} is a #{name.class} instead of a String")
       end
 
-      @tag_map[tag_name] = NormativeTag.new(tag_name, filename, tag_text)
+      unless text.is_a?(String)
+        fatal_error("Tag name #{name} in file #{tag_filename} is a #{text.class} instead of a String
+#{PN}:   If the AsciiDoc anchor for #{name} is before an AsciiDoc 'Description List' term, move to after term on its own line.")
+      end
+
+      unless @tag_map[name].nil?
+        fatal_error("Tag name #{name} in file #{tag_filename} already defined in file #{@tag_map[name].tag_filename}")
+      end
+
+      @tag_map[name] = NormativeTag.new(name, tag_filename, text)
     end
   end
 
   # @param [String] Normative rule tag name
   # @return [NormativeTag] Normative rule tag object corresponding to tag name. Returns nil if not found.
-  def get_tag(tag_name) = @tag_map[tag_name]
+  def get_tag(name) = @tag_map[name]
 
   # @return [Array<NormativeTag>] All normative tags for the standard.
   def get_tags() = @tag_map.values
@@ -46,21 +55,25 @@ end
 # Holds all information for one tag.
 class NormativeTag
   # @return [String] Name of normative rule tag into standards document
-  attr_reader :tag_name
+  attr_reader :name
 
-  # @return [String] Name of standards document tag is located in.
-  attr_reader :filename
+  # @return [String] Name of tag file
+  attr_reader :tag_filename
 
   # @return [String] Text associated with normative rule tag from standards document. Can have newlines.
-  attr_reader :tag_text
+  attr_reader :text
 
-  # @param tag_name [String]
-  # @param filename [String]
-  # @param tag_text [String]
-  def initialize(tag_name, filename, tag_text)
-    @tag_name = tag_name
-    @filename = filename
-    @tag_text = tag_text
+  # @param name [String]
+  # @param tag_filename [String]
+  # @param text [String]
+  def initialize(name, tag_filename, text)
+    fatal_error("Need String for name but passed a #{name.class}") unless name.is_a?(String)
+    fatal_error("Need String for tag_filename but passed a #{tag_filename.class}") unless tag_filename.is_a?(String)
+    fatal_error("Need String for text but passed a #{text.class}") unless text.is_a?(String)
+
+    @name = name
+    @tag_filename = tag_filename
+    @text = text
 
     # Used to find tags without any references to them.
     @ref_to_me = false
@@ -74,88 +87,171 @@ class NormativeTag
   def unreferenced? = !@ref_to_me
 end
 
-########################################
-# Classes for Normative Rule Curations #
-########################################
+##########################################
+# Classes for Normative Rule Definitions #
+##########################################
 
-# Holds all the information for all the normative rule curation files.
-class NormativeCurations
-  attr_reader :normative_curations  # Array<NormativeCuration> Contains all normative rules across all input files
+# Holds all the information for all normative rule definition files.
+class NormativeRuleDefs
+  attr_reader :norm_rule_defs  # Array<NormativeRuleDef> Contains all normative rule definitions across all input files
 
   def initialize
-    @normative_curations = []
-    @hash = {}     # Hash<String name, NormativeCuration> Same objects as in array and just internal to class
+    @norm_rule_defs = []
+    @hash = {}     # Hash<String name, NormativeRuleDef> Same objects as in array and just internal to class
   end
 
-  def add_file_contents(filename, array_data)
-    raise ArgumentError, "Need String for filename but passed a #{filename.class}" unless filename.is_a?(String)
-    raise ArgumentError, "Need Array for array_data but passed a #{array_data.class}" unless array_data.is_a?(Array)
+  def add_file_contents(def_filename, array_data)
+    fatal_error("Need String for def_filename but passed a #{def_filename.class}") unless def_filename.is_a?(String)
+    fatal_error("Need Array for array_data but passed a #{array_data.class}") unless array_data.is_a?(Array)
 
     array_data.each do |data|
-      fatal_error("File #{filename} entry isn't a hash: #{data}") unless data.is_a?(Hash)
+      fatal_error("File #{def_filename} entry isn't a hash: #{data}") unless data.is_a?(Hash)
 
       if !data["name"].nil?
-        # Add one curation object
-        add_curation(data["name"], filename, data)
+        # Add one definition object
+        add_def(data["name"], def_filename, data)
       elsif !data["names"].nil?
-        # Add one curation object for each name in array
+        # Add one definition object for each name in array
         names = data["names"]
         names.each do |name|
-          add_curation(name, filename, data)
+          add_def(name, def_filename, data)
         end
       else
-        fatal_error("File #{filename} missing name/names in normative rule curation entry: #{data}")
+        fatal_error("File #{def_filename} missing name/names in normative rule definition entry: #{data}")
       end
     end
   end
 
-  def add_curation(name, filename, data)
-    raise ArgumentError, "Need String for name but passed a #{name.class}" unless name.is_a?(String)
-    raise ArgumentError, "Need String for filename but passed a #{filename.class}" unless filename.is_a?(String)
-    raise ArgumentError, "Need Hash for data but passed a #{data.class}" unless data.is_a?(Hash)
+  def add_def(name, def_filename, data)
+    fatal_error("Need String for name but passed a #{name.class}") unless name.is_a?(String)
+    fatal_error("Need String for def_filename but passed a #{def_filename.class}") unless def_filename.is_a?(String)
+    fatal_error("Need Hash for data but passed a #{data.class}") unless data.is_a?(Hash)
 
     unless @hash[name].nil?
-      fatal_error("Normative rule curation #{name} in file #{filename} already defined in file #{@hash[name].filename}")
+      fatal_error("Normative rule definition #{name} in file #{def_filename} already defined in file #{@hash[name].def_filename}")
     end
 
-    # Create curation object and store reference to it in array (to maintain order) and hash (for convenient lookup by name).
-    normative_curation = NormativeCuration.new(filename, name, data)
-    @normative_curations.append(normative_curation)
-    @hash[name] = normative_curation
+    # Create definition object and store reference to it in array (to maintain order) and hash (for convenient lookup by name).
+    norm_rule_defs = NormativeRuleDef.new(def_filename, name, data)
+    @norm_rule_defs.append(norm_rule_defs)
+    @hash[name] = norm_rule_defs
   end
-end # class NormativeCurations
+end # class NormativeRuleDefs
 
-class NormativeCuration
-  attr_reader :filename     # String        (mandatory)
-  attr_reader :name         # String        (mandatory)
-  attr_reader :type         # String        (optional)
-  attr_reader :summary      # String        (optional - a few words)
-  attr_reader :description  # String        (optional - sentence, paragraph, or more)
-  attr_reader :tag_refs     # Array<NormativeTagRef> (optional - can be empty)
+class NormativeRuleDef
+  attr_reader :def_filename           # String (mandatory)
+  attr_reader :name                   # String (mandatory)
+  attr_reader :summary                # String (optional - a few words)
+  attr_reader :description            # String (optional - sentence, paragraph, or more)
+  attr_reader :kind                   # String (optional, can be nil, extension, instruction, csr, csr_field)
+  attr_reader :instances              # Array<String> (optional only if kind defined, nil if kind nil, otherwise an array)
+  attr_reader :tag_refs               # Array<NormativeTagRef> (optional - can be empty)
+  attr_reader :tag_refs_without_text  # Array<NormativeTagRef> (optional - can be empty - like tag_refs but no tag text)
 
-  def initialize(filename, name, data)
-    @filename = filename
+  def initialize(def_filename, name, data)
+    fatal_error("Need String for def_filename but was passed a #{def_filename.class}") unless def_filename.is_a?(String)
+    fatal_error("Need String for name but was passed a #{name.class}") unless name.is_a?(String)
+    fatal_error("Need Hash for data but was passed a #{data.class}") unless data.is_a?(Hash)
+
+    @def_filename = def_filename
     @name = name
-    @type = data["type"]
+
     @summary = data["summary"]
+    unless @summary.nil?
+      fatal_error("Provided #{@summary.class} class for summary in normative rule #{name} but need a String") unless @summary.is_a?(String)
+    end
+
     @description = data["description"]
+    unless @description.nil?
+      fatal_error("Provided #{@description.class} class for description in normative rule #{name} but need a String") unless @description.is_a?(String)
+    end
+
+    @kind = data["kind"]
+    unless @kind.nil?
+      fatal_error("Provided #{@kind.class} class for kind in normative rule #{name} but need a String") unless @kind.is_a?(String)
+      check_allowed_types(@kind, @name, nil)
+    end
+
+    @instances = data["instances"]
+    if @kind.nil?
+      # Not allowed to have instances without a kind.
+      fatal_error("Normative rule #{name} defines instances but no kind") unless @instances.nil?
+    else
+      fatal_error("Provided #{@kind.class} class for kind in normative rule #{name} but need a String") unless @kind.is_a?(String)
+
+      if @instances.nil?
+        @instances = []
+      else
+        fatal_error("Provided #{@instances.class} class for instances in normative rule #{nr_name} but need an Array") unless @instances.is_a?(Array)
+      end
+    end
 
     @tag_refs = []
     data["tags"]&.each do |tag_data|
-      @tag_refs.append(NormativeTagRef.new(tag_data))
+      @tag_refs.append(NormativeTagRef.new(@name, tag_data))
+    end
+
+    @tag_refs_without_text = []
+    data["tags_without_text"]&.each do |tag_data|
+      @tag_refs_without_text.append(NormativeTagRef.new(@name, tag_data))
     end
   end
-end # class NormativeCuration
+end # class NormativeRuleDef
 
-# Holds one reference to a tag by a curation.
+# Holds one reference to a tag by a rule definition.
 class NormativeTagRef
-  attr_reader :name
+  attr_reader :name               # String (mandatory)
+  attr_reader :kind               # String (optional, can be nil, extension, instruction, csr, csr_field)
+  attr_reader :instances          # Array<String> (optional only if kind defined, nil if kind nil, otherwise an array)
 
-  # Currently NormativeTag is just a String but could potentially be passed a Hash if metadata gets added to a tag.
-  def initialize(tag_data)
-    raise ArgumentError, "Need String for tag_data but passed a #{tag_data.class}" unless tag_data.is_a?(String)
+  # The nr_name is the name of the normative rule
+  # The data can either be a String (so just the tag name provided) or a hash if more info passed.
+  def initialize(nr_name, data)
+    fatal_error("Need String for nr_name but was passed a #{nr_name.class}") unless nr_name.is_a?(String)
 
-    @name = tag_data
+    if data.is_a?(String)
+      @name = data
+      @instances = nil
+    elsif data.is_a?(Hash)
+      @name = data["name"]
+      fatal_error("Missing tag name referenced by normative rule #{nr_name}") if @name.nil?
+      fatal_error("Provided #{@name.class} class for tag name #{@name} in normative rule #{nr_name} but need a String") unless @name.is_a?(String)
+
+      # Handle optional values
+      @kind = data["kind"]
+      unless @kind.nil?
+        fatal_error("Provided #{@kind.class} class for kind in tag #{@name} in normative rule #{name} but need a String") unless @kind.is_a?(String)
+        check_allowed_types(@kind, nr_name, @name)
+      end
+
+      @instances = data["instances"]
+
+      if @kind.nil?
+        # Not allowed to have instances without a kind.
+        fatal_error("Tag #{@name} referenced in normative rule #{nr_name} defines instances but no kind") unless @instances.nil?
+      else
+        fatal_error("Provided #{@kind.class} class for kind in tag #{name} in normative rule #{nr_name} but need a String") unless @kind.is_a?(String)
+
+        if @instances.nil?
+          @instances = []
+        else
+          fatal_error("Provided #{@instances.class} class for instances in tag #{name} in normative rule #{nr_name} but need an Array") unless @instances.is_a?(Array)
+        end
+      end
+    else
+      fatal_error("Need String or Hash for data for normative rule #{nr_name} but passed a #{data.class}")
+    end
+  end
+end # class NormativeTagRef
+
+# Create fatal_error if kind not recognized. The name is nil if this is called in the normative rule definition.
+def check_allowed_types(kind, nr_name, name)
+  allowed_types = ["extension", "instruction", "csr", "csr_field"]
+
+  unless allowed_types.include?(kind)
+    tag_str = name.nil? ? "" : "tag #{name} in "
+    allowed_str = allowed_types.join(",")
+    fatal_error("Don't recognize kind '#{kind}' for #{tag_str}normative rule #{nr_name}\n#{PN}: Allowed types are: #{allowed_str}")
   end
 end
 
@@ -170,10 +266,10 @@ end
 
 def usage(exit_status = 1)
   puts "Usage: #{PN} [OPTION]... <output-filename>"
-  puts "  -c filename    normative rule curation filename (YAML)"
-  puts "  -t filename    normative tag filename (JSON)"
+  puts "  -d filename    normative rule definition filename (YAML format)"
+  puts "  -t filename    normative tag filename (JSON format)"
   puts
-  puts "Creates curated list of normative rules and stores them <output-filename> (in JSON format)."
+  puts "Creates list of normative rules and stores them in <output-filename> (JSON format)."
   exit exit_status
 end
 
@@ -186,20 +282,20 @@ def parse_argv
   usage if ARGV.count == 0
 
   # Return values
-  curation_fnames=[]
+  def_fnames=[]
   tag_fnames=[]
-  output_fname=
+  output_fname=nil
 
   i = 0
   while i < ARGV.count
     arg = ARGV[i]
     case arg
-    when "-c"
+    when "-d"
       if (ARGV.count-i) < 1
-        info("Missing argument for -c option")
+        info("Missing argument for -d option")
         usage
       end
-      curation_fnames.append(ARGV[i+1])
+      def_fnames.append(ARGV[i+1])
       i=i+1
     when "-t"
       if (ARGV.count-i) < 1
@@ -223,8 +319,8 @@ def parse_argv
     i=i+1
   end
 
-  if curation_fnames.empty?
-    info("Missing normative rule curation filename(s)")
+  if def_fnames.empty?
+    info("Missing normative rule definition filename(s)")
     usage
   end
 
@@ -238,22 +334,22 @@ def parse_argv
     usage
   end
 
-  return [curation_fnames, tag_fnames, output_fname]
+  return [def_fnames, tag_fnames, output_fname]
 end
 
 # Load the contents of all normative rule tag files in JSON format.
 # Returns a NormativeTag class with all the contents.
 def load_tags(tag_fnames)
-  raise ArgumentError, "Need Array<String> for tag_fnames but passed a #{tag_fnames.class}" unless tag_fnames.is_a?(Array)
+  fatal_error("Need Array<String> for tag_fnames but passed a #{tag_fnames.class}") unless tag_fnames.is_a?(Array)
 
   tags = NormativeTags.new()
 
-  tag_fnames.each do |filename|
-    info("Loading tag file #{filename}")
+  tag_fnames.each do |tag_fname|
+    info("Loading tag file #{tag_fname}")
 
     # Read in file to a String
     begin
-      file_contents = File.read(filename, encoding: "UTF-8")
+      file_contents = File.read(tag_fname, encoding: "UTF-8")
     rescue Errno::ENOENT => e
       fatal_error("#{e.message}")
     end
@@ -262,33 +358,33 @@ def load_tags(tag_fnames)
     begin
       file_data = JSON.parse(file_contents)
     rescue JSON::ParserError => e
-      fatal_error("File #{filename} JSON parsing error: #{e.message}")
+      fatal_error("File #{tag_fname} JSON parsing error: #{e.message}")
     rescue JSON::NestingError => e
-      fatal_error("File #{filename} JSON nesting error: #{e.message}")
+      fatal_error("File #{tag_fname} JSON nesting error: #{e.message}")
     end
 
-    tags_data = file_data["tags"] || fatal_error("Missing 'tags' key in #{filename}")
+    tags_data = file_data["tags"] || fatal_error("Missing 'tags' key in #{tag_fname}")
 
     # Add tags from JSON file to Ruby class.
-    tags.add_tags(filename, tags_data)
+    tags.add_tags(tag_fname, tags_data)
   end
 
   return tags
 end
 
-# Load the contents of all normative rule curation files in YAML format.
-# Returns a NormativeCuration class with all the contents.
-def load_curations(curation_fnames)
-  raise ArgumentError, "Need Array<String> for curation_fnames but passed a #{curation_fnames.class}" unless curation_fnames.is_a?(Array)
+# Load the contents of all normative rule definition files in YAML format.
+# Returns a NormativeRuleDef class with all the contents.
+def load_definitions(def_fnames)
+  fatal_error("Need Array<String> for def_fnames but passed a #{def_fnames.class}") unless def_fnames.is_a?(Array)
 
-  curations = NormativeCurations.new()
+  defs = NormativeRuleDefs.new()
 
-  curation_fnames.each do |filename|
-    info("Loading curation file #{filename}")
+  def_fnames.each do |def_fname|
+    info("Loading definition file #{def_fname}")
 
     # Read in file to a String
     begin
-      file_contents = File.read(filename, encoding: "UTF-8")
+      file_contents = File.read(def_fname, encoding: "UTF-8")
     rescue Errno::ENOENT => e
       fatal_error("#{e.message}")
     end
@@ -298,45 +394,51 @@ def load_curations(curation_fnames)
     begin
       yaml_hash = YAML.load(file_contents)
     rescue Psych::SyntaxError => e
-      fatal_error("File #{filename} YAML syntax error - #{e.message}")
+      fatal_error("File #{def_fname} YAML syntax error - #{e.message}")
     end
 
-    array_data = yaml_hash["normative_curations"] || fatal_error("Missing 'normative_curations' key in #{filename}")
-    fatal_error("'normative_curations' isn't an array in #{filename}") unless array_data.is_a?(Array)
+    array_data = yaml_hash["normative_rule_definitions"] || fatal_error("Missing 'normative_rule_definitions' key in #{def_fname}")
+    fatal_error("'normative_rule_definitions' isn't an array in #{def_fname}") unless array_data.is_a?(Array)
 
-    curations.add_file_contents(filename, array_data)
+    defs.add_file_contents(def_fname, array_data)
   end
 
-  return curations
+  return defs
 end
 
-# Returns an Array of Hashes containing the curated normative rules ready to be serialized into a YAML file.
-def create_curated_rules(tags, curations)
-    raise ArgumentError, "Need NormativeTags for tags but was passed a #{tags.class}" unless tags.is_a?(NormativeTags)
-    raise ArgumentError, "Need NormativeCurations for curations but was passed a #{curations.class}" unless curations.is_a?(NormativeCurations)
+# Returns a Hash with just one entry called "normative_rules" that contains an Array of Hashes of all normative rules.
+def create_normative_rules(tags, defs)
+    fatal_error("Need NormativeTags for tags but was passed a #{tags.class}") unless tags.is_a?(NormativeTags)
+    fatal_error("Need NormativeRuleDefs for defs but was passed a #{defs.class}") unless defs.is_a?(NormativeRuleDefs)
 
-    info("Creating curated normative rules")
+    info("Creating normative rules from definition files")
 
-    ret = []
+    ret = {
+      "normative_rules" => []
+    }
+
     missing_tag_cnt = 0
 
-    curations.normative_curations.each do |curation|
-      # Create hash with mandatory curation arguments.
+    defs.norm_rule_defs.each do |d|
+      # Create hash with mandatory definition arguments.
       hash = {
-        "name" => curation.name,
-        "source" => curation.filename
+        "name" => d.name,
+        "def_filename" => d.def_filename
       }
 
       # Now add optional arguments.
-      hash["type"] = curation.type unless curation.type.nil?
-      hash["summary"] = curation.summary unless curation.summary.nil?
-      hash["description"] = curation.description unless curation.description.nil?
+      hash["kind"] = d.kind unless d.kind.nil?
+      hash["instances"] = d.instances unless d.instances.nil?
+      hash["summary"] = d.summary unless d.summary.nil?
+      hash["description"] = d.description unless d.description.nil?
 
-      # Now go through tag reference array if it has any entries and look those up.
-      unless curation.tag_refs.nil?
+      unless d.tag_refs.nil? && d.tag_refs_without_text.nil?
         hash["tags"] = []
+      end
 
-        curation.tag_refs.each do |tag_ref|
+      # Add tag entries for those that should have tag text.
+      unless d.tag_refs.nil?
+        d.tag_refs.each do |tag_ref|
           tag_ref_name = tag_ref.name
 
           # Lookup tag
@@ -344,13 +446,17 @@ def create_curated_rules(tags, curations)
 
           if tag.nil?
             missing_tag_cnt = missing_tag_cnt + 1
-            info("Normative rule #{curation.name} references non-existant tag #{tag_ref_name}")
+            info("Normative rule #{d.name} defined in file #{d.def_filename} references non-existant tag #{tag_ref_name}")
           else
             resolved_tag = {
-              "tag_name" => tag.tag_name,
-              "tag_text" => tag.tag_text,
-              "source" => tag.filename
+              "name" => tag.name,
+              "text" => tag.text,
+              "tag_filename" => tag.tag_filename
             }
+
+            # Add optional info from tag reference.
+            resolved_tag["kind"] = tag_ref.kind unless tag_ref.kind.nil?
+            resolved_tag["instances"] = tag_ref.instances unless tag_ref.instances.nil?
 
             hash["tags"].append(resolved_tag)
 
@@ -360,7 +466,32 @@ def create_curated_rules(tags, curations)
         end
       end
 
-      ret.append(hash)
+      # Add tag entries for those that shouldn't have tag text.
+      unless d.tag_refs_without_text.nil?
+        d.tag_refs_without_text.each do |tag_ref|
+          tag_ref_name = tag_ref.name
+
+          # Lookup tag. Should be nil.
+          tag = tags.get_tag(tag_ref_name)
+
+          if tag.nil?
+            resolved_tag = {
+              "name" => tag_ref_name,
+            }
+
+            # Add optional info from tag reference.
+            resolved_tag["kind"] = tag_ref.kind unless tag_ref.kind.nil?
+            resolved_tag["instances"] = tag_ref.instances unless tag_ref.instances.nil?
+
+            hash["tags"].append(resolved_tag)
+          else
+            fatal_error("Normative rule #{d.name} defined in file #{d.def_filename} has
+#{PN}: tag #{tag_ref_name} tag text but shouldn't")
+          end
+        end
+      end
+
+      ret["normative_rules"].append(hash)
     end
 
     fatal_error("#{missing_tag_cnt} reference#{missing_tag_cnt == 1 ? "" : "s"} to non-existing tags") if missing_tag_cnt > 0
@@ -369,17 +500,17 @@ def create_curated_rules(tags, curations)
 end
 
 # Report any tags not referenced by any normative rule.
-# Must be called after curated_rules are created so pass them in
+# Must be called after normative_rules are created so pass them in
 # to this method but don't use them.
-def detect_unreferenced_tags(tags, curated_rules)
-  raise ArgumentError, "Need NormativeTags for tags but was passed a #{tags.class}" unless tags.is_a?(NormativeTags)
-  raise ArgumentError, "Need Array<Hash> for curated_rules but passed a #{curated_rules.class}" unless curated_rules.is_a?(Array)
+def detect_unreferenced_tags(tags, normative_rules)
+  fatal_error("Need NormativeTags for tags but was passed a #{tags.class}") unless tags.is_a?(NormativeTags)
+  fatal_error("Need Hash<String, Array> for normative_rules but passed a #{normative_rules.class}") unless normative_rules.is_a?(Hash)
 
   unref_cnt = 0
 
   tags.get_tags.each do |tag|
     if tag.unreferenced?
-      info("Tag #{tag.tag_name} not referenced by any normative rule. Did you forget to create a normative rule?")
+      info("Tag #{tag.name} not referenced by any normative rule. Did you forget to define a normative rule?")
       unref_cnt = unref_cnt + 1
     end
   end
@@ -388,16 +519,19 @@ def detect_unreferenced_tags(tags, curated_rules)
   info("#{unref_cnt} tag#{unref_cnt == 1 ? "" : "s"} have no normative rules referencing them") if unref_cnt > 0
 end
 
-# Store curated rules in JSON output file
-def store_curated_rules(filename, curated_rules)
-  raise ArgumentError, "Need String for filename but passed a #{filename.class}" unless filename.is_a?(String)
-  raise ArgumentError, "Need Array<Hash> for curated_rules but passed a #{curated_rules.class}" unless curated_rules.is_a?(Array)
+# Store normative rules in JSON output file
+def store_normative_rules(filename, normative_rules)
+  fatal_error("Need String for filename but passed a #{filename.class}") unless filename.is_a?(String)
+  fatal_error("Need Hash<String, Array> for normative_rules but passed a #{normative_rules.class}") unless normative_rules.is_a?(Hash)
 
-  info("Storing #{curated_rules.count} curated normative rules into file #{filename}")
+  nr_array = normative_rules["normative_rules"]
+  raise "Expecting an array for key normative_rules but got an #{nr_array.class}" unless nr_array.is_a?(Array)
 
-  # Serialize curated_rules Array to JSON format String.
+  info("Storing #{nr_array.count} normative rules into file #{filename}")
+
+  # Serialize normative_rules hash to JSON format String.
   # Shouldn't throw exceptions since we created the data being serialized.
-  serialized_string = JSON.pretty_generate(curated_rules)
+  serialized_string = JSON.pretty_generate(normative_rules)
 
   # Write serialized string to desired output file.
   begin
@@ -417,16 +551,16 @@ end
 
 info("Passed #{ARGV.join(' ')}")
 
-curation_fnames, tag_fnames, output_fname = parse_argv()
+def_fnames, tag_fnames, output_fname = parse_argv()
 
-info("Normative rule curation filenames = #{curation_fnames}")
+info("Normative rule definition filenames = #{def_fnames}")
 info("Normative tag filenames = #{tag_fnames}")
 info("Output filename = #{output_fname}")
 
 tags = load_tags(tag_fnames)
-curations = load_curations(curation_fnames)
-curated_rules = create_curated_rules(tags, curations)
-detect_unreferenced_tags(tags, curated_rules)
-store_curated_rules(output_fname, curated_rules)
+defs = load_definitions(def_fnames)
+normative_rules = create_normative_rules(tags, defs)
+detect_unreferenced_tags(tags, normative_rules)
+store_normative_rules(output_fname, normative_rules)
 
 exit 0

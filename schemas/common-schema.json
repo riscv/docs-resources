@@ -1,0 +1,72 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+
+  "title": "Common content used by multiple schemas (reduces copy & paste)",
+
+  "summaryDesc": {
+    "description": "Short summary of the normative rule (just a few words)"
+  },
+  "descriptionDesc": {
+    "description": "Comprehensive description of the normative rule (sentence, paragraph, or longer)"
+  },
+  "kindRuleDesc": {
+    "description": "The kind of ISA object associated with this normative rule"
+  },
+  "instancesRuleDesc": {
+    "description": "The names of ISA object instances of the specified kind associated with this normative rule"
+  },
+  "stringArray": {
+    "type": "array",
+    "items": { "type": "string" }
+  },
+  "ruleNamePattern" : {
+    "pattern": "^[a-zA-z][a-zA-z0-9_-]+$"
+  },
+  "tagNamePattern" : {
+    "pattern": "^[a-zA-z][:a-zA-z0-9_-]+$"
+  },
+  "isaObjectKind":  {
+    "type": "string",
+    "enum": ["extension", "instruction", "csr", "csr_field"]
+  },
+  "ruleName": {
+    "type": "string",
+    "$ref": "#/ruleNamePattern"
+  },
+  "ruleNameArray": {
+    "type": "array",
+    "items": {
+      "type": "string",
+      "$ref": "#/ruleNamePattern"
+    }
+  },
+  "tagName": {
+    "type": "string",
+    "$ref": "#/tagNamePattern"
+  },
+  "tagObject": {
+    "type": "object",
+    "properties": {
+      "name": { "$ref": "#/tagName" },
+      "kind": {
+        "$ref": "#/isaObjectKind",
+        "description": "The kind of ISA object associated with this tag"
+      },
+      "instances": {
+        "$ref": "#/stringArray",
+        "description": "The names of ISA object instances of the specified kind associated with this tag"
+      }
+    },
+    "required": ["name"],
+    "additionalProperties": false
+  },
+  "tagArray": {
+    "type": "array",
+    "items": {
+      "anyOf": [
+        { "$ref": "#/tagName" },
+        { "$ref": "#/tagObject" }
+      ]
+    }
+  }
+}

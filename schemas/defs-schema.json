@@ -1,0 +1,62 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Schema for normative rule definitions input files",
+  "type": "object",
+
+  "properties": {
+    "normative_rule_definitions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "common-schema.json#/ruleName",
+            "description": "Single normative rule name"
+          },
+          "names": {
+            "$ref": "common-schema.json#/ruleNameArray",
+            "description": "Multiple normative rule names"
+          },
+          "summary": {
+            "type": "string",
+            "$ref": "common-schema.json#/summaryDesc"
+          },
+          "description": {
+            "type": "string",
+            "$ref": "common-schema.json#/descriptionDesc"
+          },
+          "kind": {
+            "allOf": [
+              { "$ref": "common-schema.json#/isaObjectKind" },
+              { "$ref": "common-schema.json#/kindRuleDesc" }
+            ]
+          },
+          "instances": {
+            "allOf": [
+              { "$ref": "common-schema.json#/stringArray" },
+              { "$ref": "common-schema.json#/instancesRuleDesc" }
+            ]
+          },
+          "tags": {
+            "$ref": "common-schema.json#/tagArray",
+            "description": "List of normative rule tags that have normative text from adoc files"
+          },
+          "tags_without_text": {
+            "$ref": "common-schema.json#/tagArray",
+            "description": "List of normative rule tags that don't have normative text (just an anchor) from adoc files"
+          }
+        },
+        "oneOf": [
+          { "required": ["name"] },
+          { "required": ["names"] }
+        ],
+        "anyOf": [
+          { "required": ["tags"] },
+          { "required": ["tags_without_text"] }
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["normative_rule_definitions"]
+}
