@@ -34,7 +34,7 @@ Quite often there is a "1:1" mapping between normative rules and tags, but not a
 
 ## AsciiDoc Anchor Background
 
-AsciiDoc provides facilities to create invisible anchors associated with an entire paragraph or portions of a paragraph. These anchors are only visible in raw AsciiDoc files and are invisible in the PDF and GitHub AsciiDoc previewer. Each "tag" added to an AsciiDoc file to indentify normative text (remember, not always 1:1 mapping from normative rules to tags) has an associated anchor name. These anchor names must be unique across all the AsciiDoc files used by a particular standard but aren't required to be unique across standards. Each RISC-V standard defines the naming convention of these anchor names but the anchor names must start with the prefix of "norm:" so they can be readily located by tools.
+AsciiDoc provides facilities to create invisible anchors associated with an entire paragraph or portions of a paragraph. These anchors are only visible in raw AsciiDoc files and are invisible in the PDF and GitHub AsciiDoc previewer. Each "tag" added to an AsciiDoc file to identify normative text (remember, not always 1:1 mapping from normative rules to tags) has an associated anchor name. These anchor names must be unique across all the AsciiDoc files used by a particular standard but aren't required to be unique across standards. Each RISC-V standard defines the naming convention of these anchor names but the anchor names must start with the prefix of "norm:" so they can be readily located by tools.
 
 AsciiDoc supports several styles of anchors:
 * _inline anchor_ such as:<br>
