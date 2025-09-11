@@ -446,7 +446,7 @@ def create_normative_rules(tags, defs)
 
           if tag.nil?
             missing_tag_cnt = missing_tag_cnt + 1
-            info("Normative rule #{d.name} defined in file #{d.def_filename} references non-existant tag #{tag_ref_name}")
+            info("Normative rule #{d.name} defined in file #{d.def_filename} references non-existent tag #{tag_ref_name}")
           else
             resolved_tag = {
               "name" => tag.name,
