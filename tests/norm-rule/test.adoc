@@ -1,0 +1,61 @@
+// This file contains test AsciiDoc to test the custom AsciiDoctor "tags" backend and the "create_normative_rules" Ruby
+// script that consumes the tags to create a list of normative rules.
+
+== Chapter 1
+
+Before inline [#norm:inline]#inside inline# outside inline.
+
+Before bad inline [#norm:bad-inline]#
+inside bad inline# outside bad inline.#
+
+=== Chapter 1.1
+
+[[norm:para]]
+Paragraph anchor
+
+Next paragraph
+
+Table:
+|===
+
+| [[norm:table-cell]] cell contents | next cell
+|===
+
+== Chapter 2
+
+Unordered List:
+
+* [[norm:unordered-item-1]] Item 1
+* [[norm:unordered-item-2]] Item 2
+* Item 3
+
+Ordered List:
+
+. [[norm:ordered-item-1]] Item 1
+. [[norm:ordered-item-2]] Item 2
+. Item 3
+
+Description List:
+
+Description-1::
+[[norm:description-item-1]]
+Item 1
+
+Description-2:: Item 2
+
+Description-3::
+[[norm:description-item-3]]
+Item 3
+
+NOTE: [[norm-note-1]] Single paragraph note
+
+[NOTE]
+====
+[[norm:note-1]]
+Multi-paragraph note 1
+
+Multi-paragraph note 2
+
+[[norm:note-3]]
+Multi-paragraph note 3
+====

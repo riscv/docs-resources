@@ -46,12 +46,14 @@ AsciiDoc supports several styles of anchors:
     >
     > `This isn't part of the anchor since it is the next paragraph.`
 
-* You must use the _paragraph anchor_ for table cells, list items, or description list terms
-  * For table cells and list items, put the anchor before its associated text as follows:
+* You must use the _paragraph anchor_ for table cells, unordered/ordered list items or description list terms
+  * For table cells and unordered/ordered list items, put the anchor before its associated text as follows:
     * Table cell<br>
     > `| [[foo]] Here are the table cell contents | next cell`
-    * List item<br>
-    > `* [[foo]] Here is the list item`
+    * Unordered list item<br>
+    > `* [[foo]] Here is the unordered list item`
+    * Ordered list item<br>
+    > `. [[foo]] Here is the ordered list item`
   * For description list terms (e.g., `Apples`, `Oranges`), put the anchor immediately after the term on its own line as follows:
     > `Apples::`<br>
     > `[[apple-colors]]`<br>
