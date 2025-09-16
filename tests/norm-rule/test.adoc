@@ -15,37 +15,40 @@ Paragraph anchor
 
 Next paragraph
 
-Table:
+[[norm:table-name-empty-tag-just-anchor]]
+.table-name:
 |===
 
-| [[norm:table-cell]] cell contents | next cell
+| [[norm:table-cell-no-tag-just-anchor]] cell contents | next cell
 |===
 
 == Chapter 2
 
+[[norm:unordered-list-heading]]
 Unordered List:
 
-* [[norm:unordered-item-1]] Item 1
-* [[norm:unordered-item-2]] Item 2
-* Item 3
+* [[norm:unordered-item-1-no-tag]] Unordered Item 1
+* [[norm:unordered-item-2-no-tag]] Unordered Item 2
+* Unordered Item 3
 
+[[norm:ordered-list-heading]]
 Ordered List:
 
-. [[norm:ordered-item-1]] Item 1
-. [[norm:ordered-item-2]] Item 2
-. Item 3
+. [[norm:ordered-item-1-no-tag]] Ordered Item 1
+. [[norm:ordered-item-2-no-tag]] Ordered Item 2
+. Ordered Item 3
 
 Description List:
 
 Description-1::
 [[norm:description-item-1]]
-Item 1
+Description Item 1
 
-Description-2:: Item 2
+Description-2:: Description Item 2
 
 Description-3::
 [[norm:description-item-3]]
-Item 3
+Description Item 3
 
 NOTE: [[norm-note-1]] Single paragraph note
 

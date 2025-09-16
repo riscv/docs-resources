@@ -46,12 +46,12 @@
       "tags": [
         {
           "name": "norm:description-item-1",
-          "text": "Item 1",
+          "text": "Description Item 1",
           "tag_filename": "/build/test-norm-tags.json"
         },
         {
           "name": "norm:description-item-3",
-          "text": "Item 3",
+          "text": "Description Item 3",
           "tag_filename": "/build/test-norm-tags.json"
         }
       ]
@@ -62,12 +62,12 @@
       "tags": [
         {
           "name": "norm:description-item-1",
-          "text": "Item 1",
+          "text": "Description Item 1",
           "tag_filename": "/build/test-norm-tags.json"
         },
         {
           "name": "norm:description-item-3",
-          "text": "Item 3",
+          "text": "Description Item 3",
           "tag_filename": "/build/test-norm-tags.json"
         }
       ]

@@ -40,6 +40,16 @@ BUILT_NORM_RULES := $(BUILD_DIR)/$(NORM_RULE_OUTPUT_FNAME)
 EXPECTED_NORM_TAGS := $(NORM_RULE_EXPECTED_DIR)/$(NORM_TAGS_OUTPUT_FNAME)
 EXPECTED_NORM_RULES := $(NORM_RULE_EXPECTED_DIR)/$(NORM_RULE_OUTPUT_FNAME)
 
+# All normative rule definition input YAML files tracked under Git (ensure you at least stage new files).
+NORM_RULE_DEF_FILES := $(shell git ls-files '$(NORM_RULE_DEF_DIR)/*.yaml')
+
+# Add -t to each normative tag input filename and add prefix of "/" to make into absolute pathname.
+NORM_TAG_FILE_ARGS := $(foreach relative_pname,$(BUILT_NORM_TAGS),-t /$(relative_pname))
+
+# Add -d to each normative rule definition filename
+NORM_RULE_DEF_ARGS := $(foreach relative_pname,$(NORM_RULE_DEF_FILES),-d $(relative_pname))
+
+# Docker stuff
 DOCKER_BIN ?= docker
 SKIP_DOCKER ?= $(shell if command -v ${DOCKER_BIN}  >/dev/null 2>&1 ; then echo false; else echo true; fi)
 DOCKER_IMG := riscvintl/riscv-docs-base-container-image:latest
@@ -94,40 +104,60 @@ OPTIONS := --trace \
            -D build \
            --failure-level=WARN
 
-.PHONY: all clean tests test-tags test-norm-rules update-expected update-norm-rule-expected
 
-all: tests
-tests: test-tags test-norm-rules
-test-tags: $(BUILT_NORM_TAGS)
-test-norm-rules: $(BUILT_NORM_RULES)
-update-expected: update-expected-norm-rule
+# Default target
+.PHONY: all
+all: test
 
-# All normative rule definition input YAML files tracked under Git (ensure you at least stage new files).
-NORM_RULE_DEF_FILES := $(shell git ls-files '$(NORM_RULE_DEF_DIR)/*.yaml')
+# Build tests and compare against expected
+.PHONY: test
+test: build-tests compare-tests
 
-# Add -t to each normative tag input filename and add prefix of "/" to make into absolute pathname.
-NORM_TAG_FILE_ARGS := $(foreach relative_pname,$(BUILT_NORM_TAGS),-t /$(relative_pname))
+# Build tests
+.PHONY: build-tests build-test-tags build-test-norm-rules
+build-tests: build-test-tags build-test-norm-rules
+build-test-tags: $(BUILT_NORM_TAGS)
+build-test-norm-rules: $(BUILT_NORM_RULES)
 
-# Add -d to each normative rule definition filename
-NORM_RULE_DEF_ARGS := $(foreach relative_pname,$(NORM_RULE_DEF_FILES),-d $(relative_pname))
+# Compare tests against expected
+.PHONY: compare-tests
+compare-tests: compare-test-tags compare-test-norm-rules
 
-update-expected-norm-rule: $(BUILT_NORM_TAGS) $(BUILT_NORM_RULES)
+compare-test-tags: $(EXPECTED_NORM_TAGS) $(BUILT_NORM_TAGS)
+	@echo XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+	@echo Comparing $(EXPECTED_NORM_TAGS) to $(BUILT_NORM_TAGS)
+	@echo XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+	diff $(EXPECTED_NORM_TAGS) $(BUILT_NORM_TAGS)
+
+compare-test-norm-rules: $(EXPECTED_NORM_RULES) $(BUILT_NORM_RULES)
+	@echo XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+	@echo Comparing $(EXPECTED_NORM_RULES) to $(BUILT_NORM_RULES)
+	@echo XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+	diff $(EXPECTED_NORM_RULES) $(BUILT_NORM_RULES)
+
+# Update expected files from built files
+.PHONY: update-expected
+update-expected: update-test-tags update-test-norm-rules
+
+update-test-tags: $(BUILT_NORM_TAGS)
 	cp -f $(BUILT_NORM_TAGS) $(EXPECTED_NORM_TAGS)
+
+update-test-norm-rules: $(BUILT_NORM_RULES)
 	cp -f $(BUILT_NORM_RULES) $(EXPECTED_NORM_RULES)
 
+# Build normative tags
 $(BUILT_NORM_TAGS): $(NORM_RULE_TESTS_DIR)/$(TEST_ADOC_INPUT_FNAME) $(CONVERTERS_DIR)/$(TAGS_BACKEND)
 	$(WORKDIR_SETUP)
 	$(DOCKER_CMD) $(DOCKER_QUOTE) $(ASCIIDOCTOR_TAGS) $(OPTIONS) -a tags-match-prefix='norm:' -a tags-output-suffix='-norm-tags.json' $< $(DOCKER_QUOTE)
 	$(WORKDIR_TEARDOWN)
-	diff $(EXPECTED_NORM_TAGS) $(BUILT_NORM_TAGS)
 
+# Build normative rules
 $(BUILT_NORM_RULES): $(BUILT_NORM_TAGS) $(NORM_RULE_DEF_FILES)
 	$(WORKDIR_SETUP)
 	cp -f $(BUILT_NORM_TAGS) $@.workdir
 	mkdir -p $@.workdir/build
 	$(DOCKER_CMD) $(DOCKER_QUOTE) ruby $(TOOLS_DIR)/$(CREATE_NORM_RULE_TOOL) $(NORM_TAG_FILE_ARGS) $(NORM_RULE_DEF_ARGS) $@ $(DOCKER_QUOTE)
 	$(WORKDIR_TEARDOWN)
-	diff $(EXPECTED_NORM_RULES) $(BUILT_NORM_RULES)
 
 # Update docker image to latest
 docker-pull-latest:
