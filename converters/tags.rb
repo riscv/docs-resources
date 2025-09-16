@@ -31,7 +31,8 @@ class TagsConverter
     @prefix = opts[:document].attributes.fetch("tags-match-prefix", "")
   end
 
-  # `node` is an `AbstractNode`.
+  # node: AbstractNode
+  # returns: String
   def convert(node, transform = node.node_name, opts = nil)
     if transform == "document" then
       # This is the top level node. First clear the outputs.
@@ -75,14 +76,16 @@ class TagsConverter
       end
 
       # Recursively get the text content of this node.
-      content = if node.inline? then node.text else node.content end
+      content = node_text_content(node)
 
       # Capture the content in the tag map and section tree if
       # this node is tagged appropriately.
       unless node.id.nil?
         if node.id.start_with?(@prefix)
           raise "Duplicate tag name '#{node.id}'" unless @tag_map[node.id].nil?
-          @tag_map[node.id] = content
+          raise "Tag '#{node.id}' content should be a String but it is #{content.class}" unless content.is_a?(String)
+
+          @tag_map[node.id] = content.strip()
           @section_stack.last["tags"] << node.id
         end
       end
@@ -95,5 +98,66 @@ class TagsConverter
 
       content
     end
+  end
+
+  private
+
+  # Return the text content of a node. Adapted from `text-converter.rb`
+  # in the docs: https://docs.asciidoctor.org/asciidoctor/latest/convert/custom/
+  #
+  # node: AbstractNode
+  # returns: String
+  def node_text_content(node)
+    content_or_nil = case node.node_name
+    when "document"
+      raise "node_text_content(document) should be unreachable"
+    when "section"
+      "\n" + [node.title, node.content].join("\n").rstrip()
+    when "paragraph"
+      "\n" + normalize_space(node.content)
+    when "ulist", "olist", "colist"
+      "\n" + node.items.map do |item|
+        normalize_space(item.text) + (item.blocks? ? "\n" + item.content : "")
+      end.join("\n")
+    when "dlist"
+      "\n" + node.items.map do |terms, dd|
+        terms.map(&:text).join(", ") +
+          (dd&.text? ? "\n" + normalize_space(dd.text) : "") +
+          (dd&.blocks? ? "\n" + dd.content : "")
+      end.join("\n")
+    when "table"
+      # This code was wrong in the docs. This is adapted from the HTML5 converter.
+      "\n" + node.rows.to_h.map do |tsec, rows|
+        rows.map do |row|
+          row.map do |cell|
+            if tsec == :head
+              cell.text
+            else
+              case cell.style
+              when :asciidoc
+                cell.content
+              when :literal
+                cell.text
+              else
+                # In this case it is an array of paragraphs.
+                cell.content.join("\n")
+              end
+            end
+            # Separate cells by |.
+          end.join("|")
+          # Separate rows by newlines.
+        end.join("\n")
+        # Separate table sections by ===.
+      end.join("\n===\n")
+    else
+      node.inline? ? node.text : ["\n", node.content].compact.join
+    end
+
+    content_or_nil.nil? ? "" : content_or_nil
+  end
+
+  # Convert spaces to newlines.
+  def normalize_space text
+    text.tr("\n", " ")
   end
 end
