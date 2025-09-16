@@ -18,6 +18,7 @@ font:
       bold: Montserrat-Medium.ttf
       bold_italic: Montserrat-MediumItalic.ttf
       light: Montserrat-Light.ttf
+      heading-h1-font-color: '#003262'
     code:
       normal: cmunbtl.ttf
       bold: cmunbtl.ttf
