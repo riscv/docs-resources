@@ -40,8 +40,8 @@ BUILT_NORM_RULES := $(BUILD_DIR)/$(NORM_RULE_OUTPUT_FNAME)
 EXPECTED_NORM_TAGS := $(NORM_RULE_EXPECTED_DIR)/$(NORM_TAGS_OUTPUT_FNAME)
 EXPECTED_NORM_RULES := $(NORM_RULE_EXPECTED_DIR)/$(NORM_RULE_OUTPUT_FNAME)
 
-# All normative rule definition input YAML files tracked under Git (ensure you at least stage new files).
-NORM_RULE_DEF_FILES := $(shell git ls-files '$(NORM_RULE_DEF_DIR)/*.yaml')
+# All normative rule definition input YAML files
+NORM_RULE_DEF_FILES := $(wildcard $(NORM_RULE_DEF_DIR)/*.yaml)
 
 # Add -t to each normative tag input filename and add prefix of "/" to make into absolute pathname.
 NORM_TAG_FILE_ARGS := $(foreach relative_pname,$(BUILT_NORM_TAGS),-t /$(relative_pname))
