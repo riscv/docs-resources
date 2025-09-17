@@ -1,0 +1,19 @@
+# yaml-language-server: $schema=../../schemas/defs-schema.json
+
+$schema: "../../schemas/defs-schema.json#"
+
+# Used to create normative rules for test.adoc file.
+
+normative_rule_definitions:
+  - name: inline
+    summary: A few words
+    tags: ["norm:inline"]
+  - name: paragraph
+    tags: ["norm:para"]
+  - name: note_with_2_tags
+    description: |
+      Here's a description.
+      It's got 2 lines.
+    tags: ["norm:note-1", "norm:note-3"]
+  - names: [desc1, desc2]
+    tags: ["norm:description-item-1", "norm:description-item-3"]
