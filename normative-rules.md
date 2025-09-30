@@ -2,7 +2,7 @@
 
 ## What is a Normative Rule?
 
-Normative rules specify the behaviors an implementation must meet in order to be compliant with the standard. Each normative rule can be thought of as a complete individual testable behavior. In some cases, normative rules allow a plurality of acceptable implementations. These are called "parameters" and can be thought of as a special case of a normative rule.
+Normative rules specify the behaviors an implementation must meet in order to be compliant with the standard. Each normative rule can be thought of as a complete individually testable behavior. In some cases, a normative rule allows multiple acceptable implementation behaviors. These are called "parameters" and can be thought of as a special case of a normative rule.
 
 ### Examples of Normative Rules:
 | ISA Manual Text |
@@ -46,28 +46,7 @@ AsciiDoc supports several styles of anchors:
     >
     > `This isn't part of the anchor since it is the next paragraph.`
 
-* You must use the _paragraph anchor_ for table cells, list items, or description list terms
-  * For table cells and list items, put the anchor before its associated text as follows:
-    * Table cell<br>
-    > `| [[foo]] Here are the table cell contents | next cell`
-    * List item<br>
-    > `* [[foo]] Here is the list item`
-  * For description list terms (e.g., `Apples`, `Oranges`), put the anchor immediately after the term on its own line as follows:
-    > `Apples::`<br>
-    > `[[apple-colors]]`<br>
-    > `Typically be red, yellow, or green.`<br>
-    > <br>
-    > `Oranges:: Generally orange in color`<br>
-    > <br>
-    > `Bananas::`<br>
-    > `[[banana-color]]`<br>
-    > `Generally yellow in color`
-    * These won't work
-    > * `Bananas:: [[banana-color]] Generally yellow in color`<br>
-    > * `[[banana-color]] Bananas:: Generally yellow in color`
-    > * `[[banana-color]]`<br>
-    > `Bananas::`<br>
-    > `Generally yellow in color`
+* You must use the _paragraph anchor_ for table cells, unordered/ordered list items or description list terms
 
 Naming restrictions:
 * Start anchor names with a letter and use `:` to separate fields in the anchor name. No spaces allowed in name.
@@ -80,12 +59,12 @@ If you'd like to get more detailed AsciiDoc information on anchors, please read:
 * How to make cross-references: https://docs.asciidoctor.org/asciidoc/latest/macros/xref/
 * How to create anchors: https://docs.asciidoctor.org/asciidoc/latest/attributes/id/
 
-## Adding anchors into AsciiDoc files
-1. Anchor to part of a paragraph
+## Using AsciiDoc Anchors to Tag Normative Rules
+1. Tag part of a paragraph
 
     > Syntax:      `[#<anchor-name>]# ... #`<br>
-    > Example:     `Here is an example of [#foo]#anchoring part# of a paragraph
-    >              and can have [#bar]#multiple anchors# if needed.`<br>
+    > Example:     `Here is an example of [#norm:foo]#anchoring part# of a paragraph
+    >              and can have [#norm:bar]#multiple anchors# if needed.`<br>
     > Tagged text: `anchoring part` and `multiple anchors`<br>
     >
     > Limitations:
@@ -95,23 +74,38 @@ If you'd like to get more detailed AsciiDoc information on anchors, please read:
     > * Can't put inside admonitions such as [NOTE] (see #5 below for solution).
     > * Can't have `.` in anchor-name (replace with `-`)
 
-2. Anchor to entire paragraph
+2. Tag entire paragraph
 
     > Syntax:     `[[<anchor-name]]`<br>
-    > Example:    `[[zort]]`<br>
+    > Example:    `[[norm:zort]]`<br>
     >             `Here is an example of anchoring a whole paragraph.`<br>
     > Tagged text: Entire paragraph<br>
 
-3. Anchor to entire table cell, list entry, or description list entry
+3. Tag tables, unordered lists (AKA bullet), or ordered lists (AKA numbered)
+  * Don't have acceptable solution right now (see https://github.com/riscv/docs-resources/issues/72)
 
-    > Example:    `| Alan Turing | [[Alan_Turing_Birthday]] June 23, 1912 | London`<br>
-    > Tagged text: None (just creates hyperlink to anchor in table/list so not so useful)
-    >
-    > Limitations:
-    >  * Anchor must be to entire contents of cell/item.
-    >  * Only one anchor per cell/item.
+    > Example:    `| Alan Turing | [[norm:Alan_Turing_Birthday]] June 23, 1912 | London`<br>
+    > Won't create a tag (just creates hyperlink to anchor in table/list entry so not so useful)
 
-4. Anchor inside admonition (e.g. `[NOTE]`):
+4. Tag description lists
+  * For description list terms (e.g., `Apples`, `Oranges`), put the anchor immediately after the term on its own line as follows:
+    > `Apples::`<br>
+    > `[[norm:apple-colors]]`<br>
+    > `Typically be red, yellow, or green.`<br>
+    > <br>
+    > `Oranges:: Generally orange in color`<br>
+    > <br>
+    > `Bananas::`<br>
+    > `[[norm:banana-color]]`<br>
+    > `Generally yellow in color`
+    * These won't work
+    > * `Bananas:: [[norm:banana-color]] Generally yellow in color`<br>
+    > * `[[norm:banana-color]] Bananas:: Generally yellow in color`
+    > * `[[norm:banana-color]]`<br>
+    > `Bananas::`<br>
+    > `Generally yellow in color`
+
+5. Tag admonitions (e.g. `[NOTE]`):
 * Must use `[[<anchor-name]]` before each paragraph (with unique anchor names of course) being tagged
 * Can't use `[#<anchor-name]#Here's some note text.#` since it just shows up in HTML as normal text
 * Don't put `[[<<anchor-name]]` before the entire admonition (e.g., before `[NOTE]`) to apply to entire admonition

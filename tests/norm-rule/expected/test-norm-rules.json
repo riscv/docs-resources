@@ -1,0 +1,76 @@
+{
+  "normative_rules": [
+    {
+      "name": "inline",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "summary": "A few words",
+      "tags": [
+        {
+          "name": "norm:inline",
+          "text": "inside inline",
+          "tag_filename": "/build/test-norm-tags.json"
+        }
+      ]
+    },
+    {
+      "name": "paragraph",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "tags": [
+        {
+          "name": "norm:para",
+          "text": "Paragraph anchor",
+          "tag_filename": "/build/test-norm-tags.json"
+        }
+      ]
+    },
+    {
+      "name": "note_with_2_tags",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "description": "Here's a description.\nIt's got 2 lines.\n",
+      "tags": [
+        {
+          "name": "norm:note-1",
+          "text": "Multi-paragraph note 1",
+          "tag_filename": "/build/test-norm-tags.json"
+        },
+        {
+          "name": "norm:note-3",
+          "text": "Multi-paragraph note 3",
+          "tag_filename": "/build/test-norm-tags.json"
+        }
+      ]
+    },
+    {
+      "name": "desc1",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "tags": [
+        {
+          "name": "norm:description-item-1",
+          "text": "Description Item 1",
+          "tag_filename": "/build/test-norm-tags.json"
+        },
+        {
+          "name": "norm:description-item-3",
+          "text": "Description Item 3",
+          "tag_filename": "/build/test-norm-tags.json"
+        }
+      ]
+    },
+    {
+      "name": "desc2",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "tags": [
+        {
+          "name": "norm:description-item-1",
+          "text": "Description Item 1",
+          "tag_filename": "/build/test-norm-tags.json"
+        },
+        {
+          "name": "norm:description-item-3",
+          "text": "Description Item 3",
+          "tag_filename": "/build/test-norm-tags.json"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "tags": {
+    "norm:inline": "inside inline",
+    "norm:para": "Paragraph anchor",
+    "norm:table-name-empty-tag-just-anchor": "",
+    "norm:unordered-list-heading": "Unordered List:",
+    "norm:ordered-list-heading": "Ordered List:",
+    "norm:description-item-1": "Description Item 1",
+    "norm:description-item-3": "Description Item 3",
+    "norm:note-1": "Multi-paragraph note 1",
+    "norm:note-3": "Multi-paragraph note 3"
+  },
+  "sections": {
+    "title": "",
+    "id": "",
+    "children": [
+      {
+        "title": "Chapter 1",
+        "id": "_chapter_1",
+        "children": [
+          {
+            "title": "Chapter 1.1",
+            "id": "_chapter_1_1",
+            "children": [],
+            "tags": [
+              "norm:para",
+              "norm:table-name-empty-tag-just-anchor"
+            ]
+          }
+        ],
+        "tags": [
+          "norm:inline"
+        ]
+      },
+      {
+        "title": "Chapter 2",
+        "id": "_chapter_2",
+        "children": [],
+        "tags": [
+          "norm:unordered-list-heading",
+          "norm:ordered-list-heading",
+          "norm:description-item-1",
+          "norm:description-item-3",
+          "norm:note-1",
+          "norm:note-3"
+        ]
+      }
+    ],
+    "tags": []
+  }
+}
