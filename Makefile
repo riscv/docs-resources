@@ -1,4 +1,4 @@
-# Makefile for tests for tools/scripts in docs-resources repository.
+# Makefile for tests of tools/scripts in docs-resources repository.
 # Must be run in top-level directory of docs-resources repository.
 #
 # This work is licensed under the Creative Commons Attribution-ShareAlike 4.0
