@@ -31,7 +31,8 @@ class TagsConverter
     @prefix = opts[:document].attributes.fetch("tags-match-prefix", "")
   end
 
-  # `node` is an `AbstractNode`.
+  # node: AbstractNode
+  # returns: String
   def convert(node, transform = node.node_name, opts = nil)
     if transform == "document" then
       # This is the top level node. First clear the outputs.
@@ -75,13 +76,15 @@ class TagsConverter
       end
 
       # Recursively get the text content of this node.
-      content = if node.inline? then node.text else node.content end
+      content = node_text_content(node)
 
       # Capture the content in the tag map and section tree if
       # this node is tagged appropriately.
       unless node.id.nil?
         if node.id.start_with?(@prefix)
           raise "Duplicate tag name '#{node.id}'" unless @tag_map[node.id].nil?
+          raise "Tag name '#{node.id}' content isn't a String" unless content.is_a?(String)
+
           @tag_map[node.id] = content
           @section_stack.last["tags"] << node.id
         end
@@ -94,6 +97,34 @@ class TagsConverter
       end
 
       content
+    end
+  end
+
+  private
+
+  # node: AbstractNode
+  # returns: String
+  def node_text_content(node)
+    if node.inline? then
+      node.text
+    else
+      case node.node_name
+      when 'ulist', 'olist', 'dlist'
+        # This node is an unordered list (ulist), ordered list (olist), or description list (dlist)
+        #
+        # List aliases `content` to `AbstractBlock.blocks` so you get
+        # a list of blocks (instead of the normal behaviour of
+        # calling convert on them and concatenating them). However we
+        # can ignore that and just call the AbstractBlock `content`
+        # method which does the right thing.
+        Asciidoctor::AbstractBlock.instance_method(:content).bind(node).call
+      #when 'list_item'
+        # This node is a list item
+      #  warn "Don't know how to handle a list item yet"
+      else
+        # Not a list
+        node.content
+      end
     end
   end
 end

@@ -22,7 +22,9 @@ Next paragraph
 | [[norm:table-cell-no-tag-just-anchor]] cell contents | next cell
 |===
 
-== Chapter 2
+== Chapter 2 - Tagging list items
+
+Doesn't work. No tag for list items created.
 
 [[norm:unordered-list-heading]]
 Unordered List:
@@ -50,6 +52,10 @@ Description-3::
 [[norm:description-item-3]]
 Description Item 3
 
+== Chapter 3 - Tagging admonitions
+
+Doesn't work. No tag for list items created.
+
 NOTE: [[norm-note-1]] Single paragraph note
 
 [NOTE]
@@ -62,3 +68,23 @@ Multi-paragraph note 2
 [[norm:note-3]]
 Multi-paragraph note 3
 ====
+
+== Chapter 4 - Tagging entire list
+
+Doesn't work yet.
+
+[[norm:fruit-color]]
+Bananas::
+Generally yellow in color
+Apples::
+Generally red in color
+
+[#norm:Zca_misa_c]#MISA.C is set if the following extensions are selected:#
+
+[[norm:Zca_misa_c_list]]
+* Zca and not F
+* Zca, Zcf and F (but not D) is specified (RV32 only)
+* Zca, Zcf and Zcd if D is specified (RV32 only)
+** this configuration excludes Zcmp, Zcmt
+* Zca, Zcd if D is specified (RV64 only)
+** this configuration excludes Zcmp, Zcmt
