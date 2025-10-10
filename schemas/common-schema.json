@@ -27,7 +27,7 @@
   },
   "isaObjectKind":  {
     "type": "string",
-    "enum": ["extension", "instruction", "csr", "csr_field"]
+    "enum": ["extension", "instruction", "csr", "csr_field", "parameter"]
   },
   "ruleName": {
     "type": "string",

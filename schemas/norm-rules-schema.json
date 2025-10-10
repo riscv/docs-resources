@@ -17,6 +17,10 @@
             "type": "string",
             "description": "Normative rule definition file that defines this rule"
           },
+          "chapter_name": {
+            "type": "string",
+            "description": "Normative rules for specified chapter in standards document"
+          },
           "summary": {
             "type": "string",
             "$ref": "common-schema.json#/summaryDesc"
@@ -39,7 +43,7 @@
           },
           "tags": {
             "type": "array",
-            "description": "List of normative rule tags that reference the standard",
+            "description": "List of normative rule tags",
             "items": {
               "type": "object",
               "properties": {

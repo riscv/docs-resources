@@ -4,17 +4,23 @@
 $schema: "../../schemas/defs-schema.json#"
 
 # Used to create normative rules for test.adoc file.
+chapter_name: my-chapter_name
 
 normative_rule_definitions:
   - name: inline
     summary: A few words
+    kind: extension
+    instances: [Zicsr, ABC]
     tags: ["norm:inline"]
   - name: paragraph
-    tags: ["norm:para"]
-  - name: note_with_2_tags
     description: |
       Here's a description.
       It's got 2 lines.
+    tags: ["norm:para"]
+  - name: note_with_2_tags
+    description: Here's a one line description.
+    kind: parameter
+    instances: [MY_PARAMETER]
     tags: ["norm:note-1", "norm:note-3"]
   - names: [desc1, desc2]
     tags: ["norm:description-item-1", "norm:description-item-3"]

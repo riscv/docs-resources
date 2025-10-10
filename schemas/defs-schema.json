@@ -4,6 +4,13 @@
   "type": "object",
 
   "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "chapter_name": {
+      "type": "string",
+      "description": "Name of chapter in standards doc associated with these normative rules definitions"
+    },
     "normative_rule_definitions": {
       "type": "array",
       "items": {
@@ -58,5 +65,6 @@
       }
     }
   },
-  "required": ["normative_rule_definitions"]
+  "required": ["$schema", "chapter_name", "normative_rule_definitions"],
+  "additionalProperties": false
 }
