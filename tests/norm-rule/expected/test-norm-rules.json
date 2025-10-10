@@ -3,6 +3,12 @@
     {
       "name": "inline",
       "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "kind": "extension",
+      "instances": [
+        "Zicsr",
+        "ABC"
+      ],
       "summary": "A few words",
       "tags": [
         {
@@ -15,6 +21,8 @@
     {
       "name": "paragraph",
       "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "description": "Here's a description.\nIt's got 2 lines.\n",
       "tags": [
         {
           "name": "norm:para",
@@ -26,7 +34,12 @@
     {
       "name": "note_with_2_tags",
       "def_filename": "tests/norm-rule/test.yaml",
-      "description": "Here's a description.\nIt's got 2 lines.\n",
+      "chapter_name": "my-chapter_name",
+      "kind": "parameter",
+      "instances": [
+        "MY_PARAMETER"
+      ],
+      "description": "Here's a one line description.",
       "tags": [
         {
           "name": "norm:note-1",
@@ -43,6 +56,7 @@
     {
       "name": "desc1",
       "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
       "tags": [
         {
           "name": "norm:description-item-1",
@@ -59,6 +73,7 @@
     {
       "name": "desc2",
       "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
       "tags": [
         {
           "name": "norm:description-item-1",

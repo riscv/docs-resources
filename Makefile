@@ -1,4 +1,4 @@
-# Makefile for tests of tools/scripts in docs-resources repository.
+# Makefile for tests for tools/scripts in docs-resources repository.
 # Must be run in top-level directory of docs-resources repository.
 #
 # This work is licensed under the Creative Commons Attribution-ShareAlike 4.0
@@ -29,16 +29,19 @@ CREATE_NORM_RULE_TOOL := create_normative_rules.rb
 # Input and output file names
 TEST_ADOC_INPUT_FNAME := test.adoc
 NORM_TAGS_OUTPUT_FNAME := test-norm-tags.json
-NORM_RULE_OUTPUT_FNAME := test-norm-rules.json
+NORM_RULE_JSON_OUTPUT_FNAME := test-norm-rules.json
+NORM_RULE_XLSX_OUTPUT_FNAME := test-norm-rules.xlsx
 
 # Built output files
 BUILT_NORM_TAGS := $(BUILD_DIR)/$(NORM_TAGS_OUTPUT_FNAME)
-BUILT_NORM_RULES := $(BUILD_DIR)/$(NORM_RULE_OUTPUT_FNAME)
+BUILT_NORM_RULES_JSON := $(BUILD_DIR)/$(NORM_RULE_JSON_OUTPUT_FNAME)
+BUILT_NORM_RULES_XLSX := $(BUILD_DIR)/$(NORM_RULE_XLSX_OUTPUT_FNAME)
 
 # Copies of expected output files.
 # Use make target "update-expected" to update from build dir contents.
 EXPECTED_NORM_TAGS := $(NORM_RULE_EXPECTED_DIR)/$(NORM_TAGS_OUTPUT_FNAME)
-EXPECTED_NORM_RULES := $(NORM_RULE_EXPECTED_DIR)/$(NORM_RULE_OUTPUT_FNAME)
+EXPECTED_NORM_RULES_JSON := $(NORM_RULE_EXPECTED_DIR)/$(NORM_RULE_JSON_OUTPUT_FNAME)
+EXPECTED_NORM_RULES_XLSX := $(NORM_RULE_EXPECTED_DIR)/$(NORM_RULE_XLSX_OUTPUT_FNAME)
 
 # All normative rule definition input YAML files
 NORM_RULE_DEF_FILES := $(wildcard $(NORM_RULE_DEF_DIR)/*.yaml)
@@ -114,32 +117,38 @@ all: test
 test: build-tests compare-tests
 
 # Build tests
-.PHONY: build-tests build-test-tags build-test-norm-rules
-build-tests: build-test-tags build-test-norm-rules
+.PHONY: build-tests build-test-tags build-test-norm-rules-json build-test-norm-rules-xlsx
+build-tests: build-test-tags build-test-norm-rules-json build-test-norm-rules-xlsx
 build-test-tags: $(BUILT_NORM_TAGS)
-build-test-norm-rules: $(BUILT_NORM_RULES)
+build-test-norm-rules-json: $(BUILT_NORM_RULES_JSON)
+build-test-norm-rules-xlsx: $(BUILT_NORM_RULES_XLSX)
 
 # Compare tests against expected
 .PHONY: compare-tests
-compare-tests: compare-test-tags compare-test-norm-rules
+compare-tests: compare-test-tags compare-test-norm-rules-json
 
 compare-test-tags: $(EXPECTED_NORM_TAGS) $(BUILT_NORM_TAGS)
 	@echo "CHECKING BUILT TAGS AGAINST EXPECTED TAGS"
 	diff $(EXPECTED_NORM_TAGS) $(BUILT_NORM_TAGS) && echo "diff PASSED" || (echo "diff FAILED"; exit 1)
 
 compare-test-norm-rules: $(EXPECTED_NORM_RULES) $(BUILT_NORM_RULES)
-	@echo "CHECKING BUILT NORM RULES AGAINST EXPECTED NORM RULES"
-	diff $(EXPECTED_NORM_RULES) $(BUILT_NORM_RULES) && echo "diff PASSED" || (echo "diff FAILED"; exit 1)
+
+compare-test-norm-rules-json: $(EXPECTED_NORM_RULES_JSON) $(BUILT_NORM_RULES_JSON)
+	@echo "CHECKING JSON BUILT NORM RULES AGAINST EXPECTED NORM RULES"
+	diff $(EXPECTED_NORM_RULES_JSON) $(BUILT_NORM_RULES_JSON) && echo "diff PASSED" || (echo "diff FAILED"; exit 1)
 
 # Update expected files from built files
 .PHONY: update-expected
-update-expected: update-test-tags update-test-norm-rules
+update-expected: update-test-tags update-test-norm-rules-json update-test-norm-rules-xlsx
 
 update-test-tags: $(BUILT_NORM_TAGS)
 	cp -f $(BUILT_NORM_TAGS) $(EXPECTED_NORM_TAGS)
 
-update-test-norm-rules: $(BUILT_NORM_RULES)
-	cp -f $(BUILT_NORM_RULES) $(EXPECTED_NORM_RULES)
+update-test-norm-rules-json: $(BUILT_NORM_RULES_JSON)
+	cp -f $(BUILT_NORM_RULES_JSON) $(EXPECTED_NORM_RULES_JSON)
+
+update-test-norm-rules-xlsx: $(BUILT_NORM_RULES_XLSX)
+	cp -f $(BUILT_NORM_RULES_XLSX) $(EXPECTED_NORM_RULES_XLSX)
 
 # Build normative tags
 $(BUILT_NORM_TAGS): $(NORM_RULE_TESTS_DIR)/$(TEST_ADOC_INPUT_FNAME) $(CONVERTERS_DIR)/$(TAGS_BACKEND)
@@ -147,12 +156,20 @@ $(BUILT_NORM_TAGS): $(NORM_RULE_TESTS_DIR)/$(TEST_ADOC_INPUT_FNAME) $(CONVERTERS
 	$(DOCKER_CMD) $(DOCKER_QUOTE) $(ASCIIDOCTOR_TAGS) $(OPTIONS) -a tags-match-prefix='norm:' -a tags-output-suffix='-norm-tags.json' $< $(DOCKER_QUOTE)
 	$(WORKDIR_TEARDOWN)
 
-# Build normative rules
-$(BUILT_NORM_RULES): $(BUILT_NORM_TAGS) $(NORM_RULE_DEF_FILES)
+# Build normative rules with JSON output format
+$(BUILT_NORM_RULES_JSON): $(BUILT_NORM_TAGS) $(NORM_RULE_DEF_FILES)
 	$(WORKDIR_SETUP)
 	cp -f $(BUILT_NORM_TAGS) $@.workdir
 	mkdir -p $@.workdir/build
 	$(DOCKER_CMD) $(DOCKER_QUOTE) ruby $(TOOLS_DIR)/$(CREATE_NORM_RULE_TOOL) $(NORM_TAG_FILE_ARGS) $(NORM_RULE_DEF_ARGS) $@ $(DOCKER_QUOTE)
+	$(WORKDIR_TEARDOWN)
+
+# Build normative rules with XLSX output format
+$(BUILT_NORM_RULES_XLSX): $(BUILT_NORM_TAGS) $(NORM_RULE_DEF_FILES)
+	$(WORKDIR_SETUP)
+	cp -f $(BUILT_NORM_TAGS) $@.workdir
+	mkdir -p $@.workdir/build
+	$(DOCKER_CMD) $(DOCKER_QUOTE) ruby $(TOOLS_DIR)/$(CREATE_NORM_RULE_TOOL) -x $(NORM_TAG_FILE_ARGS) $(NORM_RULE_DEF_ARGS) $@ $(DOCKER_QUOTE)
 	$(WORKDIR_TEARDOWN)
 
 # Update docker image to latest
