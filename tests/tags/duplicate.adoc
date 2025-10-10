@@ -1,0 +1,7 @@
+// Used to test that tags backend will throw fatal error if duplicate tag detected.
+
+== Chapter 1
+
+Before inline [#bad:duplicate]#inside inline# outside inline.
+
+Same tag [#bad:duplicate]#duplicated inside# duplicated outside.

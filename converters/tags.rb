@@ -81,6 +81,7 @@ class TagsConverter
       # this node is tagged appropriately.
       unless node.id.nil?
         if node.id.start_with?(@prefix)
+          raise "Duplicate tag name '#{node.id}'" unless @tag_map[node.id].nil?
           @tag_map[node.id] = content
           @section_stack.last["tags"] << node.id
         end
