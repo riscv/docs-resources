@@ -597,7 +597,7 @@ def output_xlsx(filename, defs, tags)
   right_arrow = "\u2192"
   defs.norm_rule_defs.each do |d|
     worksheet.write(row_num, 0, d.chapter_name)
-    worksheet.write(row_num, 1, d.name)
+    worksheet.write(row_num, 1, d.name, wrap_format)
     worksheet.write(row_num, 2, d.summary) unless d.summary.nil?
     worksheet.write(row_num, 3, d.description.chomp, wrap_format) unless d.description.nil?
     worksheet.write(row_num, 4, d.kind) unless d.kind.nil?
@@ -625,6 +625,10 @@ def output_xlsx(filename, defs, tags)
 
   # Set column widths to hold data width.
   worksheet.autofit
+
+  # Override autofit for really wide columns
+  worksheet.set_column(1, 1, 20) # name column
+  worksheet.set_column(3, 3, 30) # description column
 
   workbook.close
 end

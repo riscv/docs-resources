@@ -12,13 +12,13 @@ normative_rule_definitions:
     kind: extension
     instances: [Zicsr, ABC]
     tags: ["norm:inline"]
-  - name: paragraph
+  - name: paragraph-with-a-really-wide-rule-name
     description: |
       Here's a description.
       It's got 2 lines.
     tags: ["norm:para"]
   - name: note_with_2_tags
-    description: Here's a one line description.
+    description: Here's a one line description but it is very wide so should wrap within a cell.
     kind: parameter
     instances: [MY_PARAMETER]
     tags: ["norm:note-1", "norm:note-3"]
