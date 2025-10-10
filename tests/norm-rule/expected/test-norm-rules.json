@@ -19,7 +19,7 @@
       ]
     },
     {
-      "name": "paragraph",
+      "name": "paragraph-with-a-really-wide-rule-name",
       "def_filename": "tests/norm-rule/test.yaml",
       "chapter_name": "my-chapter_name",
       "description": "Here's a description.\nIt's got 2 lines.\n",
@@ -39,7 +39,7 @@
       "instances": [
         "MY_PARAMETER"
       ],
-      "description": "Here's a one line description.",
+      "description": "Here's a one line description but it is very wide so should wrap within a cell.",
       "tags": [
         {
           "name": "norm:note-1",
