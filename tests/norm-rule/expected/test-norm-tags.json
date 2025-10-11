@@ -1,6 +1,7 @@
 {
   "tags": {
     "norm:inline": "inside inline",
+    "norm:tag_with_newlines": "Here&#8217;s the first line.\nHere&#8217;s the second line.",
     "norm:para": "Paragraph anchor",
     "norm:table-name-empty-tag-just-anchor": "",
     "norm:unordered-list-heading": "Unordered List:",
@@ -29,7 +30,8 @@
           }
         ],
         "tags": [
-          "norm:inline"
+          "norm:inline",
+          "norm:tag_with_newlines"
         ]
       },
       {

@@ -39,7 +39,7 @@
       "instances": [
         "MY_PARAMETER"
       ],
-      "description": "Here's a one line description but it is very wide so should wrap within a cell.",
+      "description": "One line description",
       "tags": [
         {
           "name": "norm:note-1",
@@ -83,6 +83,18 @@
         {
           "name": "norm:description-item-3",
           "text": "Description Item 3",
+          "tag_filename": "/build/test-norm-tags.json"
+        }
+      ]
+    },
+    {
+      "name": "rule_with_newlines",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:tag_with_newlines",
+          "text": "Here&#8217;s the first line.\nHere&#8217;s the second line.",
           "tag_filename": "/build/test-norm-tags.json"
         }
       ]

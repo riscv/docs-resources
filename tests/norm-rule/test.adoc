@@ -8,6 +8,10 @@ Before inline [#norm:inline]#inside inline# outside inline.
 Before bad inline [#norm:bad-inline]#
 inside bad inline# outside bad inline.#
 
+[[norm:tag_with_newlines]]
+Here's the first line.
+Here's the second line.
+
 === Chapter 1.1
 
 [[norm:para]]
