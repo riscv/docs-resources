@@ -18,9 +18,11 @@ normative_rule_definitions:
       It's got 2 lines.
     tags: ["norm:para"]
   - name: note_with_2_tags
-    description: Here's a one line description but it is very wide so should wrap within a cell.
+    description: One line description
     kind: parameter
     instances: [MY_PARAMETER]
     tags: ["norm:note-1", "norm:note-3"]
   - names: [desc1, desc2]
     tags: ["norm:description-item-1", "norm:description-item-3"]
+  - name: rule_with_newlines
+    tags: ["norm:tag_with_newlines"]

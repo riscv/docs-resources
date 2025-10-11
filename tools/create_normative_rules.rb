@@ -191,7 +191,6 @@ class NormativeRuleDef
 end # class NormativeRuleDef
 
 # Holds one reference to a tag by a rule definition.
-# XXX - Not testing kind/instances (are they needed?)
 class NormativeTagRef
   attr_reader :name               # String (mandatory)
   attr_reader :kind               # String (optional, can be nil)
@@ -584,51 +583,62 @@ def output_xlsx(filename, defs, tags)
     columns: [
       { header: "Chapter Name" },
       { header: "Rule Name" },
-      { header: "Summary" },
-      { header: "Description" },
+      { header: "Rule Definition" },
+      { header: "Rule Definition Sources" },
       { header: "Kind" },
-      { header: "Instances" },
-      { header: "Tagged Text" }
+      { header: "Instances" }
     ]
   }
 
   # Add normative rules in rows. One row for each tag if multiple tags.
   row_num = 1
-  right_arrow = "\u2192"
   defs.norm_rule_defs.each do |d|
     worksheet.write(row_num, 0, d.chapter_name)
     worksheet.write(row_num, 1, d.name, wrap_format)
-    worksheet.write(row_num, 2, d.summary) unless d.summary.nil?
-    worksheet.write(row_num, 3, d.description.chomp, wrap_format) unless d.description.nil?
-    worksheet.write(row_num, 4, d.kind) unless d.kind.nil?
-    worksheet.write(row_num, 5, d.instances.join(",")) unless d.instances.empty?
 
-    tags_str = []
-    d.tag_refs.each do |tag_ref|
-      tag_ref_name = tag_ref.name
+    rule_defs = []
+    rule_def_sources = []
 
-      # Lookup tag
-      tag = tags.get_tag(tag_ref_name)
-
-      fatal("Normative rule #{d.name} defined in file #{d.def_filename} references non-existent tag #{tag_ref_name}") if tag.nil?
-
-      tags_str.append("#{tag.name} #{right_arrow} \"#{tag.text}\"")
+    unless d.summary.nil?
+      rule_defs.append(d.summary.chomp)
+      rule_def_sources.append("Summary")
     end
 
-    worksheet.write(row_num, 6, tags_str.join("\n"), wrap_format) unless tags_str.empty?
+    unless d.description.nil?
+      rule_defs.append(d.description.chomp)
+      rule_def_sources.append("Description")
+    end
+
+    tag_sources = []
+    d.tag_refs.each do |tag_ref|
+      tag_ref_name = tag_ref.name
+      tag = tags.get_tag(tag_ref_name)
+      fatal("Normative rule #{d.name} defined in file #{d.def_filename} references non-existent tag #{tag_ref_name}") if tag.nil?
+      rule_defs.append(tag.text.chomp)
+      tag_sources.append('"' + tag.name + '"')
+    end
+    rule_def_sources.append('[' + tag_sources.join(', ') + ']') unless tag_sources.empty?
+
+    worksheet.write(row_num, 2, rule_defs.join("\n"), wrap_format) unless rule_defs.empty?
+    worksheet.write(row_num, 3, rule_def_sources.join(", "), wrap_format) unless rule_def_sources.empty?
+    worksheet.write(row_num, 4, d.kind) unless d.kind.nil?
+    worksheet.write(row_num, 5, d.instances.join(', ')) unless d.instances.empty?
+
     row_num += 1
   end
 
   num_rows = row_num - 1
 
-  worksheet.add_table("A1:G#{num_rows}", table_props)
+  # Make into a table. Assume columns A to F.
+  worksheet.add_table("A1:F#{num_rows}", table_props)
 
   # Set column widths to hold data width.
   worksheet.autofit
 
   # Override autofit for really wide columns
   worksheet.set_column(1, 1, 20) # name column
-  worksheet.set_column(3, 3, 30) # description column
+  worksheet.set_column(2, 2, 80) # definition column
+  worksheet.set_column(3, 3, 40) # definition sources column
 
   workbook.close
 end
