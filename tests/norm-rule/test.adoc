@@ -26,7 +26,16 @@ Next paragraph
 | [[norm:table-cell-no-tag-just-anchor]] cell contents | next cell
 |===
 
-== Chapter 2
+[[norm:normal-table]]
+[cols="1,1"]
+|===
+|Header 1|Header 2
+
+|Cell in column 1, row 1 |Cell in column 2, row 1
+|Cell in column 1, row 2 |Cell in column 2, row 2
+|===
+
+== Chapter 2 - Tagging list items
 
 [[norm:unordered-list-heading]]
 Unordered List:
@@ -34,6 +43,13 @@ Unordered List:
 * [[norm:unordered-item-1-no-tag]] Unordered Item 1
 * [[norm:unordered-item-2-no-tag]] Unordered Item 2
 * Unordered Item 3
+
+[[norm:unordered-list-entire]]
+Entire Unordered List:
+
+* Entire Unordered Item 1
+* Entire Unordered Item 2
+* Entire Unordered Item 3
 
 [[norm:ordered-list-heading]]
 Ordered List:
@@ -54,6 +70,8 @@ Description-3::
 [[norm:description-item-3]]
 Description Item 3
 
+== Chapter 3 - Tagging admonitions
+
 NOTE: [[norm-note-1]] Single paragraph note
 
 [NOTE]
@@ -66,3 +84,21 @@ Multi-paragraph note 2
 [[norm:note-3]]
 Multi-paragraph note 3
 ====
+
+== Chapter 4 - Tagging entire list
+
+[[norm:fruit-color]]
+Bananas::
+Generally yellow in color
+Apples::
+Generally red in color
+
+[#norm:Zca_misa_c]#MISA.C is set if the following extensions are selected:#
+
+[[norm:Zca_misa_c_list]]
+* Zca and not F
+* Zca, Zcf and F (but not D) is specified (RV32 only)
+* Zca, Zcf and Zcd if D is specified (RV32 only)
+** this configuration excludes Zcmp, Zcmt
+* Zca, Zcd if D is specified (RV64 only)
+** this configuration excludes Zcmp, Zcmt
