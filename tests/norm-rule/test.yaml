@@ -12,17 +12,27 @@ normative_rule_definitions:
     kind: extension
     instances: [Zicsr, ABC]
     tags: ["norm:inline"]
+  - name: inline-anchors-in-paragraph
+    tags: ["norm:paragraph:inline-anchors-in-paragraph"]
+  - name: inline-anchors-in-tagged-paragraph
+    tags: ["norm:paragraph:inline-anchors-in-paragraph:inline-anchors"]
   - name: paragraph-with-a-really-wide-rule-name
     description: |
       Here's a description.
       It's got 2 lines.
-    tags: ["norm:para"]
+    tags: ["norm:paragraph:no-inline-anchors-in-paragraph"]
+  - name: table1
+    tags: ["norm:table:anchors-in-cells:entire-table"]
+  - name: table2
+    tags: ["norm:table:no-anchors-in-cells:entire-table"]
+  - name: unordered1
+    tags: ["norm:unordered-list:anchors-in-items:entire-list"]
   - name: note_with_2_tags
     description: One line description
     kind: parameter
     instances: [MY_PARAMETER]
-    tags: ["norm:note-1", "norm:note-3"]
+    tags: ["norm:admonition:anchors-in-notes:note1", "norm:admonition:anchors-in-notes:note3"]
   - names: [desc1, desc2]
-    tags: ["norm:description-item-1", "norm:description-item-3"]
+    tags: ["norm:description-list:anchors-in-items:item1", "norm:description-list:anchors-in-items:item3"]
   - name: rule_with_newlines
     tags: ["norm:tag_with_newlines"]

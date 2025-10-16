@@ -19,14 +19,74 @@
       ]
     },
     {
+      "name": "inline-anchors-in-paragraph",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:paragraph:inline-anchors-in-paragraph",
+          "text": "Paragraph with inline anchor and something.",
+          "tag_filename": "/build/test-norm-tags.json"
+        }
+      ]
+    },
+    {
+      "name": "inline-anchors-in-tagged-paragraph",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:paragraph:inline-anchors-in-paragraph:inline-anchors",
+          "text": "inline anchor",
+          "tag_filename": "/build/test-norm-tags.json"
+        }
+      ]
+    },
+    {
       "name": "paragraph-with-a-really-wide-rule-name",
       "def_filename": "tests/norm-rule/test.yaml",
       "chapter_name": "my-chapter_name",
       "description": "Here's a description.\nIt's got 2 lines.\n",
       "tags": [
         {
-          "name": "norm:para",
-          "text": "Paragraph anchor",
+          "name": "norm:paragraph:no-inline-anchors-in-paragraph",
+          "text": "Paragraph without inline anchors",
+          "tag_filename": "/build/test-norm-tags.json"
+        }
+      ]
+    },
+    {
+      "name": "table1",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:table:anchors-in-cells:entire-table",
+          "text": "===\n cell with anchor\ncell without anchor\n===",
+          "tag_filename": "/build/test-norm-tags.json"
+        }
+      ]
+    },
+    {
+      "name": "table2",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:table:no-anchors-in-cells:entire-table",
+          "text": "Header 1|Header 2\n===\nCell in column 1, row 1|Cell in column 2, row 1\nCell in column 1, row 2|Cell in column 2, row 2\n===",
+          "tag_filename": "/build/test-norm-tags.json"
+        }
+      ]
+    },
+    {
+      "name": "unordered1",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:unordered-list:anchors-in-items:entire-list",
+          "text": "Unordered List with anchors:",
           "tag_filename": "/build/test-norm-tags.json"
         }
       ]
@@ -42,13 +102,13 @@
       "description": "One line description",
       "tags": [
         {
-          "name": "norm:note-1",
-          "text": "Multi-paragraph note 1",
+          "name": "norm:admonition:anchors-in-notes:note1",
+          "text": "Paragraph 1",
           "tag_filename": "/build/test-norm-tags.json"
         },
         {
-          "name": "norm:note-3",
-          "text": "Multi-paragraph note 3",
+          "name": "norm:admonition:anchors-in-notes:note3",
+          "text": "Paragraph 3",
           "tag_filename": "/build/test-norm-tags.json"
         }
       ]
@@ -59,12 +119,12 @@
       "chapter_name": "my-chapter_name",
       "tags": [
         {
-          "name": "norm:description-item-1",
+          "name": "norm:description-list:anchors-in-items:item1",
           "text": "Description Item 1",
           "tag_filename": "/build/test-norm-tags.json"
         },
         {
-          "name": "norm:description-item-3",
+          "name": "norm:description-list:anchors-in-items:item3",
           "text": "Description Item 3",
           "tag_filename": "/build/test-norm-tags.json"
         }
@@ -76,12 +136,12 @@
       "chapter_name": "my-chapter_name",
       "tags": [
         {
-          "name": "norm:description-item-1",
+          "name": "norm:description-list:anchors-in-items:item1",
           "text": "Description Item 1",
           "tag_filename": "/build/test-norm-tags.json"
         },
         {
-          "name": "norm:description-item-3",
+          "name": "norm:description-list:anchors-in-items:item3",
           "text": "Description Item 3",
           "tag_filename": "/build/test-norm-tags.json"
         }
@@ -94,7 +154,7 @@
       "tags": [
         {
           "name": "norm:tag_with_newlines",
-          "text": "Here&#8217;s the first line.\nHere&#8217;s the second line.",
+          "text": "Here&#8217;s the first line. Here&#8217;s the second line.",
           "tag_filename": "/build/test-norm-tags.json"
         }
       ]

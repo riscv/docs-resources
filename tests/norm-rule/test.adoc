@@ -1,7 +1,9 @@
 // This file contains test AsciiDoc to test the custom AsciiDoctor "tags" backend and the "create_normative_rules" Ruby
 // script that consumes the tags to create a list of normative rules.
 
-== Chapter 1
+== Chapter 1 - Basic Tagging
+
+=== Chapter 1.1 - Inline Tagging
 
 Before inline [#norm:inline]#inside inline# outside inline.
 
@@ -12,21 +14,28 @@ inside bad inline# outside bad inline.#
 Here's the first line.
 Here's the second line.
 
-=== Chapter 1.1
+=== Chapter 1.2 - Paragraph Tagging
 
-[[norm:para]]
-Paragraph anchor
+[[norm:paragraph:no-inline-anchors-in-paragraph]]
+Paragraph without inline anchors
 
-Next paragraph
+Next paragraph 1
 
-[[norm:table-name-empty-tag-just-anchor]]
-.table-name:
+[[norm:paragraph:inline-anchors-in-paragraph]]
+Paragraph with [#norm:paragraph:inline-anchors-in-paragraph:inline-anchors]#inline anchor# and something.
+
+Next paragraph 2
+
+=== Chapter 2 - Table Tagging
+
+[[norm:table:anchors-in-cells:entire-table]]
 |===
 
-| [[norm:table-cell-no-tag-just-anchor]] cell contents | next cell
+| [[norm:table:anchors-in-cells:cell]] cell with anchor
+| cell without anchor
 |===
 
-[[norm:normal-table]]
+[[norm:table:no-anchors-in-cells:entire-table]]
 [cols="1,1"]
 |===
 |Header 1|Header 2
@@ -35,70 +44,107 @@ Next paragraph
 |Cell in column 1, row 2 |Cell in column 2, row 2
 |===
 
-== Chapter 2 - Tagging list items
+== Chapter 3 - Tagging Unordered Lists
 
-[[norm:unordered-list-heading]]
-Unordered List:
+[[norm:unordered-list:anchors-in-items:entire-list]]
+Unordered List with anchors:
 
-* [[norm:unordered-item-1-no-tag]] Unordered Item 1
-* [[norm:unordered-item-2-no-tag]] Unordered Item 2
-* Unordered Item 3
+* [[norm:unordered-list:anchors-in-items:item1]] Item 1
+* [[norm:unordered-list:anchors-in-items:item2]] Item 2
+* Item 3
 
-[[norm:unordered-list-entire]]
-Entire Unordered List:
+[[norm:unordered-list:no-anchors-in-items:entire-list]]
+Unordered List without anchors:
 
-* Entire Unordered Item 1
-* Entire Unordered Item 2
-* Entire Unordered Item 3
+* Item 1
+* Item 2
+* Item 3
 
-[[norm:ordered-list-heading]]
-Ordered List:
+Some text here.
 
-. [[norm:ordered-item-1-no-tag]] Ordered Item 1
-. [[norm:ordered-item-2-no-tag]] Ordered Item 2
-. Ordered Item 3
-
-Description List:
-
-Description-1::
-[[norm:description-item-1]]
-Description Item 1
-
-Description-2:: Description Item 2
-
-Description-3::
-[[norm:description-item-3]]
-Description Item 3
-
-== Chapter 3 - Tagging admonitions
-
-NOTE: [[norm-note-1]] Single paragraph note
-
-[NOTE]
-====
-[[norm:note-1]]
-Multi-paragraph note 1
-
-Multi-paragraph note 2
-
-[[norm:note-3]]
-Multi-paragraph note 3
-====
-
-== Chapter 4 - Tagging entire list
-
-[[norm:fruit-color]]
-Bananas::
-Generally yellow in color
-Apples::
-Generally red in color
-
-[#norm:Zca_misa_c]#MISA.C is set if the following extensions are selected:#
-
-[[norm:Zca_misa_c_list]]
+[[norm:unordered-list:multiple-levels]]
 * Zca and not F
 * Zca, Zcf and F (but not D) is specified (RV32 only)
 * Zca, Zcf and Zcd if D is specified (RV32 only)
 ** this configuration excludes Zcmp, Zcmt
 * Zca, Zcd if D is specified (RV64 only)
 ** this configuration excludes Zcmp, Zcmt
+
+== Chapter 4 - Tagging Ordered Lists
+
+[[norm:ordered-list:anchors-in-items:entire-list]]
+Ordered List with anchors:
+
+. [[norm:ordered-list:anchors-in-items:item1]] Item 1
+. [[norm:ordered-list:anchors-in-items:item2]] Item 2
+. Item 3
+
+[[norm:ordered-list:no-anchors-in-items:entire-list]]
+Ordered List without anchors:
+
+. Item 1
+. Item 2
+. Item 3
+
+== Chapter 5 - Tagging Description Lists
+
+// Can't put anchor here or will fail.
+Description List with anchors in items:
+
+Description-1::
+[[norm:description-list:anchors-in-items:item1]]
+Description Item 1
+
+Description-2:: Description Item 2
+
+Description-3::
+[[norm:description-list:anchors-in-items:item3]]
+Description Item 3
+
+[[norm:description-list:no-anchors-in-items:entire-list]]
+Description List without anchors in items:
+
+Description-1::
+Description Item 1
+
+Description-2:: Description Item 2
+
+Description-3::
+Description Item 3
+
+== Chapter 6 - Tagging Admonitions
+
+NOTE: [[norm:admonition:single-paragraph-note]] Single paragraph note
+
+[[norm:admonition:anchors-in-notes:entire-note]]
+[NOTE]
+====
+[[norm:admonition:anchors-in-notes:note1]]
+Paragraph 1
+
+Paragraph 2
+
+[[norm:admonition:anchors-in-notes:note3]]
+Paragraph 3
+====
+
+[[norm:admonition:no-anchors-in-notes:entire-note]]
+[NOTE]
+====
+Paragraph 1
+
+Paragraph 2
+
+Paragraph 3
+====
+
+[NOTE]
+====
+[[norm:admonition:only-anchors-in-notes:note1]]
+Paragraph 1
+
+Paragraph 2
+
+[[norm:admonition:only-anchors-in-notes:note3]]
+Paragraph 3
+====
