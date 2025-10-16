@@ -1,50 +1,118 @@
 {
   "tags": {
     "norm:inline": "inside inline",
-    "norm:tag_with_newlines": "Here&#8217;s the first line.\nHere&#8217;s the second line.",
-    "norm:para": "Paragraph anchor",
-    "norm:table-name-empty-tag-just-anchor": "",
-    "norm:unordered-list-heading": "Unordered List:",
-    "norm:ordered-list-heading": "Ordered List:",
-    "norm:description-item-1": "Description Item 1",
-    "norm:description-item-3": "Description Item 3",
-    "norm:note-1": "Multi-paragraph note 1",
-    "norm:note-3": "Multi-paragraph note 3"
+    "norm:tag_with_newlines": "Here&#8217;s the first line. Here&#8217;s the second line.",
+    "norm:paragraph:no-inline-anchors-in-paragraph": "Paragraph without inline anchors",
+    "norm:paragraph:inline-anchors-in-paragraph:inline-anchors": "inline anchor",
+    "norm:paragraph:inline-anchors-in-paragraph": "Paragraph with inline anchor and something.",
+    "norm:table:anchors-in-cells:cell": "",
+    "norm:table:anchors-in-cells:entire-table": "===\n cell with anchor\ncell without anchor\n===",
+    "norm:table:no-anchors-in-cells:entire-table": "Header 1|Header 2\n===\nCell in column 1, row 1|Cell in column 2, row 1\nCell in column 1, row 2|Cell in column 2, row 2\n===",
+    "norm:unordered-list:anchors-in-items:entire-list": "Unordered List with anchors:",
+    "norm:unordered-list:anchors-in-items:item1": "",
+    "norm:unordered-list:anchors-in-items:item2": "",
+    "norm:unordered-list:no-anchors-in-items:entire-list": "Unordered List without anchors:",
+    "norm:unordered-list:multiple-levels": "Zca and not F\nZca, Zcf and F (but not D) is specified (RV32 only)\nZca, Zcf and Zcd if D is specified (RV32 only)\n\nthis configuration excludes Zcmp, Zcmt\nZca, Zcd if D is specified (RV64 only)\n\nthis configuration excludes Zcmp, Zcmt",
+    "norm:ordered-list:anchors-in-items:entire-list": "Ordered List with anchors:",
+    "norm:ordered-list:anchors-in-items:item1": "",
+    "norm:ordered-list:anchors-in-items:item2": "",
+    "norm:ordered-list:no-anchors-in-items:entire-list": "Ordered List without anchors:",
+    "norm:description-list:anchors-in-items:item1": "Description Item 1",
+    "norm:description-list:anchors-in-items:item3": "Description Item 3",
+    "norm:description-list:no-anchors-in-items:entire-list": "Description List without anchors in items:",
+    "norm:admonition:single-paragraph-note": "",
+    "norm:admonition:anchors-in-notes:note1": "Paragraph 1",
+    "norm:admonition:anchors-in-notes:note3": "Paragraph 3",
+    "norm:admonition:anchors-in-notes:entire-note": "Paragraph 1\n\nParagraph 2\n\nParagraph 3",
+    "norm:admonition:no-anchors-in-notes:entire-note": "Paragraph 1\n\nParagraph 2\n\nParagraph 3",
+    "norm:admonition:only-anchors-in-notes:note1": "Paragraph 1",
+    "norm:admonition:only-anchors-in-notes:note3": "Paragraph 3"
   },
   "sections": {
     "title": "",
     "id": "",
     "children": [
       {
-        "title": "Chapter 1",
-        "id": "_chapter_1",
+        "title": "Chapter 1 - Basic Tagging",
+        "id": "_chapter_1_basic_tagging",
         "children": [
           {
-            "title": "Chapter 1.1",
-            "id": "_chapter_1_1",
+            "title": "Chapter 1.1 - Inline Tagging",
+            "id": "_chapter_1_1_inline_tagging",
             "children": [],
             "tags": [
-              "norm:para",
-              "norm:table-name-empty-tag-just-anchor"
+              "norm:inline",
+              "norm:tag_with_newlines"
+            ]
+          },
+          {
+            "title": "Chapter 1.2 - Paragraph Tagging",
+            "id": "_chapter_1_2_paragraph_tagging",
+            "children": [],
+            "tags": [
+              "norm:paragraph:no-inline-anchors-in-paragraph",
+              "norm:paragraph:inline-anchors-in-paragraph:inline-anchors",
+              "norm:paragraph:inline-anchors-in-paragraph"
+            ]
+          },
+          {
+            "title": "Chapter 2 - Table Tagging",
+            "id": "_chapter_2_table_tagging",
+            "children": [],
+            "tags": [
+              "norm:table:anchors-in-cells:cell",
+              "norm:table:anchors-in-cells:entire-table",
+              "norm:table:no-anchors-in-cells:entire-table"
             ]
           }
         ],
+        "tags": []
+      },
+      {
+        "title": "Chapter 3 - Tagging Unordered Lists",
+        "id": "_chapter_3_tagging_unordered_lists",
+        "children": [],
         "tags": [
-          "norm:inline",
-          "norm:tag_with_newlines"
+          "norm:unordered-list:anchors-in-items:entire-list",
+          "norm:unordered-list:anchors-in-items:item1",
+          "norm:unordered-list:anchors-in-items:item2",
+          "norm:unordered-list:no-anchors-in-items:entire-list",
+          "norm:unordered-list:multiple-levels"
         ]
       },
       {
-        "title": "Chapter 2",
-        "id": "_chapter_2",
+        "title": "Chapter 4 - Tagging Ordered Lists",
+        "id": "_chapter_4_tagging_ordered_lists",
         "children": [],
         "tags": [
-          "norm:unordered-list-heading",
-          "norm:ordered-list-heading",
-          "norm:description-item-1",
-          "norm:description-item-3",
-          "norm:note-1",
-          "norm:note-3"
+          "norm:ordered-list:anchors-in-items:entire-list",
+          "norm:ordered-list:anchors-in-items:item1",
+          "norm:ordered-list:anchors-in-items:item2",
+          "norm:ordered-list:no-anchors-in-items:entire-list"
+        ]
+      },
+      {
+        "title": "Chapter 5 - Tagging Description Lists",
+        "id": "_chapter_5_tagging_description_lists",
+        "children": [],
+        "tags": [
+          "norm:description-list:anchors-in-items:item1",
+          "norm:description-list:anchors-in-items:item3",
+          "norm:description-list:no-anchors-in-items:entire-list"
+        ]
+      },
+      {
+        "title": "Chapter 6 - Tagging Admonitions",
+        "id": "_chapter_6_tagging_admonitions",
+        "children": [],
+        "tags": [
+          "norm:admonition:single-paragraph-note",
+          "norm:admonition:anchors-in-notes:note1",
+          "norm:admonition:anchors-in-notes:note3",
+          "norm:admonition:anchors-in-notes:entire-note",
+          "norm:admonition:no-anchors-in-notes:entire-note",
+          "norm:admonition:only-anchors-in-notes:note1",
+          "norm:admonition:only-anchors-in-notes:note3"
         ]
       }
     ],
