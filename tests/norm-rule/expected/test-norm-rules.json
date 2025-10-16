@@ -19,38 +19,50 @@
       ]
     },
     {
-      "name": "inline-anchors-in-paragraph",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
-      "tags": [
-        {
-          "name": "norm:paragraph:inline-anchors-in-paragraph",
-          "text": "Paragraph with inline anchor and something.",
-          "tag_filename": "/build/test-norm-tags.json"
-        }
-      ]
-    },
-    {
-      "name": "inline-anchors-in-tagged-paragraph",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
-      "tags": [
-        {
-          "name": "norm:paragraph:inline-anchors-in-paragraph:inline-anchors",
-          "text": "inline anchor",
-          "tag_filename": "/build/test-norm-tags.json"
-        }
-      ]
-    },
-    {
       "name": "paragraph-with-a-really-wide-rule-name",
       "def_filename": "tests/norm-rule/test.yaml",
       "chapter_name": "my-chapter_name",
       "description": "Here's a description.\nIt's got 2 lines.\n",
       "tags": [
         {
-          "name": "norm:paragraph:no-inline-anchors-in-paragraph",
+          "name": "norm:paragraph:no-inline-anchors",
           "text": "Paragraph without inline anchors",
+          "tag_filename": "/build/test-norm-tags.json"
+        }
+      ]
+    },
+    {
+      "name": "inline-anchors-in-paragraph-entire",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:paragraph:inline-anchors:entire",
+          "text": "Paragraph with inline anchor and something.",
+          "tag_filename": "/build/test-norm-tags.json"
+        }
+      ]
+    },
+    {
+      "name": "inline-anchors-in-paragraph-inline-anchor",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:paragraph:inline-anchors:inline-anchor",
+          "text": "inline anchor",
+          "tag_filename": "/build/test-norm-tags.json"
+        }
+      ]
+    },
+    {
+      "name": "rule_with_newlines",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:paragraph:tag_with_newlines",
+          "text": "Here&#8217;s the first line. Here&#8217;s the second line.",
           "tag_filename": "/build/test-norm-tags.json"
         }
       ]
@@ -86,7 +98,7 @@
       "tags": [
         {
           "name": "norm:unordered-list:anchors-in-items:entire-list",
-          "text": "Unordered List with anchors:",
+          "text": "Item 1\n Item 2\nItem 3",
           "tag_filename": "/build/test-norm-tags.json"
         }
       ]
@@ -120,12 +132,12 @@
       "tags": [
         {
           "name": "norm:description-list:anchors-in-items:item1",
-          "text": "Description Item 1",
+          "text": "Item 1",
           "tag_filename": "/build/test-norm-tags.json"
         },
         {
           "name": "norm:description-list:anchors-in-items:item3",
-          "text": "Description Item 3",
+          "text": "Item 3",
           "tag_filename": "/build/test-norm-tags.json"
         }
       ]
@@ -137,24 +149,12 @@
       "tags": [
         {
           "name": "norm:description-list:anchors-in-items:item1",
-          "text": "Description Item 1",
+          "text": "Item 1",
           "tag_filename": "/build/test-norm-tags.json"
         },
         {
           "name": "norm:description-list:anchors-in-items:item3",
-          "text": "Description Item 3",
-          "tag_filename": "/build/test-norm-tags.json"
-        }
-      ]
-    },
-    {
-      "name": "rule_with_newlines",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
-      "tags": [
-        {
-          "name": "norm:tag_with_newlines",
-          "text": "Here&#8217;s the first line. Here&#8217;s the second line.",
+          "text": "Item 3",
           "tag_filename": "/build/test-norm-tags.json"
         }
       ]

@@ -1,30 +1,31 @@
 {
   "tags": {
     "norm:inline": "inside inline",
-    "norm:tag_with_newlines": "Here&#8217;s the first line. Here&#8217;s the second line.",
-    "norm:paragraph:no-inline-anchors-in-paragraph": "Paragraph without inline anchors",
-    "norm:paragraph:inline-anchors-in-paragraph:inline-anchors": "inline anchor",
-    "norm:paragraph:inline-anchors-in-paragraph": "Paragraph with inline anchor and something.",
+    "norm:paragraph:no-inline-anchors": "Paragraph without inline anchors",
+    "norm:paragraph:inline-anchors:inline-anchor": "inline anchor",
+    "norm:paragraph:inline-anchors:entire": "Paragraph with inline anchor and something.",
+    "norm:paragraph:tag_with_newlines": "Here&#8217;s the first line. Here&#8217;s the second line.",
+    "norm:table:no-anchors-in-cells:entire-table": "Header 1|Header 2\n===\nCell in column 1, row 1|Cell in column 2, row 1\nCell in column 1, row 2|Cell in column 2, row 2\n===",
     "norm:table:anchors-in-cells:cell": "",
     "norm:table:anchors-in-cells:entire-table": "===\n cell with anchor\ncell without anchor\n===",
-    "norm:table:no-anchors-in-cells:entire-table": "Header 1|Header 2\n===\nCell in column 1, row 1|Cell in column 2, row 1\nCell in column 1, row 2|Cell in column 2, row 2\n===",
-    "norm:unordered-list:anchors-in-items:entire-list": "Unordered List with anchors:",
+    "norm:unordered-list:no-anchors-in-items:entire-list": "Item A\nItem B\nItem C",
     "norm:unordered-list:anchors-in-items:item1": "",
     "norm:unordered-list:anchors-in-items:item2": "",
-    "norm:unordered-list:no-anchors-in-items:entire-list": "Unordered List without anchors:",
+    "norm:unordered-list:anchors-in-items:entire-list": "Item 1\n Item 2\nItem 3",
     "norm:unordered-list:multiple-levels": "Zca and not F\nZca, Zcf and F (but not D) is specified (RV32 only)\nZca, Zcf and Zcd if D is specified (RV32 only)\n\nthis configuration excludes Zcmp, Zcmt\nZca, Zcd if D is specified (RV64 only)\n\nthis configuration excludes Zcmp, Zcmt",
-    "norm:ordered-list:anchors-in-items:entire-list": "Ordered List with anchors:",
+    "norm:ordered-list:no-anchors-in-items:entire-list": "Item A\nItem B\nItem C",
     "norm:ordered-list:anchors-in-items:item1": "",
     "norm:ordered-list:anchors-in-items:item2": "",
-    "norm:ordered-list:no-anchors-in-items:entire-list": "Ordered List without anchors:",
-    "norm:description-list:anchors-in-items:item1": "Description Item 1",
-    "norm:description-list:anchors-in-items:item3": "Description Item 3",
-    "norm:description-list:no-anchors-in-items:entire-list": "Description List without anchors in items:",
+    "norm:ordered-list:anchors-in-items:entire-list": "Item 1\n Item 2\nItem 3",
+    "norm:description-list:no-anchors-in-items:entire-list": "Description-A\nItem A\nDescription-B\nItem B\nDescription-C\nItem C",
+    "norm:description-list:anchors-in-items:entire-list": "Description-1",
+    "norm:description-list:anchors-in-items:item1": "Item 1",
+    "norm:description-list:anchors-in-items:item3": "Item 3",
     "norm:admonition:single-paragraph-note": "",
+    "norm:admonition:no-anchors-in-notes:entire-note": "Paragraph A\n\nParagraph B\n\nParagraph C",
     "norm:admonition:anchors-in-notes:note1": "Paragraph 1",
     "norm:admonition:anchors-in-notes:note3": "Paragraph 3",
     "norm:admonition:anchors-in-notes:entire-note": "Paragraph 1\n\nParagraph 2\n\nParagraph 3",
-    "norm:admonition:no-anchors-in-notes:entire-note": "Paragraph 1\n\nParagraph 2\n\nParagraph 3",
     "norm:admonition:only-anchors-in-notes:note1": "Paragraph 1",
     "norm:admonition:only-anchors-in-notes:note3": "Paragraph 3"
   },
@@ -41,8 +42,7 @@
             "id": "_chapter_1_1_inline_tagging",
             "children": [],
             "tags": [
-              "norm:inline",
-              "norm:tag_with_newlines"
+              "norm:inline"
             ]
           },
           {
@@ -50,9 +50,10 @@
             "id": "_chapter_1_2_paragraph_tagging",
             "children": [],
             "tags": [
-              "norm:paragraph:no-inline-anchors-in-paragraph",
-              "norm:paragraph:inline-anchors-in-paragraph:inline-anchors",
-              "norm:paragraph:inline-anchors-in-paragraph"
+              "norm:paragraph:no-inline-anchors",
+              "norm:paragraph:inline-anchors:inline-anchor",
+              "norm:paragraph:inline-anchors:entire",
+              "norm:paragraph:tag_with_newlines"
             ]
           },
           {
@@ -60,9 +61,9 @@
             "id": "_chapter_2_table_tagging",
             "children": [],
             "tags": [
+              "norm:table:no-anchors-in-cells:entire-table",
               "norm:table:anchors-in-cells:cell",
-              "norm:table:anchors-in-cells:entire-table",
-              "norm:table:no-anchors-in-cells:entire-table"
+              "norm:table:anchors-in-cells:entire-table"
             ]
           }
         ],
@@ -73,10 +74,10 @@
         "id": "_chapter_3_tagging_unordered_lists",
         "children": [],
         "tags": [
-          "norm:unordered-list:anchors-in-items:entire-list",
+          "norm:unordered-list:no-anchors-in-items:entire-list",
           "norm:unordered-list:anchors-in-items:item1",
           "norm:unordered-list:anchors-in-items:item2",
-          "norm:unordered-list:no-anchors-in-items:entire-list",
+          "norm:unordered-list:anchors-in-items:entire-list",
           "norm:unordered-list:multiple-levels"
         ]
       },
@@ -85,10 +86,10 @@
         "id": "_chapter_4_tagging_ordered_lists",
         "children": [],
         "tags": [
-          "norm:ordered-list:anchors-in-items:entire-list",
+          "norm:ordered-list:no-anchors-in-items:entire-list",
           "norm:ordered-list:anchors-in-items:item1",
           "norm:ordered-list:anchors-in-items:item2",
-          "norm:ordered-list:no-anchors-in-items:entire-list"
+          "norm:ordered-list:anchors-in-items:entire-list"
         ]
       },
       {
@@ -96,9 +97,10 @@
         "id": "_chapter_5_tagging_description_lists",
         "children": [],
         "tags": [
+          "norm:description-list:no-anchors-in-items:entire-list",
+          "norm:description-list:anchors-in-items:entire-list",
           "norm:description-list:anchors-in-items:item1",
-          "norm:description-list:anchors-in-items:item3",
-          "norm:description-list:no-anchors-in-items:entire-list"
+          "norm:description-list:anchors-in-items:item3"
         ]
       },
       {
@@ -107,10 +109,10 @@
         "children": [],
         "tags": [
           "norm:admonition:single-paragraph-note",
+          "norm:admonition:no-anchors-in-notes:entire-note",
           "norm:admonition:anchors-in-notes:note1",
           "norm:admonition:anchors-in-notes:note3",
           "norm:admonition:anchors-in-notes:entire-note",
-          "norm:admonition:no-anchors-in-notes:entire-note",
           "norm:admonition:only-anchors-in-notes:note1",
           "norm:admonition:only-anchors-in-notes:note3"
         ]
