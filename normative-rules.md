@@ -2,7 +2,7 @@
 
 ## What is a Normative Rule?
 
-Normative rules specify the behaviors an implementation must meet in order to be compliant with the standard. Each normative rule can be thought of as a complete individually testable behavior. In some cases, a normative rule allows multiple acceptable implementation behaviors. These are called "parameters" and can be thought of as a special case of a normative rule.
+Normative rules specify the behaviors an implementation must meet in order to be compliant with the standard. Each normative rule can be thought of as a complete architecturally-visible behavior. In some cases, a normative rule allows multiple acceptable implementation behaviors. These are called "parameters" and can be thought of as a special case of a normative rule.
 
 ### Examples of Normative Rules:
 | ISA Manual Text |

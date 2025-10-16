@@ -5,36 +5,35 @@
 
 === Chapter 1.1 - Inline Tagging
 
+// PASSES
 Before inline [#norm:inline]#inside inline# outside inline.
 
+// SHOULD ALWAYS FAIL
 Before bad inline [#norm:bad-inline]#
-inside bad inline# outside bad inline.#
-
-[[norm:tag_with_newlines]]
-Here's the first line.
-Here's the second line.
+inside bad inline# outside bad inline.
 
 === Chapter 1.2 - Paragraph Tagging
 
-[[norm:paragraph:no-inline-anchors-in-paragraph]]
+// PASSES
+[[norm:paragraph:no-inline-anchors]]
 Paragraph without inline anchors
 
 Next paragraph 1
 
-[[norm:paragraph:inline-anchors-in-paragraph]]
-Paragraph with [#norm:paragraph:inline-anchors-in-paragraph:inline-anchors]#inline anchor# and something.
+// PASSES - Paragraph tag includes entire paragraph and inline tag just the inline portion.
+[[norm:paragraph:inline-anchors:entire]]
+Paragraph with [#norm:paragraph:inline-anchors:inline-anchor]#inline anchor# and something.
 
 Next paragraph 2
 
+// PASSES - Tag omits newline character
+[[norm:paragraph:tag_with_newlines]]
+Here's the first line.
+Here's the second line.
+
 === Chapter 2 - Table Tagging
 
-[[norm:table:anchors-in-cells:entire-table]]
-|===
-
-| [[norm:table:anchors-in-cells:cell]] cell with anchor
-| cell without anchor
-|===
-
+// FAILS - Tag includes entire table but has adoc === prefixes/suffixes.
 [[norm:table:no-anchors-in-cells:entire-table]]
 [cols="1,1"]
 |===
@@ -44,24 +43,35 @@ Next paragraph 2
 |Cell in column 1, row 2 |Cell in column 2, row 2
 |===
 
+// FAILS - Tag includes entire table but has adoc === prefixes/suffixes.
+[[norm:table:anchors-in-cells:entire-table]]
+|===
+
+// FAILS - Tag is empty string
+| [[norm:table:anchors-in-cells:cell]] cell with anchor
+| cell without anchor
+|===
+
 == Chapter 3 - Tagging Unordered Lists
 
-[[norm:unordered-list:anchors-in-items:entire-list]]
-Unordered List with anchors:
+// PASSES - Tag includes all list items
+[[norm:unordered-list:no-anchors-in-items:entire-list]]
+* Item A
+* Item B
+* Item C
 
+Some text here.
+
+// PASSES - Tag includes all items
+[[norm:unordered-list:anchors-in-items:entire-list]]
+// FAILS - Tags are empty strings
 * [[norm:unordered-list:anchors-in-items:item1]] Item 1
 * [[norm:unordered-list:anchors-in-items:item2]] Item 2
 * Item 3
 
-[[norm:unordered-list:no-anchors-in-items:entire-list]]
-Unordered List without anchors:
-
-* Item 1
-* Item 2
-* Item 3
-
 Some text here.
 
+// PASSES - Tag contains all content
 [[norm:unordered-list:multiple-levels]]
 * Zca and not F
 * Zca, Zcf and F (but not D) is specified (RV32 only)
@@ -72,79 +82,86 @@ Some text here.
 
 == Chapter 4 - Tagging Ordered Lists
 
-[[norm:ordered-list:anchors-in-items:entire-list]]
-Ordered List with anchors:
+// PASSES - Tag includes all list items
+[[norm:ordered-list:no-anchors-in-items:entire-list]]
+. Item A
+. Item B
+. Item C
 
+// PASSES - Tag contains entire list
+[[norm:ordered-list:anchors-in-items:entire-list]]
+// FAILS - Tags are empty strings
 . [[norm:ordered-list:anchors-in-items:item1]] Item 1
 . [[norm:ordered-list:anchors-in-items:item2]] Item 2
 . Item 3
 
-[[norm:ordered-list:no-anchors-in-items:entire-list]]
-Ordered List without anchors:
-
-. Item 1
-. Item 2
-. Item 3
-
 == Chapter 5 - Tagging Description Lists
 
-// Can't put anchor here or will fail.
-Description List with anchors in items:
-
-Description-1::
-[[norm:description-list:anchors-in-items:item1]]
-Description Item 1
-
-Description-2:: Description Item 2
-
-Description-3::
-[[norm:description-list:anchors-in-items:item3]]
-Description Item 3
-
+// PASSES - Tag includes all descriptions and items
 [[norm:description-list:no-anchors-in-items:entire-list]]
-Description List without anchors in items:
+Description-A::
+Item A
 
+Description-B:: Item B
+
+Description-C::
+Item C
+
+// FAILS - Tag only includes text "Description-1"
+[[norm:description-list:anchors-in-items:entire-list]]
 Description-1::
-Description Item 1
 
-Description-2:: Description Item 2
+// PASSES - Tag includes list item
+[[norm:description-list:anchors-in-items:item1]]
+Item 1
+
+Description-2:: Item 2
 
 Description-3::
-Description Item 3
+// PASSES - Tag includes list item
+[[norm:description-list:anchors-in-items:item3]]
+Item 3
 
 == Chapter 6 - Tagging Admonitions
 
+// FAILS - Tag is empty string
 NOTE: [[norm:admonition:single-paragraph-note]] Single paragraph note
 
+// PASSES - Tag contains entire list
+[[norm:admonition:no-anchors-in-notes:entire-note]]
+[NOTE]
+====
+Paragraph A
+
+Paragraph B
+
+Paragraph C
+====
+
+// PASSES - Tag contains entire list
 [[norm:admonition:anchors-in-notes:entire-note]]
 [NOTE]
 ====
+// PASSES - Tag contains paragraph
 [[norm:admonition:anchors-in-notes:note1]]
 Paragraph 1
 
 Paragraph 2
 
+// PASSES - Tag contains paragraph
 [[norm:admonition:anchors-in-notes:note3]]
 Paragraph 3
 ====
 
-[[norm:admonition:no-anchors-in-notes:entire-note]]
 [NOTE]
 ====
-Paragraph 1
-
-Paragraph 2
-
-Paragraph 3
-====
-
-[NOTE]
-====
+// PASSES - Tag contains paragraph
 [[norm:admonition:only-anchors-in-notes:note1]]
 Paragraph 1
 
 Paragraph 2
 
+// PASSES - Tag contains paragraph
 [[norm:admonition:only-anchors-in-notes:note3]]
 Paragraph 3
 ====

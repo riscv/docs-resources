@@ -12,15 +12,17 @@ normative_rule_definitions:
     kind: extension
     instances: [Zicsr, ABC]
     tags: ["norm:inline"]
-  - name: inline-anchors-in-paragraph
-    tags: ["norm:paragraph:inline-anchors-in-paragraph"]
-  - name: inline-anchors-in-tagged-paragraph
-    tags: ["norm:paragraph:inline-anchors-in-paragraph:inline-anchors"]
   - name: paragraph-with-a-really-wide-rule-name
     description: |
       Here's a description.
       It's got 2 lines.
-    tags: ["norm:paragraph:no-inline-anchors-in-paragraph"]
+    tags: ["norm:paragraph:no-inline-anchors"]
+  - name: inline-anchors-in-paragraph-entire
+    tags: ["norm:paragraph:inline-anchors:entire"]
+  - name: inline-anchors-in-paragraph-inline-anchor
+    tags: ["norm:paragraph:inline-anchors:inline-anchor"]
+  - name: rule_with_newlines
+    tags: ["norm:paragraph:tag_with_newlines"]
   - name: table1
     tags: ["norm:table:anchors-in-cells:entire-table"]
   - name: table2
@@ -34,5 +36,3 @@ normative_rule_definitions:
     tags: ["norm:admonition:anchors-in-notes:note1", "norm:admonition:anchors-in-notes:note3"]
   - names: [desc1, desc2]
     tags: ["norm:description-list:anchors-in-items:item1", "norm:description-list:anchors-in-items:item3"]
-  - name: rule_with_newlines
-    tags: ["norm:tag_with_newlines"]
