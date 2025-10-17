@@ -74,7 +74,7 @@
       "tags": [
         {
           "name": "norm:table:anchors-in-cells:entire-table",
-          "text": "===\n cell with anchor\ncell without anchor\n===",
+          "text": "===\ncell with anchor\ncell without anchor\n===",
           "tag_filename": "/build/test-norm-tags.json"
         }
       ]
@@ -98,7 +98,7 @@
       "tags": [
         {
           "name": "norm:unordered-list:anchors-in-items:entire-list",
-          "text": "Item 1\n Item 2\nItem 3",
+          "text": "Item 1\nItem 2\nItem 3",
           "tag_filename": "/build/test-norm-tags.json"
         }
       ]
