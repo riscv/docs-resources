@@ -47,8 +47,8 @@ Here's the second line.
 [[norm:table:anchors-in-cells:entire-table]]
 |===
 
-// FAILS - Tag is empty string
-| [[norm:table:anchors-in-cells:cell]] cell with anchor
+// PASSES
+| [#norm:table:anchors-in-cells:cell]#cell with anchor#
 | cell without anchor
 |===
 
@@ -64,9 +64,9 @@ Some text here.
 
 // PASSES - Tag includes all items
 [[norm:unordered-list:anchors-in-items:entire-list]]
-// FAILS - Tags are empty strings
-* [[norm:unordered-list:anchors-in-items:item1]] Item 1
-* [[norm:unordered-list:anchors-in-items:item2]] Item 2
+// PASSES
+* [#norm:unordered-list:anchors-in-items:item1]#Item 1#
+* [#norm:unordered-list:anchors-in-items:item2]#Item 2#
 * Item 3
 
 Some text here.
@@ -90,9 +90,9 @@ Some text here.
 
 // PASSES - Tag contains entire list
 [[norm:ordered-list:anchors-in-items:entire-list]]
-// FAILS - Tags are empty strings
-. [[norm:ordered-list:anchors-in-items:item1]] Item 1
-. [[norm:ordered-list:anchors-in-items:item2]] Item 2
+// PASSES
+. [#norm:ordered-list:anchors-in-items:item1]#Item 1#
+. [#norm:ordered-list:anchors-in-items:item2]#Item 2#
 . Item 3
 
 == Chapter 5 - Tagging Description Lists
@@ -124,8 +124,9 @@ Item 3
 
 == Chapter 6 - Tagging Admonitions
 
-// FAILS - Tag is empty string
-NOTE: [[norm:admonition:single-paragraph-note]] Single paragraph note
+// PASSES
+NOTE: [#norm:admonition:single-paragraph-note]#Single paragraph note
+that spans lines.#
 
 // PASSES - Tag contains entire list
 [[norm:admonition:no-anchors-in-notes:entire-note]]
@@ -157,11 +158,11 @@ Paragraph 3
 ====
 // PASSES - Tag contains paragraph
 [[norm:admonition:only-anchors-in-notes:note1]]
-Paragraph 1
+Paragraph X
 
-Paragraph 2
+Paragraph Y
 
 // PASSES - Tag contains paragraph
 [[norm:admonition:only-anchors-in-notes:note3]]
-Paragraph 3
+Paragraph Z
 ====

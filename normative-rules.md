@@ -34,7 +34,7 @@ Quite often there is a "1:1" mapping between normative rules and tags, but not a
 
 ## AsciiDoc Anchor Background
 
-AsciiDoc provides facilities to create invisible anchors associated with an entire paragraph or portions of a paragraph. These anchors are only visible in raw AsciiDoc files and are invisible in the PDF and GitHub AsciiDoc previewer. Each "tag" added to an AsciiDoc file to identify normative text (remember, not always 1:1 mapping from normative rules to tags) has an associated anchor name. These anchor names must be unique across all the AsciiDoc files used by a particular standard but aren't required to be unique across standards. Each RISC-V standard defines the naming convention of these anchor names but the anchor names must start with the prefix of "norm:" so they can be readily located by tools.
+AsciiDoc provides facilities to create invisible anchors associated with an entire paragraph or portions of a paragraph. These anchors are only visible in raw AsciiDoc files and are invisible in the PDF and GitHub AsciiDoc previewer. Each "tag" added to an AsciiDoc file to identify normative text (remember, not always a 1:1 mapping from normative rules to tags) has an associated anchor name. These anchor names must be unique across all the AsciiDoc files used by a particular standard but aren't required to be unique across standards. Each RISC-V standard defines the naming convention of these anchor names but the anchor names must start with the prefix of "norm:" so they can be readily located by tools.
 
 AsciiDoc supports several styles of anchors:
 * _inline anchor_ such as:<br>
@@ -46,7 +46,7 @@ AsciiDoc supports several styles of anchors:
     >
     > `This isn't part of the anchor since it is the next paragraph.`
 
-* You must use the _paragraph anchor_ for table cells, unordered/ordered list items or description list terms
+* You must use the _inline anchor_ for table cells, unordered/ordered list items, description list items.
 
 Naming restrictions:
 * Start anchor names with a letter and use `:` to separate fields in the anchor name. No spaces allowed in name.
@@ -59,35 +59,64 @@ If you'd like to get more detailed AsciiDoc information on anchors, please read:
 * How to make cross-references: https://docs.asciidoctor.org/asciidoc/latest/macros/xref/
 * How to create anchors: https://docs.asciidoctor.org/asciidoc/latest/attributes/id/
 
+If you'd like to see detailed AsciiDoc examples of tagging cases, see https://github.com/riscv/docs-resources/blob/main/tests/norm-rule/test.adoc.
+
 ## Using AsciiDoc Anchors to Tag Normative Rules
-1. Tag part of a paragraph
+1. Tagging entire paragraph, entire table, entire unordered/ordered/description list
+
+    > Syntax:     `[[<anchor-name]]`<br>
+    >
+    > Example:<br>
+    >> `[[norm:zort]]`<br>
+    >> `Here is an example of anchoring a whole paragraph.`<br>
+    >> Tagged text: Entire paragraph<br>
+    >
+    > Example:<br>
+    >> `My favorite fruits:`<br><br>
+    >> `[[norm:favorite-fruits]]`<br>
+    >> `* mango`<br>
+    >> `* banana`<br>
+    >> `* apple`<br>
+    >> Tagged text: `mango, banana, apple`<br>
+    >
+    > Example:<br>
+    >> `[[norm:fruit-colors]]`<br>
+    >> `Apples::`<br>
+    >> `Typically be red, yellow, or green.`<br>
+    >> <br>
+    >> `Oranges:: Generally orange in color`<br>
+    >> <br>
+    >> `Bananas::`<br>
+    >> `Typically yellow`<br>
+    >> Tagged text: Entire description list
+
+2. Tagging part of a paragraph, table cells, unordered list items (AKA bullet list), or ordered list items (AKA numbered list)
 
     > Syntax:      `[#<anchor-name>]# ... #`<br>
-    > Example:     `Here is an example of [#norm:foo]#anchoring part# of a paragraph
-    >              and can have [#norm:bar]#multiple anchors# if needed.`<br>
-    > Tagged text: `anchoring part` and `multiple anchors`<br>
+    >
+    > Example:
+    >> `Here is an example of [#norm:foo]#anchoring part# of a paragraph
+    >>  and can have [#norm:bar]#multiple anchors# if needed.`<br>
+    >> Tagged text: `anchoring part` and `multiple anchors`<br>
+    >
+    > Example:<br>
+    >> `| Alan Turing | [#norm:Alan_Turing_Birthday]#June 23, 1912# | London`<br>
+    >> Tagged text: `June 23, 1912`<br>
+    >
+    > Example:<br>
+    >> `My favorite fruits:`<br><br>
+    >> `* [#norm:fruit1]#mango#`<br>
+    >> `* banana`<br>
+    >> `* [#norm:fruit3]#apple#`<br>
+    >> Tagged text: `mango` and `apple`<br>
     >
     > Limitations:
     > * Can't anchor text across multiple paragraphs.
-    > * Can't use in table cells, list items, or description list items (see #3 below for work-around).
     > * Must have text next to the 2nd hash symbol (i.e., can't have newline after `[#<anchor-name]#`).
-    > * Can't put inside admonitions such as [NOTE] (see #5 below for solution).
+    > * Can't put inside admonitions such as [NOTE] (see #4 below for solution).
     > * Can't have `.` in anchor-name (replace with `-`)
 
-2. Tag entire paragraph
-
-    > Syntax:     `[[<anchor-name]]`<br>
-    > Example:    `[[norm:zort]]`<br>
-    >             `Here is an example of anchoring a whole paragraph.`<br>
-    > Tagged text: Entire paragraph<br>
-
-3. Tag tables, unordered lists (AKA bullet), or ordered lists (AKA numbered)
-  * Don't have acceptable solution right now (see https://github.com/riscv/docs-resources/issues/72)
-
-    > Example:    `| Alan Turing | [[norm:Alan_Turing_Birthday]] June 23, 1912 | London`<br>
-    > Won't create a tag (just creates hyperlink to anchor in table/list entry so not so useful)
-
-4. Tag description lists
+3. Tagging description lists
   * For description list terms (e.g., `Apples`, `Oranges`), put the anchor immediately after the term on its own line as follows:
     > `Apples::`<br>
     > `[[norm:apple-colors]]`<br>
@@ -105,8 +134,7 @@ If you'd like to get more detailed AsciiDoc information on anchors, please read:
     > `Bananas::`<br>
     > `Generally yellow in color`
 
-5. Tag admonitions (e.g. `[NOTE]`):
-* Must use `[[<anchor-name]]` before each paragraph (with unique anchor names of course) being tagged
-* Can't use `[#<anchor-name]#Here's some note text.#` since it just shows up in HTML as normal text
-* Don't put `[[<<anchor-name]]` before the entire admonition (e.g., before `[NOTE]`) to apply to entire admonition
-(one or more paragraphs) since it will just create a hyperlink with no associated text.
+4. Tagging admonitions (e.g. `[NOTE]`):
+* Can tag entire admonition by putting ``[[anchor-name]]`` before `[NOTE]`
+* Can also tag individual paragraphs in admonition using `[[<anchor-name]]` before each paragraph
+* Only use `NOTE: [#<anchor-name]#Here's some note text.#` for this style of admonition
