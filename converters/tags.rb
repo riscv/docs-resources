@@ -110,7 +110,8 @@ class TagsConverter
   def node_text_content(node)
     content_or_nil = case node.node_name
     when "document"
-      raise "node_text_content(document) should be unreachable"
+      # Can occur when table cells use the "a|" syntax.
+      node.content.strip
     when "section"
       "\n" + [node.title, node.content].join("\n").rstrip()
     when "paragraph"

@@ -52,6 +52,12 @@ Here's the second line.
 | cell without anchor
 |===
 
+|===
+
+// PASSES
+a| Cell is adoc
+|===
+
 == Chapter 3 - Tagging Unordered Lists
 
 // PASSES - Tag includes all list items
