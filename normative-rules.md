@@ -51,8 +51,8 @@ AsciiDoc supports several styles of anchors:
 Naming restrictions:
 * Start anchor names with a letter and use `:` to separate fields in the anchor name. No spaces allowed in name.
 * Use underscores to separate lists of items between colons (e.g., `:insts:add_sub`) since RISC-V
-uses `-` in some names (e.g., `R-type`).
-* Replace `.` in items with `-` (e.g., `fence.tso` becomes `fence-tso`) so all anchors types used
+uses hyphens in some names (e.g., `R-type`).
+* Replace `.` in items with a hyphen (e.g., `fence.tso` becomes `fence-tso`) so all anchors types used
 work properly (see https://docs.asciidoctor.org/asciidoc/latest/attributes/id/#block-assignment for details).
 
 If you'd like to get more detailed AsciiDoc information on anchors, please read:
@@ -89,6 +89,12 @@ If you'd like to see detailed AsciiDoc examples of tagging cases, see https://gi
     >> `Bananas::`<br>
     >> `Typically yellow`<br>
     >> Tagged text: Entire description list
+    >
+    > Limitations:
+    > * Only one paragraph tag per paragraph. Only the last tag is detected so you can't do:
+    >>> `[norm:abc]`<br>
+    >>> `[xyz]`<br>
+    >>> `Here's my paragraph with 2 tags but we only get an anchor for xyz. However since it doesn't start with norm: we won't see any tag for this paragraph.`
 
 2. Tagging part of a paragraph, table cells, unordered list items (AKA bullet list), or ordered list items (AKA numbered list)
 
@@ -111,10 +117,12 @@ If you'd like to see detailed AsciiDoc examples of tagging cases, see https://gi
     >> Tagged text: `mango` and `apple`<br>
     >
     > Limitations:
-    > * Can't anchor text across multiple paragraphs.
+    > * Can't anchor text across multiple AsciiDoc blocks (any text separated by blank line) such as paragraphs.
+        This also includes text followed by a list (ordered, unordered, description) since there has to be
+        a blank line between the text the list.
     > * Must have text next to the 2nd hash symbol (i.e., can't have newline after `[#<anchor-name]#`).
     > * Can't put inside admonitions such as [NOTE] (see #4 below for solution).
-    > * Can't have `.` in anchor-name (replace with `-`)
+    > * Can't have `.` in anchor-name (replace with hyphen)
 
 3. Tagging description lists
   * For description list terms (e.g., `Apples`, `Oranges`), put the anchor immediately after the term on its own line as follows:
