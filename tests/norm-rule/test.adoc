@@ -8,9 +8,20 @@
 // PASSES
 Before inline [#norm:inline]#inside inline# outside inline.
 
-// SHOULD ALWAYS FAIL
-Before bad inline [#norm:bad-inline]#
+// SHOULD ALWAYS FAIL - Can't put inline tag at end of line.
+Before bad inline [#norm:bad-inline-1]#
 inside bad inline# outside bad inline.
+
+// SHOULD ALWAYS FAIL - Can't span blocks (paragraphs in this case)
+Before bad inline [#norm:bad-inline-2]#inside bad inline.
+
+Next paragraph# outside.
+
+// SHOULD ALWAYS FAIL - Can't span blocks (list in this case)
+Before bad inline [#norm:bad-inline-3]#inside bad inline:
+
+* Unordered list line 1#
+* Unordered list line 2
 
 === Chapter 1.2 - Paragraph Tagging
 
@@ -30,6 +41,15 @@ Next paragraph 2
 [[norm:paragraph:tag_with_newlines]]
 Here's the first line.
 Here's the second line.
+
+// FAILS - Can't have multiple paragraph tags (only last works)
+[[norm:abc]]
+[[norm:def]]
+This paragraph has two tags but we only ever get a tag for norm:def.
+
+[[norm:abc]]
+[[def]]
+This paragraph has two tags but we'll never see either since the 1st isn't picked up by the tags backend as a tag and the second doesn't start with norm:
 
 === Chapter 2 - Table Tagging
 
