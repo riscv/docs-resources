@@ -2,6 +2,6 @@
 
 == Chapter 1
 
-Before inline [#bad:duplicate]#inside inline# outside inline.
+Before inline [#duplicate:bad]#inside inline# outside inline.
 
-Same tag [#bad:duplicate]#duplicated inside# duplicated outside.
+Same tag [#duplicate:bad]#duplicated inside# duplicated outside.

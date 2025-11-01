@@ -56,6 +56,18 @@
       ]
     },
     {
+      "name": "formulae",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:formulae",
+          "text": "This paragraph looks like a formulae to Excel because it has this &lt; sign in it. Make sure this gets written as a string, not a formulae in the XLSX or else it will create an error in Excel.",
+          "tag_filename": "/build/test-norm-tags.json"
+        }
+      ]
+    },
+    {
       "name": "rule_with_newlines",
       "def_filename": "tests/norm-rule/test.yaml",
       "chapter_name": "my-chapter_name",

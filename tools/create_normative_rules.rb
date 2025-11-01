@@ -243,8 +243,12 @@ def check_allowed_types(kind, nr_name, name)
 end
 
 def fatal(msg)
-  puts "#{PN}: ERROR: #{msg}"
+  error(msg)
   exit(1)
+end
+
+def error(msg)
+  puts "#{PN}: ERROR: #{msg}"
 end
 
 def info(msg)
@@ -256,6 +260,7 @@ def usage(exit_status = 1)
   puts "  -h             Display this usage message"
   puts "  -j             Set output format to JSON (default)"
   puts "  -x             Set output format to XLSX"
+  puts "  -w             Warning instead of error if tags found without rules (Only use for debugging!)"
   puts "  -d filename    Normative rule definition filename (YAML format)"
   puts "  -t filename    Normative tag filename (JSON format)"
   puts
@@ -276,6 +281,7 @@ def parse_argv
   tag_fnames=[]
   output_fname=nil
   output_format="json"
+  warn_if_tags_no_rules = 0
 
   i = 0
   while i < ARGV.count
@@ -287,6 +293,8 @@ def parse_argv
       output_format = "json"
     when "-x"
       output_format = "xlsx"
+    when "-w"
+      warn_if_tags_no_rules = 1
     when "-d"
       if (ARGV.count-i) < 1
         info("Missing argument for -d option")
@@ -331,7 +339,7 @@ def parse_argv
     usage
   end
 
-  return [def_fnames, tag_fnames, output_fname, output_format]
+  return [def_fnames, tag_fnames, output_fname, output_format, warn_if_tags_no_rules]
 end
 
 # Load the contents of all normative rule tag files in JSON format.
@@ -492,7 +500,7 @@ end
 
 # Fatal error if any normative rule references a non-existant tag
 # Warning if there are tags that no rule references.
-def validate_defs_and_tags(defs, tags)
+def validate_defs_and_tags(defs, tags, warn_if_tags_no_rules)
   fatal("Need NormativeRuleDefs for defs but passed a #{defs.class}") unless defs.is_a?(NormativeRuleDefs)
   fatal("Need NormativeTags for tags but was passed a #{tags.class}") unless tags.is_a?(NormativeTags)
 
@@ -511,7 +519,7 @@ def validate_defs_and_tags(defs, tags)
 
         if tag.nil?
           missing_tag_cnt = missing_tag_cnt + 1
-          info("Normative rule #{d.name} defined in file #{d.def_filename} references non-existent tag #{tag_ref_name}")
+          error("Normative rule #{d.name} defined in file #{d.def_filename} references non-existent tag #{tag_ref_name}")
         else
           referenced_tags[tag.name] = 1 # Any non-nil value
         end
@@ -522,13 +530,30 @@ def validate_defs_and_tags(defs, tags)
   # Look for any unreferenced tags.
   tags.get_tags.each do |tag|
     if referenced_tags[tag.name].nil?
-      info("Tag #{tag.name} not referenced by any normative rule. Did you forget to define a normative rule?")
+      msg = "Tag #{tag.name} not referenced by any normative rule. Did you forget to define a normative rule?"
+      if warn_if_tags_no_rules == 1
+        info(msg)
+      else
+        error(msg)
+      end
       unref_cnt = unref_cnt + 1
     end
   end
 
-  fatal("#{missing_tag_cnt} reference#{missing_tag_cnt == 1 ? "" : "s"} to non-existing tags") if missing_tag_cnt > 0
-  info("#{unref_cnt} tag#{unref_cnt == 1 ? "" : "s"} have no normative rules referencing them") if unref_cnt > 0
+  if missing_tag_cnt > 0
+    error("#{missing_tag_cnt} reference#{missing_tag_cnt == 1 ? "" : "s"} to non-existing tags")
+  end
+
+  if unref_cnt > 0
+    msg = "#{unref_cnt} tag#{unref_cnt == 1 ? "" : "s"} have no normative rules referencing them"
+    if warn_if_tags_no_rules == 1
+      info(msg)
+    else
+      error(msg)
+    end
+  end
+
+  fatal("Exiting due to errors") if ((missing_tag_cnt > 0) || ((unref_cnt > 0) && (warn_if_tags_no_rules == 0)))
 end
 
 # Store normative rules in JSON output file
@@ -568,7 +593,7 @@ def output_xlsx(filename, defs, tags)
   info("Storing #{defs.norm_rule_defs.count} normative rules into file #{filename}")
 
   # Create a new Excel workbook
-  info("Creating Excel workboook #{filename}")
+  info("Creating Excel workbook #{filename}")
   workbook = WriteXLSX.new(filename)
 
   # Add a worksheet
@@ -593,8 +618,8 @@ def output_xlsx(filename, defs, tags)
   # Add normative rules in rows. One row for each tag if multiple tags.
   row_num = 1
   defs.norm_rule_defs.each do |d|
-    worksheet.write(row_num, 0, d.chapter_name)
-    worksheet.write(row_num, 1, d.name, wrap_format)
+    worksheet.write_string(row_num, 0, d.chapter_name)
+    worksheet.write_string(row_num, 1, d.name, wrap_format)
 
     rule_defs = []
     rule_def_sources = []
@@ -619,10 +644,10 @@ def output_xlsx(filename, defs, tags)
     end
     rule_def_sources.append('[' + tag_sources.join(', ') + ']') unless tag_sources.empty?
 
-    worksheet.write(row_num, 2, rule_defs.join("\n"), wrap_format) unless rule_defs.empty?
-    worksheet.write(row_num, 3, rule_def_sources.join(", "), wrap_format) unless rule_def_sources.empty?
-    worksheet.write(row_num, 4, d.kind) unless d.kind.nil?
-    worksheet.write(row_num, 5, d.instances.join(', ')) unless d.instances.empty?
+    worksheet.write_string(row_num, 2, rule_defs.join("\n"), wrap_format) unless rule_defs.empty?
+    worksheet.write_string(row_num, 3, rule_def_sources.join(", "), wrap_format) unless rule_def_sources.empty?
+    worksheet.write_string(row_num, 4, d.kind) unless d.kind.nil?
+    worksheet.write_string(row_num, 5, d.instances.join(', ')) unless d.instances.empty?
 
     row_num += 1
   end
@@ -647,7 +672,7 @@ end
 
 info("Passed command-line: #{ARGV.join(' ')}")
 
-def_fnames, tag_fnames, output_fname, output_format = parse_argv()
+def_fnames, tag_fnames, output_fname, output_format, warn_if_tags_no_rules = parse_argv()
 
 info("Normative rule definition filenames = #{def_fnames}")
 info("Normative tag filenames = #{tag_fnames}")
@@ -656,7 +681,7 @@ info("Output format = #{output_format}")
 
 defs = load_definitions(def_fnames)
 tags = load_tags(tag_fnames)
-validate_defs_and_tags(defs, tags)
+validate_defs_and_tags(defs, tags, warn_if_tags_no_rules)
 
 case output_format
 when "json"
