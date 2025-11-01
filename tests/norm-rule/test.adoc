@@ -51,6 +51,10 @@ This paragraph has two tags but we only ever get a tag for norm:def.
 [[def]]
 This paragraph has two tags but we'll never see either since the 1st isn't picked up by the tags backend as a tag and the second doesn't start with norm:
 
+[[norm:formulae]]
+This paragraph looks like a formulae to Excel because it has this < sign in it.
+Make sure this gets written as a string, not a formulae in the XLSX or else it will create an error in Excel.
+
 === Chapter 2 - Table Tagging
 
 // FAILS - Tag includes entire table but has adoc === prefixes/suffixes.

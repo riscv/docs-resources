@@ -28,22 +28,24 @@ TAGS_BACKEND := tags.rb
 CREATE_NORM_RULE_TOOL := create_normative_rules.rb
 
 # Input and output file names
-GOOD_TEST_ADOC_INPUT_FNAME := test.adoc
-BAD_TEST_ADOC_INPUT_FNAME := duplicate.adoc
-GOOD_NORM_TAGS_OUTPUT_FNAME := test-norm-tags.json
-BAD_NORM_TAGS_OUTPUT_FNAME := bad-tags.json
+MAIN_TEST_ADOC_INPUT_FNAME := test.adoc
+DUPLICATE_TEST_ADOC_INPUT_FNAME := duplicate.adoc
+MAIN_NORM_TAGS_OUTPUT_FNAME := test-norm-tags.json
+DUPLICATE_NORM_TAGS_OUTPUT_FNAME := duplicate-tags.json
 NORM_RULE_JSON_OUTPUT_FNAME := test-norm-rules.json
 NORM_RULE_XLSX_OUTPUT_FNAME := test-norm-rules.xlsx
+NORM_RULE_TAGS_NO_RULES_OUTPUT_FNAME := test-norm-rules_tags_no_rules.json
 
 # Built output files
-BUILT_NORM_TAGS_GOOD := $(BUILD_DIR)/$(GOOD_NORM_TAGS_OUTPUT_FNAME)
-BUILT_NORM_TAGS_BAD := $(BUILD_DIR)/$(BAD_NORM_TAGS_OUTPUT_FNAME)
+BUILT_NORM_TAGS_MAIN := $(BUILD_DIR)/$(MAIN_NORM_TAGS_OUTPUT_FNAME)
+BUILT_NORM_TAGS_DUPLICATE := $(BUILD_DIR)/$(DUPLICATE_NORM_TAGS_OUTPUT_FNAME)
 BUILT_NORM_RULES_JSON := $(BUILD_DIR)/$(NORM_RULE_JSON_OUTPUT_FNAME)
 BUILT_NORM_RULES_XLSX := $(BUILD_DIR)/$(NORM_RULE_XLSX_OUTPUT_FNAME)
+BUILT_NORM_RULES_TAGS_NO_RULES := $(BUILD_DIR)/$(NORM_RULE_TAGS_NO_RULES_OUTPUT_FNAME)
 
 # Copies of expected output files.
 # Use make target "update-expected" to update from build dir contents.
-EXPECTED_NORM_TAGS := $(NORM_RULE_EXPECTED_DIR)/$(GOOD_NORM_TAGS_OUTPUT_FNAME)
+EXPECTED_NORM_TAGS := $(NORM_RULE_EXPECTED_DIR)/$(MAIN_NORM_TAGS_OUTPUT_FNAME)
 EXPECTED_NORM_RULES_JSON := $(NORM_RULE_EXPECTED_DIR)/$(NORM_RULE_JSON_OUTPUT_FNAME)
 EXPECTED_NORM_RULES_XLSX := $(NORM_RULE_EXPECTED_DIR)/$(NORM_RULE_XLSX_OUTPUT_FNAME)
 
@@ -51,7 +53,7 @@ EXPECTED_NORM_RULES_XLSX := $(NORM_RULE_EXPECTED_DIR)/$(NORM_RULE_XLSX_OUTPUT_FN
 NORM_RULE_DEF_FILES := $(wildcard $(NORM_RULE_DEF_DIR)/*.yaml)
 
 # Add -t to each normative tag input filename and add prefix of "/" to make into absolute pathname.
-NORM_TAG_FILE_ARGS := $(foreach relative_pname,$(BUILT_NORM_TAGS_GOOD),-t /$(relative_pname))
+NORM_TAG_FILE_ARGS := $(foreach relative_pname,$(BUILT_NORM_TAGS_MAIN),-t /$(relative_pname))
 
 # Add -d to each normative rule definition filename
 NORM_RULE_DEF_ARGS := $(foreach relative_pname,$(NORM_RULE_DEF_FILES),-d $(relative_pname))
@@ -122,18 +124,19 @@ test: build-tests compare-tests
 
 # Build tests
 .PHONY: build-tests build-test-tags build-test-norm-rules-json build-test-norm-rules-xlsx
-build-tests: build-test-tags build-test-norm-rules-json build-test-norm-rules-xlsx
-build-test-tags: $(BUILT_NORM_TAGS_GOOD) $(BUILT_NORM_TAGS_BAD)
+build-tests: build-test-tags build-test-norm-rules-json build-test-norm-rules-xlsx build-test-tags-without-rules
+build-test-tags: $(BUILT_NORM_TAGS_MAIN) $(BUILT_NORM_TAGS_DUPLICATE)
 build-test-norm-rules-json: $(BUILT_NORM_RULES_JSON)
 build-test-norm-rules-xlsx: $(BUILT_NORM_RULES_XLSX)
+build-test-tags-without-rules: $(BUILT_NORM_RULES_TAGS_NO_RULES)
 
 # Compare tests against expected
 .PHONY: compare-tests
 compare-tests: compare-test-tags compare-test-norm-rules-json
 
-compare-test-tags: $(EXPECTED_NORM_TAGS) $(BUILT_NORM_TAGS_GOOD)
+compare-test-tags: $(EXPECTED_NORM_TAGS) $(BUILT_NORM_TAGS_MAIN)
 	@echo "CHECKING BUILT TAGS AGAINST EXPECTED TAGS"
-	diff $(EXPECTED_NORM_TAGS) $(BUILT_NORM_TAGS_GOOD) && echo "diff PASSED" || (echo "diff FAILED"; exit 1)
+	diff $(EXPECTED_NORM_TAGS) $(BUILT_NORM_TAGS_MAIN) && echo "diff PASSED" || (echo "diff FAILED"; exit 1)
 
 compare-test-norm-rules: $(EXPECTED_NORM_RULES) $(BUILT_NORM_RULES)
 
@@ -145,8 +148,8 @@ compare-test-norm-rules-json: $(EXPECTED_NORM_RULES_JSON) $(BUILT_NORM_RULES_JSO
 .PHONY: update-expected
 update-expected: update-test-tags update-test-norm-rules-json update-test-norm-rules-xlsx
 
-update-test-tags: $(BUILT_NORM_TAGS_GOOD)
-	cp -f $(BUILT_NORM_TAGS_GOOD) $(EXPECTED_NORM_TAGS)
+update-test-tags: $(BUILT_NORM_TAGS_MAIN)
+	cp -f $(BUILT_NORM_TAGS_MAIN) $(EXPECTED_NORM_TAGS)
 
 update-test-norm-rules-json: $(BUILT_NORM_RULES_JSON)
 	cp -f $(BUILT_NORM_RULES_JSON) $(EXPECTED_NORM_RULES_JSON)
@@ -154,33 +157,42 @@ update-test-norm-rules-json: $(BUILT_NORM_RULES_JSON)
 update-test-norm-rules-xlsx: $(BUILT_NORM_RULES_XLSX)
 	cp -f $(BUILT_NORM_RULES_XLSX) $(EXPECTED_NORM_RULES_XLSX)
 
-# Build normative tags with good adoc input
-$(BUILT_NORM_TAGS_GOOD): $(NORM_RULE_TESTS_DIR)/$(GOOD_TEST_ADOC_INPUT_FNAME) $(CONVERTERS_DIR)/$(TAGS_BACKEND)
+# Build normative tags with main adoc input
+$(BUILT_NORM_TAGS_MAIN): $(NORM_RULE_TESTS_DIR)/$(MAIN_TEST_ADOC_INPUT_FNAME) $(CONVERTERS_DIR)/$(TAGS_BACKEND)
 	$(WORKDIR_SETUP)
 	$(DOCKER_CMD) $(DOCKER_QUOTE) $(ASCIIDOCTOR_TAGS) $(OPTIONS) -a tags-match-prefix='norm:' -a tags-output-suffix='-norm-tags.json' $< $(DOCKER_QUOTE)
 	$(WORKDIR_TEARDOWN)
 
-# Build normative tags with bad adoc input
+# Build normative tags with duplicate adoc input
 # Asciidoctor should exit with a non-zero status and then we just "touch" the output file so it exists and make is happy.
-$(BUILT_NORM_TAGS_BAD): $(TAGS_TESTS_DIR)/$(BAD_TEST_ADOC_INPUT_FNAME) $(CONVERTERS_DIR)/$(TAGS_BACKEND)
+$(BUILT_NORM_TAGS_DUPLICATE): $(TAGS_TESTS_DIR)/$(DUPLICATE_TEST_ADOC_INPUT_FNAME) $(CONVERTERS_DIR)/$(TAGS_BACKEND)
 	$(WORKDIR_SETUP)
-	$(DOCKER_CMD) $(DOCKER_QUOTE) $(ASCIIDOCTOR_TAGS) $(OPTIONS) -a tags-match-prefix='bad:' -a tags-output-suffix='-bad-tags.json' $< || touch build/bad-tags.json $(DOCKER_QUOTE)
+	$(DOCKER_CMD) $(DOCKER_QUOTE) $(ASCIIDOCTOR_TAGS) $(OPTIONS) -a tags-match-prefix='duplicate:' -a tags-output-suffix='-duplicate-tags.json' $< || touch $(BUILT_NORM_TAGS_DUPLICATE) $(DOCKER_QUOTE)
 	$(WORKDIR_TEARDOWN)
 
 # Build normative rules with JSON output format
-$(BUILT_NORM_RULES_JSON): $(BUILT_NORM_TAGS_GOOD) $(NORM_RULE_DEF_FILES)
+$(BUILT_NORM_RULES_JSON): $(BUILT_NORM_TAGS_MAIN) $(NORM_RULE_DEF_FILES)
 	$(WORKDIR_SETUP)
-	cp -f $(BUILT_NORM_TAGS_GOOD) $@.workdir
+	cp -f $(BUILT_NORM_TAGS_MAIN) $@.workdir
 	mkdir -p $@.workdir/build
-	$(DOCKER_CMD) $(DOCKER_QUOTE) ruby $(TOOLS_DIR)/$(CREATE_NORM_RULE_TOOL) $(NORM_TAG_FILE_ARGS) $(NORM_RULE_DEF_ARGS) $@ $(DOCKER_QUOTE)
+	$(DOCKER_CMD) $(DOCKER_QUOTE) ruby $(TOOLS_DIR)/$(CREATE_NORM_RULE_TOOL) -w $(NORM_TAG_FILE_ARGS) $(NORM_RULE_DEF_ARGS) $@ $(DOCKER_QUOTE)
 	$(WORKDIR_TEARDOWN)
 
 # Build normative rules with XLSX output format
-$(BUILT_NORM_RULES_XLSX): $(BUILT_NORM_TAGS_GOOD) $(NORM_RULE_DEF_FILES)
+$(BUILT_NORM_RULES_XLSX): $(BUILT_NORM_TAGS_MAIN) $(NORM_RULE_DEF_FILES)
 	$(WORKDIR_SETUP)
-	cp -f $(BUILT_NORM_TAGS_GOOD) $@.workdir
+	cp -f $(BUILT_NORM_TAGS_MAIN) $@.workdir
 	mkdir -p $@.workdir/build
-	$(DOCKER_CMD) $(DOCKER_QUOTE) ruby $(TOOLS_DIR)/$(CREATE_NORM_RULE_TOOL) -x $(NORM_TAG_FILE_ARGS) $(NORM_RULE_DEF_ARGS) $@ $(DOCKER_QUOTE)
+	$(DOCKER_CMD) $(DOCKER_QUOTE) ruby $(TOOLS_DIR)/$(CREATE_NORM_RULE_TOOL) -w -x $(NORM_TAG_FILE_ARGS) $(NORM_RULE_DEF_ARGS) $@ $(DOCKER_QUOTE)
+	$(WORKDIR_TEARDOWN)
+
+# Build normative rules that should create an error due to tags without norm rules referencing them
+# Should exit with a non-zero status and then we just "touch" the output file so it exists and make is happy.
+$(BUILT_NORM_RULES_TAGS_NO_RULES): $(BUILT_NORM_TAGS_MAIN) $(NORM_RULE_DEF_FILES)
+	$(WORKDIR_SETUP)
+	cp -f $(BUILT_NORM_TAGS_MAIN) $@.workdir
+	mkdir -p $@.workdir/build
+	$(DOCKER_CMD) $(DOCKER_QUOTE) ruby $(TOOLS_DIR)/$(CREATE_NORM_RULE_TOOL) $(NORM_TAG_FILE_ARGS) $(NORM_RULE_DEF_ARGS) $(BUILD_DIR)/bogus || touch $(BUILT_NORM_RULES_TAGS_NO_RULES) $(DOCKER_QUOTE)
 	$(WORKDIR_TEARDOWN)
 
 # Update docker image to latest

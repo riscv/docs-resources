@@ -21,6 +21,8 @@ normative_rule_definitions:
     tags: ["norm:paragraph:inline-anchors:entire"]
   - name: inline-anchors-in-paragraph-inline-anchor
     tags: ["norm:paragraph:inline-anchors:inline-anchor"]
+  - name: formulae
+    tags: ["norm:formulae"]
   - name: rule_with_newlines
     tags: ["norm:paragraph:tag_with_newlines"]
   - name: table1
