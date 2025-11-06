@@ -25,22 +25,36 @@ NORM_RULE_EXPECTED_DIR := $(NORM_RULE_TESTS_DIR)/expected
 
 # Ruby scripts being tested.
 TAGS_BACKEND := tags.rb
-CREATE_NORM_RULE_TOOL := create_normative_rules.rb
+CREATE_NORM_RULE_TOOL := $(TOOLS_DIR)/create_normative_rules.rb
+CREATE_NORM_RULE_RUBY := ruby $(CREATE_NORM_RULE_TOOL)
+
+# Stuff for building mock standards document in HTML to have links into it.
+DOCS = "test"
+DOCS_HTML := $(addprefix $(BUILD_DIR)/, $(addsuffix .html, $(DOCS)))
+ENV := LANG=C.utf8
+ASCIIDOCTOR_HTML := $(ENV) asciidoctor
 
 # Input and output file names
+DOC_NORM_TAG_SUFFIX := -norm-tags.json
 MAIN_TEST_ADOC_INPUT_FNAME := test.adoc
+MAIN_TEST_HTML_FNAME := test.html
 DUPLICATE_TEST_ADOC_INPUT_FNAME := duplicate.adoc
-MAIN_NORM_TAGS_OUTPUT_FNAME := test-norm-tags.json
+MAIN_NORM_TAGS_OUTPUT_FNAME := test$(DOC_NORM_TAG_SUFFIX)
 DUPLICATE_NORM_TAGS_OUTPUT_FNAME := duplicate-tags.json
 NORM_RULE_JSON_OUTPUT_FNAME := test-norm-rules.json
 NORM_RULE_XLSX_OUTPUT_FNAME := test-norm-rules.xlsx
+NORM_RULE_ADOC_OUTPUT_FNAME := test-norm-rules.adoc
+NORM_RULE_HTML_OUTPUT_FNAME := test-norm-rules.html
 NORM_RULE_TAGS_NO_RULES_OUTPUT_FNAME := test-norm-rules_tags_no_rules.json
 
 # Built output files
+BUILT_MAIN_TEST_HTML := $(BUILD_DIR)/$(MAIN_TEST_HTML_FNAME)
 BUILT_NORM_TAGS_MAIN := $(BUILD_DIR)/$(MAIN_NORM_TAGS_OUTPUT_FNAME)
 BUILT_NORM_TAGS_DUPLICATE := $(BUILD_DIR)/$(DUPLICATE_NORM_TAGS_OUTPUT_FNAME)
 BUILT_NORM_RULES_JSON := $(BUILD_DIR)/$(NORM_RULE_JSON_OUTPUT_FNAME)
 BUILT_NORM_RULES_XLSX := $(BUILD_DIR)/$(NORM_RULE_XLSX_OUTPUT_FNAME)
+BUILT_NORM_RULES_ADOC := $(BUILD_DIR)/$(NORM_RULE_ADOC_OUTPUT_FNAME)
+BUILT_NORM_RULES_HTML := $(BUILD_DIR)/$(NORM_RULE_HTML_OUTPUT_FNAME)
 BUILT_NORM_RULES_TAGS_NO_RULES := $(BUILD_DIR)/$(NORM_RULE_TAGS_NO_RULES_OUTPUT_FNAME)
 
 # Copies of expected output files.
@@ -48,6 +62,7 @@ BUILT_NORM_RULES_TAGS_NO_RULES := $(BUILD_DIR)/$(NORM_RULE_TAGS_NO_RULES_OUTPUT_
 EXPECTED_NORM_TAGS := $(NORM_RULE_EXPECTED_DIR)/$(MAIN_NORM_TAGS_OUTPUT_FNAME)
 EXPECTED_NORM_RULES_JSON := $(NORM_RULE_EXPECTED_DIR)/$(NORM_RULE_JSON_OUTPUT_FNAME)
 EXPECTED_NORM_RULES_XLSX := $(NORM_RULE_EXPECTED_DIR)/$(NORM_RULE_XLSX_OUTPUT_FNAME)
+EXPECTED_NORM_RULES_ADOC := $(NORM_RULE_EXPECTED_DIR)/$(NORM_RULE_ADOC_OUTPUT_FNAME)
 
 # All normative rule definition input YAML files
 NORM_RULE_DEF_FILES := $(wildcard $(NORM_RULE_DEF_DIR)/*.yaml)
@@ -57,6 +72,9 @@ NORM_TAG_FILE_ARGS := $(foreach relative_pname,$(BUILT_NORM_TAGS_MAIN),-t /$(rel
 
 # Add -d to each normative rule definition filename
 NORM_RULE_DEF_ARGS := $(foreach relative_pname,$(NORM_RULE_DEF_FILES),-d $(relative_pname))
+
+# Provide mapping from an standard's norm tags JSON file to its corresponding HTML file. Used to create links into standard's HTML files.
+NORM_RULE_DOC2HTML_ARGS := $(foreach doc_name,$(DOCS),-tag2html /$(BUILD_DIR)/$(doc_name)$(DOC_NORM_TAG_SUFFIX) $(doc_name).html)
 
 # Docker stuff
 DOCKER_BIN ?= docker
@@ -124,15 +142,17 @@ test: build-tests compare-tests
 
 # Build tests
 .PHONY: build-tests build-test-tags build-test-norm-rules-json build-test-norm-rules-xlsx
-build-tests: build-test-tags build-test-norm-rules-json build-test-norm-rules-xlsx build-test-tags-without-rules
+build-tests: build-test-tags build-test-norm-rules-json build-test-norm-rules-xlsx build-test-norm-rules-adoc build-test-norm-rules-html build-test-tags-without-rules
 build-test-tags: $(BUILT_NORM_TAGS_MAIN) $(BUILT_NORM_TAGS_DUPLICATE)
 build-test-norm-rules-json: $(BUILT_NORM_RULES_JSON)
 build-test-norm-rules-xlsx: $(BUILT_NORM_RULES_XLSX)
+build-test-norm-rules-adoc: $(BUILT_NORM_RULES_ADOC)
+build-test-norm-rules-html: $(BUILT_NORM_RULES_HTML)
 build-test-tags-without-rules: $(BUILT_NORM_RULES_TAGS_NO_RULES)
 
 # Compare tests against expected
 .PHONY: compare-tests
-compare-tests: compare-test-tags compare-test-norm-rules-json
+compare-tests: compare-test-tags compare-test-norm-rules-json compare-test-norm-rules-adoc
 
 compare-test-tags: $(EXPECTED_NORM_TAGS) $(BUILT_NORM_TAGS_MAIN)
 	@echo "CHECKING BUILT TAGS AGAINST EXPECTED TAGS"
@@ -144,9 +164,13 @@ compare-test-norm-rules-json: $(EXPECTED_NORM_RULES_JSON) $(BUILT_NORM_RULES_JSO
 	@echo "CHECKING JSON BUILT NORM RULES AGAINST EXPECTED NORM RULES"
 	diff $(EXPECTED_NORM_RULES_JSON) $(BUILT_NORM_RULES_JSON) && echo "diff PASSED" || (echo "diff FAILED"; exit 1)
 
+compare-test-norm-rules-adoc: $(EXPECTED_NORM_RULES_ADOC) $(BUILT_NORM_RULES_ADOC)
+	@echo "CHECKING ADOC BUILT NORM RULES AGAINST EXPECTED NORM RULES"
+	diff $(EXPECTED_NORM_RULES_ADOC) $(BUILT_NORM_RULES_ADOC) && echo "diff PASSED" || (echo "diff FAILED"; exit 1)
+
 # Update expected files from built files
 .PHONY: update-expected
-update-expected: update-test-tags update-test-norm-rules-json update-test-norm-rules-xlsx
+update-expected: update-test-tags update-test-norm-rules-json update-test-norm-rules-xlsx update-test-norm-rules-adoc
 
 update-test-tags: $(BUILT_NORM_TAGS_MAIN)
 	cp -f $(BUILT_NORM_TAGS_MAIN) $(EXPECTED_NORM_TAGS)
@@ -156,6 +180,9 @@ update-test-norm-rules-json: $(BUILT_NORM_RULES_JSON)
 
 update-test-norm-rules-xlsx: $(BUILT_NORM_RULES_XLSX)
 	cp -f $(BUILT_NORM_RULES_XLSX) $(EXPECTED_NORM_RULES_XLSX)
+
+update-test-norm-rules-adoc: $(BUILT_NORM_RULES_ADOC)
+	cp -f $(BUILT_NORM_RULES_ADOC) $(EXPECTED_NORM_RULES_ADOC)
 
 # Build normative tags with main adoc input
 $(BUILT_NORM_TAGS_MAIN): $(NORM_RULE_TESTS_DIR)/$(MAIN_TEST_ADOC_INPUT_FNAME) $(CONVERTERS_DIR)/$(TAGS_BACKEND)
@@ -175,7 +202,7 @@ $(BUILT_NORM_RULES_JSON): $(BUILT_NORM_TAGS_MAIN) $(NORM_RULE_DEF_FILES)
 	$(WORKDIR_SETUP)
 	cp -f $(BUILT_NORM_TAGS_MAIN) $@.workdir
 	mkdir -p $@.workdir/build
-	$(DOCKER_CMD) $(DOCKER_QUOTE) ruby $(TOOLS_DIR)/$(CREATE_NORM_RULE_TOOL) -w $(NORM_TAG_FILE_ARGS) $(NORM_RULE_DEF_ARGS) $@ $(DOCKER_QUOTE)
+	$(DOCKER_CMD) $(DOCKER_QUOTE) $(CREATE_NORM_RULE_RUBY) -w -j $(NORM_TAG_FILE_ARGS) $(NORM_RULE_DEF_ARGS) $@ $(DOCKER_QUOTE)
 	$(WORKDIR_TEARDOWN)
 
 # Build normative rules with XLSX output format
@@ -183,7 +210,28 @@ $(BUILT_NORM_RULES_XLSX): $(BUILT_NORM_TAGS_MAIN) $(NORM_RULE_DEF_FILES)
 	$(WORKDIR_SETUP)
 	cp -f $(BUILT_NORM_TAGS_MAIN) $@.workdir
 	mkdir -p $@.workdir/build
-	$(DOCKER_CMD) $(DOCKER_QUOTE) ruby $(TOOLS_DIR)/$(CREATE_NORM_RULE_TOOL) -w -x $(NORM_TAG_FILE_ARGS) $(NORM_RULE_DEF_ARGS) $@ $(DOCKER_QUOTE)
+	$(DOCKER_CMD) $(DOCKER_QUOTE) $(CREATE_NORM_RULE_RUBY) -w -x $(NORM_TAG_FILE_ARGS) $(NORM_RULE_DEF_ARGS) $@ $(DOCKER_QUOTE)
+	$(WORKDIR_TEARDOWN)
+
+$(BUILT_NORM_RULES_ADOC): $(BUILT_NORM_TAGS_MAIN) $(NORM_RULE_DEF_FILES)
+	$(WORKDIR_SETUP)
+	cp -f $(BUILT_NORM_TAGS_MAIN) $@.workdir
+	mkdir -p $@.workdir/build
+	$(DOCKER_CMD) $(DOCKER_QUOTE) $(CREATE_NORM_RULE_RUBY) -w -a $(NORM_TAG_FILE_ARGS) $(NORM_RULE_DEF_ARGS) $(NORM_RULE_DOC2HTML_ARGS) $@ $(DOCKER_QUOTE)
+	$(WORKDIR_TEARDOWN)
+
+$(BUILT_NORM_RULES_HTML): $(BUILT_NORM_RULES_ADOC) $(BUILT_MAIN_TEST_HTML)
+	$(WORKDIR_SETUP)
+	mkdir -p $@.workdir/build
+	cp -f $(BUILT_NORM_RULES_ADOC) $@.workdir/build
+	$(DOCKER_CMD) $(DOCKER_QUOTE) $(ASCIIDOCTOR_HTML) $< $(DOCKER_QUOTE)
+	$(WORKDIR_TEARDOWN)
+
+# This is the HTML file that represents the standards doc. THe norm rule HTML links into this HTML.
+$(BUILT_MAIN_TEST_HTML) : $(NORM_RULE_TESTS_DIR)/$(MAIN_TEST_ADOC_INPUT_FNAME)
+	$(WORKDIR_SETUP)
+	mkdir -p $@.workdir/build
+	$(DOCKER_CMD) $(DOCKER_QUOTE) $(ASCIIDOCTOR_HTML) -o $@ $< $(DOCKER_QUOTE)
 	$(WORKDIR_TEARDOWN)
 
 # Build normative rules that should create an error due to tags without norm rules referencing them
@@ -192,7 +240,7 @@ $(BUILT_NORM_RULES_TAGS_NO_RULES): $(BUILT_NORM_TAGS_MAIN) $(NORM_RULE_DEF_FILES
 	$(WORKDIR_SETUP)
 	cp -f $(BUILT_NORM_TAGS_MAIN) $@.workdir
 	mkdir -p $@.workdir/build
-	$(DOCKER_CMD) $(DOCKER_QUOTE) ruby $(TOOLS_DIR)/$(CREATE_NORM_RULE_TOOL) $(NORM_TAG_FILE_ARGS) $(NORM_RULE_DEF_ARGS) $(BUILD_DIR)/bogus || touch $(BUILT_NORM_RULES_TAGS_NO_RULES) $(DOCKER_QUOTE)
+	$(DOCKER_CMD) $(DOCKER_QUOTE) $(CREATE_NORM_RULE_RUBY) $(NORM_TAG_FILE_ARGS) $(NORM_RULE_DEF_ARGS) $(BUILD_DIR)/bogus || touch $(BUILT_NORM_RULES_TAGS_NO_RULES) $(DOCKER_QUOTE)
 	$(WORKDIR_TEARDOWN)
 
 # Update docker image to latest

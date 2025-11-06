@@ -55,7 +55,7 @@ end
 
 # Holds all information for one tag.
 class NormativeTag
-  # @return [String] Name of normative rule tag into standards document
+  # @return [String] Name of normative rule tag in standards document
   attr_reader :name
 
   # @return [String] Name of tag file
@@ -88,7 +88,7 @@ class NormativeRuleDefs
 
   def initialize
     @norm_rule_defs = []
-    @hash = {}     # Hash<String name, NormativeRuleDef> Same objects as in array and just internal to class
+    @defs_by_name = {}     # Hash<String name, NormativeRuleDef> Same objects as in array and just internal to class
   end
 
   def add_file_contents(def_filename, chapter_name, array_data)
@@ -120,14 +120,14 @@ class NormativeRuleDefs
     fatal("Need String for chapter_name but passed a #{chapter_name.class}") unless chapter_name.is_a?(String)
     fatal("Need Hash for data but passed a #{data.class}") unless data.is_a?(Hash)
 
-    unless @hash[name].nil?
-      fatal("Normative rule definition #{name} in file #{def_filename} already defined in file #{@hash[name].def_filename}")
+    unless @defs_by_name[name].nil?
+      fatal("Normative rule definition #{name} in file #{def_filename} already defined in file #{@defs_by_name[name].def_filename}")
     end
 
-    # Create definition object and store reference to it in array (to maintain order) and hash (for convenient lookup by name).
-    norm_rule_defs = NormativeRuleDef.new(name, def_filename, chapter_name, data)
-    @norm_rule_defs.append(norm_rule_defs)
-    @hash[name] = norm_rule_defs
+    # Create definition object and store reference to it in array (to maintain order) and defs_by_name (for convenient lookup by name).
+    norm_rule_def = NormativeRuleDef.new(name, def_filename, chapter_name, data)
+    @norm_rule_defs.append(norm_rule_def)
+    @defs_by_name[name] = norm_rule_def
   end
 end # class NormativeRuleDefs
 
@@ -260,9 +260,11 @@ def usage(exit_status = 1)
   puts "  -h             Display this usage message"
   puts "  -j             Set output format to JSON (default)"
   puts "  -x             Set output format to XLSX"
+  puts "  -a             Set output format to AsciiDoc"
   puts "  -w             Warning instead of error if tags found without rules (Only use for debugging!)"
-  puts "  -d filename    Normative rule definition filename (YAML format)"
-  puts "  -t filename    Normative tag filename (JSON format)"
+  puts "  -d fname       Normative rule definition filename (YAML format)"
+  puts "  -t fname       Normative tag filename (JSON format)"
+  puts "  -doc2hmtl tag-fname html-fname   Maps from tag fname to HTML stds doc fname (required for AsciiDoc output format)"
   puts
   puts "Creates list of normative rules and stores them in <output-filename> (JSON format)."
   exit exit_status
@@ -279,6 +281,7 @@ def parse_argv
   # Return values
   def_fnames=[]
   tag_fnames=[]
+  tag2html_fnames={}
   output_fname=nil
   output_format="json"
   warn_if_tags_no_rules = 0
@@ -293,6 +296,8 @@ def parse_argv
       output_format = "json"
     when "-x"
       output_format = "xlsx"
+    when "-a"
+      output_format = "adoc"
     when "-w"
       warn_if_tags_no_rules = 1
     when "-d"
@@ -309,6 +314,15 @@ def parse_argv
       end
       tag_fnames.append(ARGV[i+1])
       i=i+1
+    when "-tag2html"
+      if (ARGV.count-i) < 2
+        info("Missing one or more arguments for -tag2html option")
+        usage
+      end
+      tag_fname = ARGV[i+1]
+      html_fname = ARGV[i+2]
+      tag2html_fnames[tag_fname] = html_fname
+      i=i+2
     when /^-/
       info("Unknown command-line option #{arg}")
     else
@@ -339,7 +353,12 @@ def parse_argv
     usage
   end
 
-  return [def_fnames, tag_fnames, output_fname, output_format, warn_if_tags_no_rules]
+  if output_format == "adoc" && tag2html_fnames.empty?
+    info("Missing output filename")
+    usage
+  end
+
+  return [def_fnames, tag_fnames, tag2html_fnames, output_fname, output_format, warn_if_tags_no_rules]
 end
 
 # Load the contents of all normative rule tag files in JSON format.
@@ -639,7 +658,7 @@ def output_xlsx(filename, defs, tags)
       tag_ref_name = tag_ref.name
       tag = tags.get_tag(tag_ref_name)
       fatal("Normative rule #{d.name} defined in file #{d.def_filename} references non-existent tag #{tag_ref_name}") if tag.nil?
-      rule_defs.append(tag.text.chomp)
+      rule_defs.append(sanitize_tag_text(tag.text).chomp)
       tag_sources.append('"' + tag.name + '"')
     end
     rule_def_sources.append('[' + tag_sources.join(', ') + ']') unless tag_sources.empty?
@@ -668,14 +687,83 @@ def output_xlsx(filename, defs, tags)
   workbook.close
 end
 
+# Store normative rules in AsciiDoc output file.
+def output_adoc(filename, defs, tags, tag2html_fnames)
+  fatal("Need String for filename but passed a #{filename.class}") unless filename.is_a?(String)
+  fatal("Need NormativeRuleDefs for defs but passed a #{defs.class}") unless defs.is_a?(NormativeRuleDefs)
+  fatal("Need NormativeTags for tags but passed a #{tags.class}") unless tags.is_a?(NormativeTags)
+  fatal("Need Hash for tag2html_fnames but passed a #{tag2html_fnames.class}") unless tag2html_fnames.is_a?(Hash)
+
+  info("Storing #{defs.norm_rule_defs.count} normative rules into file #{filename}")
+
+  # Organize rules by chapter name. Each hash key is chapter name. Each hash entry is an Array<NormativeRuleDef>
+  defs_by_chapter_name = {}
+  defs.norm_rule_defs.each do |d|
+    defs_by_chapter_name[d.chapter_name] = [] if defs_by_chapter_name[d.chapter_name].nil?
+    defs_by_chapter_name[d.chapter_name].append(d)
+  end
+
+  File.open(filename, "w") do |f|
+    f.puts("= Normative Rules by Chapter")
+
+    defs_by_chapter_name.each do |chapter_name, nr_defs|
+      f.puts("")
+      f.puts("== #{chapter_name}")
+      f.puts("")
+      f.puts("[cols=\"20%,80%\"]")
+      f.puts("|===")
+      f.puts("| Rule Name | Rule Information")
+
+      nr_defs.each do |nr|
+        info_rows = nr.tag_refs.length + (nr.description.nil? ? 0 : 1) + (nr.summary.nil? ? 0 : 1)
+        row_span = (info_rows > 0) ? ".#{info_rows}+" : ""
+
+        f.puts("")
+        f.puts("#{row_span}| #{nr.name}")
+        f.puts("a| Summary: #{nr.summary}") unless nr.summary.nil?
+        f.puts("a| Description: #{nr.description}") unless nr.description.nil?
+        nr.tag_refs.each do |tag_ref|
+          tag_ref_name = tag_ref.name
+          tag = tags.get_tag(tag_ref_name)
+          fatal("Normative rule #{nr.name} defined in file #{nr.def_filename} references non-existent tag #{tag_ref_name}") if tag.nil?
+
+          html_fname = tag2html_fnames[tag.tag_filename]
+          fatal("No fname tag to HTML mapping (-tag2html cmd line arg) for tag fname #{tag.tag_filename} for tag name #{tag.name}") if html_fname.nil?
+
+          f.puts("a| link:#{html_fname}" + "#" + tag_ref.name + "[#{tag_ref.name}] => #{sanitize_tag_text(tag.text)}")
+        end
+      end
+
+      f.puts("|===")
+    end
+  end
+end
+
+# Cleanup the tag text to be suitably displayed.
+# TODO: When https://github.com/riscv/docs-resources/issues/112 improves table format,
+# update this to allow small tables to be displayed.
+def sanitize_tag_text(text)
+  raise ArgumentError, "Expected String for text but was passed a #{text}.class" unless text.is_a?(String)
+
+  if text.end_with?("\n===")
+    # This is the currentl weak detection pattern for an entire table being tagged.
+    "ENTIRE TABLE"
+  else
+    text
+  end
+end
+
 #main()
 
 info("Passed command-line: #{ARGV.join(' ')}")
 
-def_fnames, tag_fnames, output_fname, output_format, warn_if_tags_no_rules = parse_argv()
+def_fnames, tag_fnames, tag2html_fnames, output_fname, output_format, warn_if_tags_no_rules = parse_argv()
 
 info("Normative rule definition filenames = #{def_fnames}")
 info("Normative tag filenames = #{tag_fnames}")
+tag2html_fnames.each do |tag_fname, html_fname|
+  info("Normative tag file #{tag_fname} links to HTML file #{html_fname}")
+end
 info("Output filename = #{output_fname}")
 info("Output format = #{output_format}")
 
@@ -689,6 +777,8 @@ when "json"
   output_json(output_fname, normative_rules_hash)
 when "xlsx"
   output_xlsx(output_fname, defs, tags)
+when "adoc"
+  output_adoc(output_fname, defs, tags, tag2html_fnames)
 else
   raise "Unknown output_format of #{output_format}"
 end

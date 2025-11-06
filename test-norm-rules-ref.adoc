@@ -1,0 +1,64 @@
+= Normative Rules by Chapter
+
+== my-chapter_name
+
+[cols="20%,80%"]
+|===
+| Rule Name | Rule Information
+
+.2+| inline
+a| Summary: A few words
+a| link:test.html#norm:inline[norm:inline] => inside inline
+
+.2+| paragraph-with-a-really-wide-rule-name
+a| Description: Here's a description.
+It's got 2 lines.
+a| link:test.html#norm:paragraph:no-inline-anchors[norm:paragraph:no-inline-anchors] => Paragraph without inline anchors
+
+.1+| inline-anchors-in-paragraph-entire
+a| link:test.html#norm:paragraph:inline-anchors:entire[norm:paragraph:inline-anchors:entire] => Paragraph with inline anchor and something.
+
+.1+| inline-anchors-in-paragraph-inline-anchor
+a| link:test.html#norm:paragraph:inline-anchors:inline-anchor[norm:paragraph:inline-anchors:inline-anchor] => inline anchor
+
+.1+| formulae
+a| link:test.html#norm:formulae[norm:formulae] => This paragraph looks like a formulae to Excel because it has this &lt; sign in it. Make sure this gets written as a string, not a formulae in the XLSX or else it will create an error in Excel.
+
+.1+| rule_with_newlines
+a| link:test.html#norm:paragraph:tag_with_newlines[norm:paragraph:tag_with_newlines] => Here&#8217;s the first line. Here&#8217;s the second line.
+
+.1+| table1
+a| link:test.html#norm:table:anchors-in-cells:entire-table[norm:table:anchors-in-cells:entire-table] =>
+!===
+
+!cell with anchor
+!cell without anchor
+!===
+
+.1+| table2
+a| link:test.html#norm:table:no-anchors-in-cells:entire-table[norm:table:no-anchors-in-cells:entire-table] =>
+!===
+! Header 1!Header 2
+
+!Cell in column 1, row 1!Cell in column 2, row 1
+!Cell in column 1, row 2!Cell in column 2, row 2
+!===
+
+.1+| unordered1
+a| link:test.html#norm:unordered-list:anchors-in-items:entire-list[norm:unordered-list:anchors-in-items:entire-list] => Item 1
+Item 2
+Item 3
+
+.3+| note_with_2_tags
+a| Description: One line description
+a| link:test.html#norm:admonition:anchors-in-notes:note1[norm:admonition:anchors-in-notes:note1] => Paragraph 1
+a| link:test.html#norm:admonition:anchors-in-notes:note3[norm:admonition:anchors-in-notes:note3] => Paragraph 3
+
+.2+| desc1
+a| link:test.html#norm:description-list:anchors-in-items:item1[norm:description-list:anchors-in-items:item1] => Item 1
+a| link:test.html#norm:description-list:anchors-in-items:item3[norm:description-list:anchors-in-items:item3] => Item 3
+
+.2+| desc2
+a| link:test.html#norm:description-list:anchors-in-items:item1[norm:description-list:anchors-in-items:item1] => Item 1
+a| link:test.html#norm:description-list:anchors-in-items:item3[norm:description-list:anchors-in-items:item3] => Item 3
+|===

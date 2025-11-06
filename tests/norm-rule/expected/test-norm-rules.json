@@ -86,7 +86,7 @@
       "tags": [
         {
           "name": "norm:table:anchors-in-cells:entire-table",
-          "text": "===\ncell with anchor\ncell without anchor\n===",
+          "text": "===\nWITH anchor\nWITHOUT anchor\n===",
           "tag_filename": "/build/test-norm-tags.json"
         }
       ]
@@ -99,6 +99,30 @@
         {
           "name": "norm:table:no-anchors-in-cells:entire-table",
           "text": "Header 1|Header 2\n===\nCell in column 1, row 1|Cell in column 2, row 1\nCell in column 1, row 2|Cell in column 2, row 2\n===",
+          "tag_filename": "/build/test-norm-tags.json"
+        }
+      ]
+    },
+    {
+      "name": "anchors-in-cells1",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:table:anchors-in-cells:entire-table-tagged:cell",
+          "text": "WITH anchor",
+          "tag_filename": "/build/test-norm-tags.json"
+        }
+      ]
+    },
+    {
+      "name": "anchors-in-cells2",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:table:anchors-in-cells:entire-table-not-tagged:cell",
+          "text": "ABC DEF",
           "tag_filename": "/build/test-norm-tags.json"
         }
       ]
