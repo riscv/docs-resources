@@ -8,8 +8,9 @@
     "norm:def": "This paragraph has two tags but we only ever get a tag for norm:def.",
     "norm:formulae": "This paragraph looks like a formulae to Excel because it has this &lt; sign in it. Make sure this gets written as a string, not a formulae in the XLSX or else it will create an error in Excel.",
     "norm:table:no-anchors-in-cells:entire-table": "Header 1|Header 2\n===\nCell in column 1, row 1|Cell in column 2, row 1\nCell in column 1, row 2|Cell in column 2, row 2\n===",
-    "norm:table:anchors-in-cells:cell": "cell with anchor",
-    "norm:table:anchors-in-cells:entire-table": "===\ncell with anchor\ncell without anchor\n===",
+    "norm:table:anchors-in-cells:entire-table-tagged:cell": "WITH anchor",
+    "norm:table:anchors-in-cells:entire-table": "===\nWITH anchor\nWITHOUT anchor\n===",
+    "norm:table:anchors-in-cells:entire-table-not-tagged:cell": "ABC DEF",
     "norm:unordered-list:no-anchors-in-items:entire-list": "Item A\nItem B\nItem C",
     "norm:unordered-list:anchors-in-items:item1": "Item 1",
     "norm:unordered-list:anchors-in-items:item2": "Item 2",
@@ -66,8 +67,9 @@
             "children": [],
             "tags": [
               "norm:table:no-anchors-in-cells:entire-table",
-              "norm:table:anchors-in-cells:cell",
-              "norm:table:anchors-in-cells:entire-table"
+              "norm:table:anchors-in-cells:entire-table-tagged:cell",
+              "norm:table:anchors-in-cells:entire-table",
+              "norm:table:anchors-in-cells:entire-table-not-tagged:cell"
             ]
           }
         ],

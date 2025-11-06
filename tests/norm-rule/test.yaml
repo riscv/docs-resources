@@ -29,6 +29,10 @@ normative_rule_definitions:
     tags: ["norm:table:anchors-in-cells:entire-table"]
   - name: table2
     tags: ["norm:table:no-anchors-in-cells:entire-table"]
+  - name: anchors-in-cells1
+    tags: ["norm:table:anchors-in-cells:entire-table-tagged:cell"]
+  - name: anchors-in-cells2
+    tags: ["norm:table:anchors-in-cells:entire-table-not-tagged:cell"]
   - name: unordered1
     tags: ["norm:unordered-list:anchors-in-items:entire-list"]
   - name: note_with_2_tags

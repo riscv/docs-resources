@@ -57,7 +57,7 @@ Make sure this gets written as a string, not a formulae in the XLSX or else it w
 
 === Chapter 2 - Table Tagging
 
-// FAILS - Tag includes entire table but has adoc === prefixes/suffixes.
+// FAILS - Want tagged text to be "ENTIRE TABLE"
 [[norm:table:no-anchors-in-cells:entire-table]]
 [cols="1,1"]
 |===
@@ -67,19 +67,21 @@ Make sure this gets written as a string, not a formulae in the XLSX or else it w
 |Cell in column 1, row 2 |Cell in column 2, row 2
 |===
 
-// FAILS - Tag includes entire table but has adoc === prefixes/suffixes.
+// FAILS - Want tagged text to be "ENTIRE TABLE"
 [[norm:table:anchors-in-cells:entire-table]]
 |===
 
-// PASSES
-| [#norm:table:anchors-in-cells:cell]#cell with anchor#
-| cell without anchor
+// FAILS - Want tagged text to be "cell with anchor"
+| [#norm:table:anchors-in-cells:entire-table-tagged:cell]#WITH anchor#
+| WITHOUT anchor
 |===
 
 |===
 
-// PASSES
+// PASSES - Handles adoc formatted cell
 a| Cell is adoc
+// FAILS - Want tagged text to be "ABC DEF"
+| [#norm:table:anchors-in-cells:entire-table-not-tagged:cell]#ABC DEF#
 |===
 
 == Chapter 3 - Tagging Unordered Lists
