@@ -3,7 +3,7 @@
 
 $schema: "../../schemas/defs-schema.json#"
 
-# Used to create normative rules for test.adoc file.
+# Copy of test.adoc made at some point but with some tags not referenced.
 chapter_name: my-chapter_name
 
 normative_rule_definitions:
@@ -70,18 +70,3 @@ normative_rule_definitions:
     tags: ["norm:description-list:anchors-in-items:entire-list"]
   - names: [desc3, desc4]
     tags: ["norm:description-list:anchors-in-items:item1", "norm:description-list:anchors-in-items:item3"]
-
-  # Admonitions
-  - name: admon1
-    tags: ["norm:admonition:single-paragraph-note"]
-  - name: admon2
-    tags: ["norm:admonition:no-anchors-in-notes:entire-note"]
-  - name: admon3
-    tags: ["norm:admonition:anchors-in-notes:entire-note"]
-  - name: admon4
-    tags: ["norm:admonition:only-anchors-in-notes:note1", "norm:admonition:only-anchors-in-notes:note3"]
-  - name: admon5
-    description: One line description
-    kind: parameter
-    instances: [MY_PARAMETER]
-    tags: ["norm:admonition:anchors-in-notes:note1", "norm:admonition:anchors-in-notes:note3"]

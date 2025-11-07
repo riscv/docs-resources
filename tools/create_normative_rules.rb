@@ -257,10 +257,11 @@ end
 
 def usage(exit_status = 1)
   puts "Usage: #{PN} [OPTION]... <output-filename>"
-  puts "  -h             Display this usage message"
+  puts "  --help         Display this usage message"
   puts "  -j             Set output format to JSON (default)"
   puts "  -x             Set output format to XLSX"
   puts "  -a             Set output format to AsciiDoc"
+  puts "  -h             Set output format to HTML"
   puts "  -w             Warning instead of error if tags found without rules (Only use for debugging!)"
   puts "  -d fname       Normative rule definition filename (YAML format)"
   puts "  -t fname       Normative tag filename (JSON format)"
@@ -274,7 +275,7 @@ end
 # Uses Ruby ARGV variable to access command line args.
 # Exits program on error.
 def parse_argv
-  usage(0) if ARGV.count == 1 && (ARGV[0] == "-h" || ARGV[0] == "--help")
+  usage(0) if ARGV.count == 1 && (ARGV[0] == "--help")
 
   usage if ARGV.count == 0
 
@@ -290,7 +291,7 @@ def parse_argv
   while i < ARGV.count
     arg = ARGV[i]
     case arg
-    when "-h"
+    when "--help"
       usage 0
     when "-j"
       output_format = "json"
@@ -298,6 +299,8 @@ def parse_argv
       output_format = "xlsx"
     when "-a"
       output_format = "adoc"
+    when "-h"
+      output_format = "html"
     when "-w"
       warn_if_tags_no_rules = 1
     when "-d"
@@ -353,8 +356,8 @@ def parse_argv
     usage
   end
 
-  if output_format == "adoc" && tag2html_fnames.empty?
-    info("Missing output filename")
+  if (output_format == "adoc" || output_format == "html") && tag2html_fnames.empty?
+    info("Missing -tag2html command line options")
     usage
   end
 
@@ -658,7 +661,7 @@ def output_xlsx(filename, defs, tags)
       tag_ref_name = tag_ref.name
       tag = tags.get_tag(tag_ref_name)
       fatal("Normative rule #{d.name} defined in file #{d.def_filename} references non-existent tag #{tag_ref_name}") if tag.nil?
-      rule_defs.append(sanitize_tag_text(tag.text).chomp)
+      rule_defs.append(handle_tables(tag.text).chomp)
       tag_sources.append('"' + tag.name + '"')
     end
     rule_def_sources.append('[' + tag_sources.join(', ') + ']') unless tag_sources.empty?
@@ -710,9 +713,9 @@ def output_adoc(filename, defs, tags, tag2html_fnames)
       f.puts("")
       f.puts("== #{chapter_name}")
       f.puts("")
-      f.puts("[cols=\"20%,80%\"]")
+      f.puts("[cols=\"20%,20%,60%\"]")
       f.puts("|===")
-      f.puts("| Rule Name | Rule Information")
+      f.puts("| Rule Name | Link to Standard | Text from Standard")
 
       nr_defs.each do |nr|
         info_rows = nr.tag_refs.length + (nr.description.nil? ? 0 : 1) + (nr.summary.nil? ? 0 : 1)
@@ -720,8 +723,8 @@ def output_adoc(filename, defs, tags, tag2html_fnames)
 
         f.puts("")
         f.puts("#{row_span}| #{nr.name}")
-        f.puts("a| Summary: #{nr.summary}") unless nr.summary.nil?
-        f.puts("a| Description: #{nr.description}") unless nr.description.nil?
+        f.puts("| Summary | #{nr.summary}") unless nr.summary.nil?
+        f.puts("| Description | #{nr.description}") unless nr.description.nil?
         nr.tag_refs.each do |tag_ref|
           tag_ref_name = tag_ref.name
           tag = tags.get_tag(tag_ref_name)
@@ -730,7 +733,7 @@ def output_adoc(filename, defs, tags, tag2html_fnames)
           html_fname = tag2html_fnames[tag.tag_filename]
           fatal("No fname tag to HTML mapping (-tag2html cmd line arg) for tag fname #{tag.tag_filename} for tag name #{tag.name}") if html_fname.nil?
 
-          f.puts("a| link:#{html_fname}" + "#" + tag_ref.name + "[#{tag_ref.name}] => #{sanitize_tag_text(tag.text)}")
+          f.puts("a| link:#{html_fname}" + "#" + tag_ref.name + "[#{tag_ref.name}] | #{handle_tables(tag.text)}")
         end
       end
 
@@ -739,10 +742,264 @@ def output_adoc(filename, defs, tags, tag2html_fnames)
   end
 end
 
+# Store normative rules in HTML output file.
+def output_html(filename, defs, tags, tag2html_fnames)
+  fatal("Need String for filename but passed a #{filename.class}") unless filename.is_a?(String)
+  fatal("Need NormativeRuleDefs for defs but passed a #{defs.class}") unless defs.is_a?(NormativeRuleDefs)
+  fatal("Need NormativeTags for tags but passed a #{tags.class}") unless tags.is_a?(NormativeTags)
+  fatal("Need Hash for tag2html_fnames but passed a #{tag2html_fnames.class}") unless tag2html_fnames.is_a?(Hash)
+
+  info("Storing #{defs.norm_rule_defs.count} normative rules into file #{filename}")
+
+  # Organize rules by chapter name. Each hash key is chapter name. Each hash entry is an Array<NormativeRuleDef>
+  defs_by_chapter_name = {}
+  chapter_names=[]
+  defs.norm_rule_defs.each do |d|
+    if defs_by_chapter_name[d.chapter_name].nil?
+      # Haven't seen this chapter name yet.
+      defs_by_chapter_name[d.chapter_name] = []
+      chapter_names.append(d.chapter_name)
+    end
+    defs_by_chapter_name[d.chapter_name].append(d)
+  end
+
+  chapter_names.sort!
+
+  File.open(filename, "w") do |f|
+    #f.puts("= Normative Rules by Chapter")
+    html_head(f)
+    f.puts(%Q{<body>})
+    f.puts(%Q{  <div class="app">})
+
+    html_sidebar(f, chapter_names)
+    f.puts("    <main>")
+
+    table_num=1
+
+    chapter_names.each do |chapter_name|
+      nr_defs = defs_by_chapter_name[chapter_name]
+      html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag2html_fnames)
+      table_num=table_num+1
+    end
+
+    f.puts("    </main>")
+    f.puts("  </div>")
+
+    html_script(f)
+
+    f.puts("</body>")
+    f.puts("</html>")
+  end
+end
+
+def html_head(f)
+  fatal("Need File for f but passed a #{f.class}") unless f.is_a?(File)
+
+  f.puts(<<~HTML
+    <!doctype html>
+    <html lang="en">
+    <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <title>Page with Tables & Sidebar Navigation</title>
+      <style>
+        :root{
+          --sidebar-width: 200px;
+          --accent: #0366d6;
+          --muted: #6b7280;
+          --bg: #f8fafc;
+          --card: #ffffff;
+        }
+        html{scroll-behavior:smooth}
+        body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:0;background:var(--bg);color:#111}
+
+        /* Layout */
+        .app{
+          display:grid;
+          grid-template-columns:var(--sidebar-width) 1fr;
+          min-height:100vh;
+        }
+
+        /* Sidebar */
+        .sidebar{
+          position:sticky;top:0;height:100vh;padding:24px;background:linear-gradient(180deg,#ffffff, #f1f5f9);
+          border-right:1px solid rgba(15,23,42,0.04);
+          box-sizing:border-box;
+          overflow-y:auto;
+          scrollbar-width:auto; /* show only when needed in Firefox */
+        }
+        sidebar::-webkit-scrollbar{
+          width:8px;
+        }
+        .sidebar::-webkit-scrollbar-thumb{
+          background:rgba(0,0,0,0.2);
+          border-radius:4px;
+        }
+        .sidebar::-webkit-scrollbar-thumb:hover{
+          background:rgba(0,0,0,0.3);
+        }
+        .sidebar::-webkit-scrollbar-track{
+          background:transparent;
+        }
+        .sidebar h2{margin:0 0 12px;font-size:18px}
+        .nav{display:flex;flex-direction:column;gap:8px}
+        .nav a{
+          display:block;padding:10px 12px;border-radius:8px;text-decoration:none;color:var(--accent);font-weight:600;
+        }
+        .nav a .subtitle{display:block;font-weight:400;color:var(--muted);font-size:12px}
+        .nav a.active{background:rgba(3,102,214,0.12);color:var(--accent)}
+
+        /* Content */
+        main{padding:28px 36px}
+        .section{background:var(--card);border-radius:12px;padding:20px;margin-bottom:22px;box-shadow:0 1px 0 rgba(15,23,42,0.03)}
+        .section h3{margin-top:0}
+
+        table{width:100%;border-collapse:collapse;margin-top:12px;table-layout: fixed}
+        th,td{padding:10px 12px;border:1px solid #e6edf3;text-align:left;overflow-wrap: break-word;white-space: normal}
+        th{background:#f3f7fb;font-weight:700}
+
+        .col-name { width: 20%; }
+        .col-link { width: 20%; }
+        .col-text { width: 60%; }
+
+        /* Responsive */
+        @media (max-width:820px){
+          .app{grid-template-columns:1fr}
+          .sidebar{position:relative;height:auto;display:flex;gap:8px;overflow:auto;border-right:none;border-bottom:1px solid rgba(15,23,42,0.04)}
+          main{padding:18px}
+        }
+      </style>
+    </head>
+HTML
+  )
+end
+
+def html_sidebar(f, chapter_names)
+  fatal("Need File for f but passed a #{f.class}") unless f.is_a?(File)
+  fatal("Need Array for chapter_names but passed a #{chapter_names.class}") unless chapter_names.is_a?(Array)
+
+  # Use Ruby $Q{...} instead of double quotes to allow freely mixing embedded double quotes and Ruby's #{} operator.
+  f.puts("")
+  f.puts(%Q{  <aside class="sidebar">})
+  f.puts(%Q{    <h2>Chapters</h2>})
+  f.puts(%Q{      <nav class="nav" id="nav">})
+
+  table_num=1
+
+  chapter_names.each do |chapter_name|
+    f.puts(%Q{        <a href="#table-#{table_num}" data-target="table-#{table_num}">#{chapter_name}</a>})
+    table_num = table_num+1
+  end
+
+  f.puts('    </nav>')
+  f.puts('  </aside>')
+end
+
+def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag2html_fnames)
+  fatal("Need File for f but passed a #{f.class}") unless f.is_a?(File)
+  fatal("Need Integer for table_num but passed a #{table_num.class}") unless table_num.is_a?(Integer)
+  fatal("Need String for chapter_name but passed a #{chapter_name.class}") unless chapter_name.is_a?(String)
+  fatal("Need Array for nr_defs but passed a #{nr_defs.class}") unless nr_defs.is_a?(Array)
+  fatal("Need NormativeTags for tags but passed a #{tags.class}") unless tags.is_a?(NormativeTags)
+  fatal("Need Hash for tag2html_fnames but passed a #{tag2html_fnames.class}") unless tag2html_fnames.is_a?(Hash)
+
+  f.puts("")
+  f.puts(%Q{      <section id="table-#{table_num}" class="section">})
+  f.puts(%Q{        <h3>#{chapter_name}</h3>})
+  f.puts(%Q{        <table>})
+  f.puts(%Q{          <colgroup>})
+  f.puts(%Q{            <col class="col-name">})
+  f.puts(%Q{            <col class="col-link">})
+  f.puts(%Q{            <col class="col-text">})
+  f.puts(%Q{          </colgroup>})
+  f.puts(%Q{          <thead>})
+  f.puts(%Q{            <tr><th>Rule Name</th><th>Link to Standard</th><th>Text from Standard</th></tr>})
+  f.puts(%Q{          </thead>})
+  f.puts(%Q{          <tbody>})
+
+  nr_defs.each do |nr|
+    name_row_span = nr.tag_refs.length + (nr.description.nil? ? 0 : 1) + (nr.summary.nil? ? 0 : 1)
+
+    row_started = true
+    f.puts(%Q{            <tr>})
+    f.puts(%Q{              <td rowspan=#{name_row_span}>#{nr.name}</td>})
+
+    unless nr.summary.nil?
+      f.puts(%Q{            <tr>}) unless row_started
+      f.puts(%Q{              <td>Summary</td>})
+      f.puts(%Q{              <td>#{nr.summary}</td>})
+      f.puts(%Q{            </tr>})
+      row_started = false
+    end
+
+    unless nr.description.nil?
+      f.puts(%Q{            <tr>}) unless row_started
+      f.puts(%Q{              <td>Description</td>})
+      f.puts(%Q{              <td>#{html_handle_newlines(nr.description)}</td>})
+      f.puts(%Q{            </tr>})
+      row_started = false
+    end
+
+    nr.tag_refs.each do |tag_ref|
+      tag_ref_name = tag_ref.name
+      tag = tags.get_tag(tag_ref_name)
+      fatal("Normative rule #{nr.name} defined in file #{nr.def_filename} references non-existent tag #{tag_ref_name}") if tag.nil?
+
+      html_fname = tag2html_fnames[tag.tag_filename]
+      fatal("No fname tag to HTML mapping (-tag2html cmd line arg) for tag fname #{tag.tag_filename} for tag name #{tag.name}") if html_fname.nil?
+
+      f.puts(%Q{            <tr>}) unless row_started
+      f.puts(%Q{              <td><a href="#{html_fname}##{tag_ref.name}">#{tag_ref.name}</a></td>})
+      f.puts(%Q{              <td>#{html_handle_newlines(handle_tables(tag.text))}</td></tr>})
+      f.puts(%Q{            </tr>})
+      row_started = false
+    end
+  end
+
+  f.puts(%Q{          </tbody>})
+  f.puts(%Q{        </table>})
+  f.puts(%Q{      </section>})
+end
+
+def html_script(f)
+  fatal("Need File for f but passed a #{f.class}") unless f.is_a?(File)
+
+  f.puts(<<~HTML
+    <script>
+      // Highlight active link as the user scrolls
+      const sections = document.querySelectorAll('section[id]');
+      const navLinks = document.querySelectorAll('.nav a');
+
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          const id = entry.target.id;
+          const link = document.querySelector('.nav a[data-target="'+id+'"]');
+          if(entry.isIntersecting){
+            navLinks.forEach(a=>a.classList.remove('active'));
+            if(link) link.classList.add('active');
+          }
+        });
+      }, {root:null,rootMargin:'-40% 0px -40% 0px',threshold:0});
+
+      sections.forEach(s=>io.observe(s));
+
+      // Smooth scroll for older browsers fallback
+      document.querySelectorAll('.nav a').forEach(a=>{
+        a.addEventListener('click', (e)=>{
+          // close mobile nav or similar — none here, but keep behavior predictable
+        });
+      });
+    </script>
+  </body>
+  </html>
+HTML
+  )
+end
+
 # Cleanup the tag text to be suitably displayed.
 # TODO: When https://github.com/riscv/docs-resources/issues/112 improves table format,
 # update this to allow small tables to be displayed.
-def sanitize_tag_text(text)
+def handle_tables(text)
   raise ArgumentError, "Expected String for text but was passed a #{text}.class" unless text.is_a?(String)
 
   if text.end_with?("\n===")
@@ -751,6 +1008,13 @@ def sanitize_tag_text(text)
   else
     text
   end
+end
+
+# Convert newlines to <br>.
+def html_handle_newlines(text)
+  raise ArgumentError, "Expected String for text but was passed a #{text}.class" unless text.is_a?(String)
+
+  text.gsub(/\n/, '<br>')
 end
 
 #main()
@@ -779,6 +1043,8 @@ when "xlsx"
   output_xlsx(output_fname, defs, tags)
 when "adoc"
   output_adoc(output_fname, defs, tags, tag2html_fnames)
+when "html"
+  output_html(output_fname, defs, tags, tag2html_fnames)
 else
   raise "Unknown output_format of #{output_format}"
 end

@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Page with Tables & Sidebar Navigation</title>
+  <style>
+    :root{
+      --sidebar-width: 200px;
+      --accent: #0366d6;
+      --muted: #6b7280;
+      --bg: #f8fafc;
+      --card: #ffffff;
+    }
+    html{scroll-behavior:smooth}
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:0;background:var(--bg);color:#111}
+
+    /* Layout */
+    .app{
+      display:grid;
+      grid-template-columns:var(--sidebar-width) 1fr;
+      min-height:100vh;
+    }
+
+    /* Sidebar */
+    .sidebar{
+      position:sticky;top:0;height:100vh;padding:24px;background:linear-gradient(180deg,#ffffff, #f1f5f9);
+      border-right:1px solid rgba(15,23,42,0.04);
+      box-sizing:border-box;
+      overflow-y:auto;
+      scrollbar-width:auto; /* show only when needed in Firefox */
+    }
+    sidebar::-webkit-scrollbar{
+      width:8px;
+    }
+    .sidebar::-webkit-scrollbar-thumb{
+      background:rgba(0,0,0,0.2);
+      border-radius:4px;
+    }
+    .sidebar::-webkit-scrollbar-thumb:hover{
+      background:rgba(0,0,0,0.3);
+    }
+    .sidebar::-webkit-scrollbar-track{
+      background:transparent;
+    }
+    .sidebar h2{margin:0 0 12px;font-size:18px}
+    .nav{display:flex;flex-direction:column;gap:8px}
+    .nav a{
+      display:block;padding:10px 12px;border-radius:8px;text-decoration:none;color:var(--accent);font-weight:600;
+    }
+    .nav a .subtitle{display:block;font-weight:400;color:var(--muted);font-size:12px}
+    .nav a.active{background:rgba(3,102,214,0.12);color:var(--accent)}
+
+    /* Content */
+    main{padding:28px 36px}
+    .section{background:var(--card);border-radius:12px;padding:20px;margin-bottom:22px;box-shadow:0 1px 0 rgba(15,23,42,0.03)}
+    .section h3{margin-top:0}
+
+    table{width:100%;border-collapse:collapse;margin-top:12px;table-layout: fixed}
+    th,td{padding:10px 12px;border:1px solid #e6edf3;text-align:left;overflow-wrap: break-word;white-space: normal}
+    th{background:#f3f7fb;font-weight:700}
+
+    .col-name { width: 20%; }
+    .col-link { width: 20%; }
+    .col-text { width: 60%; }
+
+    /* Responsive */
+    @media (max-width:820px){
+      .app{grid-template-columns:1fr}
+      .sidebar{position:relative;height:auto;display:flex;gap:8px;overflow:auto;border-right:none;border-bottom:1px solid rgba(15,23,42,0.04)}
+      main{padding:18px}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+
+  <aside class="sidebar">
+    <h2>Chapters</h2>
+      <nav class="nav" id="nav">
+        <a href="#table-1" data-target="table-1">my-chapter_name</a>
+    </nav>
+  </aside>
+    <main>
+
+      <section id="table-1" class="section">
+        <h3>my-chapter_name</h3>
+        <table>
+          <colgroup>
+            <col class="col-name">
+            <col class="col-link">
+            <col class="col-text">
+          </colgroup>
+          <thead>
+            <tr><th>Rule Name</th><th>Link to Standard</th><th>Text from Standard</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td rowspan=2>inline</td>
+              <td>Summary</td>
+              <td>A few words</td>
+            </tr>
+            <tr>
+              <td><a href="test.html#norm:inline">norm:inline</a></td>
+              <td>inside inline</td></tr>
+            </tr>
+            <tr>
+              <td rowspan=2>paragraph-with-a-really-wide-rule-name</td>
+              <td>Description</td>
+              <td>Here's a description.<br>It's got 2 lines.<br></td>
+            </tr>
+            <tr>
+              <td><a href="test.html#norm:paragraph:no-inline-anchors">norm:paragraph:no-inline-anchors</a></td>
+              <td>Paragraph without inline anchors</td></tr>
+            </tr>
+            <tr>
+              <td rowspan=1>inline-anchors-in-paragraph-entire</td>
+              <td><a href="test.html#norm:paragraph:inline-anchors:entire">norm:paragraph:inline-anchors:entire</a></td>
+              <td>Paragraph with inline anchor and something.</td></tr>
+            </tr>
+            <tr>
+              <td rowspan=1>inline-anchors-in-paragraph-inline-anchor</td>
+              <td><a href="test.html#norm:paragraph:inline-anchors:inline-anchor">norm:paragraph:inline-anchors:inline-anchor</a></td>
+              <td>inline anchor</td></tr>
+            </tr>
+            <tr>
+              <td rowspan=1>formulae</td>
+              <td><a href="test.html#norm:formulae">norm:formulae</a></td>
+              <td>This paragraph looks like a formulae to Excel because it has this &lt; sign in it. Make sure this gets written as a string, not a formulae in the XLSX or else it will create an error in Excel.</td></tr>
+            </tr>
+            <tr>
+              <td rowspan=1>rule_with_newlines</td>
+              <td><a href="test.html#norm:paragraph:tag_with_newlines">norm:paragraph:tag_with_newlines</a></td>
+              <td>Here&#8217;s the first line. Here&#8217;s the second line.</td></tr>
+            </tr>
+            <tr>
+              <td rowspan=1>double_tags</td>
+              <td><a href="test.html#norm:def">norm:def</a></td>
+              <td>This paragraph has two tags but we only ever get a tag for norm:def.</td></tr>
+            </tr>
+            <tr>
+              <td rowspan=1>table1</td>
+              <td><a href="test.html#norm:table:anchors-in-cells:entire-table">norm:table:anchors-in-cells:entire-table</a></td>
+              <td>ENTIRE TABLE</td></tr>
+            </tr>
+            <tr>
+              <td rowspan=1>table2</td>
+              <td><a href="test.html#norm:table:no-anchors-in-cells:entire-table">norm:table:no-anchors-in-cells:entire-table</a></td>
+              <td>ENTIRE TABLE</td></tr>
+            </tr>
+            <tr>
+              <td rowspan=1>table3</td>
+              <td><a href="test.html#norm:table:anchors-in-cells:entire-table-tagged:cell">norm:table:anchors-in-cells:entire-table-tagged:cell</a></td>
+              <td>WITH anchor</td></tr>
+            </tr>
+            <tr>
+              <td rowspan=1>table4</td>
+              <td><a href="test.html#norm:table:anchors-in-cells:entire-table-not-tagged:cell">norm:table:anchors-in-cells:entire-table-not-tagged:cell</a></td>
+              <td>ABC DEF</td></tr>
+            </tr>
+            <tr>
+              <td rowspan=1>unordered1</td>
+              <td><a href="test.html#norm:unordered-list:no-anchors-in-items:entire-list">norm:unordered-list:no-anchors-in-items:entire-list</a></td>
+              <td>Item A<br>Item B<br>Item C</td></tr>
+            </tr>
+            <tr>
+              <td rowspan=1>unordered2</td>
+              <td><a href="test.html#norm:unordered-list:anchors-in-items:entire-list">norm:unordered-list:anchors-in-items:entire-list</a></td>
+              <td>Item 1<br>Item 2<br>Item 3</td></tr>
+            </tr>
+            <tr>
+              <td rowspan=1>unordered3</td>
+              <td><a href="test.html#norm:unordered-list:anchors-in-items:item1">norm:unordered-list:anchors-in-items:item1</a></td>
+              <td>Item 1</td></tr>
+            </tr>
+            <tr>
+              <td rowspan=1>unordered4</td>
+              <td><a href="test.html#norm:unordered-list:anchors-in-items:item2">norm:unordered-list:anchors-in-items:item2</a></td>
+              <td>Item 2</td></tr>
+            </tr>
+            <tr>
+              <td rowspan=1>unordered5</td>
+              <td><a href="test.html#norm:unordered-list:multiple-levels">norm:unordered-list:multiple-levels</a></td>
+              <td>Zca and not F<br>Zca, Zcf and F (but not D) is specified (RV32 only)<br>Zca, Zcf and Zcd if D is specified (RV32 only)<br><br>this configuration excludes Zcmp, Zcmt<br>Zca, Zcd if D is specified (RV64 only)<br><br>this configuration excludes Zcmp, Zcmt</td></tr>
+            </tr>
+            <tr>
+              <td rowspan=1>ordered1</td>
+              <td><a href="test.html#norm:ordered-list:no-anchors-in-items:entire-list">norm:ordered-list:no-anchors-in-items:entire-list</a></td>
+              <td>Item A<br>Item B<br>Item C</td></tr>
+            </tr>
+            <tr>
+              <td rowspan=1>ordered2</td>
+              <td><a href="test.html#norm:ordered-list:anchors-in-items:entire-list">norm:ordered-list:anchors-in-items:entire-list</a></td>
+              <td>Item 1<br>Item 2<br>Item 3</td></tr>
+            </tr>
+            <tr>
+              <td rowspan=1>ordered3</td>
+              <td><a href="test.html#norm:ordered-list:anchors-in-items:item1">norm:ordered-list:anchors-in-items:item1</a></td>
+              <td>Item 1</td></tr>
+            </tr>
+            <tr>
+              <td rowspan=1>ordered4</td>
+              <td><a href="test.html#norm:ordered-list:anchors-in-items:item2">norm:ordered-list:anchors-in-items:item2</a></td>
+              <td>Item 2</td></tr>
+            </tr>
+            <tr>
+              <td rowspan=1>desc1</td>
+              <td><a href="test.html#norm:description-list:no-anchors-in-items:entire-list">norm:description-list:no-anchors-in-items:entire-list</a></td>
+              <td>Description-A<br>Item A<br>Description-B<br>Item B<br>Description-C<br>Item C</td></tr>
+            </tr>
+            <tr>
+              <td rowspan=1>desc2</td>
+              <td><a href="test.html#norm:description-list:anchors-in-items:entire-list">norm:description-list:anchors-in-items:entire-list</a></td>
+              <td>Description-1</td></tr>
+            </tr>
+            <tr>
+              <td rowspan=2>desc3</td>
+              <td><a href="test.html#norm:description-list:anchors-in-items:item1">norm:description-list:anchors-in-items:item1</a></td>
+              <td>Item 1</td></tr>
+            </tr>
+            <tr>
+              <td><a href="test.html#norm:description-list:anchors-in-items:item3">norm:description-list:anchors-in-items:item3</a></td>
+              <td>Item 3</td></tr>
+            </tr>
+            <tr>
+              <td rowspan=2>desc4</td>
+              <td><a href="test.html#norm:description-list:anchors-in-items:item1">norm:description-list:anchors-in-items:item1</a></td>
+              <td>Item 1</td></tr>
+            </tr>
+            <tr>
+              <td><a href="test.html#norm:description-list:anchors-in-items:item3">norm:description-list:anchors-in-items:item3</a></td>
+              <td>Item 3</td></tr>
+            </tr>
+            <tr>
+              <td rowspan=1>admon1</td>
+              <td><a href="test.html#norm:admonition:single-paragraph-note">norm:admonition:single-paragraph-note</a></td>
+              <td>Single paragraph note<br>that spans lines.</td></tr>
+            </tr>
+            <tr>
+              <td rowspan=1>admon2</td>
+              <td><a href="test.html#norm:admonition:no-anchors-in-notes:entire-note">norm:admonition:no-anchors-in-notes:entire-note</a></td>
+              <td>Paragraph A<br><br>Paragraph B<br><br>Paragraph C</td></tr>
+            </tr>
+            <tr>
+              <td rowspan=1>admon3</td>
+              <td><a href="test.html#norm:admonition:anchors-in-notes:entire-note">norm:admonition:anchors-in-notes:entire-note</a></td>
+              <td>Paragraph 1<br><br>Paragraph 2<br><br>Paragraph 3</td></tr>
+            </tr>
+            <tr>
+              <td rowspan=2>admon4</td>
+              <td><a href="test.html#norm:admonition:only-anchors-in-notes:note1">norm:admonition:only-anchors-in-notes:note1</a></td>
+              <td>Paragraph X</td></tr>
+            </tr>
+            <tr>
+              <td><a href="test.html#norm:admonition:only-anchors-in-notes:note3">norm:admonition:only-anchors-in-notes:note3</a></td>
+              <td>Paragraph Z</td></tr>
+            </tr>
+            <tr>
+              <td rowspan=3>admon5</td>
+              <td>Description</td>
+              <td>One line description</td>
+            </tr>
+            <tr>
+              <td><a href="test.html#norm:admonition:anchors-in-notes:note1">norm:admonition:anchors-in-notes:note1</a></td>
+              <td>Paragraph 1</td></tr>
+            </tr>
+            <tr>
+              <td><a href="test.html#norm:admonition:anchors-in-notes:note3">norm:admonition:anchors-in-notes:note3</a></td>
+              <td>Paragraph 3</td></tr>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+  <script>
+    // Highlight active link as the user scrolls
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav a');
+
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        const id = entry.target.id;
+        const link = document.querySelector('.nav a[data-target="'+id+'"]');
+        if(entry.isIntersecting){
+          navLinks.forEach(a=>a.classList.remove('active'));
+          if(link) link.classList.add('active');
+        }
+      });
+    }, {root:null,rootMargin:'-40% 0px -40% 0px',threshold:0});
+
+    sections.forEach(s=>io.observe(s));
+
+    // Smooth scroll for older browsers fallback
+    document.querySelectorAll('.nav a').forEach(a=>{
+      a.addEventListener('click', (e)=>{
+        // close mobile nav or similar — none here, but keep behavior predictable
+      });
+    });
+  </script>
+</body>
+</html>
+</body>
+</html>
