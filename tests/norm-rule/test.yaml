@@ -40,6 +40,8 @@ normative_rule_definitions:
     tags: ["norm:table:anchors-in-cells:entire-table-tagged:cell"]
   - name: table4
     tags: ["norm:table:anchors-in-cells:entire-table-not-tagged:cell"]
+  - name: table5
+    tags: ["norm:table:many-rows"]
 
   # Unordered lists
   - name: unordered1

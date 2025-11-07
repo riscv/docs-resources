@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Page with Tables & Sidebar Navigation</title>
+  <title>Normative Rules per Chapter</title>
   <style>
     :root{
       --sidebar-width: 200px;
@@ -30,7 +30,7 @@
       overflow-y:auto;
       scrollbar-width:auto; /* show only when needed in Firefox */
     }
-    sidebar::-webkit-scrollbar{
+    .sidebar::-webkit-scrollbar{
       width:8px;
     }
     .sidebar::-webkit-scrollbar-thumb{
@@ -40,13 +40,27 @@
     .sidebar::-webkit-scrollbar-thumb:hover{
       background:rgba(0,0,0,0.3);
     }
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .sidebar li {
+      margin: 2px 0; /* reduce vertical gap between items */
+    }
     .sidebar::-webkit-scrollbar-track{
       background:transparent;
     }
     .sidebar h2{margin:0 0 12px;font-size:18px}
-    .nav{display:flex;flex-direction:column;gap:8px}
+    .nav{display:flex;flex-direction:column;gap:2px}
     .nav a{
-      display:block;padding:10px 12px;border-radius:8px;text-decoration:none;color:var(--accent);font-weight:600;
+      display:block;
+      font-size: 14px;
+      padding:6px 10px;
+      border-radius:6px;
+      text-decoration:none;
+      color:var(--accent);
+      font-weight:600;
     }
     .nav a .subtitle{display:block;font-weight:400;color:var(--muted);font-size:12px}
     .nav a.active{background:rgba(3,102,214,0.12);color:var(--accent)}
@@ -141,12 +155,12 @@
             <tr>
               <td rowspan=1>table1</td>
               <td><a href="test.html#norm:table:anchors-in-cells:entire-table">norm:table:anchors-in-cells:entire-table</a></td>
-              <td>ENTIRE TABLE</td></tr>
+              <td>===<br>WITH anchor<br>WITHOUT anchor<br>===</td></tr>
             </tr>
             <tr>
               <td rowspan=1>table2</td>
               <td><a href="test.html#norm:table:no-anchors-in-cells:entire-table">norm:table:no-anchors-in-cells:entire-table</a></td>
-              <td>ENTIRE TABLE</td></tr>
+              <td>Header 1|Header 2<br>===<br>Cell in column 1, row 1|Cell in column 2, row 1<br>Cell in column 1, row 2|Cell in column 2, row 2<br>===</td></tr>
             </tr>
             <tr>
               <td rowspan=1>table3</td>
@@ -157,6 +171,11 @@
               <td rowspan=1>table4</td>
               <td><a href="test.html#norm:table:anchors-in-cells:entire-table-not-tagged:cell">norm:table:anchors-in-cells:entire-table-not-tagged:cell</a></td>
               <td>ABC DEF</td></tr>
+            </tr>
+            <tr>
+              <td rowspan=1>table5</td>
+              <td><a href="test.html#norm:table:many-rows">norm:table:many-rows</a></td>
+              <td>Name|Color<br>===<br>Roses|Red<br>Violets|Blue<br>Name1|Color1<br>Name2|Color2<br>Name3|Color3<br>Name4|Color4<br>Name5|Color5<br>Name6|Color6<br>Name7|Color8<br>Name9|Color9<br>Name10|Color10<br>...</td></tr>
             </tr>
             <tr>
               <td rowspan=1>unordered1</td>

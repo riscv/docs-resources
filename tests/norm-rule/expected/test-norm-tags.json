@@ -11,6 +11,7 @@
     "norm:table:anchors-in-cells:entire-table-tagged:cell": "WITH anchor",
     "norm:table:anchors-in-cells:entire-table": "===\nWITH anchor\nWITHOUT anchor\n===",
     "norm:table:anchors-in-cells:entire-table-not-tagged:cell": "ABC DEF",
+    "norm:table:many-rows": "Name|Color\n===\nRoses|Red\nViolets|Blue\nName1|Color1\nName2|Color2\nName3|Color3\nName4|Color4\nName5|Color5\nName6|Color6\nName7|Color8\nName9|Color9\nName10|Color10\nName11|Color11\nName12|Color12\nName13|Color13\nName14|Color14\n===",
     "norm:unordered-list:no-anchors-in-items:entire-list": "Item A\nItem B\nItem C",
     "norm:unordered-list:anchors-in-items:item1": "Item 1",
     "norm:unordered-list:anchors-in-items:item2": "Item 2",
@@ -69,7 +70,8 @@
               "norm:table:no-anchors-in-cells:entire-table",
               "norm:table:anchors-in-cells:entire-table-tagged:cell",
               "norm:table:anchors-in-cells:entire-table",
-              "norm:table:anchors-in-cells:entire-table-not-tagged:cell"
+              "norm:table:anchors-in-cells:entire-table-not-tagged:cell",
+              "norm:table:many-rows"
             ]
           }
         ],

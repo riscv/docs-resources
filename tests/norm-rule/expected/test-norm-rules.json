@@ -140,6 +140,18 @@
       ]
     },
     {
+      "name": "table5",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:table:many-rows",
+          "text": "Name|Color\n===\nRoses|Red\nViolets|Blue\nName1|Color1\nName2|Color2\nName3|Color3\nName4|Color4\nName5|Color5\nName6|Color6\nName7|Color8\nName9|Color9\nName10|Color10\nName11|Color11\nName12|Color12\nName13|Color13\nName14|Color14\n===",
+          "tag_filename": "/build/test-norm-tags.json"
+        }
+      ]
+    },
+    {
       "name": "unordered1",
       "def_filename": "tests/norm-rule/test.yaml",
       "chapter_name": "my-chapter_name",
