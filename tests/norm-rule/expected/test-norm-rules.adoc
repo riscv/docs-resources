@@ -2,58 +2,131 @@
 
 == my-chapter_name
 
-[cols="20%,80%"]
+[cols="20%,20%,60%"]
 |===
-| Rule Name | Rule Information
+| Rule Name | Link to Standard | Text from Standard
 
 .2+| inline
-a| Summary: A few words
-a| link:test.html#norm:inline[norm:inline] => inside inline
+| Summary | A few words
+a| link:test.html#norm:inline[norm:inline] | inside inline
 
 .2+| paragraph-with-a-really-wide-rule-name
-a| Description: Here's a description.
+| Description | Here's a description.
 It's got 2 lines.
-a| link:test.html#norm:paragraph:no-inline-anchors[norm:paragraph:no-inline-anchors] => Paragraph without inline anchors
+a| link:test.html#norm:paragraph:no-inline-anchors[norm:paragraph:no-inline-anchors] | Paragraph without inline anchors
 
 .1+| inline-anchors-in-paragraph-entire
-a| link:test.html#norm:paragraph:inline-anchors:entire[norm:paragraph:inline-anchors:entire] => Paragraph with inline anchor and something.
+a| link:test.html#norm:paragraph:inline-anchors:entire[norm:paragraph:inline-anchors:entire] | Paragraph with inline anchor and something.
 
 .1+| inline-anchors-in-paragraph-inline-anchor
-a| link:test.html#norm:paragraph:inline-anchors:inline-anchor[norm:paragraph:inline-anchors:inline-anchor] => inline anchor
+a| link:test.html#norm:paragraph:inline-anchors:inline-anchor[norm:paragraph:inline-anchors:inline-anchor] | inline anchor
 
 .1+| formulae
-a| link:test.html#norm:formulae[norm:formulae] => This paragraph looks like a formulae to Excel because it has this &lt; sign in it. Make sure this gets written as a string, not a formulae in the XLSX or else it will create an error in Excel.
+a| link:test.html#norm:formulae[norm:formulae] | This paragraph looks like a formulae to Excel because it has this &lt; sign in it. Make sure this gets written as a string, not a formulae in the XLSX or else it will create an error in Excel.
 
 .1+| rule_with_newlines
-a| link:test.html#norm:paragraph:tag_with_newlines[norm:paragraph:tag_with_newlines] => Here&#8217;s the first line. Here&#8217;s the second line.
+a| link:test.html#norm:paragraph:tag_with_newlines[norm:paragraph:tag_with_newlines] | Here&#8217;s the first line. Here&#8217;s the second line.
+
+.1+| double_tags
+a| link:test.html#norm:def[norm:def] | This paragraph has two tags but we only ever get a tag for norm:def.
 
 .1+| table1
-a| link:test.html#norm:table:anchors-in-cells:entire-table[norm:table:anchors-in-cells:entire-table] => ENTIRE TABLE
+a| link:test.html#norm:table:anchors-in-cells:entire-table[norm:table:anchors-in-cells:entire-table] | ENTIRE TABLE
 
 .1+| table2
-a| link:test.html#norm:table:no-anchors-in-cells:entire-table[norm:table:no-anchors-in-cells:entire-table] => ENTIRE TABLE
+a| link:test.html#norm:table:no-anchors-in-cells:entire-table[norm:table:no-anchors-in-cells:entire-table] | ENTIRE TABLE
 
-.1+| anchors-in-cells1
-a| link:test.html#norm:table:anchors-in-cells:entire-table-tagged:cell[norm:table:anchors-in-cells:entire-table-tagged:cell] => WITH anchor
+.1+| table3
+a| link:test.html#norm:table:anchors-in-cells:entire-table-tagged:cell[norm:table:anchors-in-cells:entire-table-tagged:cell] | WITH anchor
 
-.1+| anchors-in-cells2
-a| link:test.html#norm:table:anchors-in-cells:entire-table-not-tagged:cell[norm:table:anchors-in-cells:entire-table-not-tagged:cell] => ABC DEF
+.1+| table4
+a| link:test.html#norm:table:anchors-in-cells:entire-table-not-tagged:cell[norm:table:anchors-in-cells:entire-table-not-tagged:cell] | ABC DEF
 
 .1+| unordered1
-a| link:test.html#norm:unordered-list:anchors-in-items:entire-list[norm:unordered-list:anchors-in-items:entire-list] => Item 1
+a| link:test.html#norm:unordered-list:no-anchors-in-items:entire-list[norm:unordered-list:no-anchors-in-items:entire-list] | Item A
+Item B
+Item C
+
+.1+| unordered2
+a| link:test.html#norm:unordered-list:anchors-in-items:entire-list[norm:unordered-list:anchors-in-items:entire-list] | Item 1
 Item 2
 Item 3
 
-.3+| note_with_2_tags
-a| Description: One line description
-a| link:test.html#norm:admonition:anchors-in-notes:note1[norm:admonition:anchors-in-notes:note1] => Paragraph 1
-a| link:test.html#norm:admonition:anchors-in-notes:note3[norm:admonition:anchors-in-notes:note3] => Paragraph 3
+.1+| unordered3
+a| link:test.html#norm:unordered-list:anchors-in-items:item1[norm:unordered-list:anchors-in-items:item1] | Item 1
 
-.2+| desc1
-a| link:test.html#norm:description-list:anchors-in-items:item1[norm:description-list:anchors-in-items:item1] => Item 1
-a| link:test.html#norm:description-list:anchors-in-items:item3[norm:description-list:anchors-in-items:item3] => Item 3
+.1+| unordered4
+a| link:test.html#norm:unordered-list:anchors-in-items:item2[norm:unordered-list:anchors-in-items:item2] | Item 2
 
-.2+| desc2
-a| link:test.html#norm:description-list:anchors-in-items:item1[norm:description-list:anchors-in-items:item1] => Item 1
-a| link:test.html#norm:description-list:anchors-in-items:item3[norm:description-list:anchors-in-items:item3] => Item 3
+.1+| unordered5
+a| link:test.html#norm:unordered-list:multiple-levels[norm:unordered-list:multiple-levels] | Zca and not F
+Zca, Zcf and F (but not D) is specified (RV32 only)
+Zca, Zcf and Zcd if D is specified (RV32 only)
+
+this configuration excludes Zcmp, Zcmt
+Zca, Zcd if D is specified (RV64 only)
+
+this configuration excludes Zcmp, Zcmt
+
+.1+| ordered1
+a| link:test.html#norm:ordered-list:no-anchors-in-items:entire-list[norm:ordered-list:no-anchors-in-items:entire-list] | Item A
+Item B
+Item C
+
+.1+| ordered2
+a| link:test.html#norm:ordered-list:anchors-in-items:entire-list[norm:ordered-list:anchors-in-items:entire-list] | Item 1
+Item 2
+Item 3
+
+.1+| ordered3
+a| link:test.html#norm:ordered-list:anchors-in-items:item1[norm:ordered-list:anchors-in-items:item1] | Item 1
+
+.1+| ordered4
+a| link:test.html#norm:ordered-list:anchors-in-items:item2[norm:ordered-list:anchors-in-items:item2] | Item 2
+
+.1+| desc1
+a| link:test.html#norm:description-list:no-anchors-in-items:entire-list[norm:description-list:no-anchors-in-items:entire-list] | Description-A
+Item A
+Description-B
+Item B
+Description-C
+Item C
+
+.1+| desc2
+a| link:test.html#norm:description-list:anchors-in-items:entire-list[norm:description-list:anchors-in-items:entire-list] | Description-1
+
+.2+| desc3
+a| link:test.html#norm:description-list:anchors-in-items:item1[norm:description-list:anchors-in-items:item1] | Item 1
+a| link:test.html#norm:description-list:anchors-in-items:item3[norm:description-list:anchors-in-items:item3] | Item 3
+
+.2+| desc4
+a| link:test.html#norm:description-list:anchors-in-items:item1[norm:description-list:anchors-in-items:item1] | Item 1
+a| link:test.html#norm:description-list:anchors-in-items:item3[norm:description-list:anchors-in-items:item3] | Item 3
+
+.1+| admon1
+a| link:test.html#norm:admonition:single-paragraph-note[norm:admonition:single-paragraph-note] | Single paragraph note
+that spans lines.
+
+.1+| admon2
+a| link:test.html#norm:admonition:no-anchors-in-notes:entire-note[norm:admonition:no-anchors-in-notes:entire-note] | Paragraph A
+
+Paragraph B
+
+Paragraph C
+
+.1+| admon3
+a| link:test.html#norm:admonition:anchors-in-notes:entire-note[norm:admonition:anchors-in-notes:entire-note] | Paragraph 1
+
+Paragraph 2
+
+Paragraph 3
+
+.2+| admon4
+a| link:test.html#norm:admonition:only-anchors-in-notes:note1[norm:admonition:only-anchors-in-notes:note1] | Paragraph X
+a| link:test.html#norm:admonition:only-anchors-in-notes:note3[norm:admonition:only-anchors-in-notes:note3] | Paragraph Z
+
+.3+| admon5
+| Description | One line description
+a| link:test.html#norm:admonition:anchors-in-notes:note1[norm:admonition:anchors-in-notes:note1] | Paragraph 1
+a| link:test.html#norm:admonition:anchors-in-notes:note3[norm:admonition:anchors-in-notes:note3] | Paragraph 3
 |===

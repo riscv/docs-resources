@@ -32,7 +32,8 @@ Paragraph without inline anchors
 Next paragraph 1
 
 // PASSES - Paragraph tag includes entire paragraph and inline tag just the inline portion.
-[[norm:paragraph:inline-anchors:entire]]
+// Get coverage on alternate adoc paragraph tag format.
+[#norm:paragraph:inline-anchors:entire]
 Paragraph with [#norm:paragraph:inline-anchors:inline-anchor]#inline anchor# and something.
 
 Next paragraph 2

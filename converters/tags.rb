@@ -157,7 +157,7 @@ class TagsConverter
     content_or_nil.nil? ? "" : content_or_nil
   end
 
-  # Convert spaces to newlines.
+  # Convert newlines to spaces.
   def normalize_space text
     text.tr("\n", " ")
   end

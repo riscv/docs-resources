@@ -44,7 +44,10 @@ AsciiDoc supports several styles of anchors:
     > `[[foo]]`<br>
     > `This is an anchor for the entire paragraph.`
     >
-    > `This isn't part of the anchor since it is the next paragraph.`
+    > `This isn't part of the above anchor since it is the next paragraph.`
+    >
+    > `[#bar]`<br>
+    > `This is an alternative paragraph anchor syntax equivalent to [[]]`
 
 * You must use the _inline anchor_ for table cells, unordered/ordered list items, description list items.
 
