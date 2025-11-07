@@ -85,6 +85,29 @@ a| Cell is adoc
 | [#norm:table:anchors-in-cells:entire-table-not-tagged:cell]#ABC DEF#
 |===
 
+// PASSES - Want tagged text to be "ENTIRE TABLE"
+[[norm:table:many-rows]]
+[cols="1,1"]
+|===
+|Name|Color
+
+|Roses|Red
+|Violets|Blue
+|Name1|Color1
+|Name2|Color2
+|Name3|Color3
+|Name4|Color4
+|Name5|Color5
+|Name6|Color6
+|Name7|Color8
+|Name9|Color9
+|Name10|Color10
+|Name11|Color11
+|Name12|Color12
+|Name13|Color13
+|Name14|Color14
+|===
+
 == Chapter 3 - Tagging Unordered Lists
 
 // PASSES - Tag includes all list items

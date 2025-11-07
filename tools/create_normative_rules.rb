@@ -801,7 +801,7 @@ def html_head(f)
     <head>
       <meta charset="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <title>Page with Tables & Sidebar Navigation</title>
+      <title>Normative Rules per Chapter</title>
       <style>
         :root{
           --sidebar-width: 200px;
@@ -828,7 +828,7 @@ def html_head(f)
           overflow-y:auto;
           scrollbar-width:auto; /* show only when needed in Firefox */
         }
-        sidebar::-webkit-scrollbar{
+        .sidebar::-webkit-scrollbar{
           width:8px;
         }
         .sidebar::-webkit-scrollbar-thumb{
@@ -838,13 +838,27 @@ def html_head(f)
         .sidebar::-webkit-scrollbar-thumb:hover{
           background:rgba(0,0,0,0.3);
         }
+        .sidebar ul {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+        }
+        .sidebar li {
+          margin: 2px 0; /* reduce vertical gap between items */
+        }
         .sidebar::-webkit-scrollbar-track{
           background:transparent;
         }
         .sidebar h2{margin:0 0 12px;font-size:18px}
-        .nav{display:flex;flex-direction:column;gap:8px}
+        .nav{display:flex;flex-direction:column;gap:2px}
         .nav a{
-          display:block;padding:10px 12px;border-radius:8px;text-decoration:none;color:var(--accent);font-weight:600;
+          display:block;
+          font-size: 14px;
+          padding:6px 10px;
+          border-radius:6px;
+          text-decoration:none;
+          color:var(--accent);
+          font-weight:600;
         }
         .nav a .subtitle{display:block;font-weight:400;color:var(--muted);font-size:12px}
         .nav a.active{background:rgba(3,102,214,0.12);color:var(--accent)}
@@ -997,17 +1011,32 @@ HTML
 end
 
 # Cleanup the tag text to be suitably displayed.
-# TODO: When https://github.com/riscv/docs-resources/issues/112 improves table format,
-# update this to allow small tables to be displayed.
 def handle_tables(text)
   raise ArgumentError, "Expected String for text but was passed a #{text}.class" unless text.is_a?(String)
 
+  # This is the detection pattern for an entire table being tagged from the "tags.rb" AsciiDoctor backend.
   if text.end_with?("\n===")
-    # This is the currentl weak detection pattern for an entire table being tagged.
-    "ENTIRE TABLE"
+    # Limit table size displayed.
+    truncate_after_newlines(text, 12)
   else
     text
   end
+end
+
+def truncate_after_newlines(text, max_newlines)
+  # Split the string into lines
+  lines = text.split("\n")
+
+  # Take only up to the allowed number of lines
+  truncated_lines = lines.first(max_newlines + 1)
+
+  # Join them back together with newline characters
+  truncated_text = truncated_lines.join("\n")
+
+  # If there were more lines than allowed, indicate truncation.
+  truncated_text += "\n..." if lines.size > max_newlines + 1
+
+  truncated_text
 end
 
 # Convert newlines to <br>.
@@ -1048,6 +1077,5 @@ when "html"
 else
   raise "Unknown output_format of #{output_format}"
 end
-
 
 exit 0
