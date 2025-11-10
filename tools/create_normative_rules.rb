@@ -638,7 +638,7 @@ def output_adoc(filename, defs, tags, tag2html_fnames)
       f.puts("")
       f.puts("[cols=\"20%,20%,60%\"]")
       f.puts("|===")
-      f.puts("| Rule Name | Info Source | Info Text")
+      f.puts("| Rule Name | Text Source | Normative Text")
 
       nr_defs.each do |nr|
         info_rows = (nr.summary.nil? ? 0 : 1) + (nr.description.nil? ? 0 : 1) +
@@ -852,7 +852,7 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag2html_fname
   f.puts(%Q{            <col class="col-text">})
   f.puts(%Q{          </colgroup>})
   f.puts(%Q{          <thead>})
-  f.puts(%Q{            <tr><th>Rule Name</th><th>Info Source</th><th>Info Text</th></tr>})
+  f.puts(%Q{            <tr><th>Rule Name</th><th>Text Source</th><th>Normative Text</th></tr>})
   f.puts(%Q{          </thead>})
   f.puts(%Q{          <tbody>})
 
