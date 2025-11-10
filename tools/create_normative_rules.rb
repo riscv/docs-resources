@@ -167,8 +167,11 @@ class NormativeRuleDef
       check_allowed_types(@kind, @name, nil)
     end
 
-    @instances = data["instances"]
-    @instances = [] if @instances.nil?
+    @instances = []
+    @instances.append(data["instance"]) unless data["instance"].nil?
+    data["instances"]&.each do |instance_name|
+      @instances.append(instance_name)
+    end
 
     if @kind.nil?
       # Not allowed to have instances without a kind.
@@ -635,16 +638,19 @@ def output_adoc(filename, defs, tags, tag2html_fnames)
       f.puts("")
       f.puts("[cols=\"20%,20%,60%\"]")
       f.puts("|===")
-      f.puts("| Rule Name | Link to Standard | Text from Standard")
+      f.puts("| Rule Name | Info Source | Info Text")
 
       nr_defs.each do |nr|
-        info_rows = nr.tag_refs.length + (nr.description.nil? ? 0 : 1) + (nr.summary.nil? ? 0 : 1)
+        info_rows = (nr.summary.nil? ? 0 : 1) + (nr.description.nil? ? 0 : 1) +
+          (nr.kind.nil? ? 0 : 1) + (nr.instances.empty? ? 0 : 1) + nr.tag_refs.length
         row_span = (info_rows > 0) ? ".#{info_rows}+" : ""
 
         f.puts("")
         f.puts("#{row_span}| #{nr.name}")
         f.puts("| Summary | #{nr.summary}") unless nr.summary.nil?
         f.puts("| Description | #{nr.description}") unless nr.description.nil?
+        f.puts("| Kind | #{nr.kind}") unless nr.kind.nil?
+        f.puts('[' + nr.instances.join(', ') + ']') unless nr.instances.empty?
         nr.tag_refs.each do |tag_ref|
           tag = tags.get_tag(tag_ref)
           fatal("Normative rule #{nr.name} defined in file #{nr.def_filename} references non-existent tag #{tag_ref}") if tag.nil?
@@ -846,12 +852,13 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag2html_fname
   f.puts(%Q{            <col class="col-text">})
   f.puts(%Q{          </colgroup>})
   f.puts(%Q{          <thead>})
-  f.puts(%Q{            <tr><th>Rule Name</th><th>Link to Standard</th><th>Text from Standard</th></tr>})
+  f.puts(%Q{            <tr><th>Rule Name</th><th>Info Source</th><th>Info Text</th></tr>})
   f.puts(%Q{          </thead>})
   f.puts(%Q{          <tbody>})
 
   nr_defs.each do |nr|
-    name_row_span = nr.tag_refs.length + (nr.description.nil? ? 0 : 1) + (nr.summary.nil? ? 0 : 1)
+    name_row_span = (nr.summary.nil? ? 0 : 1) + (nr.description.nil? ? 0 : 1) +
+      (nr.kind.nil? ? 0 : 1) + (nr.instances.empty? ? 0 : 1) + nr.tag_refs.length
 
     row_started = true
     f.puts(%Q{            <tr>})
@@ -869,6 +876,23 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag2html_fname
       f.puts(%Q{            <tr>}) unless row_started
       f.puts(%Q{              <td>Description</td>})
       f.puts(%Q{              <td>#{html_handle_newlines(nr.description)}</td>})
+      f.puts(%Q{            </tr>})
+      row_started = false
+    end
+
+    unless nr.kind.nil?
+      f.puts(%Q{            <tr>}) unless row_started
+      f.puts(%Q{              <td>Kind</td>})
+      f.puts(%Q{              <td>#{nr.kind}</td>})
+      f.puts(%Q{            </tr>})
+      row_started = false
+    end
+
+    unless nr.instances.empty?
+      instances_str = "[" + nr.instances.join(', ') + "]"
+      f.puts(%Q{            <tr>}) unless row_started
+      f.puts(%Q{              <td>Instances</td>})
+      f.puts(%Q{              <td>#{instances_str}</td})
       f.puts(%Q{            </tr>})
       row_started = false
     end

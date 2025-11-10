@@ -4,10 +4,12 @@
 
 [cols="20%,20%,60%"]
 |===
-| Rule Name | Link to Standard | Text from Standard
+| Rule Name | Info Source | Info Text
 
-.2+| inline
+.4+| inline
 | Summary | A few words
+| Kind | extension
+[Zicsr, ABC]
 a| link:test.html#norm:inline[norm:inline] | inside inline
 
 .1+| no_tag
@@ -151,8 +153,10 @@ Paragraph 3
 a| link:test.html#norm:admonition:only-anchors-in-notes:note1[norm:admonition:only-anchors-in-notes:note1] | Paragraph X
 a| link:test.html#norm:admonition:only-anchors-in-notes:note3[norm:admonition:only-anchors-in-notes:note3] | Paragraph Z
 
-.3+| admon5
+.5+| admon5
 | Description | One line description
+| Kind | parameter
+[MY_PARAMETER]
 a| link:test.html#norm:admonition:anchors-in-notes:note1[norm:admonition:anchors-in-notes:note1] | Paragraph 1
 a| link:test.html#norm:admonition:anchors-in-notes:note3[norm:admonition:anchors-in-notes:note3] | Paragraph 3
 |===

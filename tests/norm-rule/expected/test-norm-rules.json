@@ -382,6 +382,9 @@
       "def_filename": "tests/norm-rule/test.yaml",
       "chapter_name": "my-chapter_name",
       "kind": "parameter",
+      "instances": [
+        "MY_PARAMETER"
+      ],
       "description": "One line description",
       "tags": [
         {
