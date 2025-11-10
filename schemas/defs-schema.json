@@ -9,7 +9,7 @@
     },
     "chapter_name": {
       "type": "string",
-      "description": "Name of chapter in standards doc associated with these normative rules definitions"
+      "description": "Name of chapter (keep it short) in standards document associated with normative rules definitions"
     },
     "normative_rule_definitions": {
       "type": "array",
@@ -34,9 +34,13 @@
           },
           "kind": {
             "allOf": [
-              { "$ref": "common-schema.json#/isaObjectKind" },
+              { "$ref": "common-schema.json#/stdsObjectKind" },
               { "$ref": "common-schema.json#/kindRuleDesc" }
             ]
+          },
+          "instance": {
+            "type": "string",
+            "$ref": "common-schema.json#/instanceRuleDesc"
           },
           "instances": {
             "allOf": [
@@ -44,22 +48,32 @@
               { "$ref": "common-schema.json#/instancesRuleDesc" }
             ]
           },
-          "tags": {
-            "$ref": "common-schema.json#/tagArray",
-            "description": "List of normative rule tags that have normative text from adoc files"
+          "tag": {
+            "$ref": "common-schema.json#/tagName",
+            "description": "Name of tag containing normative text"
           },
-          "tags_without_text": {
-            "$ref": "common-schema.json#/tagArray",
-            "description": "List of normative rule tags that don't have normative text (just an anchor) from adoc files"
+          "tags": {
+            "$ref": "common-schema.json#/tagNameArray",
+            "description": "List of tag names containing normative text"
           }
         },
-        "oneOf": [
-          { "required": ["name"] },
-          { "required": ["names"] }
-        ],
-        "anyOf": [
-          { "required": ["tags"] },
-          { "required": ["tags_without_text"] }
+        "allOf": [
+          {
+            "oneOf": [
+              { "required": ["name"] },
+              { "required": ["names"] }
+            ]
+          },
+          {
+            "not": {
+              "required": ["tag", "tags"]
+            }
+          },
+          {
+            "not": {
+              "required": ["instance", "instances"]
+            }
+          }
         ],
         "additionalProperties": false
       }

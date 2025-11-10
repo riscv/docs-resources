@@ -10,10 +10,13 @@
     "description": "Comprehensive description of the normative rule (sentence, paragraph, or longer)"
   },
   "kindRuleDesc": {
-    "description": "The kind of ISA object associated with this normative rule"
+    "description": "The kind of standards object associated with this normative rule"
+  },
+  "instanceRuleDesc": {
+    "description": "The name of a standards object of the specified kind associated with this normative rule"
   },
   "instancesRuleDesc": {
-    "description": "The names of ISA object instances of the specified kind associated with this normative rule"
+    "description": "The names of standards objects of the specified kind associated with this normative rule"
   },
   "stringArray": {
     "type": "array",
@@ -25,7 +28,7 @@
   "tagNamePattern" : {
     "pattern": "^[a-zA-z][:a-zA-z0-9_-]+$"
   },
-  "isaObjectKind":  {
+  "stdsObjectKind":  {
     "type": "string",
     "enum": ["extension", "instruction", "csr", "csr_field", "parameter"]
   },
@@ -44,29 +47,11 @@
     "type": "string",
     "$ref": "#/tagNamePattern"
   },
-  "tagObject": {
-    "type": "object",
-    "properties": {
-      "name": { "$ref": "#/tagName" },
-      "kind": {
-        "$ref": "#/isaObjectKind",
-        "description": "The kind of ISA object associated with this tag"
-      },
-      "instances": {
-        "$ref": "#/stringArray",
-        "description": "The names of ISA object instances of the specified kind associated with this tag"
-      }
-    },
-    "required": ["name"],
-    "additionalProperties": false
-  },
-  "tagArray": {
+  "tagNameArray": {
     "type": "array",
     "items": {
-      "anyOf": [
-        { "$ref": "#/tagName" },
-        { "$ref": "#/tagObject" }
-      ]
+      "type": "string",
+      "$ref": "#/tagNamePattern"
     }
   }
 }
