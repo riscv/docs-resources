@@ -4,7 +4,7 @@
 
 [cols="20%,20%,60%"]
 |===
-| Rule Name | Info Source | Info Text
+| Rule Name | Text Source | Normative Text
 
 .4+| inline
 | Summary | A few words
