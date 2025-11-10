@@ -10,6 +10,9 @@
 | Summary | A few words
 a| link:test.html#norm:inline[norm:inline] | inside inline
 
+.1+| no_tag
+| Summary | Normative rule without tag/tags
+
 .2+| paragraph-with-a-really-wide-rule-name
 | Description | Here's a description.
 It's got 2 lines.

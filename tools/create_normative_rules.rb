@@ -139,8 +139,7 @@ class NormativeRuleDef
   attr_reader :description            # String (optional - sentence, paragraph, or more)
   attr_reader :kind                   # String (optional, can be nil)
   attr_reader :instances              # Array<String> (optional - can be empty)
-  attr_reader :tag_refs               # Array<NormativeTagRef> (optional - can be empty)
-  attr_reader :tag_refs_without_text  # Array<NormativeTagRef> (optional - can be empty - like tag_refs but no tag text)
+  attr_reader :tag_refs               # Array<String> (optional - can be empty)
 
   def initialize(name, def_filename, chapter_name, data)
     fatal("Need String for name but was passed a #{name.class}") unless name.is_a?(String)
@@ -179,57 +178,12 @@ class NormativeRuleDef
     end
 
     @tag_refs = []
-    data["tags"]&.each do |tag_data|
-      @tag_refs.append(NormativeTagRef.new(@name, tag_data))
-    end
-
-    @tag_refs_without_text = []
-    data["tags_without_text"]&.each do |tag_data|
-      @tag_refs_without_text.append(NormativeTagRef.new(@name, tag_data))
+    @tag_refs.append(data["tag"]) unless data["tag"].nil?
+    data["tags"]&.each do |tag_name|
+      @tag_refs.append(tag_name)
     end
   end
 end # class NormativeRuleDef
-
-# Holds one reference to a tag by a rule definition.
-class NormativeTagRef
-  attr_reader :name               # String (mandatory)
-  attr_reader :kind               # String (optional, can be nil)
-  attr_reader :instances          # Array<String> (optional, can be empty array)
-
-  # The nr_name is the name of the normative rule
-  # The data can either be a String (so just the tag name provided) or a hash if more info passed.
-  def initialize(nr_name, data)
-    fatal("Need String for nr_name but was passed a #{nr_name.class}") unless nr_name.is_a?(String)
-
-    if data.is_a?(String)
-      @name = data
-      @instances = []
-    elsif data.is_a?(Hash)
-      @name = data["name"]
-      fatal("Missing tag name referenced by normative rule #{nr_name}") if @name.nil?
-      fatal("Provided #{@name.class} class for tag name #{@name} in normative rule #{nr_name} but need a String") unless @name.is_a?(String)
-
-      # Handle optional values
-      @kind = data["kind"]
-      unless @kind.nil?
-        fatal("Provided #{@kind.class} class for kind in tag #{@name} in normative rule #{name} but need a String") unless @kind.is_a?(String)
-        check_allowed_types(@kind, nr_name, @name)
-      end
-
-      @instances = data["instances"]
-      @instances = [] if @instances.nil?
-
-      if @kind.nil?
-        # Not allowed to have instances without a kind.
-        fatal("Tag #{@name} referenced in normative rule #{nr_name} defines instances but no kind") unless @instances.empty?
-      else
-        fatal("Provided #{@instances.class} class for instances in tag #{name} in normative rule #{nr_name} but need an Array") unless @instances.is_a?(Array)
-      end
-    else
-      fatal("Need String or Hash for data for normative rule #{nr_name} but passed a #{data.class}")
-    end
-  end
-end # class NormativeTagRef
 
 # Create fatal if kind not recognized. The name is nil if this is called in the normative rule definition.
 def check_allowed_types(kind, nr_name, name)
@@ -461,19 +415,17 @@ def create_normative_rules_hash(defs, tags)
       hash["summary"] = d.summary unless d.summary.nil?
       hash["description"] = d.description unless d.description.nil?
 
-      unless d.tag_refs.nil? && d.tag_refs_without_text.nil?
+      unless d.tag_refs.nil?
         hash["tags"] = []
       end
 
-      # Add tag entries for those that should have tag text.
+      # Add tag entries
       unless d.tag_refs.nil?
         d.tag_refs.each do |tag_ref|
-          tag_ref_name = tag_ref.name
-
           # Lookup tag
-          tag = tags.get_tag(tag_ref_name)
+          tag = tags.get_tag(tag_ref)
 
-          fatal("Normative rule #{d.name} defined in file #{d.def_filename} references non-existent tag #{tag_ref_name}") if tag.nil?
+          fatal("Normative rule #{d.name} defined in file #{d.def_filename} references non-existent tag #{tag_ref}") if tag.nil?
 
           resolved_tag = {
             "name" => tag.name,
@@ -481,36 +433,7 @@ def create_normative_rules_hash(defs, tags)
             "tag_filename" => tag.tag_filename
           }
 
-          # Add optional info from tag reference.
-          resolved_tag["kind"] = tag_ref.kind unless tag_ref.kind.nil?
-          resolved_tag["instances"] = tag_ref.instances unless tag_ref.instances.empty?
-
           hash["tags"].append(resolved_tag)
-        end
-      end
-
-      # Add tag entries for those that shouldn't have tag text.
-      unless d.tag_refs_without_text.nil?
-        d.tag_refs_without_text.each do |tag_ref|
-          tag_ref_name = tag_ref.name
-
-          # Lookup tag. Should be nil.
-          tag = tags.get_tag(tag_ref_name)
-
-          if tag.nil?
-            resolved_tag = {
-              "name" => tag_ref_name,
-            }
-
-            # Add optional info from tag reference.
-            resolved_tag["kind"] = tag_ref.kind unless tag_ref.kind.nil?
-            resolved_tag["instances"] = tag_ref.instances
-
-            hash["tags"].append(resolved_tag)
-          else
-            fatal("Normative rule #{d.name} defined in file #{d.def_filename} has
-#{PN}: tag #{tag_ref_name} tag text but shouldn't")
-          end
         end
       end
 
@@ -520,8 +443,8 @@ def create_normative_rules_hash(defs, tags)
     return ret
 end
 
-# Fatal error if any normative rule references a non-existant tag
-# Warning if there are tags that no rule references.
+# Fatal error if any normative rule references a non-existant tag.
+# Fatal error or warning (controlled by cmd line switch) if there are tags that no rule references.
 def validate_defs_and_tags(defs, tags, warn_if_tags_no_rules)
   fatal("Need NormativeRuleDefs for defs but passed a #{defs.class}") unless defs.is_a?(NormativeRuleDefs)
   fatal("Need NormativeTags for tags but was passed a #{tags.class}") unless tags.is_a?(NormativeTags)
@@ -534,14 +457,12 @@ def validate_defs_and_tags(defs, tags, warn_if_tags_no_rules)
   defs.norm_rule_defs.each do |d|
     unless d.tag_refs.nil?
       d.tag_refs.each do |tag_ref|
-        tag_ref_name = tag_ref.name
-
-        # Lookup tag
-        tag = tags.get_tag(tag_ref_name)
+        # Lookup tag by its name
+        tag = tags.get_tag(tag_ref)
 
         if tag.nil?
           missing_tag_cnt = missing_tag_cnt + 1
-          error("Normative rule #{d.name} defined in file #{d.def_filename} references non-existent tag #{tag_ref_name}")
+          error("Normative rule #{d.name} defined in file #{d.def_filename} references non-existent tag #{tag_ref}")
         else
           referenced_tags[tag.name] = 1 # Any non-nil value
         end
@@ -658,9 +579,8 @@ def output_xlsx(filename, defs, tags)
 
     tag_sources = []
     d.tag_refs.each do |tag_ref|
-      tag_ref_name = tag_ref.name
-      tag = tags.get_tag(tag_ref_name)
-      fatal("Normative rule #{d.name} defined in file #{d.def_filename} references non-existent tag #{tag_ref_name}") if tag.nil?
+      tag = tags.get_tag(tag_ref)
+      fatal("Normative rule #{d.name} defined in file #{d.def_filename} references non-existent tag #{tag_ref}") if tag.nil?
       rule_defs.append(handle_tables(tag.text).chomp)
       tag_sources.append('"' + tag.name + '"')
     end
@@ -726,14 +646,13 @@ def output_adoc(filename, defs, tags, tag2html_fnames)
         f.puts("| Summary | #{nr.summary}") unless nr.summary.nil?
         f.puts("| Description | #{nr.description}") unless nr.description.nil?
         nr.tag_refs.each do |tag_ref|
-          tag_ref_name = tag_ref.name
-          tag = tags.get_tag(tag_ref_name)
-          fatal("Normative rule #{nr.name} defined in file #{nr.def_filename} references non-existent tag #{tag_ref_name}") if tag.nil?
+          tag = tags.get_tag(tag_ref)
+          fatal("Normative rule #{nr.name} defined in file #{nr.def_filename} references non-existent tag #{tag_ref}") if tag.nil?
 
           html_fname = tag2html_fnames[tag.tag_filename]
           fatal("No fname tag to HTML mapping (-tag2html cmd line arg) for tag fname #{tag.tag_filename} for tag name #{tag.name}") if html_fname.nil?
 
-          f.puts("a| link:#{html_fname}" + "#" + tag_ref.name + "[#{tag_ref.name}] | #{handle_tables(tag.text)}")
+          f.puts("a| link:#{html_fname}" + "#" + tag_ref + "[#{tag_ref}] | #{handle_tables(tag.text)}")
         end
       end
 
@@ -955,15 +874,14 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag2html_fname
     end
 
     nr.tag_refs.each do |tag_ref|
-      tag_ref_name = tag_ref.name
-      tag = tags.get_tag(tag_ref_name)
-      fatal("Normative rule #{nr.name} defined in file #{nr.def_filename} references non-existent tag #{tag_ref_name}") if tag.nil?
+      tag = tags.get_tag(tag_ref)
+      fatal("Normative rule #{nr.name} defined in file #{nr.def_filename} references non-existent tag #{tag_ref}") if tag.nil?
 
       html_fname = tag2html_fnames[tag.tag_filename]
       fatal("No fname tag to HTML mapping (-tag2html cmd line arg) for tag fname #{tag.tag_filename} for tag name #{tag.name}") if html_fname.nil?
 
       f.puts(%Q{            <tr>}) unless row_started
-      f.puts(%Q{              <td><a href="#{html_fname}##{tag_ref.name}">#{tag_ref.name}</a></td>})
+      f.puts(%Q{              <td><a href="#{html_fname}##{tag_ref}">#{tag_ref}</a></td>})
       f.puts(%Q{              <td>#{html_handle_newlines(handle_tables(tag.text))}</td></tr>})
       f.puts(%Q{            </tr>})
       row_started = false

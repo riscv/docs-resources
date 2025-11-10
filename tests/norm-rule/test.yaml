@@ -12,78 +12,80 @@ normative_rule_definitions:
     summary: A few words
     kind: extension
     instances: [Zicsr, ABC]
-    tags: ["norm:inline"]
+    tag: "norm:inline"
+  - name: no_tag
+    summary: Normative rule without tag/tags
 
   # Paragraph
   - name: paragraph-with-a-really-wide-rule-name
     description: |
       Here's a description.
       It's got 2 lines.
-    tags: ["norm:paragraph:no-inline-anchors"]
+    tag: "norm:paragraph:no-inline-anchors"
   - name: inline-anchors-in-paragraph-entire
-    tags: ["norm:paragraph:inline-anchors:entire"]
+    tag: "norm:paragraph:inline-anchors:entire"
   - name: inline-anchors-in-paragraph-inline-anchor
-    tags: ["norm:paragraph:inline-anchors:inline-anchor"]
+    tag: "norm:paragraph:inline-anchors:inline-anchor"
   - name: formulae
-    tags: ["norm:formulae"]
+    tag: "norm:formulae"
   - name: rule_with_newlines
-    tags: ["norm:paragraph:tag_with_newlines"]
+    tag: "norm:paragraph:tag_with_newlines"
   - name: double_tags
-    tags: ["norm:def"]
+    tag: "norm:def"
 
   # Table
   - name: table1
-    tags: ["norm:table:anchors-in-cells:entire-table"]
+    tag: "norm:table:anchors-in-cells:entire-table"
   - name: table2
-    tags: ["norm:table:no-anchors-in-cells:entire-table"]
+    tag: "norm:table:no-anchors-in-cells:entire-table"
   - name: table3
-    tags: ["norm:table:anchors-in-cells:entire-table-tagged:cell"]
+    tag: "norm:table:anchors-in-cells:entire-table-tagged:cell"
   - name: table4
-    tags: ["norm:table:anchors-in-cells:entire-table-not-tagged:cell"]
+    tag: "norm:table:anchors-in-cells:entire-table-not-tagged:cell"
   - name: table5
-    tags: ["norm:table:many-rows"]
+    tag: "norm:table:many-rows"
 
   # Unordered lists
   - name: unordered1
-    tags: ["norm:unordered-list:no-anchors-in-items:entire-list"]
+    tag: "norm:unordered-list:no-anchors-in-items:entire-list"
   - name: unordered2
-    tags: ["norm:unordered-list:anchors-in-items:entire-list"]
+    tag: "norm:unordered-list:anchors-in-items:entire-list"
   - name: unordered3
-    tags: ["norm:unordered-list:anchors-in-items:item1"]
+    tag: "norm:unordered-list:anchors-in-items:item1"
   - name: unordered4
-    tags: ["norm:unordered-list:anchors-in-items:item2"]
+    tag: "norm:unordered-list:anchors-in-items:item2"
   - name: unordered5
-    tags: ["norm:unordered-list:multiple-levels"]
+    tag: "norm:unordered-list:multiple-levels"
 
   # Ordered lists
   - name: ordered1
-    tags: ["norm:ordered-list:no-anchors-in-items:entire-list"]
+    tag: "norm:ordered-list:no-anchors-in-items:entire-list"
   - name: ordered2
-    tags: ["norm:ordered-list:anchors-in-items:entire-list"]
+    tag: "norm:ordered-list:anchors-in-items:entire-list"
   - name: ordered3
-    tags: ["norm:ordered-list:anchors-in-items:item1"]
+    tag: "norm:ordered-list:anchors-in-items:item1"
   - name: ordered4
-    tags: ["norm:ordered-list:anchors-in-items:item2"]
+    tag: "norm:ordered-list:anchors-in-items:item2"
 
   # Description lists
   - name: desc1
-    tags: ["norm:description-list:no-anchors-in-items:entire-list"]
+    tag: "norm:description-list:no-anchors-in-items:entire-list"
   - name: desc2
-    tags: ["norm:description-list:anchors-in-items:entire-list"]
+    tag: "norm:description-list:anchors-in-items:entire-list"
   - names: [desc3, desc4]
     tags: ["norm:description-list:anchors-in-items:item1", "norm:description-list:anchors-in-items:item3"]
 
   # Admonitions
   - name: admon1
-    tags: ["norm:admonition:single-paragraph-note"]
+    tag: "norm:admonition:single-paragraph-note"
   - name: admon2
-    tags: ["norm:admonition:no-anchors-in-notes:entire-note"]
+    tag: "norm:admonition:no-anchors-in-notes:entire-note"
   - name: admon3
-    tags: ["norm:admonition:anchors-in-notes:entire-note"]
+    tag: "norm:admonition:anchors-in-notes:entire-note"
   - name: admon4
     tags: ["norm:admonition:only-anchors-in-notes:note1", "norm:admonition:only-anchors-in-notes:note3"]
   - name: admon5
     description: One line description
     kind: parameter
-    instances: [MY_PARAMETER]
+    instance: MY_PARAMETER
     tags: ["norm:admonition:anchors-in-notes:note1", "norm:admonition:anchors-in-notes:note3"]

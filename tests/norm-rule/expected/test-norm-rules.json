@@ -19,6 +19,13 @@
       ]
     },
     {
+      "name": "no_tag",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "summary": "Normative rule without tag/tags",
+      "tags": []
+    },
+    {
       "name": "paragraph-with-a-really-wide-rule-name",
       "def_filename": "tests/norm-rule/test.yaml",
       "chapter_name": "my-chapter_name",
@@ -375,9 +382,6 @@
       "def_filename": "tests/norm-rule/test.yaml",
       "chapter_name": "my-chapter_name",
       "kind": "parameter",
-      "instances": [
-        "MY_PARAMETER"
-      ],
       "description": "One line description",
       "tags": [
         {
