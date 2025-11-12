@@ -58,6 +58,10 @@
                 "tag_filename": {
                   "type": "string",
                   "description": "Tag file that maps tag names to tag text"
+                },
+                "stds_doc_url": {
+                  "type": "string",
+                  "description": "URL to standards doc associated with tag_filename"
                 }
               },
               "required": ["name"]
@@ -65,6 +69,9 @@
           }
         },
         "required": ["name", "def_filename"],
+        "dependencies": {
+          "tag_filename": ["stds_doc_url"]
+        },
         "additionalProperties": false
       }
     }

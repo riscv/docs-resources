@@ -14,7 +14,8 @@
         {
           "name": "norm:inline",
           "text": "inside inline",
-          "tag_filename": "/build/test-norm-tags.json"
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
         }
       ]
     },
@@ -26,6 +27,19 @@
       "tags": []
     },
     {
+      "name": "inline-with-hash",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:inline-with-hash",
+          "text": "includes a hash # symbol.",
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
+        }
+      ]
+    },
+    {
       "name": "paragraph-with-a-really-wide-rule-name",
       "def_filename": "tests/norm-rule/test.yaml",
       "chapter_name": "my-chapter_name",
@@ -34,7 +48,8 @@
         {
           "name": "norm:paragraph:no-inline-anchors",
           "text": "Paragraph without inline anchors",
-          "tag_filename": "/build/test-norm-tags.json"
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
         }
       ]
     },
@@ -46,7 +61,8 @@
         {
           "name": "norm:paragraph:inline-anchors:entire",
           "text": "Paragraph with inline anchor and something.",
-          "tag_filename": "/build/test-norm-tags.json"
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
         }
       ]
     },
@@ -58,7 +74,8 @@
         {
           "name": "norm:paragraph:inline-anchors:inline-anchor",
           "text": "inline anchor",
-          "tag_filename": "/build/test-norm-tags.json"
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
         }
       ]
     },
@@ -70,7 +87,8 @@
         {
           "name": "norm:formulae",
           "text": "This paragraph looks like a formulae to Excel because it has this &lt; sign in it. Make sure this gets written as a string, not a formulae in the XLSX or else it will create an error in Excel.",
-          "tag_filename": "/build/test-norm-tags.json"
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
         }
       ]
     },
@@ -82,7 +100,8 @@
         {
           "name": "norm:paragraph:tag_with_newlines",
           "text": "Here&#8217;s the first line. Here&#8217;s the second line.",
-          "tag_filename": "/build/test-norm-tags.json"
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
         }
       ]
     },
@@ -94,7 +113,8 @@
         {
           "name": "norm:def",
           "text": "This paragraph has two tags but we only ever get a tag for norm:def.",
-          "tag_filename": "/build/test-norm-tags.json"
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
         }
       ]
     },
@@ -106,7 +126,8 @@
         {
           "name": "norm:table:anchors-in-cells:entire-table",
           "text": "===\nWITH anchor\nWITHOUT anchor\n===",
-          "tag_filename": "/build/test-norm-tags.json"
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
         }
       ]
     },
@@ -118,7 +139,8 @@
         {
           "name": "norm:table:no-anchors-in-cells:entire-table",
           "text": "Header 1|Header 2\n===\nCell in column 1, row 1|Cell in column 2, row 1\nCell in column 1, row 2|Cell in column 2, row 2\n===",
-          "tag_filename": "/build/test-norm-tags.json"
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
         }
       ]
     },
@@ -130,7 +152,8 @@
         {
           "name": "norm:table:anchors-in-cells:entire-table-tagged:cell",
           "text": "WITH anchor",
-          "tag_filename": "/build/test-norm-tags.json"
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
         }
       ]
     },
@@ -142,7 +165,8 @@
         {
           "name": "norm:table:anchors-in-cells:entire-table-not-tagged:cell",
           "text": "ABC DEF",
-          "tag_filename": "/build/test-norm-tags.json"
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
         }
       ]
     },
@@ -154,7 +178,8 @@
         {
           "name": "norm:table:many-rows",
           "text": "Name|Color\n===\nRoses|Red\nViolets|Blue\nName1|Color1\nName2|Color2\nName3|Color3\nName4|Color4\nName5|Color5\nName6|Color6\nName7|Color8\nName9|Color9\nName10|Color10\nName11|Color11\nName12|Color12\nName13|Color13\nName14|Color14\n===",
-          "tag_filename": "/build/test-norm-tags.json"
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
         }
       ]
     },
@@ -166,7 +191,8 @@
         {
           "name": "norm:unordered-list:no-anchors-in-items:entire-list",
           "text": "Item A\nItem B\nItem C",
-          "tag_filename": "/build/test-norm-tags.json"
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
         }
       ]
     },
@@ -178,7 +204,8 @@
         {
           "name": "norm:unordered-list:anchors-in-items:entire-list",
           "text": "Item 1\nItem 2\nItem 3",
-          "tag_filename": "/build/test-norm-tags.json"
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
         }
       ]
     },
@@ -190,7 +217,8 @@
         {
           "name": "norm:unordered-list:anchors-in-items:item1",
           "text": "Item 1",
-          "tag_filename": "/build/test-norm-tags.json"
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
         }
       ]
     },
@@ -202,7 +230,8 @@
         {
           "name": "norm:unordered-list:anchors-in-items:item2",
           "text": "Item 2",
-          "tag_filename": "/build/test-norm-tags.json"
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
         }
       ]
     },
@@ -214,7 +243,8 @@
         {
           "name": "norm:unordered-list:multiple-levels",
           "text": "Zca and not F\nZca, Zcf and F (but not D) is specified (RV32 only)\nZca, Zcf and Zcd if D is specified (RV32 only)\n\nthis configuration excludes Zcmp, Zcmt\nZca, Zcd if D is specified (RV64 only)\n\nthis configuration excludes Zcmp, Zcmt",
-          "tag_filename": "/build/test-norm-tags.json"
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
         }
       ]
     },
@@ -226,7 +256,8 @@
         {
           "name": "norm:ordered-list:no-anchors-in-items:entire-list",
           "text": "Item A\nItem B\nItem C",
-          "tag_filename": "/build/test-norm-tags.json"
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
         }
       ]
     },
@@ -238,7 +269,8 @@
         {
           "name": "norm:ordered-list:anchors-in-items:entire-list",
           "text": "Item 1\nItem 2\nItem 3",
-          "tag_filename": "/build/test-norm-tags.json"
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
         }
       ]
     },
@@ -250,7 +282,8 @@
         {
           "name": "norm:ordered-list:anchors-in-items:item1",
           "text": "Item 1",
-          "tag_filename": "/build/test-norm-tags.json"
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
         }
       ]
     },
@@ -262,7 +295,8 @@
         {
           "name": "norm:ordered-list:anchors-in-items:item2",
           "text": "Item 2",
-          "tag_filename": "/build/test-norm-tags.json"
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
         }
       ]
     },
@@ -274,7 +308,8 @@
         {
           "name": "norm:description-list:no-anchors-in-items:entire-list",
           "text": "Description-A\nItem A\nDescription-B\nItem B\nDescription-C\nItem C",
-          "tag_filename": "/build/test-norm-tags.json"
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
         }
       ]
     },
@@ -286,7 +321,8 @@
         {
           "name": "norm:description-list:anchors-in-items:entire-list",
           "text": "Description-1",
-          "tag_filename": "/build/test-norm-tags.json"
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
         }
       ]
     },
@@ -298,12 +334,14 @@
         {
           "name": "norm:description-list:anchors-in-items:item1",
           "text": "Item 1",
-          "tag_filename": "/build/test-norm-tags.json"
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
         },
         {
           "name": "norm:description-list:anchors-in-items:item3",
           "text": "Item 3",
-          "tag_filename": "/build/test-norm-tags.json"
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
         }
       ]
     },
@@ -315,12 +353,14 @@
         {
           "name": "norm:description-list:anchors-in-items:item1",
           "text": "Item 1",
-          "tag_filename": "/build/test-norm-tags.json"
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
         },
         {
           "name": "norm:description-list:anchors-in-items:item3",
           "text": "Item 3",
-          "tag_filename": "/build/test-norm-tags.json"
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
         }
       ]
     },
@@ -332,7 +372,8 @@
         {
           "name": "norm:admonition:single-paragraph-note",
           "text": "Single paragraph note\nthat spans lines.",
-          "tag_filename": "/build/test-norm-tags.json"
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
         }
       ]
     },
@@ -344,7 +385,8 @@
         {
           "name": "norm:admonition:no-anchors-in-notes:entire-note",
           "text": "Paragraph A\n\nParagraph B\n\nParagraph C",
-          "tag_filename": "/build/test-norm-tags.json"
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
         }
       ]
     },
@@ -356,7 +398,8 @@
         {
           "name": "norm:admonition:anchors-in-notes:entire-note",
           "text": "Paragraph 1\n\nParagraph 2\n\nParagraph 3",
-          "tag_filename": "/build/test-norm-tags.json"
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
         }
       ]
     },
@@ -368,12 +411,14 @@
         {
           "name": "norm:admonition:only-anchors-in-notes:note1",
           "text": "Paragraph X",
-          "tag_filename": "/build/test-norm-tags.json"
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
         },
         {
           "name": "norm:admonition:only-anchors-in-notes:note3",
           "text": "Paragraph Z",
-          "tag_filename": "/build/test-norm-tags.json"
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
         }
       ]
     },
@@ -390,12 +435,14 @@
         {
           "name": "norm:admonition:anchors-in-notes:note1",
           "text": "Paragraph 1",
-          "tag_filename": "/build/test-norm-tags.json"
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
         },
         {
           "name": "norm:admonition:anchors-in-notes:note3",
           "text": "Paragraph 3",
-          "tag_filename": "/build/test-norm-tags.json"
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
         }
       ]
     }

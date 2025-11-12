@@ -15,6 +15,8 @@ normative_rule_definitions:
     tag: "norm:inline"
   - name: no_tag
     summary: Normative rule without tag/tags
+  - name: inline-with-hash
+    tag: "norm:inline-with-hash"
 
   # Paragraph
   - name: paragraph-with-a-really-wide-rule-name

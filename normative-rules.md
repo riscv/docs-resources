@@ -38,7 +38,10 @@ AsciiDoc provides facilities to create invisible anchors associated with an enti
 
 AsciiDoc supports several styles of anchors:
 * _inline anchor_ such as:<br>
-    `We must [#goal]#free the world#.`
+    `We must [#goal]#free the world#.`<br>
+    OR<br>
+    `This text [#fix]+contains a # symbox+ so use plus to mark beginning & end of anchored text`
+
 * _paragraph anchor_ such as:
 
     > `[[foo]]`<br>
@@ -102,6 +105,7 @@ If you'd like to see detailed AsciiDoc examples of tagging cases, see https://gi
 2. Tagging part of a paragraph, table cells, unordered list items (AKA bullet list), or ordered list items (AKA numbered list)
 
     > Syntax:      `[#<anchor-name>]# ... #`<br>
+    > Alternate:   `[#<anchor-name>]+ ... +` if tagged text contains a # symbol.<br>
     >
     > Example:
     >> `Here is an example of [#norm:foo]#anchoring part# of a paragraph

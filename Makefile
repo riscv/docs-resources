@@ -76,8 +76,8 @@ NORM_TAG_FILE_ARGS := $(foreach relative_pname,$(BUILT_NORM_TAGS_MAIN),-t /$(rel
 GOOD_NORM_RULE_DEF_ARGS := $(foreach relative_pname,$(GOOD_NORM_RULE_DEF_FILES),-d $(relative_pname))
 BAD_NORM_RULE_DEF_ARGS := $(foreach relative_pname,$(BAD_NORM_RULE_DEF_FILES),-d $(relative_pname))
 
-# Provide mapping from an standard's norm tags JSON file to its corresponding HTML file. Used to create links into standard's HTML files.
-NORM_RULE_DOC2HTML_ARGS := $(foreach doc_name,$(DOCS),-tag2html /$(BUILD_DIR)/$(doc_name)$(DOC_NORM_TAG_SUFFIX) $(doc_name).html)
+# Provide mapping from a stds doc norm tags JSON file to a URL that one can link to. Used to create links into stds doc.
+NORM_RULE_DOC2URL_ARGS := $(foreach doc_name,$(DOCS),-tag2url /$(BUILD_DIR)/$(doc_name)$(DOC_NORM_TAG_SUFFIX) $(doc_name).html)
 
 # Docker stuff
 DOCKER_BIN ?= docker
@@ -212,7 +212,7 @@ $(BUILT_NORM_RULES_JSON): $(BUILT_NORM_TAGS_MAIN) $(GOOD_NORM_RULE_DEF_FILES)
 	$(WORKDIR_SETUP)
 	cp -f $(BUILT_NORM_TAGS_MAIN) $@.workdir
 	mkdir -p $@.workdir/build
-	$(DOCKER_CMD) $(DOCKER_QUOTE) $(CREATE_NORM_RULE_RUBY) -j $(NORM_TAG_FILE_ARGS) $(GOOD_NORM_RULE_DEF_ARGS) $@ $(DOCKER_QUOTE)
+	$(DOCKER_CMD) $(DOCKER_QUOTE) $(CREATE_NORM_RULE_RUBY) -j $(NORM_TAG_FILE_ARGS) $(GOOD_NORM_RULE_DEF_ARGS) $(NORM_RULE_DOC2URL_ARGS) $@ $(DOCKER_QUOTE)
 	$(WORKDIR_TEARDOWN)
 
 # Build normative rules with XLSX output format
@@ -220,21 +220,21 @@ $(BUILT_NORM_RULES_XLSX): $(BUILT_NORM_TAGS_MAIN) $(GOOD_NORM_RULE_DEF_FILES)
 	$(WORKDIR_SETUP)
 	cp -f $(BUILT_NORM_TAGS_MAIN) $@.workdir
 	mkdir -p $@.workdir/build
-	$(DOCKER_CMD) $(DOCKER_QUOTE) $(CREATE_NORM_RULE_RUBY) -x $(NORM_TAG_FILE_ARGS) $(GOOD_NORM_RULE_DEF_ARGS) $@ $(DOCKER_QUOTE)
+	$(DOCKER_CMD) $(DOCKER_QUOTE) $(CREATE_NORM_RULE_RUBY) -x $(NORM_TAG_FILE_ARGS) $(GOOD_NORM_RULE_DEF_ARGS) $(NORM_RULE_DOC2URL_ARGS) $@ $(DOCKER_QUOTE)
 	$(WORKDIR_TEARDOWN)
 
 $(BUILT_NORM_RULES_ADOC): $(BUILT_NORM_TAGS_MAIN) $(GOOD_NORM_RULE_DEF_FILES)
 	$(WORKDIR_SETUP)
 	cp -f $(BUILT_NORM_TAGS_MAIN) $@.workdir
 	mkdir -p $@.workdir/build
-	$(DOCKER_CMD) $(DOCKER_QUOTE) $(CREATE_NORM_RULE_RUBY) -a $(NORM_TAG_FILE_ARGS) $(GOOD_NORM_RULE_DEF_ARGS) $(NORM_RULE_DOC2HTML_ARGS) $@ $(DOCKER_QUOTE)
+	$(DOCKER_CMD) $(DOCKER_QUOTE) $(CREATE_NORM_RULE_RUBY) -a $(NORM_TAG_FILE_ARGS) $(GOOD_NORM_RULE_DEF_ARGS) $(NORM_RULE_DOC2URL_ARGS) $@ $(DOCKER_QUOTE)
 	$(WORKDIR_TEARDOWN)
 
 $(BUILT_NORM_RULES_HTML): $(BUILT_MAIN_TEST_HTML) $(GOOD_NORM_RULE_DEF_FILES)
 	$(WORKDIR_SETUP)
 	cp -f $(BUILT_NORM_TAGS_MAIN) $@.workdir
 	mkdir -p $@.workdir/build
-	$(DOCKER_CMD) $(DOCKER_QUOTE) $(CREATE_NORM_RULE_RUBY) -h $(NORM_TAG_FILE_ARGS) $(GOOD_NORM_RULE_DEF_ARGS) $(NORM_RULE_DOC2HTML_ARGS) $@ $(DOCKER_QUOTE)
+	$(DOCKER_CMD) $(DOCKER_QUOTE) $(CREATE_NORM_RULE_RUBY) -h $(NORM_TAG_FILE_ARGS) $(GOOD_NORM_RULE_DEF_ARGS) $(NORM_RULE_DOC2URL_ARGS) $@ $(DOCKER_QUOTE)
 	$(WORKDIR_TEARDOWN)
 
 # This is the HTML file that represents the standards doc. THe norm rule HTML links into this HTML.
@@ -250,7 +250,7 @@ $(BUILT_NORM_RULES_TAGS_NO_RULES): $(BUILT_NORM_TAGS_MAIN) $(BAD_NORM_RULE_DEF_F
 	$(WORKDIR_SETUP)
 	cp -f $(BUILT_NORM_TAGS_MAIN) $@.workdir
 	mkdir -p $@.workdir/build
-	$(DOCKER_CMD) $(DOCKER_QUOTE) $(CREATE_NORM_RULE_RUBY) $(NORM_TAG_FILE_ARGS) $(BAD_NORM_RULE_DEF_ARGS) $(BUILD_DIR)/bogus || touch $(BUILT_NORM_RULES_TAGS_NO_RULES) $(DOCKER_QUOTE)
+	$(DOCKER_CMD) $(DOCKER_QUOTE) $(CREATE_NORM_RULE_RUBY) $(NORM_TAG_FILE_ARGS) $(BAD_NORM_RULE_DEF_ARGS) $(NORM_RULE_DOC2URL_ARGS) $(BUILD_DIR)/bogus || touch $(BUILT_NORM_RULES_TAGS_NO_RULES) $(DOCKER_QUOTE)
 	$(WORKDIR_TEARDOWN)
 
 # Update docker image to latest

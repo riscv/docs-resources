@@ -2,60 +2,64 @@
 
 == my-chapter_name
 
-[cols="20%,20%,60%"]
+[cols="20%,60%,20%"]
 |===
-| Rule Name | Text Source | Normative Text
+| Rule Name | Rule Description | Description Location
 
 .4+| inline
-| Summary | A few words
-| Kind | extension
-[Zicsr, ABC]
-a| link:test.html#norm:inline[norm:inline] | inside inline
+| A few words | Rule Summary
+| extension | Rule Kind
+| [Zicsr, ABC] | Rule Instances
+| inside inline a| link:test.html#norm:inline[norm:inline]
 
 .1+| no_tag
-| Summary | Normative rule without tag/tags
+| Normative rule without tag/tags | Rule Summary
+
+.1+| inline-with-hash
+| includes a hash # symbol. a| link:test.html#norm:inline-with-hash[norm:inline-with-hash]
 
 .2+| paragraph-with-a-really-wide-rule-name
-| Description | Here's a description.
+| Here's a description.
 It's got 2 lines.
-a| link:test.html#norm:paragraph:no-inline-anchors[norm:paragraph:no-inline-anchors] | Paragraph without inline anchors
+ | Rule Description
+| Paragraph without inline anchors a| link:test.html#norm:paragraph:no-inline-anchors[norm:paragraph:no-inline-anchors]
 
 .1+| inline-anchors-in-paragraph-entire
-a| link:test.html#norm:paragraph:inline-anchors:entire[norm:paragraph:inline-anchors:entire] | Paragraph with inline anchor and something.
+| Paragraph with inline anchor and something. a| link:test.html#norm:paragraph:inline-anchors:entire[norm:paragraph:inline-anchors:entire]
 
 .1+| inline-anchors-in-paragraph-inline-anchor
-a| link:test.html#norm:paragraph:inline-anchors:inline-anchor[norm:paragraph:inline-anchors:inline-anchor] | inline anchor
+| inline anchor a| link:test.html#norm:paragraph:inline-anchors:inline-anchor[norm:paragraph:inline-anchors:inline-anchor]
 
 .1+| formulae
-a| link:test.html#norm:formulae[norm:formulae] | This paragraph looks like a formulae to Excel because it has this &lt; sign in it. Make sure this gets written as a string, not a formulae in the XLSX or else it will create an error in Excel.
+| This paragraph looks like a formulae to Excel because it has this &lt; sign in it. Make sure this gets written as a string, not a formulae in the XLSX or else it will create an error in Excel. a| link:test.html#norm:formulae[norm:formulae]
 
 .1+| rule_with_newlines
-a| link:test.html#norm:paragraph:tag_with_newlines[norm:paragraph:tag_with_newlines] | Here&#8217;s the first line. Here&#8217;s the second line.
+| Here&#8217;s the first line. Here&#8217;s the second line. a| link:test.html#norm:paragraph:tag_with_newlines[norm:paragraph:tag_with_newlines]
 
 .1+| double_tags
-a| link:test.html#norm:def[norm:def] | This paragraph has two tags but we only ever get a tag for norm:def.
+| This paragraph has two tags but we only ever get a tag for norm:def. a| link:test.html#norm:def[norm:def]
 
 .1+| table1
-a| link:test.html#norm:table:anchors-in-cells:entire-table[norm:table:anchors-in-cells:entire-table] | ===
+| ===
 WITH anchor
 WITHOUT anchor
-===
+=== a| link:test.html#norm:table:anchors-in-cells:entire-table[norm:table:anchors-in-cells:entire-table]
 
 .1+| table2
-a| link:test.html#norm:table:no-anchors-in-cells:entire-table[norm:table:no-anchors-in-cells:entire-table] | Header 1|Header 2
+| Header 1|Header 2
 ===
 Cell in column 1, row 1|Cell in column 2, row 1
 Cell in column 1, row 2|Cell in column 2, row 2
-===
+=== a| link:test.html#norm:table:no-anchors-in-cells:entire-table[norm:table:no-anchors-in-cells:entire-table]
 
 .1+| table3
-a| link:test.html#norm:table:anchors-in-cells:entire-table-tagged:cell[norm:table:anchors-in-cells:entire-table-tagged:cell] | WITH anchor
+| WITH anchor a| link:test.html#norm:table:anchors-in-cells:entire-table-tagged:cell[norm:table:anchors-in-cells:entire-table-tagged:cell]
 
 .1+| table4
-a| link:test.html#norm:table:anchors-in-cells:entire-table-not-tagged:cell[norm:table:anchors-in-cells:entire-table-not-tagged:cell] | ABC DEF
+| ABC DEF a| link:test.html#norm:table:anchors-in-cells:entire-table-not-tagged:cell[norm:table:anchors-in-cells:entire-table-not-tagged:cell]
 
 .1+| table5
-a| link:test.html#norm:table:many-rows[norm:table:many-rows] | Name|Color
+| Name|Color
 ===
 Roses|Red
 Violets|Blue
@@ -68,95 +72,95 @@ Name6|Color6
 Name7|Color8
 Name9|Color9
 Name10|Color10
-...
+... a| link:test.html#norm:table:many-rows[norm:table:many-rows]
 
 .1+| unordered1
-a| link:test.html#norm:unordered-list:no-anchors-in-items:entire-list[norm:unordered-list:no-anchors-in-items:entire-list] | Item A
+| Item A
 Item B
-Item C
+Item C a| link:test.html#norm:unordered-list:no-anchors-in-items:entire-list[norm:unordered-list:no-anchors-in-items:entire-list]
 
 .1+| unordered2
-a| link:test.html#norm:unordered-list:anchors-in-items:entire-list[norm:unordered-list:anchors-in-items:entire-list] | Item 1
+| Item 1
 Item 2
-Item 3
+Item 3 a| link:test.html#norm:unordered-list:anchors-in-items:entire-list[norm:unordered-list:anchors-in-items:entire-list]
 
 .1+| unordered3
-a| link:test.html#norm:unordered-list:anchors-in-items:item1[norm:unordered-list:anchors-in-items:item1] | Item 1
+| Item 1 a| link:test.html#norm:unordered-list:anchors-in-items:item1[norm:unordered-list:anchors-in-items:item1]
 
 .1+| unordered4
-a| link:test.html#norm:unordered-list:anchors-in-items:item2[norm:unordered-list:anchors-in-items:item2] | Item 2
+| Item 2 a| link:test.html#norm:unordered-list:anchors-in-items:item2[norm:unordered-list:anchors-in-items:item2]
 
 .1+| unordered5
-a| link:test.html#norm:unordered-list:multiple-levels[norm:unordered-list:multiple-levels] | Zca and not F
+| Zca and not F
 Zca, Zcf and F (but not D) is specified (RV32 only)
 Zca, Zcf and Zcd if D is specified (RV32 only)
 
 this configuration excludes Zcmp, Zcmt
 Zca, Zcd if D is specified (RV64 only)
 
-this configuration excludes Zcmp, Zcmt
+this configuration excludes Zcmp, Zcmt a| link:test.html#norm:unordered-list:multiple-levels[norm:unordered-list:multiple-levels]
 
 .1+| ordered1
-a| link:test.html#norm:ordered-list:no-anchors-in-items:entire-list[norm:ordered-list:no-anchors-in-items:entire-list] | Item A
+| Item A
 Item B
-Item C
+Item C a| link:test.html#norm:ordered-list:no-anchors-in-items:entire-list[norm:ordered-list:no-anchors-in-items:entire-list]
 
 .1+| ordered2
-a| link:test.html#norm:ordered-list:anchors-in-items:entire-list[norm:ordered-list:anchors-in-items:entire-list] | Item 1
+| Item 1
 Item 2
-Item 3
+Item 3 a| link:test.html#norm:ordered-list:anchors-in-items:entire-list[norm:ordered-list:anchors-in-items:entire-list]
 
 .1+| ordered3
-a| link:test.html#norm:ordered-list:anchors-in-items:item1[norm:ordered-list:anchors-in-items:item1] | Item 1
+| Item 1 a| link:test.html#norm:ordered-list:anchors-in-items:item1[norm:ordered-list:anchors-in-items:item1]
 
 .1+| ordered4
-a| link:test.html#norm:ordered-list:anchors-in-items:item2[norm:ordered-list:anchors-in-items:item2] | Item 2
+| Item 2 a| link:test.html#norm:ordered-list:anchors-in-items:item2[norm:ordered-list:anchors-in-items:item2]
 
 .1+| desc1
-a| link:test.html#norm:description-list:no-anchors-in-items:entire-list[norm:description-list:no-anchors-in-items:entire-list] | Description-A
+| Description-A
 Item A
 Description-B
 Item B
 Description-C
-Item C
+Item C a| link:test.html#norm:description-list:no-anchors-in-items:entire-list[norm:description-list:no-anchors-in-items:entire-list]
 
 .1+| desc2
-a| link:test.html#norm:description-list:anchors-in-items:entire-list[norm:description-list:anchors-in-items:entire-list] | Description-1
+| Description-1 a| link:test.html#norm:description-list:anchors-in-items:entire-list[norm:description-list:anchors-in-items:entire-list]
 
 .2+| desc3
-a| link:test.html#norm:description-list:anchors-in-items:item1[norm:description-list:anchors-in-items:item1] | Item 1
-a| link:test.html#norm:description-list:anchors-in-items:item3[norm:description-list:anchors-in-items:item3] | Item 3
+| Item 1 a| link:test.html#norm:description-list:anchors-in-items:item1[norm:description-list:anchors-in-items:item1]
+| Item 3 a| link:test.html#norm:description-list:anchors-in-items:item3[norm:description-list:anchors-in-items:item3]
 
 .2+| desc4
-a| link:test.html#norm:description-list:anchors-in-items:item1[norm:description-list:anchors-in-items:item1] | Item 1
-a| link:test.html#norm:description-list:anchors-in-items:item3[norm:description-list:anchors-in-items:item3] | Item 3
+| Item 1 a| link:test.html#norm:description-list:anchors-in-items:item1[norm:description-list:anchors-in-items:item1]
+| Item 3 a| link:test.html#norm:description-list:anchors-in-items:item3[norm:description-list:anchors-in-items:item3]
 
 .1+| admon1
-a| link:test.html#norm:admonition:single-paragraph-note[norm:admonition:single-paragraph-note] | Single paragraph note
-that spans lines.
+| Single paragraph note
+that spans lines. a| link:test.html#norm:admonition:single-paragraph-note[norm:admonition:single-paragraph-note]
 
 .1+| admon2
-a| link:test.html#norm:admonition:no-anchors-in-notes:entire-note[norm:admonition:no-anchors-in-notes:entire-note] | Paragraph A
+| Paragraph A
 
 Paragraph B
 
-Paragraph C
+Paragraph C a| link:test.html#norm:admonition:no-anchors-in-notes:entire-note[norm:admonition:no-anchors-in-notes:entire-note]
 
 .1+| admon3
-a| link:test.html#norm:admonition:anchors-in-notes:entire-note[norm:admonition:anchors-in-notes:entire-note] | Paragraph 1
+| Paragraph 1
 
 Paragraph 2
 
-Paragraph 3
+Paragraph 3 a| link:test.html#norm:admonition:anchors-in-notes:entire-note[norm:admonition:anchors-in-notes:entire-note]
 
 .2+| admon4
-a| link:test.html#norm:admonition:only-anchors-in-notes:note1[norm:admonition:only-anchors-in-notes:note1] | Paragraph X
-a| link:test.html#norm:admonition:only-anchors-in-notes:note3[norm:admonition:only-anchors-in-notes:note3] | Paragraph Z
+| Paragraph X a| link:test.html#norm:admonition:only-anchors-in-notes:note1[norm:admonition:only-anchors-in-notes:note1]
+| Paragraph Z a| link:test.html#norm:admonition:only-anchors-in-notes:note3[norm:admonition:only-anchors-in-notes:note3]
 
 .5+| admon5
-| Description | One line description
-| Kind | parameter
-[MY_PARAMETER]
-a| link:test.html#norm:admonition:anchors-in-notes:note1[norm:admonition:anchors-in-notes:note1] | Paragraph 1
-a| link:test.html#norm:admonition:anchors-in-notes:note3[norm:admonition:anchors-in-notes:note3] | Paragraph 3
+| One line description | Rule Description
+| parameter | Rule Kind
+| [MY_PARAMETER] | Rule Instances
+| Paragraph 1 a| link:test.html#norm:admonition:anchors-in-notes:note1[norm:admonition:anchors-in-notes:note1]
+| Paragraph 3 a| link:test.html#norm:admonition:anchors-in-notes:note3[norm:admonition:anchors-in-notes:note3]
 |===

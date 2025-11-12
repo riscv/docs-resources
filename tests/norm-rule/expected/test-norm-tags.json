@@ -1,6 +1,7 @@
 {
   "tags": {
     "norm:inline": "inside inline",
+    "norm:inline-with-hash": "includes a hash # symbol.",
     "norm:paragraph:no-inline-anchors": "Paragraph without inline anchors",
     "norm:paragraph:inline-anchors:inline-anchor": "inline anchor",
     "norm:paragraph:inline-anchors:entire": "Paragraph with inline anchor and something.",
@@ -46,7 +47,8 @@
             "id": "_chapter_1_1_inline_tagging",
             "children": [],
             "tags": [
-              "norm:inline"
+              "norm:inline",
+              "norm:inline-with-hash"
             ]
           },
           {
