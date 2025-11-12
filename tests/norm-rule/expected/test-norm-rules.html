@@ -75,8 +75,8 @@
     th{background:#f3f7fb;font-weight:700}
 
     .col-name { width: 20%; }
-    .col-link { width: 20%; }
-    .col-text { width: 60%; }
+    .col-description { width: 60%; }
+    .col-location { width: 20%; }
 
     /* Responsive */
     @media (max-width:820px){
@@ -91,8 +91,8 @@
 
   <aside class="sidebar">
     <h2>Chapters</h2>
-      <nav class="nav" id="nav">
-        <a href="#table-1" data-target="table-1">my-chapter_name</a>
+    <nav class="nav" id="nav">
+      <a href="#table-1" data-target="table-1">my-chapter_name</a>
     </nav>
   </aside>
     <main>
@@ -102,211 +102,216 @@
         <table>
           <colgroup>
             <col class="col-name">
-            <col class="col-link">
-            <col class="col-text">
+            <col class="col-description">
+            <col class="col-location">
           </colgroup>
           <thead>
-            <tr><th>Rule Name</th><th>Text Source</th><th>Normative Text</th></tr>
+            <tr><th>Rule Name</th><th>Rule Description</th><th>Description Location</th></tr>
           </thead>
           <tbody>
             <tr>
               <td rowspan=4>inline</td>
-              <td>Summary</td>
               <td>A few words</td>
+              <td>Rule Summary</td>
             </tr>
             <tr>
-              <td>Kind</td>
               <td>extension</td>
+              <td>Rule Kind</td>
             </tr>
             <tr>
-              <td>Instances</td>
-              <td>[Zicsr, ABC]</td
+              <td>[Zicsr, ABC]</td>
+              <td>Rule Instances</td>
             </tr>
             <tr>
+              <td>inside inline</td>
               <td><a href="test.html#norm:inline">norm:inline</a></td>
-              <td>inside inline</td></tr>
             </tr>
             <tr>
               <td rowspan=1>no_tag</td>
-              <td>Summary</td>
               <td>Normative rule without tag/tags</td>
+              <td>Rule Summary</td>
+            </tr>
+            <tr>
+              <td rowspan=1>inline-with-hash</td>
+              <td>includes a hash # symbol.</td>
+              <td><a href="test.html#norm:inline-with-hash">norm:inline-with-hash</a></td>
             </tr>
             <tr>
               <td rowspan=2>paragraph-with-a-really-wide-rule-name</td>
-              <td>Description</td>
               <td>Here's a description.<br>It's got 2 lines.<br></td>
+              <td>Rule Description</td>
             </tr>
             <tr>
+              <td>Paragraph without inline anchors</td>
               <td><a href="test.html#norm:paragraph:no-inline-anchors">norm:paragraph:no-inline-anchors</a></td>
-              <td>Paragraph without inline anchors</td></tr>
             </tr>
             <tr>
               <td rowspan=1>inline-anchors-in-paragraph-entire</td>
+              <td>Paragraph with inline anchor and something.</td>
               <td><a href="test.html#norm:paragraph:inline-anchors:entire">norm:paragraph:inline-anchors:entire</a></td>
-              <td>Paragraph with inline anchor and something.</td></tr>
             </tr>
             <tr>
               <td rowspan=1>inline-anchors-in-paragraph-inline-anchor</td>
+              <td>inline anchor</td>
               <td><a href="test.html#norm:paragraph:inline-anchors:inline-anchor">norm:paragraph:inline-anchors:inline-anchor</a></td>
-              <td>inline anchor</td></tr>
             </tr>
             <tr>
               <td rowspan=1>formulae</td>
+              <td>This paragraph looks like a formulae to Excel because it has this &lt; sign in it. Make sure this gets written as a string, not a formulae in the XLSX or else it will create an error in Excel.</td>
               <td><a href="test.html#norm:formulae">norm:formulae</a></td>
-              <td>This paragraph looks like a formulae to Excel because it has this &lt; sign in it. Make sure this gets written as a string, not a formulae in the XLSX or else it will create an error in Excel.</td></tr>
             </tr>
             <tr>
               <td rowspan=1>rule_with_newlines</td>
+              <td>Here&#8217;s the first line. Here&#8217;s the second line.</td>
               <td><a href="test.html#norm:paragraph:tag_with_newlines">norm:paragraph:tag_with_newlines</a></td>
-              <td>Here&#8217;s the first line. Here&#8217;s the second line.</td></tr>
             </tr>
             <tr>
               <td rowspan=1>double_tags</td>
+              <td>This paragraph has two tags but we only ever get a tag for norm:def.</td>
               <td><a href="test.html#norm:def">norm:def</a></td>
-              <td>This paragraph has two tags but we only ever get a tag for norm:def.</td></tr>
             </tr>
             <tr>
               <td rowspan=1>table1</td>
+              <td>===<br>WITH anchor<br>WITHOUT anchor<br>===</td>
               <td><a href="test.html#norm:table:anchors-in-cells:entire-table">norm:table:anchors-in-cells:entire-table</a></td>
-              <td>===<br>WITH anchor<br>WITHOUT anchor<br>===</td></tr>
             </tr>
             <tr>
               <td rowspan=1>table2</td>
+              <td>Header 1|Header 2<br>===<br>Cell in column 1, row 1|Cell in column 2, row 1<br>Cell in column 1, row 2|Cell in column 2, row 2<br>===</td>
               <td><a href="test.html#norm:table:no-anchors-in-cells:entire-table">norm:table:no-anchors-in-cells:entire-table</a></td>
-              <td>Header 1|Header 2<br>===<br>Cell in column 1, row 1|Cell in column 2, row 1<br>Cell in column 1, row 2|Cell in column 2, row 2<br>===</td></tr>
             </tr>
             <tr>
               <td rowspan=1>table3</td>
+              <td>WITH anchor</td>
               <td><a href="test.html#norm:table:anchors-in-cells:entire-table-tagged:cell">norm:table:anchors-in-cells:entire-table-tagged:cell</a></td>
-              <td>WITH anchor</td></tr>
             </tr>
             <tr>
               <td rowspan=1>table4</td>
+              <td>ABC DEF</td>
               <td><a href="test.html#norm:table:anchors-in-cells:entire-table-not-tagged:cell">norm:table:anchors-in-cells:entire-table-not-tagged:cell</a></td>
-              <td>ABC DEF</td></tr>
             </tr>
             <tr>
               <td rowspan=1>table5</td>
+              <td>Name|Color<br>===<br>Roses|Red<br>Violets|Blue<br>Name1|Color1<br>Name2|Color2<br>Name3|Color3<br>Name4|Color4<br>Name5|Color5<br>Name6|Color6<br>Name7|Color8<br>Name9|Color9<br>Name10|Color10<br>...</td>
               <td><a href="test.html#norm:table:many-rows">norm:table:many-rows</a></td>
-              <td>Name|Color<br>===<br>Roses|Red<br>Violets|Blue<br>Name1|Color1<br>Name2|Color2<br>Name3|Color3<br>Name4|Color4<br>Name5|Color5<br>Name6|Color6<br>Name7|Color8<br>Name9|Color9<br>Name10|Color10<br>...</td></tr>
             </tr>
             <tr>
               <td rowspan=1>unordered1</td>
+              <td>Item A<br>Item B<br>Item C</td>
               <td><a href="test.html#norm:unordered-list:no-anchors-in-items:entire-list">norm:unordered-list:no-anchors-in-items:entire-list</a></td>
-              <td>Item A<br>Item B<br>Item C</td></tr>
             </tr>
             <tr>
               <td rowspan=1>unordered2</td>
+              <td>Item 1<br>Item 2<br>Item 3</td>
               <td><a href="test.html#norm:unordered-list:anchors-in-items:entire-list">norm:unordered-list:anchors-in-items:entire-list</a></td>
-              <td>Item 1<br>Item 2<br>Item 3</td></tr>
             </tr>
             <tr>
               <td rowspan=1>unordered3</td>
+              <td>Item 1</td>
               <td><a href="test.html#norm:unordered-list:anchors-in-items:item1">norm:unordered-list:anchors-in-items:item1</a></td>
-              <td>Item 1</td></tr>
             </tr>
             <tr>
               <td rowspan=1>unordered4</td>
+              <td>Item 2</td>
               <td><a href="test.html#norm:unordered-list:anchors-in-items:item2">norm:unordered-list:anchors-in-items:item2</a></td>
-              <td>Item 2</td></tr>
             </tr>
             <tr>
               <td rowspan=1>unordered5</td>
+              <td>Zca and not F<br>Zca, Zcf and F (but not D) is specified (RV32 only)<br>Zca, Zcf and Zcd if D is specified (RV32 only)<br><br>this configuration excludes Zcmp, Zcmt<br>Zca, Zcd if D is specified (RV64 only)<br><br>this configuration excludes Zcmp, Zcmt</td>
               <td><a href="test.html#norm:unordered-list:multiple-levels">norm:unordered-list:multiple-levels</a></td>
-              <td>Zca and not F<br>Zca, Zcf and F (but not D) is specified (RV32 only)<br>Zca, Zcf and Zcd if D is specified (RV32 only)<br><br>this configuration excludes Zcmp, Zcmt<br>Zca, Zcd if D is specified (RV64 only)<br><br>this configuration excludes Zcmp, Zcmt</td></tr>
             </tr>
             <tr>
               <td rowspan=1>ordered1</td>
+              <td>Item A<br>Item B<br>Item C</td>
               <td><a href="test.html#norm:ordered-list:no-anchors-in-items:entire-list">norm:ordered-list:no-anchors-in-items:entire-list</a></td>
-              <td>Item A<br>Item B<br>Item C</td></tr>
             </tr>
             <tr>
               <td rowspan=1>ordered2</td>
+              <td>Item 1<br>Item 2<br>Item 3</td>
               <td><a href="test.html#norm:ordered-list:anchors-in-items:entire-list">norm:ordered-list:anchors-in-items:entire-list</a></td>
-              <td>Item 1<br>Item 2<br>Item 3</td></tr>
             </tr>
             <tr>
               <td rowspan=1>ordered3</td>
+              <td>Item 1</td>
               <td><a href="test.html#norm:ordered-list:anchors-in-items:item1">norm:ordered-list:anchors-in-items:item1</a></td>
-              <td>Item 1</td></tr>
             </tr>
             <tr>
               <td rowspan=1>ordered4</td>
+              <td>Item 2</td>
               <td><a href="test.html#norm:ordered-list:anchors-in-items:item2">norm:ordered-list:anchors-in-items:item2</a></td>
-              <td>Item 2</td></tr>
             </tr>
             <tr>
               <td rowspan=1>desc1</td>
+              <td>Description-A<br>Item A<br>Description-B<br>Item B<br>Description-C<br>Item C</td>
               <td><a href="test.html#norm:description-list:no-anchors-in-items:entire-list">norm:description-list:no-anchors-in-items:entire-list</a></td>
-              <td>Description-A<br>Item A<br>Description-B<br>Item B<br>Description-C<br>Item C</td></tr>
             </tr>
             <tr>
               <td rowspan=1>desc2</td>
+              <td>Description-1</td>
               <td><a href="test.html#norm:description-list:anchors-in-items:entire-list">norm:description-list:anchors-in-items:entire-list</a></td>
-              <td>Description-1</td></tr>
             </tr>
             <tr>
               <td rowspan=2>desc3</td>
+              <td>Item 1</td>
               <td><a href="test.html#norm:description-list:anchors-in-items:item1">norm:description-list:anchors-in-items:item1</a></td>
-              <td>Item 1</td></tr>
             </tr>
             <tr>
+              <td>Item 3</td>
               <td><a href="test.html#norm:description-list:anchors-in-items:item3">norm:description-list:anchors-in-items:item3</a></td>
-              <td>Item 3</td></tr>
             </tr>
             <tr>
               <td rowspan=2>desc4</td>
+              <td>Item 1</td>
               <td><a href="test.html#norm:description-list:anchors-in-items:item1">norm:description-list:anchors-in-items:item1</a></td>
-              <td>Item 1</td></tr>
             </tr>
             <tr>
+              <td>Item 3</td>
               <td><a href="test.html#norm:description-list:anchors-in-items:item3">norm:description-list:anchors-in-items:item3</a></td>
-              <td>Item 3</td></tr>
             </tr>
             <tr>
               <td rowspan=1>admon1</td>
+              <td>Single paragraph note<br>that spans lines.</td>
               <td><a href="test.html#norm:admonition:single-paragraph-note">norm:admonition:single-paragraph-note</a></td>
-              <td>Single paragraph note<br>that spans lines.</td></tr>
             </tr>
             <tr>
               <td rowspan=1>admon2</td>
+              <td>Paragraph A<br><br>Paragraph B<br><br>Paragraph C</td>
               <td><a href="test.html#norm:admonition:no-anchors-in-notes:entire-note">norm:admonition:no-anchors-in-notes:entire-note</a></td>
-              <td>Paragraph A<br><br>Paragraph B<br><br>Paragraph C</td></tr>
             </tr>
             <tr>
               <td rowspan=1>admon3</td>
+              <td>Paragraph 1<br><br>Paragraph 2<br><br>Paragraph 3</td>
               <td><a href="test.html#norm:admonition:anchors-in-notes:entire-note">norm:admonition:anchors-in-notes:entire-note</a></td>
-              <td>Paragraph 1<br><br>Paragraph 2<br><br>Paragraph 3</td></tr>
             </tr>
             <tr>
               <td rowspan=2>admon4</td>
+              <td>Paragraph X</td>
               <td><a href="test.html#norm:admonition:only-anchors-in-notes:note1">norm:admonition:only-anchors-in-notes:note1</a></td>
-              <td>Paragraph X</td></tr>
             </tr>
             <tr>
+              <td>Paragraph Z</td>
               <td><a href="test.html#norm:admonition:only-anchors-in-notes:note3">norm:admonition:only-anchors-in-notes:note3</a></td>
-              <td>Paragraph Z</td></tr>
             </tr>
             <tr>
               <td rowspan=5>admon5</td>
-              <td>Description</td>
               <td>One line description</td>
+              <td>Rule Description</td>
             </tr>
             <tr>
-              <td>Kind</td>
               <td>parameter</td>
+              <td>Rule Kind</td>
             </tr>
             <tr>
-              <td>Instances</td>
-              <td>[MY_PARAMETER]</td
+              <td>[MY_PARAMETER]</td>
+              <td>Rule Instances</td>
             </tr>
             <tr>
+              <td>Paragraph 1</td>
               <td><a href="test.html#norm:admonition:anchors-in-notes:note1">norm:admonition:anchors-in-notes:note1</a></td>
-              <td>Paragraph 1</td></tr>
             </tr>
             <tr>
+              <td>Paragraph 3</td>
               <td><a href="test.html#norm:admonition:anchors-in-notes:note3">norm:admonition:anchors-in-notes:note3</a></td>
-              <td>Paragraph 3</td></tr>
             </tr>
           </tbody>
         </table>

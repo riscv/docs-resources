@@ -23,6 +23,9 @@ Before bad inline [#norm:bad-inline-3]#inside bad inline:
 * Unordered list line 1#
 * Unordered list line 2
 
+// PASSES
+Use inline anchor that [#norm:inline-with-hash]+includes a hash # symbol.+
+
 === Chapter 1.2 - Paragraph Tagging
 
 // PASSES

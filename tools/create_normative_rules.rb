@@ -455,6 +455,8 @@ def validate_defs_and_tags(defs, tags, warn_if_tags_no_rules)
   missing_tag_cnt = 0
   unref_cnt = 0
   referenced_tags = {}    # Key is tag name and value is any non-nil value
+  rule_name_lengths = []
+  tag_name_lengths = []
 
   # Detect missing tags and unreferenced tags.
   defs.norm_rule_defs.each do |d|
@@ -471,6 +473,10 @@ def validate_defs_and_tags(defs, tags, warn_if_tags_no_rules)
         end
       end
     end
+
+    # Increment length (ensure it isn't nil first with ||=)
+    rule_name_lengths[d.name.length] ||= 0
+    rule_name_lengths[d.name.length] += 1
   end
 
   # Look for any unreferenced tags.
@@ -484,6 +490,10 @@ def validate_defs_and_tags(defs, tags, warn_if_tags_no_rules)
       end
       unref_cnt = unref_cnt + 1
     end
+
+    # Increment length (ensure it isn't nil first with ||=)
+    tag_name_lengths[tag.name.length] ||= 0
+    tag_name_lengths[tag.name.length] += 1
   end
 
   if missing_tag_cnt > 0
@@ -500,6 +510,20 @@ def validate_defs_and_tags(defs, tags, warn_if_tags_no_rules)
   end
 
   fatal("Exiting due to errors") if ((missing_tag_cnt > 0) || ((unref_cnt > 0) && (warn_if_tags_no_rules == 0)))
+
+  # Display counts of name lengths.
+  #info("")
+  #info("Normative rule name lengths:")
+  #rule_name_lengths.each_with_index do |count, index|
+  #  info("  rule_name_length[#{index}] => #{count}")
+  #end
+
+  # Display counts of name lengths.
+  #info("")
+  #info("Tag name lengths:")
+  #tag_name_lengths.each_with_index do |count, index|
+  #  info("  tag_name_length[#{index}] => #{count}")
+  #end
 end
 
 # Store normative rules in JSON output file
@@ -554,8 +578,8 @@ def output_xlsx(filename, defs, tags)
     columns: [
       { header: "Chapter Name" },
       { header: "Rule Name" },
-      { header: "Rule Definition" },
-      { header: "Rule Definition Sources" },
+      { header: "Rule Description" },
+      { header: "Description Location" },
       { header: "Kind" },
       { header: "Instances" }
     ]
@@ -572,12 +596,12 @@ def output_xlsx(filename, defs, tags)
 
     unless d.summary.nil?
       rule_defs.append(d.summary.chomp)
-      rule_def_sources.append("Summary")
+      rule_def_sources.append("Rule Summary")
     end
 
     unless d.description.nil?
       rule_defs.append(d.description.chomp)
-      rule_def_sources.append("Description")
+      rule_def_sources.append("Rule Description")
     end
 
     tag_sources = []
@@ -636,9 +660,9 @@ def output_adoc(filename, defs, tags, tag2html_fnames)
       f.puts("")
       f.puts("== #{chapter_name}")
       f.puts("")
-      f.puts("[cols=\"20%,20%,60%\"]")
+      f.puts("[cols=\"20%,60%,20%\"]")
       f.puts("|===")
-      f.puts("| Rule Name | Text Source | Normative Text")
+      f.puts("| Rule Name | Rule Description | Description Location")
 
       nr_defs.each do |nr|
         info_rows = (nr.summary.nil? ? 0 : 1) + (nr.description.nil? ? 0 : 1) +
@@ -647,10 +671,10 @@ def output_adoc(filename, defs, tags, tag2html_fnames)
 
         f.puts("")
         f.puts("#{row_span}| #{nr.name}")
-        f.puts("| Summary | #{nr.summary}") unless nr.summary.nil?
-        f.puts("| Description | #{nr.description}") unless nr.description.nil?
-        f.puts("| Kind | #{nr.kind}") unless nr.kind.nil?
-        f.puts('[' + nr.instances.join(', ') + ']') unless nr.instances.empty?
+        f.puts("| #{nr.summary} | Rule Summary") unless nr.summary.nil?
+        f.puts("| #{nr.description} | Rule Description") unless nr.description.nil?
+        f.puts("| #{nr.kind} | Rule Kind") unless nr.kind.nil?
+        f.puts('| [' + nr.instances.join(', ') + '] | Rule Instances') unless nr.instances.empty?
         nr.tag_refs.each do |tag_ref|
           tag = tags.get_tag(tag_ref)
           fatal("Normative rule #{nr.name} defined in file #{nr.def_filename} references non-existent tag #{tag_ref}") if tag.nil?
@@ -658,7 +682,7 @@ def output_adoc(filename, defs, tags, tag2html_fnames)
           html_fname = tag2html_fnames[tag.tag_filename]
           fatal("No fname tag to HTML mapping (-tag2html cmd line arg) for tag fname #{tag.tag_filename} for tag name #{tag.name}") if html_fname.nil?
 
-          f.puts("a| link:#{html_fname}" + "#" + tag_ref + "[#{tag_ref}] | #{handle_tables(tag.text)}")
+          f.puts("| #{handle_tables(tag.text)} a| link:#{html_fname}" + "#" + tag_ref + "[#{tag_ref}]")
         end
       end
 
@@ -798,8 +822,8 @@ def html_head(f)
         th{background:#f3f7fb;font-weight:700}
 
         .col-name { width: 20%; }
-        .col-link { width: 20%; }
-        .col-text { width: 60%; }
+        .col-description { width: 60%; }
+        .col-location { width: 20%; }
 
         /* Responsive */
         @media (max-width:820px){
@@ -821,12 +845,12 @@ def html_sidebar(f, chapter_names)
   f.puts("")
   f.puts(%Q{  <aside class="sidebar">})
   f.puts(%Q{    <h2>Chapters</h2>})
-  f.puts(%Q{      <nav class="nav" id="nav">})
+  f.puts(%Q{    <nav class="nav" id="nav">})
 
   table_num=1
 
   chapter_names.each do |chapter_name|
-    f.puts(%Q{        <a href="#table-#{table_num}" data-target="table-#{table_num}">#{chapter_name}</a>})
+    f.puts(%Q{      <a href="#table-#{table_num}" data-target="table-#{table_num}">#{chapter_name}</a>})
     table_num = table_num+1
   end
 
@@ -848,11 +872,11 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag2html_fname
   f.puts(%Q{        <table>})
   f.puts(%Q{          <colgroup>})
   f.puts(%Q{            <col class="col-name">})
-  f.puts(%Q{            <col class="col-link">})
-  f.puts(%Q{            <col class="col-text">})
+  f.puts(%Q{            <col class="col-description">})
+  f.puts(%Q{            <col class="col-location">})
   f.puts(%Q{          </colgroup>})
   f.puts(%Q{          <thead>})
-  f.puts(%Q{            <tr><th>Rule Name</th><th>Text Source</th><th>Normative Text</th></tr>})
+  f.puts(%Q{            <tr><th>Rule Name</th><th>Rule Description</th><th>Description Location</th></tr>})
   f.puts(%Q{          </thead>})
   f.puts(%Q{          <tbody>})
 
@@ -866,24 +890,24 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag2html_fname
 
     unless nr.summary.nil?
       f.puts(%Q{            <tr>}) unless row_started
-      f.puts(%Q{              <td>Summary</td>})
       f.puts(%Q{              <td>#{nr.summary}</td>})
+      f.puts(%Q{              <td>Rule Summary</td>})
       f.puts(%Q{            </tr>})
       row_started = false
     end
 
     unless nr.description.nil?
       f.puts(%Q{            <tr>}) unless row_started
-      f.puts(%Q{              <td>Description</td>})
       f.puts(%Q{              <td>#{html_handle_newlines(nr.description)}</td>})
+      f.puts(%Q{              <td>Rule Description</td>})
       f.puts(%Q{            </tr>})
       row_started = false
     end
 
     unless nr.kind.nil?
       f.puts(%Q{            <tr>}) unless row_started
-      f.puts(%Q{              <td>Kind</td>})
       f.puts(%Q{              <td>#{nr.kind}</td>})
+      f.puts(%Q{              <td>Rule Kind</td>})
       f.puts(%Q{            </tr>})
       row_started = false
     end
@@ -891,8 +915,8 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag2html_fname
     unless nr.instances.empty?
       instances_str = "[" + nr.instances.join(', ') + "]"
       f.puts(%Q{            <tr>}) unless row_started
-      f.puts(%Q{              <td>Instances</td>})
-      f.puts(%Q{              <td>#{instances_str}</td})
+      f.puts(%Q{              <td>#{instances_str}</td>})
+      f.puts(%Q{              <td>Rule Instances</td>})
       f.puts(%Q{            </tr>})
       row_started = false
     end
@@ -905,8 +929,8 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag2html_fname
       fatal("No fname tag to HTML mapping (-tag2html cmd line arg) for tag fname #{tag.tag_filename} for tag name #{tag.name}") if html_fname.nil?
 
       f.puts(%Q{            <tr>}) unless row_started
+      f.puts(%Q{              <td>#{html_handle_newlines(handle_tables(tag.text))}</td>})
       f.puts(%Q{              <td><a href="#{html_fname}##{tag_ref}">#{tag_ref}</a></td>})
-      f.puts(%Q{              <td>#{html_handle_newlines(handle_tables(tag.text))}</td></tr>})
       f.puts(%Q{            </tr>})
       row_started = false
     end

@@ -26,6 +26,18 @@
       "tags": []
     },
     {
+      "name": "inline-with-hash",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:inline-with-hash",
+          "text": "includes a hash # symbol.",
+          "tag_filename": "/build/test-norm-tags.json"
+        }
+      ]
+    },
+    {
       "name": "paragraph-with-a-really-wide-rule-name",
       "def_filename": "tests/norm-rule/test.yaml",
       "chapter_name": "my-chapter_name",
