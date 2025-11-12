@@ -214,15 +214,15 @@ end
 
 def usage(exit_status = 1)
   puts "Usage: #{PN} [OPTION]... <output-filename>"
-  puts "  --help         Display this usage message"
-  puts "  -j             Set output format to JSON (default)"
-  puts "  -x             Set output format to XLSX"
-  puts "  -a             Set output format to AsciiDoc"
-  puts "  -h             Set output format to HTML"
-  puts "  -w             Warning instead of error if tags found without rules (Only use for debugging!)"
-  puts "  -d fname       Normative rule definition filename (YAML format)"
-  puts "  -t fname       Normative tag filename (JSON format)"
-  puts "  -doc2hmtl tag-fname html-fname   Maps from tag fname to HTML stds doc fname (required for AsciiDoc output format)"
+  puts "  --help                  Display this usage message"
+  puts "  -j                      Set output format to JSON (default)"
+  puts "  -x                      Set output format to XLSX"
+  puts "  -a                      Set output format to AsciiDoc"
+  puts "  -h                      Set output format to HTML"
+  puts "  -w                      Warning instead of error if tags found without rules (Only use for debugging!)"
+  puts "  -d fname                Normative rule definition filename (YAML format)"
+  puts "  -t fname                Normative tag filename (JSON format)"
+  puts "  -tag2url tag-fname url  Maps from tag fname to corresponding URL to stds doc"
   puts
   puts "Creates list of normative rules and stores them in <output-filename> (JSON format)."
   exit exit_status
@@ -239,7 +239,7 @@ def parse_argv
   # Return values
   def_fnames=[]
   tag_fnames=[]
-  tag2html_fnames={}
+  tag_fname2url={}
   output_fname=nil
   output_format="json"
   warn_if_tags_no_rules = 0
@@ -274,14 +274,14 @@ def parse_argv
       end
       tag_fnames.append(ARGV[i+1])
       i=i+1
-    when "-tag2html"
+    when "-tag2url"
       if (ARGV.count-i) < 2
-        info("Missing one or more arguments for -tag2html option")
+        info("Missing one or more arguments for -tag2url option")
         usage
       end
       tag_fname = ARGV[i+1]
-      html_fname = ARGV[i+2]
-      tag2html_fnames[tag_fname] = html_fname
+      url = ARGV[i+2]
+      tag_fname2url[tag_fname] = url
       i=i+2
     when /^-/
       info("Unknown command-line option #{arg}")
@@ -313,12 +313,12 @@ def parse_argv
     usage
   end
 
-  if (output_format == "adoc" || output_format == "html") && tag2html_fnames.empty?
-    info("Missing -tag2html command line options")
+  if (output_format == "json" || output_format == "adoc" || output_format == "html") && tag_fname2url.empty?
+    info("Missing -tag2url command line options")
     usage
   end
 
-  return [def_fnames, tag_fnames, tag2html_fnames, output_fname, output_format, warn_if_tags_no_rules]
+  return [def_fnames, tag_fnames, tag_fname2url, output_fname, output_format, warn_if_tags_no_rules]
 end
 
 # Load the contents of all normative rule tag files in JSON format.
@@ -394,56 +394,61 @@ end
 
 # Returns a Hash with just one entry called "normative_rules" that contains an Array of Hashes of all normative rules.
 # Hash is suitable for JSON/YAML serialization.
-def create_normative_rules_hash(defs, tags)
-    fatal("Need NormativeRuleDefs for defs but was passed a #{defs.class}") unless defs.is_a?(NormativeRuleDefs)
-    fatal("Need NormativeTags for tags but was passed a #{tags.class}") unless tags.is_a?(NormativeTags)
+def create_normative_rules_hash(defs, tags, tag_fname2url)
+  fatal("Need NormativeRuleDefs for defs but was passed a #{defs.class}") unless defs.is_a?(NormativeRuleDefs)
+  fatal("Need NormativeTags for tags but was passed a #{tags.class}") unless tags.is_a?(NormativeTags)
+  fatal("Need Hash for tag_fname2url but passed a #{tag_fname2url.class}") unless tag_fname2url.is_a?(Hash)
 
-    info("Creating normative rules from definition files")
+  info("Creating normative rules from definition files")
 
-    ret = {
-      "normative_rules" => []
+  ret = {
+    "normative_rules" => []
+  }
+
+  defs.norm_rule_defs.each do |d|
+    # Create hash with mandatory definition file arguments.
+    hash = {
+      "name" => d.name,
+      "def_filename" => d.def_filename,
+      "chapter_name" => d.chapter_name
     }
 
-    defs.norm_rule_defs.each do |d|
-      # Create hash with mandatory definition arguments.
-      hash = {
-        "name" => d.name,
-        "def_filename" => d.def_filename,
-        "chapter_name" => d.chapter_name
-      }
+    # Now add optional arguments.
+    hash["kind"] = d.kind unless d.kind.nil?
+    hash["instances"] = d.instances unless d.instances.empty?
+    hash["summary"] = d.summary unless d.summary.nil?
+    hash["description"] = d.description unless d.description.nil?
 
-      # Now add optional arguments.
-      hash["kind"] = d.kind unless d.kind.nil?
-      hash["instances"] = d.instances unless d.instances.empty?
-      hash["summary"] = d.summary unless d.summary.nil?
-      hash["description"] = d.description unless d.description.nil?
-
-      unless d.tag_refs.nil?
-        hash["tags"] = []
-      end
-
-      # Add tag entries
-      unless d.tag_refs.nil?
-        d.tag_refs.each do |tag_ref|
-          # Lookup tag
-          tag = tags.get_tag(tag_ref)
-
-          fatal("Normative rule #{d.name} defined in file #{d.def_filename} references non-existent tag #{tag_ref}") if tag.nil?
-
-          resolved_tag = {
-            "name" => tag.name,
-            "text" => tag.text,
-            "tag_filename" => tag.tag_filename
-          }
-
-          hash["tags"].append(resolved_tag)
-        end
-      end
-
-      ret["normative_rules"].append(hash)
+    unless d.tag_refs.nil?
+      hash["tags"] = []
     end
 
-    return ret
+    # Add tag entries
+    unless d.tag_refs.nil?
+      d.tag_refs.each do |tag_ref|
+        # Lookup tag
+        tag = tags.get_tag(tag_ref)
+
+        fatal("Normative rule #{d.name} defined in file #{d.def_filename} references non-existent tag #{tag_ref}") if tag.nil?
+
+        url = tag_fname2url[tag.tag_filename]
+        fatal("No fname tag to URL mapping (-tag2url cmd line arg) for tag fname #{tag.tag_filename} for tag name #{tag.name}") if url.nil?
+
+        resolved_tag = {
+          "name" => tag.name,
+          "text" => tag.text,
+          "tag_filename" => tag.tag_filename,
+          "stds_doc_url" => url
+        }
+
+        hash["tags"].append(resolved_tag)
+      end
+    end
+
+    ret["normative_rules"].append(hash)
+  end
+
+  return ret
 end
 
 # Fatal error if any normative rule references a non-existant tag.
@@ -638,11 +643,11 @@ def output_xlsx(filename, defs, tags)
 end
 
 # Store normative rules in AsciiDoc output file.
-def output_adoc(filename, defs, tags, tag2html_fnames)
+def output_adoc(filename, defs, tags, tag_fname2url)
   fatal("Need String for filename but passed a #{filename.class}") unless filename.is_a?(String)
   fatal("Need NormativeRuleDefs for defs but passed a #{defs.class}") unless defs.is_a?(NormativeRuleDefs)
   fatal("Need NormativeTags for tags but passed a #{tags.class}") unless tags.is_a?(NormativeTags)
-  fatal("Need Hash for tag2html_fnames but passed a #{tag2html_fnames.class}") unless tag2html_fnames.is_a?(Hash)
+  fatal("Need Hash for tag_fname2url but passed a #{tag_fname2url.class}") unless tag_fname2url.is_a?(Hash)
 
   info("Storing #{defs.norm_rule_defs.count} normative rules into file #{filename}")
 
@@ -679,10 +684,10 @@ def output_adoc(filename, defs, tags, tag2html_fnames)
           tag = tags.get_tag(tag_ref)
           fatal("Normative rule #{nr.name} defined in file #{nr.def_filename} references non-existent tag #{tag_ref}") if tag.nil?
 
-          html_fname = tag2html_fnames[tag.tag_filename]
-          fatal("No fname tag to HTML mapping (-tag2html cmd line arg) for tag fname #{tag.tag_filename} for tag name #{tag.name}") if html_fname.nil?
+          url = tag_fname2url[tag.tag_filename]
+          fatal("No fname tag to URL mapping (-tag2url cmd line arg) for tag fname #{tag.tag_filename} for tag name #{tag.name}") if url.nil?
 
-          f.puts("| #{handle_tables(tag.text)} a| link:#{html_fname}" + "#" + tag_ref + "[#{tag_ref}]")
+          f.puts("| #{handle_tables(tag.text)} a| link:#{url}" + "#" + tag_ref + "[#{tag_ref}]")
         end
       end
 
@@ -692,11 +697,11 @@ def output_adoc(filename, defs, tags, tag2html_fnames)
 end
 
 # Store normative rules in HTML output file.
-def output_html(filename, defs, tags, tag2html_fnames)
+def output_html(filename, defs, tags, tag_fname2url)
   fatal("Need String for filename but passed a #{filename.class}") unless filename.is_a?(String)
   fatal("Need NormativeRuleDefs for defs but passed a #{defs.class}") unless defs.is_a?(NormativeRuleDefs)
   fatal("Need NormativeTags for tags but passed a #{tags.class}") unless tags.is_a?(NormativeTags)
-  fatal("Need Hash for tag2html_fnames but passed a #{tag2html_fnames.class}") unless tag2html_fnames.is_a?(Hash)
+  fatal("Need Hash for tag_fname2url but passed a #{tag_fname2url.class}") unless tag_fname2url.is_a?(Hash)
 
   info("Storing #{defs.norm_rule_defs.count} normative rules into file #{filename}")
 
@@ -727,7 +732,7 @@ def output_html(filename, defs, tags, tag2html_fnames)
 
     chapter_names.each do |chapter_name|
       nr_defs = defs_by_chapter_name[chapter_name]
-      html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag2html_fnames)
+      html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
       table_num=table_num+1
     end
 
@@ -858,13 +863,13 @@ def html_sidebar(f, chapter_names)
   f.puts('  </aside>')
 end
 
-def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag2html_fnames)
+def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
   fatal("Need File for f but passed a #{f.class}") unless f.is_a?(File)
   fatal("Need Integer for table_num but passed a #{table_num.class}") unless table_num.is_a?(Integer)
   fatal("Need String for chapter_name but passed a #{chapter_name.class}") unless chapter_name.is_a?(String)
   fatal("Need Array for nr_defs but passed a #{nr_defs.class}") unless nr_defs.is_a?(Array)
   fatal("Need NormativeTags for tags but passed a #{tags.class}") unless tags.is_a?(NormativeTags)
-  fatal("Need Hash for tag2html_fnames but passed a #{tag2html_fnames.class}") unless tag2html_fnames.is_a?(Hash)
+  fatal("Need Hash for tag_fname2url but passed a #{tag_fname2url.class}") unless tag_fname2url.is_a?(Hash)
 
   f.puts("")
   f.puts(%Q{      <section id="table-#{table_num}" class="section">})
@@ -925,8 +930,8 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag2html_fname
       tag = tags.get_tag(tag_ref)
       fatal("Normative rule #{nr.name} defined in file #{nr.def_filename} references non-existent tag #{tag_ref}") if tag.nil?
 
-      html_fname = tag2html_fnames[tag.tag_filename]
-      fatal("No fname tag to HTML mapping (-tag2html cmd line arg) for tag fname #{tag.tag_filename} for tag name #{tag.name}") if html_fname.nil?
+      html_fname = tag_fname2url[tag.tag_filename]
+      fatal("No fname tag to HTML mapping (-tag2url cmd line arg) for tag fname #{tag.tag_filename} for tag name #{tag.name}") if html_fname.nil?
 
       f.puts(%Q{            <tr>}) unless row_started
       f.puts(%Q{              <td>#{html_handle_newlines(handle_tables(tag.text))}</td>})
@@ -1016,12 +1021,12 @@ end
 
 info("Passed command-line: #{ARGV.join(' ')}")
 
-def_fnames, tag_fnames, tag2html_fnames, output_fname, output_format, warn_if_tags_no_rules = parse_argv()
+def_fnames, tag_fnames, tag_fname2url, output_fname, output_format, warn_if_tags_no_rules = parse_argv()
 
 info("Normative rule definition filenames = #{def_fnames}")
 info("Normative tag filenames = #{tag_fnames}")
-tag2html_fnames.each do |tag_fname, html_fname|
-  info("Normative tag file #{tag_fname} links to HTML file #{html_fname}")
+tag_fname2url.each do |tag_fname, url|
+  info("Normative tag file #{tag_fname} links to URL #{url}")
 end
 info("Output filename = #{output_fname}")
 info("Output format = #{output_format}")
@@ -1032,14 +1037,14 @@ validate_defs_and_tags(defs, tags, warn_if_tags_no_rules)
 
 case output_format
 when "json"
-  normative_rules_hash = create_normative_rules_hash(defs, tags)
+  normative_rules_hash = create_normative_rules_hash(defs, tags, tag_fname2url)
   output_json(output_fname, normative_rules_hash)
 when "xlsx"
   output_xlsx(output_fname, defs, tags)
 when "adoc"
-  output_adoc(output_fname, defs, tags, tag2html_fnames)
+  output_adoc(output_fname, defs, tags, tag_fname2url)
 when "html"
-  output_html(output_fname, defs, tags, tag2html_fnames)
+  output_html(output_fname, defs, tags, tag_fname2url)
 else
   raise "Unknown output_format of #{output_format}"
 end
