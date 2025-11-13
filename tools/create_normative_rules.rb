@@ -891,7 +891,7 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
 
     row_started = true
     f.puts(%Q{            <tr>})
-    f.puts(%Q{              <td rowspan=#{name_row_span}>#{nr.name}</td>})
+    f.puts(%Q{              <td rowspan=#{name_row_span} id="#{nr.name}">#{nr.name}</td>})
 
     unless nr.summary.nil?
       f.puts(%Q{            <tr>}) unless row_started
