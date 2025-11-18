@@ -29,7 +29,7 @@ CREATE_NORM_RULE_TOOL := $(TOOLS_DIR)/create_normative_rules.rb
 CREATE_NORM_RULE_RUBY := ruby $(CREATE_NORM_RULE_TOOL)
 
 # Stuff for building mock standards document in HTML to have links into it.
-DOCS = "test"
+DOCS = test
 DOCS_HTML := $(addprefix $(BUILD_DIR)/, $(addsuffix .html, $(DOCS)))
 ENV := LANG=C.utf8
 ASCIIDOCTOR_HTML := $(ENV) asciidoctor

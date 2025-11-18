@@ -242,7 +242,7 @@ def parse_argv
   tag_fname2url={}
   output_fname=nil
   output_format="json"
-  warn_if_tags_no_rules = 0
+  warn_if_tags_no_rules = false
 
   i = 0
   while i < ARGV.count
@@ -259,7 +259,7 @@ def parse_argv
     when "-h"
       output_format = "html"
     when "-w"
-      warn_if_tags_no_rules = 1
+      warn_if_tags_no_rules = true
     when "-d"
       if (ARGV.count-i) < 1
         info("Missing argument for -d option")
@@ -458,12 +458,15 @@ def validate_defs_and_tags(defs, tags, warn_if_tags_no_rules)
   fatal("Need NormativeTags for tags but was passed a #{tags.class}") unless tags.is_a?(NormativeTags)
 
   missing_tag_cnt = 0
+  bad_norm_rule_name_cnt = 0
   unref_cnt = 0
   referenced_tags = {}    # Key is tag name and value is any non-nil value
   rule_name_lengths = []
   tag_name_lengths = []
 
-  # Detect missing tags and unreferenced tags.
+  # Go through each normative rule definition. Look for:
+  #   - References to non-existant tags
+  #   - Normative rule names starting with "norm:" prefix (should only be for tags)
   defs.norm_rule_defs.each do |d|
     unless d.tag_refs.nil?
       d.tag_refs.each do |tag_ref|
@@ -471,11 +474,16 @@ def validate_defs_and_tags(defs, tags, warn_if_tags_no_rules)
         tag = tags.get_tag(tag_ref)
 
         if tag.nil?
-          missing_tag_cnt = missing_tag_cnt + 1
-          error("Normative rule #{d.name} defined in file #{d.def_filename} references non-existent tag #{tag_ref}")
+          missing_tag_cnt += 1
+          error("Normative rule #{d.name} references non-existent tag #{tag_ref} in file #{d.def_filename}")
         else
           referenced_tags[tag.name] = 1 # Any non-nil value
         end
+      end
+
+      if d.name.start_with?("norm:")
+        bad_norm_rule_name_cnt += 1
+        error("Normative rule #{d.name} starts with \"norm:\" prefix. This prefix is only for tag names, not rule names.")
       end
     end
 
@@ -488,7 +496,7 @@ def validate_defs_and_tags(defs, tags, warn_if_tags_no_rules)
   tags.get_tags.each do |tag|
     if referenced_tags[tag.name].nil?
       msg = "Tag #{tag.name} not referenced by any normative rule. Did you forget to define a normative rule?"
-      if warn_if_tags_no_rules == 1
+      if warn_if_tags_no_rules
         info(msg)
       else
         error(msg)
@@ -505,16 +513,22 @@ def validate_defs_and_tags(defs, tags, warn_if_tags_no_rules)
     error("#{missing_tag_cnt} reference#{missing_tag_cnt == 1 ? "" : "s"} to non-existing tags")
   end
 
+  if bad_norm_rule_name_cnt > 0
+    error("#{bad_norm_rule_name_cnt} illegal normative rule name#{bad_norm_rule_name_cnt == 1 ? "" : "s"}")
+  end
+
   if unref_cnt > 0
     msg = "#{unref_cnt} tag#{unref_cnt == 1 ? "" : "s"} have no normative rules referencing them"
-    if warn_if_tags_no_rules == 1
+    if warn_if_tags_no_rules
       info(msg)
     else
       error(msg)
     end
   end
 
-  fatal("Exiting due to errors") if ((missing_tag_cnt > 0) || ((unref_cnt > 0) && (warn_if_tags_no_rules == 0)))
+  if (missing_tag_cnt > 0) || (bad_norm_rule_name_cnt > 0) || ((unref_cnt > 0) && !warn_if_tags_no_rules)
+    fatal("Exiting due to errors")
+  end
 
   # Display counts of name lengths.
   #info("")
@@ -535,11 +549,6 @@ end
 def output_json(filename, normative_rules_hash)
   fatal("Need String for filename but passed a #{filename.class}") unless filename.is_a?(String)
   fatal("Need Hash<String, Array> for normative_rules_hash but passed a #{normative_rules_hash.class}") unless normative_rules_hash.is_a?(Hash)
-
-  nr_array = normative_rules_hash["normative_rules"]
-  raise "Expecting an array for key normative_rules but got an #{nr_array.class}" unless nr_array.is_a?(Array)
-
-  info("Storing #{nr_array.count} normative rules into file #{filename}")
 
   # Serialize normative_rules_hash to JSON format String.
   # Shouldn't throw exceptions since we created the data being serialized.
@@ -564,8 +573,6 @@ def output_xlsx(filename, defs, tags)
   fatal("Need String for filename but passed a #{filename.class}") unless filename.is_a?(String)
   fatal("Need NormativeRuleDefs for defs but passed a #{defs.class}") unless defs.is_a?(NormativeRuleDefs)
   fatal("Need NormativeTags for tags but passed a #{tags.class}") unless tags.is_a?(NormativeTags)
-
-  info("Storing #{defs.norm_rule_defs.count} normative rules into file #{filename}")
 
   # Create a new Excel workbook
   info("Creating Excel workbook #{filename}")
@@ -649,8 +656,6 @@ def output_adoc(filename, defs, tags, tag_fname2url)
   fatal("Need NormativeTags for tags but passed a #{tags.class}") unless tags.is_a?(NormativeTags)
   fatal("Need Hash for tag_fname2url but passed a #{tag_fname2url.class}") unless tag_fname2url.is_a?(Hash)
 
-  info("Storing #{defs.norm_rule_defs.count} normative rules into file #{filename}")
-
   # Organize rules by chapter name. Each hash key is chapter name. Each hash entry is an Array<NormativeRuleDef>
   defs_by_chapter_name = {}
   defs.norm_rule_defs.each do |d|
@@ -702,8 +707,6 @@ def output_html(filename, defs, tags, tag_fname2url)
   fatal("Need NormativeRuleDefs for defs but passed a #{defs.class}") unless defs.is_a?(NormativeRuleDefs)
   fatal("Need NormativeTags for tags but passed a #{tags.class}") unless tags.is_a?(NormativeTags)
   fatal("Need Hash for tag_fname2url but passed a #{tag_fname2url.class}") unless tag_fname2url.is_a?(Hash)
-
-  info("Storing #{defs.norm_rule_defs.count} normative rules into file #{filename}")
 
   # Organize rules by chapter name. Each hash key is chapter name. Each hash entry is an Array<NormativeRuleDef>
   defs_by_chapter_name = {}
@@ -1010,6 +1013,18 @@ def truncate_after_newlines(text, max_newlines)
   truncated_text
 end
 
+def count_parameters(defs)
+  raise ArgumentError, "Need NormativeRuleDefs for defs but passed a #{defs.class}" unless defs.is_a?(NormativeRuleDefs)
+
+  num_parameters = 0
+
+  defs.norm_rule_defs.each do |d|
+    num_parameters += 1 if d.kind == "parameter"
+  end
+
+  return num_parameters
+end
+
 # Convert newlines to <br>.
 def html_handle_newlines(text)
   raise ArgumentError, "Expected String for text but was passed a #{text}.class" unless text.is_a?(String)
@@ -1034,6 +1049,9 @@ info("Output format = #{output_format}")
 defs = load_definitions(def_fnames)
 tags = load_tags(tag_fnames)
 validate_defs_and_tags(defs, tags, warn_if_tags_no_rules)
+
+info("Storing #{defs.norm_rule_defs.count} normative rules into file #{output_fname}")
+info("Includes #{count_parameters(defs)} parameters")
 
 case output_format
 when "json"
