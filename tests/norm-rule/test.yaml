@@ -13,6 +13,8 @@ normative_rule_definitions:
     kind: extension
     instances: [Zicsr, ABC]
     tag: "norm:inline"
+  - name: infinity
+    tag: "norm:infinity"
   - name: no_tag
     summary: Normative rule without tag/tags
   - name: inline-with-hash

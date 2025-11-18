@@ -6,7 +6,14 @@
 === Chapter 1.1 - Inline Tagging
 
 // PASSES
-Before inline [#norm:inline]#inside inline# outside inline.
+Before inline [#norm:inline]#inside > &gt; inline# outside inline.
+
+Infinity inside [#norm:infinity]#abc &#x221e; def# outside.
+
+// Define macro for Unicode greater-than-or-equal-to symbol.
+:ge: &#8805;
+
+Trying the {ge} macro.
 
 // SHOULD ALWAYS FAIL - Can't put inline tag at end of line.
 Before bad inline [#norm:bad-inline-1]#

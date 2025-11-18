@@ -10,7 +10,10 @@
 | A few words | Rule Summary
 | extension | Rule Kind
 | [Zicsr, ABC] | Rule Instances
-| inside inline a| link:test.html#norm:inline[norm:inline]
+| inside &gt; &amp;gt; inline a| link:test.html#norm:inline[norm:inline]
+
+.1+| infinity
+| abc &amp;#x221e; def a| link:test.html#norm:infinity[norm:infinity]
 
 .1+| no_tag
 | Normative rule without tag/tags | Rule Summary

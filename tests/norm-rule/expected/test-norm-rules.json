@@ -13,7 +13,20 @@
       "tags": [
         {
           "name": "norm:inline",
-          "text": "inside inline",
+          "text": "inside &gt; &amp;gt; inline",
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
+        }
+      ]
+    },
+    {
+      "name": "infinity",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:infinity",
+          "text": "abc &amp;#x221e; def",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
         }

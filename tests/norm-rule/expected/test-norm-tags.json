@@ -1,6 +1,7 @@
 {
   "tags": {
-    "norm:inline": "inside inline",
+    "norm:inline": "inside &gt; &amp;gt; inline",
+    "norm:infinity": "abc &amp;#x221e; def",
     "norm:inline-with-hash": "includes a hash # symbol.",
     "norm:paragraph:no-inline-anchors": "Paragraph without inline anchors",
     "norm:paragraph:inline-anchors:inline-anchor": "inline anchor",
@@ -48,6 +49,7 @@
             "children": [],
             "tags": [
               "norm:inline",
+              "norm:infinity",
               "norm:inline-with-hash"
             ]
           },
