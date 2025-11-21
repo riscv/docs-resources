@@ -13,20 +13,7 @@
       "tags": [
         {
           "name": "norm:inline",
-          "text": "inside &gt; &amp;gt; inline",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
-        }
-      ]
-    },
-    {
-      "name": "infinity",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
-      "tags": [
-        {
-          "name": "norm:infinity",
-          "text": "abc &amp;#x221e; def",
+          "text": "inside inline",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
         }
@@ -126,6 +113,123 @@
         {
           "name": "norm:def",
           "text": "This paragraph has two tags but we only ever get a tag for norm:def.",
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
+        }
+      ]
+    },
+    {
+      "name": "superscript",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:superscript",
+          "text": "xyz 2^32^ 123",
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
+        }
+      ]
+    },
+    {
+      "name": "subscript",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:subscript",
+          "text": "xyz X~i~ 123",
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
+        }
+      ]
+    },
+    {
+      "name": "inline-underline",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:inline-underline",
+          "text": "ABC [.underline]#inside tag# GHI",
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
+        }
+      ]
+    },
+    {
+      "name": "paragraph-underline",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:paragraph-underline",
+          "text": "Paragraph underlined outside.",
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
+        }
+      ]
+    },
+    {
+      "name": "unicode_name",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:unicode_name",
+          "text": "ABC &amp;ge; DEF",
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
+        }
+      ]
+    },
+    {
+      "name": "unicode_decimal_value",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:unicode_decimal_value",
+          "text": "ABC &amp;#8805; DEF",
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
+        }
+      ]
+    },
+    {
+      "name": "unicode_hexadecimal_value",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:unicode_hexadecimal_value",
+          "text": "ABC &amp;#x2265; DEF",
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
+        }
+      ]
+    },
+    {
+      "name": "unicode_char",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:unicode_char",
+          "text": "ABC ≥ DEF",
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
+        }
+      ]
+    },
+    {
+      "name": "macro_call",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:macro_call",
+          "text": "200 {ge} 100",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
         }

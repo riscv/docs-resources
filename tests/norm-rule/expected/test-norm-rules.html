@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Normative Rules per Chapter</title>
   <style>
+    .underline {
+      text-decoration: underline;
+    }
     :root{
       --sidebar-width: 200px;
       --accent: #0366d6;
@@ -106,35 +109,30 @@
             <col class="col-location">
           </colgroup>
           <thead>
-            <tr><th>Rule Name</th><th>Rule Description</th><th>Description Location</th></tr>
+            <tr><th>Rule Name</th><th>Rule Description</th><th>Origin of Description</th></tr>
           </thead>
           <tbody>
             <tr>
               <td rowspan=4 id="inline">inline</td>
               <td>A few words</td>
-              <td>Rule Summary</td>
+              <td>Rule's "summary" property</td>
             </tr>
             <tr>
               <td>extension</td>
-              <td>Rule Kind</td>
+              <td>Rule's "kind" property</td>
             </tr>
             <tr>
               <td>[Zicsr, ABC]</td>
-              <td>Rule Instances</td>
+              <td>Rule's "instance/instances" property</td>
             </tr>
             <tr>
-              <td>inside &gt; &amp;gt; inline</td>
+              <td>inside inline</td>
               <td><a href="test.html#norm:inline">norm:inline</a></td>
-            </tr>
-            <tr>
-              <td rowspan=1 id="infinity">infinity</td>
-              <td>abc &amp;#x221e; def</td>
-              <td><a href="test.html#norm:infinity">norm:infinity</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="no_tag">no_tag</td>
               <td>Normative rule without tag/tags</td>
-              <td>Rule Summary</td>
+              <td>Rule's "summary" property</td>
             </tr>
             <tr>
               <td rowspan=1 id="inline-with-hash">inline-with-hash</td>
@@ -144,7 +142,7 @@
             <tr>
               <td rowspan=2 id="paragraph-with-a-really-wide-rule-name">paragraph-with-a-really-wide-rule-name</td>
               <td>Here's a description.<br>It's got 2 lines.<br></td>
-              <td>Rule Description</td>
+              <td>Rule's "description" property</td>
             </tr>
             <tr>
               <td>Paragraph without inline anchors</td>
@@ -174,6 +172,51 @@
               <td rowspan=1 id="double_tags">double_tags</td>
               <td>This paragraph has two tags but we only ever get a tag for norm:def.</td>
               <td><a href="test.html#norm:def">norm:def</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1 id="superscript">superscript</td>
+              <td>xyz 2<sup>32</sup> 123</td>
+              <td><a href="test.html#norm:superscript">norm:superscript</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1 id="subscript">subscript</td>
+              <td>xyz X<sub>i</sub> 123</td>
+              <td><a href="test.html#norm:subscript">norm:subscript</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1 id="inline-underline">inline-underline</td>
+              <td>ABC <span class="underline">inside tag</span> GHI</td>
+              <td><a href="test.html#norm:inline-underline">norm:inline-underline</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1 id="paragraph-underline">paragraph-underline</td>
+              <td>Paragraph underlined outside.</td>
+              <td><a href="test.html#norm:paragraph-underline">norm:paragraph-underline</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1 id="unicode_name">unicode_name</td>
+              <td>ABC &#8805; DEF</td>
+              <td><a href="test.html#norm:unicode_name">norm:unicode_name</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1 id="unicode_decimal_value">unicode_decimal_value</td>
+              <td>ABC &#8805; DEF</td>
+              <td><a href="test.html#norm:unicode_decimal_value">norm:unicode_decimal_value</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1 id="unicode_hexadecimal_value">unicode_hexadecimal_value</td>
+              <td>ABC &#x2265; DEF</td>
+              <td><a href="test.html#norm:unicode_hexadecimal_value">norm:unicode_hexadecimal_value</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1 id="unicode_char">unicode_char</td>
+              <td>ABC ≥ DEF</td>
+              <td><a href="test.html#norm:unicode_char">norm:unicode_char</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1 id="macro_call">macro_call</td>
+              <td>200 {ge} 100</td>
+              <td><a href="test.html#norm:macro_call">norm:macro_call</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="table1">table1</td>
@@ -300,15 +343,15 @@
             <tr>
               <td rowspan=5 id="admon5">admon5</td>
               <td>One line description</td>
-              <td>Rule Description</td>
+              <td>Rule's "description" property</td>
             </tr>
             <tr>
               <td>parameter</td>
-              <td>Rule Kind</td>
+              <td>Rule's "kind" property</td>
             </tr>
             <tr>
               <td>[MY_PARAMETER]</td>
-              <td>Rule Instances</td>
+              <td>Rule's "instance/instances" property</td>
             </tr>
             <tr>
               <td>Paragraph 1</td>

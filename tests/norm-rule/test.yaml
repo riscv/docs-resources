@@ -13,8 +13,6 @@ normative_rule_definitions:
     kind: extension
     instances: [Zicsr, ABC]
     tag: "norm:inline"
-  - name: infinity
-    tag: "norm:infinity"
   - name: no_tag
     summary: Normative rule without tag/tags
   - name: inline-with-hash
@@ -36,6 +34,26 @@ normative_rule_definitions:
     tag: "norm:paragraph:tag_with_newlines"
   - name: double_tags
     tag: "norm:def"
+
+  # AsciiDoc formatting
+  - name: superscript
+    tag: "norm:superscript"
+  - name: subscript
+    tag: "norm:subscript"
+  - name: inline-underline
+    tag: "norm:inline-underline"
+  - name: paragraph-underline
+    tag: "norm:paragraph-underline"
+  - name: unicode_name
+    tag: "norm:unicode_name"
+  - name: unicode_decimal_value
+    tag: "norm:unicode_decimal_value"
+  - name: unicode_hexadecimal_value
+    tag: "norm:unicode_hexadecimal_value"
+  - name: unicode_char
+    tag: "norm:unicode_char"
+  - name: macro_call
+    tag: "norm:macro_call"
 
   # Table
   - name: table1

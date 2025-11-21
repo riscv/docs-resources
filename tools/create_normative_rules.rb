@@ -531,6 +531,99 @@ def validate_defs_and_tags(defs, tags, warn_if_tags_no_rules)
   #end
 end
 
+module Adoc2HTML
+  extend self
+
+  # Convert superscript notation: 2^32^ -> 2<sup>32</sup>
+  # Uses non-greedy matching and allows various content types
+  def convert_superscript(text)
+    # Match word followed by ^content^, where content doesn't contain ^
+    text.gsub(/(\w+)\^([^\^]+?)\^/) do
+      "#{$1}<sup>#{$2}</sup>"
+    end
+  end
+
+  # Convert subscript notation: X~i~ -> X<sub>i</sub>
+  # Uses non-greedy matching and allows various content types
+  def convert_subscript(text)
+    # Match word followed by ~content~, where content doesn't contain ~
+    text.gsub(/(\w+)~([^~]+?)~/) do
+      "#{$1}<sub>#{$2}</sub>"
+    end
+  end
+
+  # Convert underline notation: [.underline]#text# -> <span class="underline">text</span>
+  def convert_underline(text)
+    text.gsub(/\[\.underline\]#([^#]+)#/, '<span class="underline">\1</span>')
+  end
+
+  # Convert unicode character entity names to numeric codes
+  # Handles tags backend converting "&" in the adoc to "&amp;".
+  def convert_unicode_names(text)
+    # Common HTML entity names to numeric codes
+    entities = {
+      'ge' => 8805,    # ≥ greater than or equal
+      'le' => 8804,    # ≤ less than or equal
+      'ne' => 8800,    # ≠ not equal
+      'equiv' => 8801, # ≡ equivalent
+      'lt' => 60,      # < less than
+      'gt' => 62,      # > greater than
+      'amp' => 38,     # & ampersand
+      'quot' => 34,    # " quote
+      'apos' => 39,    # ' apostrophe
+      'nbsp' => 160,   # non-breaking space
+      'times' => 215,  # × multiplication
+      'divide' => 247, # ÷ division
+      'plusmn' => 177, # ± plus-minus
+      'deg' => 176,    # ° degree
+      'micro' => 181,  # µ micro
+      'para' => 182,   # ¶ paragraph
+      'middot' => 183, # · middle dot
+      'raquo' => 187,  # » right angle quote
+      'laquo' => 171,  # « left angle quote
+      'frac12' => 189, # ½ one half
+      'frac14' => 188, # ¼ one quarter
+      'frac34' => 190, # ¾ three quarters
+    }
+
+    text.gsub(/&amp;(\w+);/) do
+      entity_name = $1
+      if entities.key?(entity_name)
+        # Convert to numeric entity
+        "&##{entities[entity_name]};"
+      else
+        # Leave unknown entities as-is
+        "&#{entity_name};"
+      end
+    end
+  end
+
+  # Convert numeric unicode entities to proper unicode numbers. Handle both hex and decimal formats.
+  # Handles tags backend converting "&" in the adoc to "&amp;". That's all this really does.
+  def convert_unicode_numbers(text)
+    text.gsub(/&amp;#x(\h+);/) do
+      # Hexadecimal case
+      "&#x#{$1};"
+    end.gsub(/&amp;#(\d+);/) do
+      # Decimal case
+      "&##{$1};"
+    end
+  end
+
+  # Apply all inline format conversions (keeping numeric entities)
+  def convert_all(text)
+    puts "XXX: Before '#{text}'"
+    result = text.dup
+    result = convert_superscript(result)
+    result = convert_subscript(result)
+    result = convert_underline(result)
+    result = convert_unicode_names(result)
+    result = convert_unicode_numbers(result)
+    puts "XXX: After  '#{result}'"
+    result
+  end
+end
+
 # Store normative rules in JSON output file
 def output_json(filename, normative_rules_hash)
   fatal("Need String for filename but passed a #{filename.class}") unless filename.is_a?(String)
@@ -584,7 +677,7 @@ def output_xlsx(filename, defs, tags)
       { header: "Chapter Name" },
       { header: "Rule Name" },
       { header: "Rule Description" },
-      { header: "Description Location" },
+      { header: "Origin of Description" },
       { header: "Kind" },
       { header: "Instances" }
     ]
@@ -667,7 +760,7 @@ def output_adoc(filename, defs, tags, tag_fname2url)
       f.puts("")
       f.puts("[cols=\"20%,60%,20%\"]")
       f.puts("|===")
-      f.puts("| Rule Name | Rule Description | Description Location")
+      f.puts("| Rule Name | Rule Description | Origin of Description")
 
       nr_defs.each do |nr|
         info_rows = (nr.summary.nil? ? 0 : 1) + (nr.description.nil? ? 0 : 1) +
@@ -676,9 +769,9 @@ def output_adoc(filename, defs, tags, tag_fname2url)
 
         f.puts("")
         f.puts("#{row_span}| #{nr.name}")
-        f.puts("| #{nr.summary} | Rule Summary") unless nr.summary.nil?
-        f.puts("| #{nr.description} | Rule Description") unless nr.description.nil?
-        f.puts("| #{nr.kind} | Rule Kind") unless nr.kind.nil?
+        f.puts("| #{nr.summary} | Rule's 'summary' property") unless nr.summary.nil?
+        f.puts("| #{nr.description} | Rule's 'description' property") unless nr.description.nil?
+        f.puts("| #{nr.kind} | Rule's 'kind' property") unless nr.kind.nil?
         f.puts('| [' + nr.instances.join(', ') + '] | Rule Instances') unless nr.instances.empty?
         nr.tag_refs.each do |tag_ref|
           tag = tags.get_tag(tag_ref)
@@ -757,6 +850,9 @@ def html_head(f)
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <title>Normative Rules per Chapter</title>
       <style>
+        .underline {
+          text-decoration: underline;
+        }
         :root{
           --sidebar-width: 200px;
           --accent: #0366d6;
@@ -881,7 +977,7 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
   f.puts(%Q{            <col class="col-location">})
   f.puts(%Q{          </colgroup>})
   f.puts(%Q{          <thead>})
-  f.puts(%Q{            <tr><th>Rule Name</th><th>Rule Description</th><th>Description Location</th></tr>})
+  f.puts(%Q{            <tr><th>Rule Name</th><th>Rule Description</th><th>Origin of Description</th></tr>})
   f.puts(%Q{          </thead>})
   f.puts(%Q{          <tbody>})
 
@@ -896,7 +992,7 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
     unless nr.summary.nil?
       f.puts(%Q{            <tr>}) unless row_started
       f.puts(%Q{              <td>#{nr.summary}</td>})
-      f.puts(%Q{              <td>Rule Summary</td>})
+      f.puts(%Q{              <td>Rule's "summary" property</td>})
       f.puts(%Q{            </tr>})
       row_started = false
     end
@@ -904,7 +1000,7 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
     unless nr.description.nil?
       f.puts(%Q{            <tr>}) unless row_started
       f.puts(%Q{              <td>#{html_handle_newlines(nr.description)}</td>})
-      f.puts(%Q{              <td>Rule Description</td>})
+      f.puts(%Q{              <td>Rule's "description" property</td>})
       f.puts(%Q{            </tr>})
       row_started = false
     end
@@ -912,7 +1008,7 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
     unless nr.kind.nil?
       f.puts(%Q{            <tr>}) unless row_started
       f.puts(%Q{              <td>#{nr.kind}</td>})
-      f.puts(%Q{              <td>Rule Kind</td>})
+      f.puts(%Q{              <td>Rule's "kind" property</td>})
       f.puts(%Q{            </tr>})
       row_started = false
     end
@@ -921,7 +1017,7 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
       instances_str = "[" + nr.instances.join(', ') + "]"
       f.puts(%Q{            <tr>}) unless row_started
       f.puts(%Q{              <td>#{instances_str}</td>})
-      f.puts(%Q{              <td>Rule Instances</td>})
+      f.puts(%Q{              <td>Rule's "instance/instances" property</td>})
       f.puts(%Q{            </tr>})
       row_started = false
     end
@@ -934,7 +1030,7 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
       fatal("No fname tag to HTML mapping (-tag2url cmd line arg) for tag fname #{tag.tag_filename} for tag name #{tag.name}") if html_fname.nil?
 
       f.puts(%Q{            <tr>}) unless row_started
-      f.puts(%Q{              <td>#{html_handle_newlines(handle_tables(tag.text))}</td>})
+      f.puts(%Q{              <td>#{html_handle_newlines(handle_tables(Adoc2HTML::convert_all(tag.text)))}</td>})
       f.puts(%Q{              <td><a href="#{html_fname}##{tag_ref}">#{tag_ref}</a></td>})
       f.puts(%Q{            </tr>})
       row_started = false

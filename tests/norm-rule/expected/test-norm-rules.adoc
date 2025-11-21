@@ -4,19 +4,16 @@
 
 [cols="20%,60%,20%"]
 |===
-| Rule Name | Rule Description | Description Location
+| Rule Name | Rule Description | Origin of Description
 
 .4+| inline
-| A few words | Rule Summary
-| extension | Rule Kind
+| A few words | Rule's 'summary' property
+| extension | Rule's 'kind' property
 | [Zicsr, ABC] | Rule Instances
-| inside &gt; &amp;gt; inline a| link:test.html#norm:inline[norm:inline]
-
-.1+| infinity
-| abc &amp;#x221e; def a| link:test.html#norm:infinity[norm:infinity]
+| inside inline a| link:test.html#norm:inline[norm:inline]
 
 .1+| no_tag
-| Normative rule without tag/tags | Rule Summary
+| Normative rule without tag/tags | Rule's 'summary' property
 
 .1+| inline-with-hash
 | includes a hash # symbol. a| link:test.html#norm:inline-with-hash[norm:inline-with-hash]
@@ -24,7 +21,7 @@
 .2+| paragraph-with-a-really-wide-rule-name
 | Here's a description.
 It's got 2 lines.
- | Rule Description
+ | Rule's 'description' property
 | Paragraph without inline anchors a| link:test.html#norm:paragraph:no-inline-anchors[norm:paragraph:no-inline-anchors]
 
 .1+| inline-anchors-in-paragraph-entire
@@ -41,6 +38,33 @@ It's got 2 lines.
 
 .1+| double_tags
 | This paragraph has two tags but we only ever get a tag for norm:def. a| link:test.html#norm:def[norm:def]
+
+.1+| superscript
+| xyz 2^32^ 123 a| link:test.html#norm:superscript[norm:superscript]
+
+.1+| subscript
+| xyz X~i~ 123 a| link:test.html#norm:subscript[norm:subscript]
+
+.1+| inline-underline
+| ABC [.underline]#inside tag# GHI a| link:test.html#norm:inline-underline[norm:inline-underline]
+
+.1+| paragraph-underline
+| Paragraph underlined outside. a| link:test.html#norm:paragraph-underline[norm:paragraph-underline]
+
+.1+| unicode_name
+| ABC &amp;ge; DEF a| link:test.html#norm:unicode_name[norm:unicode_name]
+
+.1+| unicode_decimal_value
+| ABC &amp;#8805; DEF a| link:test.html#norm:unicode_decimal_value[norm:unicode_decimal_value]
+
+.1+| unicode_hexadecimal_value
+| ABC &amp;#x2265; DEF a| link:test.html#norm:unicode_hexadecimal_value[norm:unicode_hexadecimal_value]
+
+.1+| unicode_char
+| ABC ≥ DEF a| link:test.html#norm:unicode_char[norm:unicode_char]
+
+.1+| macro_call
+| 200 {ge} 100 a| link:test.html#norm:macro_call[norm:macro_call]
 
 .1+| table1
 | ===
@@ -161,8 +185,8 @@ Paragraph 3 a| link:test.html#norm:admonition:anchors-in-notes:entire-note[norm:
 | Paragraph Z a| link:test.html#norm:admonition:only-anchors-in-notes:note3[norm:admonition:only-anchors-in-notes:note3]
 
 .5+| admon5
-| One line description | Rule Description
-| parameter | Rule Kind
+| One line description | Rule's 'description' property
+| parameter | Rule's 'kind' property
 | [MY_PARAMETER] | Rule Instances
 | Paragraph 1 a| link:test.html#norm:admonition:anchors-in-notes:note1[norm:admonition:anchors-in-notes:note1]
 | Paragraph 3 a| link:test.html#norm:admonition:anchors-in-notes:note3[norm:admonition:anchors-in-notes:note3]
