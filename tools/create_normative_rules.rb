@@ -612,14 +612,12 @@ module Adoc2HTML
 
   # Apply all inline format conversions (keeping numeric entities)
   def convert_all(text)
-    puts "XXX: Before '#{text}'"
     result = text.dup
     result = convert_superscript(result)
     result = convert_subscript(result)
     result = convert_underline(result)
     result = convert_unicode_names(result)
     result = convert_unicode_numbers(result)
-    puts "XXX: After  '#{result}'"
     result
   end
 end
