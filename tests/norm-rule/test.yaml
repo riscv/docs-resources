@@ -35,6 +35,26 @@ normative_rule_definitions:
   - name: double_tags
     tag: "norm:def"
 
+  # AsciiDoc formatting
+  - name: superscript
+    tag: "norm:superscript"
+  - name: subscript
+    tag: "norm:subscript"
+  - name: inline-underline
+    tag: "norm:inline-underline"
+  - name: paragraph-underline
+    tag: "norm:paragraph-underline"
+  - name: unicode_name
+    tag: "norm:unicode_name"
+  - name: unicode_decimal_value
+    tag: "norm:unicode_decimal_value"
+  - name: unicode_hexadecimal_value
+    tag: "norm:unicode_hexadecimal_value"
+  - name: unicode_char
+    tag: "norm:unicode_char"
+  - name: macro_call
+    tag: "norm:macro_call"
+
   # Table
   - name: table1
     tag: "norm:table:anchors-in-cells:entire-table"
