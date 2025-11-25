@@ -153,7 +153,22 @@ class TagsConverter
         # Separate table sections by ===.
       end.join("\n===\n")
     else
-      node.inline? ? node.text : ["\n", node.content].compact.join
+      if node.inline? then
+        # Awkwardly Asciidoctor does not apply substitutions (e.g. `{ge}`) to
+        # inline nodes. Instead the substitutions get applied by the parent block,
+        # which means ordinarily there would be no way to extract the plain text
+        # of just the inline node with the subtitutions applied.
+        #
+        # Therefore here we try to apply them manually. This assumes all sorts
+        # of things that we can't know for sure due to Ruby's lack of static
+        # type hints - is `node.parent` always valid for inline nodes? Does
+        # it always have `@subs`? Do all inline nodes have `apply_subs`?
+        #
+        # This seems to work for now at least.
+        node.text.nil? ? nil : node.apply_subs(node.text, node.parent.instance_variable_get(:@subs))
+      else
+        ["\n", node.content].compact.join
+      end
     end
 
     content_or_nil.nil? ? "" : content_or_nil
