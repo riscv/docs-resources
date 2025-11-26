@@ -6,6 +6,15 @@ require "write_xlsx"
 
 PN = "create_normative_rules.rb"
 
+# Global constants
+LT_UNICODE_DECIMAL = 60     # "<" Unicode devimal value
+GT_UNICODE_DECIMAL = 62     # ">"" Unicode decimal value
+
+LT_UNICODE_STR = "&##{LT_UNICODE_DECIMAL};"   # "<" Unicode string
+GT_UNICODE_STR = "&##{GT_UNICODE_DECIMAL};"   # ">" Unicode string
+
+NORM_PREFIX = "norm:"
+
 ###################################
 # Classes for Normative Rule Tags #
 ###################################
@@ -466,7 +475,7 @@ def validate_defs_and_tags(defs, tags, warn_if_tags_no_rules)
 
   # Go through each normative rule definition. Look for:
   #   - References to non-existant tags
-  #   - Normative rule names starting with "norm:" prefix (should only be for tags)
+  #   - Normative rule names starting with NORM_PREFIX (should only be for tags)
   defs.norm_rule_defs.each do |d|
     unless d.tag_refs.nil?
       d.tag_refs.each do |tag_ref|
@@ -481,9 +490,9 @@ def validate_defs_and_tags(defs, tags, warn_if_tags_no_rules)
         end
       end
 
-      if d.name.start_with?("norm:")
+      if d.name.start_with?(NORM_PREFIX)
         bad_norm_rule_name_cnt += 1
-        error("Normative rule #{d.name} starts with \"norm:\" prefix. This prefix is only for tag names, not rule names.")
+        error("Normative rule #{d.name} starts with \"#{NORM_PREFIX}\" prefix. This prefix is only for tag names, not rule names.")
       end
     end
 
@@ -571,8 +580,25 @@ module Adoc2HTML
     text.gsub(/\[\.underline\]#([^#]+)#/, '<span class="underline">\1</span>')
   end
 
+  def convert_extra_amp(text)
+    # Sometimes the tags backend converts "&foo;" to "&amp;foo;". Convert it to "&foo;".
+    # Note that the \w is equivalent to [a-zA-Z0-9_].
+    text = text.gsub(/&amp;(\w+);/) do
+      "&" + $1 + ";"
+    end
+
+    # Sometimes the tags backend converts "&#8800;" to "&amp;#8800;". Convert it to "&#8800".
+    text = text.gsub(/&amp;#([0-9]+);/) do
+      "&#" + $1 + ";"
+    end
+
+    # And now handle the the hexadecimal variant.
+    text.gsub(/&amp;#x([0-9a-fA-F]+);/) do
+      "&#x" + $1 + ";"
+    end
+  end
+
   # Convert unicode character entity names to numeric codes
-  # Handles tags backend converting "&" in the adoc to "&amp;".
   def convert_unicode_names(text)
     # Common HTML entity names to numeric codes
     entities = {
@@ -580,8 +606,8 @@ module Adoc2HTML
       'le' => 8804,    # ≤ less than or equal
       'ne' => 8800,    # ≠ not equal
       'equiv' => 8801, # ≡ equivalent
-      'lt' => 60,      # < less than
-      'gt' => 62,      # > greater than
+      'lt' => LT_UNICODE_DECIMAL,      # < less than
+      'gt' => GT_UNICODE_DECIMAL,      # > greater than
       'amp' => 38,     # & ampersand
       'quot' => 34,    # " quote
       'apos' => 39,    # ' apostrophe
@@ -600,7 +626,9 @@ module Adoc2HTML
       'frac34' => 190, # ¾ three quarters
     }
 
-    text.gsub(/&amp;(\w+);/) do
+    # Convert known entities to their Unicode value.
+    # The \w is equivalent to [a-zA-Z0-9_].
+    text.gsub(/&(\w+);/) do
       entity_name = $1
       if entities.key?(entity_name)
         # Convert to numeric entity
@@ -612,26 +640,14 @@ module Adoc2HTML
     end
   end
 
-  # Convert numeric unicode entities to proper unicode numbers. Handle both hex and decimal formats.
-  # Handles tags backend converting "&" in the adoc to "&amp;". That's all this really does.
-  def convert_unicode_numbers(text)
-    text.gsub(/&amp;#x(\h+);/) do
-      # Hexadecimal case
-      "&#x#{$1};"
-    end.gsub(/&amp;#(\d+);/) do
-      # Decimal case
-      "&##{$1};"
-    end
-  end
-
-  # Apply all inline format conversions (keeping numeric entities)
-  def convert_all(text)
+  # Apply all format conversions (keeping numeric entities).
+  def convert(text)
     result = text.dup
     result = convert_superscript(result)
     result = convert_subscript(result)
     result = convert_underline(result)
+    result = convert_extra_amp(result)
     result = convert_unicode_names(result)
-    result = convert_unicode_numbers(result)
     result
   end
 end
@@ -711,7 +727,7 @@ def output_xlsx(filename, defs, tags)
     d.tag_refs.each do |tag_ref|
       tag = tags.get_tag(tag_ref)
       fatal("Normative rule #{d.name} defined in file #{d.def_filename} references non-existent tag #{tag_ref}") if tag.nil?
-      rule_defs.append(handle_tables(tag.text).chomp)
+      rule_defs.append(limit_table_rows(tag.text).chomp)
       tag_sources.append('"' + tag.name + '"')
     end
     rule_def_sources.append('[' + tag_sources.join(', ') + ']') unless tag_sources.empty?
@@ -783,7 +799,7 @@ def output_adoc(filename, defs, tags, tag_fname2url)
           url = tag_fname2url[tag.tag_filename]
           fatal("No fname tag to URL mapping (-tag2url cmd line arg) for tag fname #{tag.tag_filename} for tag name #{tag.name}") if url.nil?
 
-          f.puts("| #{handle_tables(tag.text)} a| link:#{url}" + "#" + tag_ref + "[#{tag_ref}]")
+          f.puts("| #{limit_table_rows(tag.text)} a| link:#{url}" + "#" + tag_ref + "[#{tag_ref}]")
         end
       end
 
@@ -1000,7 +1016,7 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
 
     unless nr.description.nil?
       f.puts(%Q{            <tr>}) unless row_started
-      f.puts(%Q{              <td>#{html_handle_newlines(nr.description)}</td>})
+      f.puts(%Q{              <td>#{html_convert_newlines(nr.description)}</td>})
       f.puts(%Q{              <td>Rule's "description" property</td>})
       f.puts(%Q{            </tr>})
       row_started = false
@@ -1015,10 +1031,17 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
     end
 
     unless nr.instances.empty?
-      instances_str = "[" + nr.instances.join(', ') + "]"
+      if nr.instances.size == 1
+        instances_str = nr.instances[0]
+        rule_name = "instance"
+      else
+        instances_str = "[" + nr.instances.join(', ') + "]"
+        rule_name = "instances"
+      end
+      instances_str = (nr.instances.size > 1) ? ("[" + nr.instances.join(', ') + "]") : nr.instances[0]
       f.puts(%Q{            <tr>}) unless row_started
       f.puts(%Q{              <td>#{instances_str}</td>})
-      f.puts(%Q{              <td>Rule's "instance/instances" property</td>})
+      f.puts(%Q{              <td>Rule's "#{rule_name}" property</td>})
       f.puts(%Q{            </tr>})
       row_started = false
     end
@@ -1027,12 +1050,28 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
       tag = tags.get_tag(tag_ref)
       fatal("Normative rule #{nr.name} defined in file #{nr.def_filename} references non-existent tag #{tag_ref}") if tag.nil?
 
-      html_fname = tag_fname2url[tag.tag_filename]
-      fatal("No fname tag to HTML mapping (-tag2url cmd line arg) for tag fname #{tag.tag_filename} for tag name #{tag.name}") if html_fname.nil?
+      tag_text = tag.text
+
+      tag_text = html_convert_newlines(limit_table_rows(Adoc2HTML::convert(tag_text)))
+
+      # Convert adoc links to normative text in tag text to html links.
+      #
+      # Supported formats:
+      #   <<#{NORM_PREFIX}foo>>
+      #   <<#{NORM_PREFIX}foo,custom text>>
+      tag_text.gsub!(/#{LT_UNICODE_STR}#{LT_UNICODE_STR}#{NORM_PREFIX}([^,]+)#{GT_UNICODE_STR}#{GT_UNICODE_STR}/) do
+        tag2html_link("#{NORM_PREFIX}#{$1}", nr, tags, tag_fname2url)
+      end
+
+      tag_text.gsub!(/#{LT_UNICODE_STR}#{LT_UNICODE_STR}#{NORM_PREFIX}([^,]+),(.+)#{GT_UNICODE_STR}#{GT_UNICODE_STR}/) do
+        tag2html_link("#{NORM_PREFIX}#{$1}", nr, tags, tag_fname2url, $2)
+      end
+
+      tag_link = tag2html_link(tag_ref, nr, tags, tag_fname2url)
 
       f.puts(%Q{            <tr>}) unless row_started
-      f.puts(%Q{              <td>#{html_handle_newlines(handle_tables(Adoc2HTML::convert_all(tag.text)))}</td>})
-      f.puts(%Q{              <td><a href="#{html_fname}##{tag_ref}">#{tag_ref}</a></td>})
+      f.puts(%Q{              <td>#{tag_text}</td>})
+      f.puts(%Q{              <td>#{tag_link}</td>})
       f.puts(%Q{            </tr>})
       row_started = false
     end
@@ -1041,6 +1080,23 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
   f.puts(%Q{          </tbody>})
   f.puts(%Q{        </table>})
   f.puts(%Q{      </section>})
+end
+
+def tag2html_link(tag_ref, nr, tags, tag_fname2url, custom_text = nil)
+  fatal("Expected String for tag_ref but was passed a #{tag_ref}.class") unless tag_ref.is_a?(String)
+  fatal("Need NormativeRule for nr but passed a #{nr.class}") unless nr.is_a?(NormativeRuleDef)
+  fatal("Need NormativeTags for tags but passed a #{tags.class}") unless tags.is_a?(NormativeTags)
+  fatal("Need Hash for tag_fname2url but passed a #{tag_fname2url.class}") unless tag_fname2url.is_a?(Hash)
+
+  tag = tags.get_tag(tag_ref)
+  fatal("Normative rule #{nr.name} defined in file #{nr.def_filename} references non-existent tag #{tag_ref}") if tag.nil?
+
+  html_fname = tag_fname2url[tag.tag_filename]
+  fatal("No fname tag to HTML mapping (-tag2url cmd line arg) for tag fname #{tag.tag_filename} for tag name #{tag.name}") if html_fname.nil?
+
+  text = custom_text.nil? ? tag_ref : custom_text
+
+  return %Q{<a href="#{html_fname}##{tag_ref}">#{text}</a>}
 end
 
 def html_script(f)
@@ -1079,7 +1135,7 @@ HTML
 end
 
 # Cleanup the tag text to be suitably displayed.
-def handle_tables(text)
+def limit_table_rows(text)
   raise ArgumentError, "Expected String for text but was passed a #{text}.class" unless text.is_a?(String)
 
   # This is the detection pattern for an entire table being tagged from the "tags.rb" AsciiDoctor backend.
@@ -1120,7 +1176,7 @@ def count_parameters(defs)
 end
 
 # Convert newlines to <br>.
-def html_handle_newlines(text)
+def html_convert_newlines(text)
   raise ArgumentError, "Expected String for text but was passed a #{text}.class" unless text.is_a?(String)
 
   text.gsub(/\n/, '<br>')

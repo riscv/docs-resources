@@ -44,6 +44,8 @@ normative_rule_definitions:
     tag: "norm:inline-underline"
   - name: paragraph-underline
     tag: "norm:paragraph-underline"
+  - name: standalone_ampersand
+    tag: "norm:standalone_ampersand"
   - name: unicode_name
     tag: "norm:unicode_name"
   - name: unicode_decimal_value
@@ -54,6 +56,10 @@ normative_rule_definitions:
     tag: "norm:unicode_char"
   - name: macro_call
     tag: "norm:macro_call"
+  - name: hyperlink1
+    tag: "norm:hyperlink1"
+  - name: hyperlink2
+    tag: "norm:hyperlink2"
 
   # Table
   - name: table1
@@ -109,5 +115,5 @@ normative_rule_definitions:
   - name: admon5
     description: One line description
     kind: parameter
-    instance: MY_PARAMETER
+    instance: my_parameter
     tags: ["norm:admonition:anchors-in-notes:note1", "norm:admonition:anchors-in-notes:note3"]

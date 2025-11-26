@@ -171,13 +171,26 @@
       ]
     },
     {
+      "name": "standalone_ampersand",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:standalone_ampersand",
+          "text": "ABC &amp; DEF",
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
+        }
+      ]
+    },
+    {
       "name": "unicode_name",
       "def_filename": "tests/norm-rule/test.yaml",
       "chapter_name": "my-chapter_name",
       "tags": [
         {
           "name": "norm:unicode_name",
-          "text": "ABC &amp;ge; DEF",
+          "text": "DEF &amp;ge; GHI",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
         }
@@ -190,7 +203,7 @@
       "tags": [
         {
           "name": "norm:unicode_decimal_value",
-          "text": "ABC &amp;#8805; DEF",
+          "text": "GHI &amp;#8805; JKL",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
         }
@@ -203,7 +216,7 @@
       "tags": [
         {
           "name": "norm:unicode_hexadecimal_value",
-          "text": "ABC &amp;#x2265; DEF",
+          "text": "JKL &amp;#x2265; MNO",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
         }
@@ -216,7 +229,7 @@
       "tags": [
         {
           "name": "norm:unicode_char",
-          "text": "ABC ≥ DEF",
+          "text": "MNO ≥ PQR",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
         }
@@ -230,6 +243,32 @@
         {
           "name": "norm:macro_call",
           "text": "200 {ge} 100",
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
+        }
+      ]
+    },
+    {
+      "name": "hyperlink1",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:hyperlink1",
+          "text": "ABC &lt;&lt;norm:superscript&gt;&gt; DEF",
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
+        }
+      ]
+    },
+    {
+      "name": "hyperlink2",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:hyperlink2",
+          "text": "DEF &lt;&lt;norm:superscript,custom text&gt;&gt; GHI",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
         }
@@ -545,7 +584,7 @@
       "chapter_name": "my-chapter_name",
       "kind": "parameter",
       "instances": [
-        "MY_PARAMETER"
+        "my_parameter"
       ],
       "description": "One line description",
       "tags": [

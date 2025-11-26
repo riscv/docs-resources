@@ -123,7 +123,7 @@
             </tr>
             <tr>
               <td>[Zicsr, ABC]</td>
-              <td>Rule's "instance/instances" property</td>
+              <td>Rule's "instances" property</td>
             </tr>
             <tr>
               <td>inside inline</td>
@@ -160,7 +160,7 @@
             </tr>
             <tr>
               <td rowspan=1 id="formulae">formulae</td>
-              <td>This paragraph looks like a formulae to Excel because it has this &lt; sign in it. Make sure this gets written as a string, not a formulae in the XLSX or else it will create an error in Excel.</td>
+              <td>This paragraph looks like a formulae to Excel because it has this &#60; sign in it. Make sure this gets written as a string, not a formulae in the XLSX or else it will create an error in Excel.</td>
               <td><a href="test.html#norm:formulae">norm:formulae</a></td>
             </tr>
             <tr>
@@ -194,29 +194,44 @@
               <td><a href="test.html#norm:paragraph-underline">norm:paragraph-underline</a></td>
             </tr>
             <tr>
+              <td rowspan=1 id="standalone_ampersand">standalone_ampersand</td>
+              <td>ABC &#38; DEF</td>
+              <td><a href="test.html#norm:standalone_ampersand">norm:standalone_ampersand</a></td>
+            </tr>
+            <tr>
               <td rowspan=1 id="unicode_name">unicode_name</td>
-              <td>ABC &#8805; DEF</td>
+              <td>DEF &#8805; GHI</td>
               <td><a href="test.html#norm:unicode_name">norm:unicode_name</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="unicode_decimal_value">unicode_decimal_value</td>
-              <td>ABC &#8805; DEF</td>
+              <td>GHI &#8805; JKL</td>
               <td><a href="test.html#norm:unicode_decimal_value">norm:unicode_decimal_value</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="unicode_hexadecimal_value">unicode_hexadecimal_value</td>
-              <td>ABC &#x2265; DEF</td>
+              <td>JKL &#x2265; MNO</td>
               <td><a href="test.html#norm:unicode_hexadecimal_value">norm:unicode_hexadecimal_value</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="unicode_char">unicode_char</td>
-              <td>ABC ≥ DEF</td>
+              <td>MNO ≥ PQR</td>
               <td><a href="test.html#norm:unicode_char">norm:unicode_char</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="macro_call">macro_call</td>
               <td>200 {ge} 100</td>
               <td><a href="test.html#norm:macro_call">norm:macro_call</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1 id="hyperlink1">hyperlink1</td>
+              <td>ABC <a href="test.html#norm:superscript">norm:superscript</a> DEF</td>
+              <td><a href="test.html#norm:hyperlink1">norm:hyperlink1</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1 id="hyperlink2">hyperlink2</td>
+              <td>DEF <a href="test.html#norm:superscript">custom text</a> GHI</td>
+              <td><a href="test.html#norm:hyperlink2">norm:hyperlink2</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="table1">table1</td>
@@ -350,8 +365,8 @@
               <td>Rule's "kind" property</td>
             </tr>
             <tr>
-              <td>[MY_PARAMETER]</td>
-              <td>Rule's "instance/instances" property</td>
+              <td>my_parameter</td>
+              <td>Rule's "instance" property</td>
             </tr>
             <tr>
               <td>Paragraph 1</td>

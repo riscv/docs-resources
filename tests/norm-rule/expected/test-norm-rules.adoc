@@ -51,20 +51,29 @@ It's got 2 lines.
 .1+| paragraph-underline
 | Paragraph underlined outside. a| link:test.html#norm:paragraph-underline[norm:paragraph-underline]
 
+.1+| standalone_ampersand
+| ABC &amp; DEF a| link:test.html#norm:standalone_ampersand[norm:standalone_ampersand]
+
 .1+| unicode_name
-| ABC &amp;ge; DEF a| link:test.html#norm:unicode_name[norm:unicode_name]
+| DEF &amp;ge; GHI a| link:test.html#norm:unicode_name[norm:unicode_name]
 
 .1+| unicode_decimal_value
-| ABC &amp;#8805; DEF a| link:test.html#norm:unicode_decimal_value[norm:unicode_decimal_value]
+| GHI &amp;#8805; JKL a| link:test.html#norm:unicode_decimal_value[norm:unicode_decimal_value]
 
 .1+| unicode_hexadecimal_value
-| ABC &amp;#x2265; DEF a| link:test.html#norm:unicode_hexadecimal_value[norm:unicode_hexadecimal_value]
+| JKL &amp;#x2265; MNO a| link:test.html#norm:unicode_hexadecimal_value[norm:unicode_hexadecimal_value]
 
 .1+| unicode_char
-| ABC ≥ DEF a| link:test.html#norm:unicode_char[norm:unicode_char]
+| MNO ≥ PQR a| link:test.html#norm:unicode_char[norm:unicode_char]
 
 .1+| macro_call
 | 200 {ge} 100 a| link:test.html#norm:macro_call[norm:macro_call]
+
+.1+| hyperlink1
+| ABC &lt;&lt;norm:superscript&gt;&gt; DEF a| link:test.html#norm:hyperlink1[norm:hyperlink1]
+
+.1+| hyperlink2
+| DEF &lt;&lt;norm:superscript,custom text&gt;&gt; GHI a| link:test.html#norm:hyperlink2[norm:hyperlink2]
 
 .1+| table1
 | ===
@@ -187,7 +196,7 @@ Paragraph 3 a| link:test.html#norm:admonition:anchors-in-notes:entire-note[norm:
 .5+| admon5
 | One line description | Rule's 'description' property
 | parameter | Rule's 'kind' property
-| [MY_PARAMETER] | Rule Instances
+| [my_parameter] | Rule Instances
 | Paragraph 1 a| link:test.html#norm:admonition:anchors-in-notes:note1[norm:admonition:anchors-in-notes:note1]
 | Paragraph 3 a| link:test.html#norm:admonition:anchors-in-notes:note3[norm:admonition:anchors-in-notes:note3]
 |===
