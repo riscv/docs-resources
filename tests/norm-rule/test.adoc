@@ -118,7 +118,7 @@ Here's some text that isn't normative but the normatively tagged text has an exi
 [[norm:table:anchors-in-cells:entire-table]]
 |===
 
-// FAILS - Want tagged text to be "cell with anchor"
+// FAILS - Want tagged text to be "WITH anchor"
 | [#norm:table:anchors-in-cells:entire-table-tagged:cell]#WITH anchor#
 | WITHOUT anchor
 |===
@@ -145,7 +145,8 @@ a| Cell is adoc
 |Name4|Color4
 |Name5|Color5
 |Name6|Color6
-|Name7|Color8
+|Name7|Color7
+|Name8|Color8
 |Name9|Color9
 |Name10|Color10
 |Name11|Color11
