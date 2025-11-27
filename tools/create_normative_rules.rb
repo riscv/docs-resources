@@ -1038,7 +1038,6 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
         instances_str = "[" + nr.instances.join(', ') + "]"
         rule_name = "instances"
       end
-      instances_str = (nr.instances.size > 1) ? ("[" + nr.instances.join(', ') + "]") : nr.instances[0]
       f.puts(%Q{            <tr>}) unless row_started
       f.puts(%Q{              <td>#{instances_str}</td>})
       f.puts(%Q{              <td>Rule's "#{rule_name}" property</td>})
@@ -1050,24 +1049,29 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
       tag = tags.get_tag(tag_ref)
       fatal("Normative rule #{nr.name} defined in file #{nr.def_filename} references non-existent tag #{tag_ref}") if tag.nil?
 
-      tag_text = tag.text
+      html_fname = tag_fname2url[tag.tag_filename]
+      fatal("No fname tag to HTML mapping (-tag2url cmd line arg) for tag fname #{tag.tag_filename} for tag name #{tag.name}") if html_fname.nil?
 
-      tag_text = html_convert_newlines(limit_table_rows(Adoc2HTML::convert(tag_text)))
+      tag_text = html_convert_newlines(limit_table_rows(Adoc2HTML::convert(tag.text)))
+
 
       # Convert adoc links to normative text in tag text to html links.
       #
       # Supported formats:
-      #   <<#{NORM_PREFIX}foo>>
-      #   <<#{NORM_PREFIX}foo,custom text>>
-      tag_text.gsub!(/#{LT_UNICODE_STR}#{LT_UNICODE_STR}#{NORM_PREFIX}([^,]+)#{GT_UNICODE_STR}#{GT_UNICODE_STR}/) do
-        tag2html_link("#{NORM_PREFIX}#{$1}", nr, tags, tag_fname2url)
+      #   <<link>>
+      #   <<link,custom text>>
+      #
+      # Can assume that the link is to the same HTML standards document as the
+      # tag text that it is found in because these kind of links only link within their document.
+      tag_text.gsub!(/#{LT_UNICODE_STR}#{LT_UNICODE_STR}([^,]+)#{GT_UNICODE_STR}#{GT_UNICODE_STR}/) do
+        tag2html_link($1, $1, html_fname)
       end
 
-      tag_text.gsub!(/#{LT_UNICODE_STR}#{LT_UNICODE_STR}#{NORM_PREFIX}([^,]+),(.+)#{GT_UNICODE_STR}#{GT_UNICODE_STR}/) do
-        tag2html_link("#{NORM_PREFIX}#{$1}", nr, tags, tag_fname2url, $2)
+      tag_text.gsub!(/#{LT_UNICODE_STR}#{LT_UNICODE_STR}([^,]+),(.+)#{GT_UNICODE_STR}#{GT_UNICODE_STR}/) do
+        tag2html_link($1, $2, html_fname)
       end
 
-      tag_link = tag2html_link(tag_ref, nr, tags, tag_fname2url)
+      tag_link = tag2html_link(tag_ref, tag_ref, html_fname)
 
       f.puts(%Q{            <tr>}) unless row_started
       f.puts(%Q{              <td>#{tag_text}</td>})
@@ -1082,21 +1086,12 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
   f.puts(%Q{      </section>})
 end
 
-def tag2html_link(tag_ref, nr, tags, tag_fname2url, custom_text = nil)
+def tag2html_link(tag_ref, link_text, html_fname)
   fatal("Expected String for tag_ref but was passed a #{tag_ref}.class") unless tag_ref.is_a?(String)
-  fatal("Need NormativeRule for nr but passed a #{nr.class}") unless nr.is_a?(NormativeRuleDef)
-  fatal("Need NormativeTags for tags but passed a #{tags.class}") unless tags.is_a?(NormativeTags)
-  fatal("Need Hash for tag_fname2url but passed a #{tag_fname2url.class}") unless tag_fname2url.is_a?(Hash)
+  fatal("Expected String for link_text but was passed a #{link_text}.class") unless link_text.is_a?(String)
+  fatal("Expected String for html_fname but was passed a #{html_fname}.class") unless html_fname.is_a?(String)
 
-  tag = tags.get_tag(tag_ref)
-  fatal("Normative rule #{nr.name} defined in file #{nr.def_filename} references non-existent tag #{tag_ref}") if tag.nil?
-
-  html_fname = tag_fname2url[tag.tag_filename]
-  fatal("No fname tag to HTML mapping (-tag2url cmd line arg) for tag fname #{tag.tag_filename} for tag name #{tag.name}") if html_fname.nil?
-
-  text = custom_text.nil? ? tag_ref : custom_text
-
-  return %Q{<a href="#{html_fname}##{tag_ref}">#{text}</a>}
+  return %Q{<a href="#{html_fname}##{tag_ref}">#{link_text}</a>}
 end
 
 def html_script(f)

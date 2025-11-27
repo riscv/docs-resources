@@ -75,6 +75,12 @@ It's got 2 lines.
 .1+| hyperlink2
 | DEF &lt;&lt;norm:superscript,custom text&gt;&gt; GHI a| link:test.html#norm:hyperlink2[norm:hyperlink2]
 
+.1+| hyperlink3
+| ABC &lt;&lt;non-norm-anchor&gt;&gt; DEF a| link:test.html#norm:hyperlink3[norm:hyperlink3]
+
+.1+| hyperlink4
+| DEF &lt;&lt;non-norm-anchor,custom text&gt;&gt; GHI a| link:test.html#norm:hyperlink4[norm:hyperlink4]
+
 .1+| table1
 | ===
 WITH anchor
