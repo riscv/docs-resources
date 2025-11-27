@@ -15,6 +15,8 @@ GT_UNICODE_STR = "&##{GT_UNICODE_DECIMAL};"   # ">" Unicode string
 
 NORM_PREFIX = "norm:"
 
+MAX_TABLE_ROWS = 12         # Max rows of a table displayed in a cell.
+
 ###################################
 # Classes for Normative Rule Tags #
 ###################################
@@ -1016,7 +1018,7 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
 
     unless nr.description.nil?
       f.puts(%Q{            <tr>}) unless row_started
-      f.puts(%Q{              <td>#{html_convert_newlines(nr.description)}</td>})
+      f.puts(%Q{              <td>#{convert_newlines_to_html(nr.description)}</td>})
       f.puts(%Q{              <td>Rule's "description" property</td>})
       f.puts(%Q{            </tr>})
       row_started = false
@@ -1052,8 +1054,7 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
       html_fname = tag_fname2url[tag.tag_filename]
       fatal("No fname tag to HTML mapping (-tag2url cmd line arg) for tag fname #{tag.tag_filename} for tag name #{tag.name}") if html_fname.nil?
 
-      tag_text = html_convert_newlines(limit_table_rows(Adoc2HTML::convert(tag.text)))
-
+      tag_text = convert_newlines_to_html(convert_tags_tables_to_html(Adoc2HTML::convert(tag.text)))
 
       # Convert adoc links to normative text in tag text to html links.
       #
@@ -1139,6 +1140,96 @@ HTML
   )
 end
 
+# Convert the tagged text containing entire tables. Uses format created by "tags" Asciidoctor backend.
+#
+# Two possible formats:
+#
+#   Without heading:
+#
+#     ===
+#     | ABC | DEF
+#     |GHI |JKL
+#     ===
+#
+#     Actual string from tags: "===\n| ABC | DEF\n|GHI |JKL\n==="
+#
+#   With heading:
+#
+#     | H1 | H2
+#     ===
+#     | GHI | JKL
+#     ===
+#
+#     Actual string from tags: "| H1 | H2\n===\n| GHI | JKL\n==="
+
+def convert_tags_tables_to_html(text)
+  raise ArgumentError, "Expected String for text but was passed a #{text}.class" unless text.is_a?(String)
+
+  ret = text      # Default to input
+
+  text.gsub(/(.*?)===\n(.+)\n===/m) do
+    # Found a "tags" formatted table
+    heading = $1.chomp          # Remove trailing newline
+    rows = $2.split("\n")       # Split into array of rows
+
+    ret = "<table>".dup    # Start html table
+
+    # Add heading if present
+    heading_cells = extract_tags_table_cells(heading)
+    unless heading_cells.empty?
+      ret << "<thead>"
+      ret << "<tr>"
+      ret << heading_cells.map { |cell| "<th>#{cell}</th>" }.join("")
+      ret << "</tr>"
+      ret << "</thead>"
+    end
+
+    # Add each row
+    ret << "<tbody>"
+    rows.each_with_index do |row,index|
+      if index < MAX_TABLE_ROWS
+        ret << "<tr>"
+        row_cells = extract_tags_table_cells(row)
+        ret << row_cells.map { |cell| "<td>#{cell}</td>" }.join("")
+        ret << "</tr>"
+      elsif index == MAX_TABLE_ROWS
+        ret << "<tr>"
+        row_cells = extract_tags_table_cells(row)
+        ret << row_cells.map { |cell| "<td>...</td>" }.join("")
+        ret << "</tr>"
+      end
+    end
+
+    ret << "</tbody>"
+    ret << "</table>"    # End html table
+  end
+
+  return ret
+end
+
+# Return array of table columns from one row/header of a table.
+def extract_tags_table_cells(text)
+  raise ArgumentError, "Expected String for text but was passed a #{text}.class" unless text.is_a?(String)
+
+  # This pattern matches strings that:
+  #   - Start with a non-pipe, non-whitespace character
+  #   - Then contain zero or more non-pipe characters (can include internal spaces)
+  #   - End with a non-pipe, non-whitespace character
+  #
+  # All leading/trailing whitespace is removed.
+  #
+  # Examples:
+  #   "| H1 | H2".scan(/[^|\s][^|]*[^|\s]/)
+  #   => ["H1", "H2"]
+  #
+  #   "| ABC | DEF GHI |".scan(/[^|\s][^|]*[^|\s]/)
+  #   => ["ABC", "DEF GHI"]  # Note: internal space preserved
+  #
+  #   "|  Name  |  Value  |".scan(/[^|\s][^|]*[^|\s]/)
+  #   => ["Name", "Value"]  # Leading/trailing spaces removed
+  text.scan(/[^|\s][^|]*[^|\s]/)
+end
+
 # Cleanup the tag text to be suitably displayed.
 def limit_table_rows(text)
   raise ArgumentError, "Expected String for text but was passed a #{text}.class" unless text.is_a?(String)
@@ -1146,7 +1237,7 @@ def limit_table_rows(text)
   # This is the detection pattern for an entire table being tagged from the "tags.rb" AsciiDoctor backend.
   if text.end_with?("\n===")
     # Limit table size displayed.
-    truncate_after_newlines(text, 12)
+    truncate_after_newlines(text, MAX_TABLE_ROWS)
   else
     text
   end
@@ -1181,7 +1272,7 @@ def count_parameters(defs)
 end
 
 # Convert newlines to <br>.
-def html_convert_newlines(text)
+def convert_newlines_to_html(text)
   raise ArgumentError, "Expected String for text but was passed a #{text}.class" unless text.is_a?(String)
 
   text.gsub(/\n/, '<br>')
