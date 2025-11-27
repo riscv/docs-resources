@@ -60,6 +60,10 @@ normative_rule_definitions:
     tag: "norm:hyperlink1"
   - name: hyperlink2
     tag: "norm:hyperlink2"
+  - name: hyperlink3
+    tag: "norm:hyperlink3"
+  - name: hyperlink4
+    tag: "norm:hyperlink4"
 
   # Table
   - name: table1

@@ -91,6 +91,13 @@ Before hyperlink [#norm:hyperlink1]#ABC <<norm:superscript>> DEF# outside.
 
 Before hyperlink [#norm:hyperlink2]#DEF <<norm:superscript,custom text>> GHI# outside.
 
+Before hyperlink [#norm:hyperlink3]#ABC <<non-norm-anchor>> DEF# outside.
+
+Before hyperlink [#norm:hyperlink4]#DEF <<non-norm-anchor,custom text>> GHI# outside.
+
+[[non-norm-anchor]]
+Here's some text that isn't normative but the normatively tagged text has an existing link into it.
+
 === Chapter 2 - Table Tagging
 
 // FAILS - Want tagged text to be "ENTIRE TABLE"

@@ -275,6 +275,32 @@
       ]
     },
     {
+      "name": "hyperlink3",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:hyperlink3",
+          "text": "ABC &lt;&lt;non-norm-anchor&gt;&gt; DEF",
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
+        }
+      ]
+    },
+    {
+      "name": "hyperlink4",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:hyperlink4",
+          "text": "DEF &lt;&lt;non-norm-anchor,custom text&gt;&gt; GHI",
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
+        }
+      ]
+    },
+    {
       "name": "table1",
       "def_filename": "tests/norm-rule/test.yaml",
       "chapter_name": "my-chapter_name",

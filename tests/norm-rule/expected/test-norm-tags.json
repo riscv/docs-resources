@@ -20,6 +20,8 @@
     "norm:macro_call": "200 {ge} 100",
     "norm:hyperlink1": "ABC &lt;&lt;norm:superscript&gt;&gt; DEF",
     "norm:hyperlink2": "DEF &lt;&lt;norm:superscript,custom text&gt;&gt; GHI",
+    "norm:hyperlink3": "ABC &lt;&lt;non-norm-anchor&gt;&gt; DEF",
+    "norm:hyperlink4": "DEF &lt;&lt;non-norm-anchor,custom text&gt;&gt; GHI",
     "norm:table:no-anchors-in-cells:entire-table": "Header 1|Header 2\n===\nCell in column 1, row 1|Cell in column 2, row 1\nCell in column 1, row 2|Cell in column 2, row 2\n===",
     "norm:table:anchors-in-cells:entire-table-tagged:cell": "WITH anchor",
     "norm:table:anchors-in-cells:entire-table": "===\nWITH anchor\nWITHOUT anchor\n===",
@@ -92,7 +94,9 @@
               "norm:unicode_char",
               "norm:macro_call",
               "norm:hyperlink1",
-              "norm:hyperlink2"
+              "norm:hyperlink2",
+              "norm:hyperlink3",
+              "norm:hyperlink4"
             ]
           },
           {
