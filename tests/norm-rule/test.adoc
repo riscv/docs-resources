@@ -73,18 +73,23 @@ Inline underline [.underline]#before tag# [#norm:inline-underline]+ABC [.underli
 [[norm:paragraph-underline]]
 Paragraph [.underline]#underlined# outside.
 
-Unicode name [#norm:unicode_name]#ABC &ge; DEF# outside.
+Ampersand [#norm:standalone_ampersand]#ABC & DEF# outside.
 
-Unicode decimal value [#norm:unicode_decimal_value]#ABC &#8805; DEF# outside.
+Unicode name [#norm:unicode_name]#DEF &ge; GHI# outside.
 
-Unicode hexadecimal value [#norm:unicode_hexadecimal_value]#ABC &#x2265; DEF# outside.
+Unicode decimal value [#norm:unicode_decimal_value]#GHI &#8805; JKL# outside.
 
-Unicode character [#norm:unicode_char]#ABC ≥ DEF# outside.
+Unicode hexadecimal value [#norm:unicode_hexadecimal_value]#JKL &#x2265; MNO# outside.
+
+Unicode character [#norm:unicode_char]#MNO ≥ PQR# outside.
 
 :ge: &#8805;
 
 Macro call [#norm:macro_call]#200 {ge} 100# outside.
 
+Before hyperlink [#norm:hyperlink1]#ABC <<norm:superscript>> DEF# outside.
+
+Before hyperlink [#norm:hyperlink2]#DEF <<norm:superscript,custom text>> GHI# outside.
 
 === Chapter 2 - Table Tagging
 
