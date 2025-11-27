@@ -1063,12 +1063,22 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
       #
       # Can assume that the link is to the same HTML standards document as the
       # tag text that it is found in because these kind of links only link within their document.
-      tag_text.gsub!(/#{LT_UNICODE_STR}#{LT_UNICODE_STR}([^,]+)#{GT_UNICODE_STR}#{GT_UNICODE_STR}/) do
-        tag2html_link($1, $1, html_fname)
-      end
+      #
+      # Note that I'm using the non-greedy regular expression (? after +) otherwise the regular expression
+      # will return multiple <<link>> in the same text as one.
+      tag_text.gsub!(/#{LT_UNICODE_STR}#{LT_UNICODE_STR}(.+?)#{GT_UNICODE_STR}#{GT_UNICODE_STR}/) do
+        # Look to see if custom text has been provided.
+        split_texts = $1.split(",")
 
-      tag_text.gsub!(/#{LT_UNICODE_STR}#{LT_UNICODE_STR}([^,]+),(.+)#{GT_UNICODE_STR}#{GT_UNICODE_STR}/) do
-        tag2html_link($1, $2, html_fname)
+        if split_texts.length == 0
+          fail("Hyperlink '$1' is empty")
+        elsif split_texts.length == 1
+          tag2html_link(split_texts[0], split_texts[0], html_fname)
+        elsif split_texts.length == 2
+          tag2html_link(split_texts[0], split_texts[1], html_fname)
+        else
+          fail("Hyperlink '$1' contains too many commas")
+        end
       end
 
       tag_link = tag2html_link(tag_ref, tag_ref, html_fname)
