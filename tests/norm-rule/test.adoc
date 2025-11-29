@@ -104,7 +104,7 @@ Here's some text that isn't normative but the normatively tagged text has an exi
 
 === Chapter 2 - Table Tagging
 
-// FAILS - Want tagged text to be "ENTIRE TABLE"
+// PASSES
 [[norm:table:no-anchors-in-cells:entire-table]]
 [cols="1,1"]
 |===
@@ -114,11 +114,11 @@ Here's some text that isn't normative but the normatively tagged text has an exi
 |Cell in column 1, row 2 |Cell in column 2, row 2
 |===
 
-// FAILS - Want tagged text to be "ENTIRE TABLE"
+// PASSES
 [[norm:table:anchors-in-cells:entire-table]]
 |===
 
-// FAILS - Want tagged text to be "WITH anchor"
+// PASSES
 | [#norm:table:anchors-in-cells:entire-table-tagged:cell]#WITH anchor#
 | WITHOUT anchor
 |===
@@ -127,11 +127,11 @@ Here's some text that isn't normative but the normatively tagged text has an exi
 
 // PASSES - Handles adoc formatted cell
 a| Cell is adoc
-// FAILS - Want tagged text to be "ABC DEF"
+// PASSES
 | [#norm:table:anchors-in-cells:entire-table-not-tagged:cell]#ABC DEF#
 |===
 
-// PASSES - Want tagged text to be "ENTIRE TABLE"
+// PASSES
 [[norm:table:many-rows]]
 [cols="1,1"]
 |===
@@ -153,6 +153,14 @@ a| Cell is adoc
 |Name12|Color12
 |Name13|Color13
 |Name14|Color14
+|===
+
+[[norm:table:single-char-cells]]
+|===
+|X1|X2
+
+| A|B
+|C| D
 |===
 
 == Chapter 3 - Tagging Unordered Lists

@@ -144,8 +144,8 @@ class TagsConverter
                 cell.content.join("\n")
               end
             end
-            # Prefix cells with "|"
-          end.map { |s| '|' + s }.join
+            # Separate cells with "|"
+          end.join("|")
           # Separate rows by newlines.
         end.join("\n")
         # Separate table sections by ===.

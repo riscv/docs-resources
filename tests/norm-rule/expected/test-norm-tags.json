@@ -24,11 +24,12 @@
     "norm:hyperlink4": "DEF &lt;&lt;non-norm-anchor,custom text&gt;&gt; GHI",
     "norm:hyperlink5": "GHI &lt;&lt;norm:superscript&gt;&gt; and &lt;&lt;norm:subscript&gt;&gt; JKL",
     "norm:hyperlink6": "JKL &lt;&lt;norm:superscript,hello&gt;&gt; and &lt;&lt;norm:subscript,goodbye&gt;&gt; MNO",
-    "norm:table:no-anchors-in-cells:entire-table": "|Header 1|Header 2\n===\n|Cell in column 1, row 1|Cell in column 2, row 1\n|Cell in column 1, row 2|Cell in column 2, row 2\n===",
+    "norm:table:no-anchors-in-cells:entire-table": "Header 1|Header 2\n===\nCell in column 1, row 1|Cell in column 2, row 1\nCell in column 1, row 2|Cell in column 2, row 2\n===",
     "norm:table:anchors-in-cells:entire-table-tagged:cell": "WITH anchor",
-    "norm:table:anchors-in-cells:entire-table": "===\n|WITH anchor\n|WITHOUT anchor\n===",
+    "norm:table:anchors-in-cells:entire-table": "===\nWITH anchor\nWITHOUT anchor\n===",
     "norm:table:anchors-in-cells:entire-table-not-tagged:cell": "ABC DEF",
-    "norm:table:many-rows": "|Name|Color\n===\n|Roses|Red\n|Violets|Blue\n|Name1|Color1\n|Name2|Color2\n|Name3|Color3\n|Name4|Color4\n|Name5|Color5\n|Name6|Color6\n|Name7|Color7\n|Name8|Color8\n|Name9|Color9\n|Name10|Color10\n|Name11|Color11\n|Name12|Color12\n|Name13|Color13\n|Name14|Color14\n===",
+    "norm:table:many-rows": "Name|Color\n===\nRoses|Red\nViolets|Blue\nName1|Color1\nName2|Color2\nName3|Color3\nName4|Color4\nName5|Color5\nName6|Color6\nName7|Color7\nName8|Color8\nName9|Color9\nName10|Color10\nName11|Color11\nName12|Color12\nName13|Color13\nName14|Color14\n===",
+    "norm:table:single-char-cells": "X1|X2\n===\nA|B\nC|D\n===",
     "norm:unordered-list:no-anchors-in-items:entire-list": "Item A\nItem B\nItem C",
     "norm:unordered-list:anchors-in-items:item1": "Item 1",
     "norm:unordered-list:anchors-in-items:item2": "Item 2",
@@ -112,7 +113,8 @@
               "norm:table:anchors-in-cells:entire-table-tagged:cell",
               "norm:table:anchors-in-cells:entire-table",
               "norm:table:anchors-in-cells:entire-table-not-tagged:cell",
-              "norm:table:many-rows"
+              "norm:table:many-rows",
+              "norm:table:single-char-cells"
             ]
           }
         ],

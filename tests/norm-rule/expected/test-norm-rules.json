@@ -333,7 +333,7 @@
       "tags": [
         {
           "name": "norm:table:anchors-in-cells:entire-table",
-          "text": "===\n|WITH anchor\n|WITHOUT anchor\n===",
+          "text": "===\nWITH anchor\nWITHOUT anchor\n===",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
         }
@@ -346,7 +346,7 @@
       "tags": [
         {
           "name": "norm:table:no-anchors-in-cells:entire-table",
-          "text": "|Header 1|Header 2\n===\n|Cell in column 1, row 1|Cell in column 2, row 1\n|Cell in column 1, row 2|Cell in column 2, row 2\n===",
+          "text": "Header 1|Header 2\n===\nCell in column 1, row 1|Cell in column 2, row 1\nCell in column 1, row 2|Cell in column 2, row 2\n===",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
         }
@@ -385,7 +385,20 @@
       "tags": [
         {
           "name": "norm:table:many-rows",
-          "text": "|Name|Color\n===\n|Roses|Red\n|Violets|Blue\n|Name1|Color1\n|Name2|Color2\n|Name3|Color3\n|Name4|Color4\n|Name5|Color5\n|Name6|Color6\n|Name7|Color7\n|Name8|Color8\n|Name9|Color9\n|Name10|Color10\n|Name11|Color11\n|Name12|Color12\n|Name13|Color13\n|Name14|Color14\n===",
+          "text": "Name|Color\n===\nRoses|Red\nViolets|Blue\nName1|Color1\nName2|Color2\nName3|Color3\nName4|Color4\nName5|Color5\nName6|Color6\nName7|Color7\nName8|Color8\nName9|Color9\nName10|Color10\nName11|Color11\nName12|Color12\nName13|Color13\nName14|Color14\n===",
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
+        }
+      ]
+    },
+    {
+      "name": "table6",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:table:single-char-cells",
+          "text": "X1|X2\n===\nA|B\nC|D\n===",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
         }

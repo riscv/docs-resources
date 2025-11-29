@@ -1208,26 +1208,19 @@ def convert_tags_tables_to_html(text)
 end
 
 # Return array of table columns from one row/header of a table.
-def extract_tags_table_cells(text)
-  raise ArgumentError, "Expected String for text but was passed a #{text}.class" unless text.is_a?(String)
+# Returns empty array if row is nil or the empty string.
+def extract_tags_table_cells(row)
+  raise ArgumentError, "Expected String for row but was passed a #{row}.class" unless row.is_a?(String)
 
-  # This pattern matches strings that:
-  #   - Start with a non-pipe, non-whitespace character
-  #   - Then contain zero or more non-pipe characters (can include internal spaces)
-  #   - End with a non-pipe, non-whitespace character
-  #
-  # All leading/trailing whitespace is removed.
-  #
+  return [] if row.nil? || row.empty?
+
+  # Split row fields with pipe symbol.
   # Examples:
-  #   "| H1 | H2".scan(/[^|\s][^|]*[^|\s]/)
-  #   => ["H1", "H2"]
-  #
-  #   "| ABC | DEF GHI |".scan(/[^|\s][^|]*[^|\s]/)
-  #   => ["ABC", "DEF GHI"]  # Note: internal space preserved
-  #
-  #   "|  Name  |  Value  |".scan(/[^|\s][^|]*[^|\s]/)
-  #   => ["Name", "Value"]  # Leading/trailing spaces removed
-  text.scan(/[^|\s][^|]*[^|\s]/)
+  #   "H1 | H2" => ["H1", "H2"]
+  #   "|" => ["", ""]
+  #   "|A|B" => ["", "A", "B"]
+  #   "||C" => ["", "", "C"]
+  row.split('|', -1).map(&:strip)
 end
 
 # Cleanup the tag text to be suitably displayed.
