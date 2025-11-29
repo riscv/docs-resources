@@ -320,7 +320,7 @@
       "tags": [
         {
           "name": "norm:hyperlink6",
-          "text": "JKL &lt;&lt;norm:superscript,hello&gt;&gt; and &lt;&lt;norm:subscript,goodbye&gt;&gt; MNO",
+          "text": "JKL &lt;&lt;norm:superscript ,hello&gt;&gt; and &lt;&lt;norm:subscript, goodbye&gt;&gt; MNO",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
         }

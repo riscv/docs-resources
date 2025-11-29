@@ -7,7 +7,7 @@ require "write_xlsx"
 PN = "create_normative_rules.rb"
 
 # Global constants
-LT_UNICODE_DECIMAL = 60     # "<" Unicode devimal value
+LT_UNICODE_DECIMAL = 60     # "<" Unicode decimal value
 GT_UNICODE_DECIMAL = 62     # ">"" Unicode decimal value
 
 LT_UNICODE_STR = "&##{LT_UNICODE_DECIMAL};"   # "<" Unicode string
@@ -589,12 +589,12 @@ module Adoc2HTML
       "&" + $1 + ";"
     end
 
-    # Sometimes the tags backend converts "&#8800;" to "&amp;#8800;". Convert it to "&#8800".
+    # Sometimes the tags backend converts "&#8800;" to "&amp;#8800;". Convert it to "&#8800;".
     text = text.gsub(/&amp;#([0-9]+);/) do
       "&#" + $1 + ";"
     end
 
-    # And now handle the the hexadecimal variant.
+    # And now handle the hexadecimal variant.
     text.gsub(/&amp;#x([0-9a-fA-F]+);/) do
       "&#x" + $1 + ";"
     end
@@ -1069,16 +1069,16 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
       # will return multiple <<link>> in the same text as one.
       tag_text.gsub!(/#{LT_UNICODE_STR}#{LT_UNICODE_STR}(.+?)#{GT_UNICODE_STR}#{GT_UNICODE_STR}/) do
         # Look to see if custom text has been provided.
-        split_texts = $1.split(",")
+        split_texts = $1.split(",").map(&:strip)
 
         if split_texts.length == 0
-          fail("Hyperlink '$1' is empty")
+          fail("Hyperlink '#{$1}' is empty")
         elsif split_texts.length == 1
           tag2html_link(split_texts[0], split_texts[0], html_fname)
         elsif split_texts.length == 2
           tag2html_link(split_texts[0], split_texts[1], html_fname)
         else
-          fail("Hyperlink '$1' contains too many commas")
+          fail("Hyperlink '#{$1}' contains too many commas")
         end
       end
 
@@ -1098,9 +1098,9 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
 end
 
 def tag2html_link(tag_ref, link_text, html_fname)
-  fatal("Expected String for tag_ref but was passed a #{tag_ref}.class") unless tag_ref.is_a?(String)
-  fatal("Expected String for link_text but was passed a #{link_text}.class") unless link_text.is_a?(String)
-  fatal("Expected String for html_fname but was passed a #{html_fname}.class") unless html_fname.is_a?(String)
+  fatal("Expected String for tag_ref but was passed a #{tag_ref.class}") unless tag_ref.is_a?(String)
+  fatal("Expected String for link_text but was passed a #{link_text.class}") unless link_text.is_a?(String)
+  fatal("Expected String for html_fname but was passed a #{html_fname.class}") unless html_fname.is_a?(String)
 
   return %Q{<a href="#{html_fname}##{tag_ref}">#{link_text}</a>}
 end
@@ -1147,25 +1147,23 @@ end
 #   Without heading:
 #
 #     ===
-#     | ABC | DEF
-#     |GHI |JKL
+#     ABC | DEF
+#     GHI |JKL
 #     ===
 #
-#     Actual string from tags: "===\n| ABC | DEF\n|GHI |JKL\n==="
+#     Actual string from tags: "===\nABC | DEF\nGHI |JKL\n==="
 #
 #   With heading:
 #
-#     | H1 | H2
+#     H1 | H2
 #     ===
-#     | GHI | JKL
+#     GHI | JKL
 #     ===
 #
-#     Actual string from tags: "| H1 | H2\n===\n| GHI | JKL\n==="
+#     Actual string from tags: "H1 | H2\n===\nGHI | JKL\n==="
 
 def convert_tags_tables_to_html(text)
-  raise ArgumentError, "Expected String for text but was passed a #{text}.class" unless text.is_a?(String)
-
-  ret = text      # Default to input
+  raise ArgumentError, "Expected String for text but was passed a #{text.class}" unless text.is_a?(String)
 
   text.gsub(/(.*?)===\n(.+)\n===/m) do
     # Found a "tags" formatted table
@@ -1203,18 +1201,17 @@ def convert_tags_tables_to_html(text)
     ret << "</tbody>"
     ret << "</table>"    # End html table
   end
-
-  return ret
 end
 
 # Return array of table columns from one row/header of a table.
 # Returns empty array if row is nil or the empty string.
 def extract_tags_table_cells(row)
-  raise ArgumentError, "Expected String for row but was passed a #{row}.class" unless row.is_a?(String)
+  raise ArgumentError, "Expected String for row but was passed a #{row.class}" unless row.is_a?(String)
 
   return [] if row.nil? || row.empty?
 
-  # Split row fields with pipe symbol.
+  # Split row fields with pipe symbol. The -1 passed to split ensures trailing null fields are not suppressed.
+  #
   # Examples:
   #   "H1 | H2" => ["H1", "H2"]
   #   "|" => ["", ""]
@@ -1225,7 +1222,7 @@ end
 
 # Cleanup the tag text to be suitably displayed.
 def limit_table_rows(text)
-  raise ArgumentError, "Expected String for text but was passed a #{text}.class" unless text.is_a?(String)
+  raise ArgumentError, "Expected String for text but was passed a #{text.class}" unless text.is_a?(String)
 
   # This is the detection pattern for an entire table being tagged from the "tags.rb" AsciiDoctor backend.
   if text.end_with?("\n===")
@@ -1266,7 +1263,7 @@ end
 
 # Convert newlines to <br>.
 def convert_newlines_to_html(text)
-  raise ArgumentError, "Expected String for text but was passed a #{text}.class" unless text.is_a?(String)
+  raise ArgumentError, "Expected String for text but was passed a #{text.class}" unless text.is_a?(String)
 
   text.gsub(/\n/, '<br>')
 end

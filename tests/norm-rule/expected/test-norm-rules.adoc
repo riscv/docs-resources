@@ -85,7 +85,7 @@ It's got 2 lines.
 | GHI &lt;&lt;norm:superscript&gt;&gt; and &lt;&lt;norm:subscript&gt;&gt; JKL a| link:test.html#norm:hyperlink5[norm:hyperlink5]
 
 .1+| hyperlink6
-| JKL &lt;&lt;norm:superscript,hello&gt;&gt; and &lt;&lt;norm:subscript,goodbye&gt;&gt; MNO a| link:test.html#norm:hyperlink6[norm:hyperlink6]
+| JKL &lt;&lt;norm:superscript ,hello&gt;&gt; and &lt;&lt;norm:subscript, goodbye&gt;&gt; MNO a| link:test.html#norm:hyperlink6[norm:hyperlink6]
 
 .1+| table1
 | ===

@@ -97,7 +97,7 @@ Before hyperlink [#norm:hyperlink4]#DEF <<non-norm-anchor,custom text>> GHI# out
 
 Before hyperlink [#norm:hyperlink5]#GHI <<norm:superscript>> and <<norm:subscript>> JKL# outside.
 
-Before hyperlink [#norm:hyperlink6]#JKL <<norm:superscript,hello>> and <<norm:subscript,goodbye>> MNO# outside.
+Before hyperlink [#norm:hyperlink6]#JKL <<norm:superscript ,hello>> and <<norm:subscript, goodbye>> MNO# outside.
 
 [[non-norm-anchor]]
 Here's some text that isn't normative but the normatively tagged text has an existing link into it.
