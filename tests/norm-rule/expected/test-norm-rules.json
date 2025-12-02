@@ -24,6 +24,7 @@
       "def_filename": "tests/norm-rule/test.yaml",
       "chapter_name": "my-chapter_name",
       "summary": "Normative rule without tag/tags",
+      "note": "This normative rule has no references to the standard. This should only be used in extraordinary circumstances.",
       "tags": []
     },
     {

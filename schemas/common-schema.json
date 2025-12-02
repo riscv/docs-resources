@@ -6,6 +6,9 @@
   "summaryDesc": {
     "description": "Short summary of the normative rule (just a few words)"
   },
+  "noteDesc": {
+    "description": "A note about the normative rule"
+  },
   "descriptionDesc": {
     "description": "Comprehensive description of the normative rule (sentence, paragraph, or longer)"
   },

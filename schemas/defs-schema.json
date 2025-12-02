@@ -28,6 +28,10 @@
             "type": "string",
             "$ref": "common-schema.json#/summaryDesc"
           },
+          "note": {
+            "type": "string",
+            "$ref": "common-schema.json#/noteDesc"
+          },
           "description": {
             "type": "string",
             "$ref": "common-schema.json#/descriptionDesc"

@@ -12,8 +12,9 @@
 | [Zicsr, ABC] | Rule Instances
 | inside inline a| link:test.html#norm:inline[norm:inline]
 
-.1+| no_tag
+.2+| no_tag
 | Normative rule without tag/tags | Rule's 'summary' property
+| This normative rule has no references to the standard. This should only be used in extraordinary circumstances. | Rule's 'note' property
 
 .1+| inline-with-hash
 | includes a hash # symbol. a| link:test.html#norm:inline-with-hash[norm:inline-with-hash]
