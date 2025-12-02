@@ -147,6 +147,7 @@ class NormativeRuleDef
   attr_reader :def_filename           # String (mandatory)
   attr_reader :chapter_name           # String (mandatory)
   attr_reader :summary                # String (optional - a few words)
+  attr_reader :note                   # String (optional - as long as needed)
   attr_reader :description            # String (optional - sentence, paragraph, or more)
   attr_reader :kind                   # String (optional, can be nil)
   attr_reader :instances              # Array<String> (optional - can be empty)
@@ -165,6 +166,11 @@ class NormativeRuleDef
     @summary = data["summary"]
     unless @summary.nil?
       fatal("Provided #{@summary.class} class for summary in normative rule #{name} but need a String") unless @summary.is_a?(String)
+    end
+
+    @note = data["note"]
+    unless @note.nil?
+      fatal("Provided #{@note.class} class for note in normative rule #{name} but need a String") unless @note.is_a?(String)
     end
 
     @description = data["description"]
@@ -428,6 +434,7 @@ def create_normative_rules_hash(defs, tags, tag_fname2url)
     hash["kind"] = d.kind unless d.kind.nil?
     hash["instances"] = d.instances unless d.instances.empty?
     hash["summary"] = d.summary unless d.summary.nil?
+    hash["note"] = d.note unless d.note.nil?
     hash["description"] = d.description unless d.description.nil?
 
     unless d.tag_refs.nil?
@@ -720,6 +727,11 @@ def output_xlsx(filename, defs, tags)
       rule_def_sources.append("Rule Summary")
     end
 
+    unless d.note.nil?
+      rule_defs.append(d.note.chomp)
+      rule_def_sources.append("Rule Note")
+    end
+
     unless d.description.nil?
       rule_defs.append(d.description.chomp)
       rule_def_sources.append("Rule Description")
@@ -784,13 +796,19 @@ def output_adoc(filename, defs, tags, tag_fname2url)
       f.puts("| Rule Name | Rule Description | Origin of Description")
 
       nr_defs.each do |nr|
-        info_rows = (nr.summary.nil? ? 0 : 1) + (nr.description.nil? ? 0 : 1) +
-          (nr.kind.nil? ? 0 : 1) + (nr.instances.empty? ? 0 : 1) + nr.tag_refs.length
+        info_rows =
+          (nr.summary.nil? ? 0 : 1) +
+          (nr.note.nil? ? 0 : 1) +
+          (nr.description.nil? ? 0 : 1) +
+          (nr.kind.nil? ? 0 : 1) +
+          (nr.instances.empty? ? 0 : 1) +
+          nr.tag_refs.length
         row_span = (info_rows > 0) ? ".#{info_rows}+" : ""
 
         f.puts("")
         f.puts("#{row_span}| #{nr.name}")
         f.puts("| #{nr.summary} | Rule's 'summary' property") unless nr.summary.nil?
+        f.puts("| #{nr.note} | Rule's 'note' property") unless nr.note.nil?
         f.puts("| #{nr.description} | Rule's 'description' property") unless nr.description.nil?
         f.puts("| #{nr.kind} | Rule's 'kind' property") unless nr.kind.nil?
         f.puts('| [' + nr.instances.join(', ') + '] | Rule Instances') unless nr.instances.empty?
@@ -1001,8 +1019,13 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
   f.puts(%Q{          <tbody>})
 
   nr_defs.each do |nr|
-    name_row_span = (nr.summary.nil? ? 0 : 1) + (nr.description.nil? ? 0 : 1) +
-      (nr.kind.nil? ? 0 : 1) + (nr.instances.empty? ? 0 : 1) + nr.tag_refs.length
+    name_row_span =
+      (nr.summary.nil? ? 0 : 1) +
+      (nr.note.nil? ? 0 : 1) +
+      (nr.description.nil? ? 0 : 1) +
+      (nr.kind.nil? ? 0 : 1) +
+      (nr.instances.empty? ? 0 : 1) +
+      nr.tag_refs.length
 
     row_started = true
     f.puts(%Q{            <tr>})
@@ -1012,6 +1035,14 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
       f.puts(%Q{            <tr>}) unless row_started
       f.puts(%Q{              <td>#{nr.summary}</td>})
       f.puts(%Q{              <td>Rule's "summary" property</td>})
+      f.puts(%Q{            </tr>})
+      row_started = false
+    end
+
+    unless nr.note.nil?
+      f.puts(%Q{            <tr>}) unless row_started
+      f.puts(%Q{              <td>#{nr.note}</td>})
+      f.puts(%Q{              <td>Rule's "note" property</td>})
       f.puts(%Q{            </tr>})
       row_started = false
     end
