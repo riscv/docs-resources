@@ -131,11 +131,11 @@
             </tr>
             <tr>
               <td rowspan=2 id="no_tag">no_tag</td>
-              <td>Normative rule without tag/tags</td>
+              <td>Normative rule <b>without</b> tag/tags</td>
               <td>Rule's "summary" property</td>
             </tr>
             <tr>
-              <td>This normative rule has no references to the standard. This should only be used in extraordinary circumstances.</td>
+              <td>This normative rule has no references to the standard. This should only be used in extraordinary circumstances.<br>It does include a link to <a href="#table1">table1</a> (another normative rule).<br>Has basic adoc formatting such as <b>bold</b>, ita<i>lics</i>, <code>monospace</code>, 2<sup>superscript</sup>, <sub>subscript</sub>, <span class="underline">underline</span>,<br>and &#8804; (Unicode text for less-than-equals-to) and &#8800; (Unicode decimal value for not-equal-to).<br></td>
               <td>Rule's "note" property</td>
             </tr>
             <tr>
@@ -145,7 +145,7 @@
             </tr>
             <tr>
               <td rowspan=2 id="paragraph-with-a-really-wide-rule-name">paragraph-with-a-really-wide-rule-name</td>
-              <td>Here's a description.<br>It's got 2 lines.<br></td>
+              <td>Here's a <span class="underline">description</span>.<br>It's got 2 lines.<br></td>
               <td>Rule's "description" property</td>
             </tr>
             <tr>
@@ -178,13 +178,23 @@
               <td><a href="test.html#norm:def">norm:def</a></td>
             </tr>
             <tr>
+              <td rowspan=1 id="bold">bold</td>
+              <td>ABC is a network - Bold is removed by tags backend so I don't see it</td>
+              <td><a href="test.html#norm:bold">norm:bold</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1 id="italics">italics</td>
+              <td>Let's have fun today - Italics is removed by tags backend so I don't see it</td>
+              <td><a href="test.html#norm:italics">norm:italics</a></td>
+            </tr>
+            <tr>
               <td rowspan=1 id="superscript">superscript</td>
-              <td>xyz 2<sup>32</sup> 123</td>
+              <td>both 2<sup>32</sup> and <sup>32</sup> work</td>
               <td><a href="test.html#norm:superscript">norm:superscript</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="subscript">subscript</td>
-              <td>xyz X<sub>i</sub> 123</td>
+              <td>both <sub>log</sub> and log<sub>2</sub> work</td>
               <td><a href="test.html#norm:subscript">norm:subscript</a></td>
             </tr>
             <tr>
