@@ -642,7 +642,6 @@ module Adoc2HTML
   # Convert formatting within already-captured content.
   # This processes unconstrained (double delimiters) first, then constrained (single delimiters),
   # which is an order based on delimiter type, not on innermost-to-outermost nesting.
-  # True nesting is not supported; for example, *_foo_* will not become <b><i>foo</i></b>.
   def convert_nested(text)
     result = text.dup
     # Process unconstrained first (double delimiters)
