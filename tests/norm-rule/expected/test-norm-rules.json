@@ -23,8 +23,9 @@
       "name": "no_tag",
       "def_filename": "tests/norm-rule/test.yaml",
       "chapter_name": "my-chapter_name",
-      "summary": "Normative rule *without* tag/tags",
+      "summary": "Normative rule *without* tag/tags and *nested **bold** cases*.",
       "note": "This normative rule has no references to the standard. This should only be used in extraordinary circumstances.\nIt does include a link to <<table1>> (another normative rule).\nHas basic adoc formatting such as *bold*, ita__lics__, `monospace`, 2^superscript^, ~subscript~, [.underline]#underline#,\nand &le; (Unicode text for less-than-equals-to) and &#8800; (Unicode decimal value for not-equal-to).\n",
+      "description": "Let's try a nested *_bold italics_* case or all 3 *_`bold italic monospace`_* too.",
       "tags": []
     },
     {

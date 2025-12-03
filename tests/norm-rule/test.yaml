@@ -14,7 +14,8 @@ normative_rule_definitions:
     instances: [Zicsr, ABC]
     tag: "norm:inline"
   - name: no_tag
-    summary: Normative rule *without* tag/tags
+    summary: Normative rule *without* tag/tags and *nested **bold** cases*.
+    description: Let's try a nested *_bold italics_* case or all 3 *_`bold italic monospace`_* too.
     note: |
       This normative rule has no references to the standard. This should only be used in extraordinary circumstances.
       It does include a link to <<table1>> (another normative rule).
