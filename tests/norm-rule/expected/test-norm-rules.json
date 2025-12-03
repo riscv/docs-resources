@@ -23,8 +23,8 @@
       "name": "no_tag",
       "def_filename": "tests/norm-rule/test.yaml",
       "chapter_name": "my-chapter_name",
-      "summary": "Normative rule without tag/tags",
-      "note": "This normative rule has no references to the standard. This should only be used in extraordinary circumstances.",
+      "summary": "Normative rule *without* tag/tags",
+      "note": "This normative rule has no references to the standard. This should only be used in extraordinary circumstances.\nIt does include a link to <<table1>> (another normative rule).\nHas basic adoc formatting such as *bold*, ita__lics__, `monospace`, 2^superscript^, ~subscript~, [.underline]#underline#,\nand &le; (Unicode text for less-than-equals-to) and &#8800; (Unicode decimal value for not-equal-to).\n",
       "tags": []
     },
     {
@@ -44,7 +44,7 @@
       "name": "paragraph-with-a-really-wide-rule-name",
       "def_filename": "tests/norm-rule/test.yaml",
       "chapter_name": "my-chapter_name",
-      "description": "Here's a description.\nIt's got 2 lines.\n",
+      "description": "Here's a [.underline]#description#.\nIt's got 2 lines.\n",
       "tags": [
         {
           "name": "norm:paragraph:no-inline-anchors",
@@ -120,13 +120,39 @@
       ]
     },
     {
+      "name": "bold",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:bold",
+          "text": "ABC is a network - Bold is removed by tags backend so I don't see it",
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
+        }
+      ]
+    },
+    {
+      "name": "italics",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:italics",
+          "text": "Let's have fun today - Italics is removed by tags backend so I don't see it",
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
+        }
+      ]
+    },
+    {
       "name": "superscript",
       "def_filename": "tests/norm-rule/test.yaml",
       "chapter_name": "my-chapter_name",
       "tags": [
         {
           "name": "norm:superscript",
-          "text": "xyz 2^32^ 123",
+          "text": "both 2^32^ and ^32^ work",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
         }
@@ -139,7 +165,7 @@
       "tags": [
         {
           "name": "norm:subscript",
-          "text": "xyz X~i~ 123",
+          "text": "both ~log~ and log~2~ work",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
         }

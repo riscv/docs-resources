@@ -64,9 +64,13 @@ Make sure this gets written as a string, not a formulae in the XLSX or else it w
 These are present to test conversation of normative text that contains AsciiDoc formatting to
 output formats such as HTML.
 
-Superscript [#norm:superscript]#xyz 2^32^ 123# outside.
+Bold and italics are stripped by the tags backend somehow so they aren't present in the tags JSON file.
+Bold [#norm:bold]#*ABC* is a n**et**work - Bold is removed by tags backend so I don't see it# outside.
+Italics [#norm:italics]#Let's have _fun_ to__day__ - Italics is removed by tags backend so I don't see it# outside.
 
-Subscript [#norm:subscript]#xyz X~i~ 123# outside.
+Superscript [#norm:superscript]#both 2^32^ and ^32^ work# outside.
+
+Subscript [#norm:subscript]#both ~log~ and log~2~ work# outside.
 
 Inline underline [.underline]#before tag# [#norm:inline-underline]+ABC [.underline]#inside tag# GHI+ outside.
 

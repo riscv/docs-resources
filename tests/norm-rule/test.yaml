@@ -14,15 +14,19 @@ normative_rule_definitions:
     instances: [Zicsr, ABC]
     tag: "norm:inline"
   - name: no_tag
-    summary: Normative rule without tag/tags
-    note: This normative rule has no references to the standard. This should only be used in extraordinary circumstances.
+    summary: Normative rule *without* tag/tags
+    note: |
+      This normative rule has no references to the standard. This should only be used in extraordinary circumstances.
+      It does include a link to <<table1>> (another normative rule).
+      Has basic adoc formatting such as *bold*, ita__lics__, `monospace`, 2^superscript^, ~subscript~, [.underline]#underline#,
+      and &le; (Unicode text for less-than-equals-to) and &#8800; (Unicode decimal value for not-equal-to).
   - name: inline-with-hash
     tag: "norm:inline-with-hash"
 
   # Paragraph
   - name: paragraph-with-a-really-wide-rule-name
     description: |
-      Here's a description.
+      Here's a [.underline]#description#.
       It's got 2 lines.
     tag: "norm:paragraph:no-inline-anchors"
   - name: inline-anchors-in-paragraph-entire
@@ -37,6 +41,10 @@ normative_rule_definitions:
     tag: "norm:def"
 
   # AsciiDoc formatting
+  - name: bold
+    tag: "norm:bold"
+  - name: italics
+    tag: "norm:italics"
   - name: superscript
     tag: "norm:superscript"
   - name: subscript

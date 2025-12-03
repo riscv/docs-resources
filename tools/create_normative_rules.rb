@@ -566,22 +566,99 @@ end
 module Adoc2HTML
   extend self
 
+  # Apply constrained formatting pair transformation
+  # Single delimiter, bounded by whitespace/punctuation
+  # Matches: *text*, _text_, ^text^, ~text~
+  # Example: "That is *strong* stuff!" or "This is *strong*!"
+  #
+  # @param text [String] The text to transform
+  # @param delimiter [String] The formatting delimiter (e.g., '*', '_', '^', '~')
+  # @yield [content] Block that transforms the captured content
+  # @yieldparam content [String] The text between the delimiters
+  # @yieldreturn [String] The transformed content
+  # @return [String] The text with formatting applied
+  def constrained_format_pattern(text, delimiter, &block)
+    escaped_delimiter = Regexp.escape(delimiter)
+    # (?:^|\s) - start of line or space before
+    # \K - keep assertion (excludes preceding pattern from match)
+    # #{escaped_delimiter} - single opening mark
+    # (\S(?:(?!\s).*?(?<!\s))?) - text that doesn't start/end with space
+    # #{escaped_delimiter} - single closing mark
+    # (?=[,;".?!\s]|$) - followed by punctuation, space, or end of line
+    pattern = /(?:^|\s)\K#{escaped_delimiter}(\S(?:(?!\s).*?(?<!\s))?)#{escaped_delimiter}(?=[,;".?!\s]|$)/
+    text.gsub(pattern) { block.call($1) }
+  end
+
+  # Apply unconstrained formatting pair transformation
+  # Double delimiter, can be used anywhere
+  # Matches: **text**, __text__, ^^text^^, ~~text~~
+  # Example: "Sara**h**" or "**man**ual"
+  #
+  # @param text [String] The text to transform
+  # @param delimiter [String] The formatting delimiter (e.g., '*', '_', '^', '~')
+  # @yield [content] Block that transforms the captured content
+  # @yieldparam content [String] The text between the delimiters
+  # @yieldreturn [String] The transformed content
+  # @return [String] The text with formatting applied
+  def unconstrained_format_pattern(text, delimiter, &block)
+    escaped_delimiter = Regexp.escape(delimiter)
+    # #{escaped_delimiter}{2} - double opening mark
+    # (.+?) - any text (non-greedy)
+    # #{escaped_delimiter}{2} - double closing mark
+    pattern = /#{escaped_delimiter}{2}(.+?)#{escaped_delimiter}{2}/
+    text.gsub(pattern) { block.call($1) }
+  end
+
+  # Apply superscript/subscript formatting transformation
+  # Single delimiter, can be used anywhere, but text must be continuous (no spaces)
+  # Matches: ^text^, ~text~ where text contains no spaces
+  # Example: "2^32^" or "X~i~"
+  #
+  # @param text [String] The text to transform
+  # @param delimiter [String] The formatting delimiter ('^' or '~')
+  # @yield [content] Block that transforms the captured content
+  # @yieldparam content [String] The text between the delimiters
+  # @yieldreturn [String] The transformed content
+  # @return [String] The text with formatting applied
+  def continuous_format_pattern(text, delimiter, &block)
+    escaped_delimiter = Regexp.escape(delimiter)
+    # #{escaped_delimiter} - single opening mark
+    # (\S+?) - continuous non-space text (no spaces allowed)
+    # #{escaped_delimiter} - single closing mark
+    pattern = /#{escaped_delimiter}(\S+?)#{escaped_delimiter}/
+    text.gsub(pattern) { block.call($1) }
+  end
+
+  # Convert bold notation: *foo* -> <b>foo</b>
+  def convert_bold(text)
+    text = constrained_format_pattern(text, "*") { |content| "<b>#{content}</b>" }
+    text = unconstrained_format_pattern(text, "*") { |content| "<b>#{content}</b>" }
+  end
+
+  # Convert italics notation: _bar_ -> <i>bar</i>
+  def convert_italics(text)
+    text = constrained_format_pattern(text, "_") { |content| "<i>#{content}</i>" }
+    text = unconstrained_format_pattern(text, "_") { |content| "<i>#{content}</i>" }
+  end
+
+  # Convert monospace notation: `zort` -> <code>zort</code>
+  def convert_monospace(text)
+    text = constrained_format_pattern(text, "`") { |content| "<code>#{content}</code>" }
+    text = unconstrained_format_pattern(text, "`") { |content| "<code>#{content}</code>" }
+  end
+
   # Convert superscript notation: 2^32^ -> 2<sup>32</sup>
-  # Uses non-greedy matching and allows various content types
+  #                               ^32^  -> <sup>32</sup>
+  # Superscript uses continuous formatting (no spaces allowed in content)
   def convert_superscript(text)
-    # Match word followed by ^content^, where content doesn't contain ^
-    text.gsub(/(\w+)\^([^\^]+?)\^/) do
-      "#{$1}<sup>#{$2}</sup>"
-    end
+    text = continuous_format_pattern(text, "^") { |content| "<sup>#{content}</sup>" }
   end
 
   # Convert subscript notation: X~i~ -> X<sub>i</sub>
-  # Uses non-greedy matching and allows various content types
+  #                             ~i~  -> <sub>i</sub>
+  # Subscript uses continuous formatting (no spaces allowed in content)
   def convert_subscript(text)
-    # Match word followed by ~content~, where content doesn't contain ~
-    text.gsub(/(\w+)~([^~]+?)~/) do
-      "#{$1}<sub>#{$2}</sub>"
-    end
+    text = continuous_format_pattern(text, "~") { |content| "<sub>#{content}</sub>" }
   end
 
   # Convert underline notation: [.underline]#text# -> <span class="underline">text</span>
@@ -652,6 +729,9 @@ module Adoc2HTML
   # Apply all format conversions (keeping numeric entities).
   def convert(text)
     result = text.dup
+    result = convert_bold(result)
+    result = convert_italics(result)
+    result = convert_monospace(result)
     result = convert_superscript(result)
     result = convert_subscript(result)
     result = convert_underline(result)
@@ -1032,24 +1112,30 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
     f.puts(%Q{              <td rowspan=#{name_row_span} id="#{nr.name}">#{nr.name}</td>})
 
     unless nr.summary.nil?
+      text = convert_adoc_links_to_html(convert_newlines_to_html(Adoc2HTML::convert(nr.summary)))
+
       f.puts(%Q{            <tr>}) unless row_started
-      f.puts(%Q{              <td>#{nr.summary}</td>})
+      f.puts(%Q{              <td>#{text}</td>})
       f.puts(%Q{              <td>Rule's "summary" property</td>})
       f.puts(%Q{            </tr>})
       row_started = false
     end
 
     unless nr.note.nil?
+      text = convert_adoc_links_to_html(convert_newlines_to_html(Adoc2HTML::convert(nr.note)))
+
       f.puts(%Q{            <tr>}) unless row_started
-      f.puts(%Q{              <td>#{nr.note}</td>})
+      f.puts(%Q{              <td>#{text}</td>})
       f.puts(%Q{              <td>Rule's "note" property</td>})
       f.puts(%Q{            </tr>})
       row_started = false
     end
 
     unless nr.description.nil?
+      text = convert_adoc_links_to_html(convert_newlines_to_html(Adoc2HTML::convert(nr.description)))
+
       f.puts(%Q{            <tr>}) unless row_started
-      f.puts(%Q{              <td>#{convert_newlines_to_html(nr.description)}</td>})
+      f.puts(%Q{              <td>#{text}</td>})
       f.puts(%Q{              <td>Rule's "description" property</td>})
       f.puts(%Q{            </tr>})
       row_started = false
@@ -1082,38 +1168,17 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
       tag = tags.get_tag(tag_ref)
       fatal("Normative rule #{nr.name} defined in file #{nr.def_filename} references non-existent tag #{tag_ref}") if tag.nil?
 
-      html_fname = tag_fname2url[tag.tag_filename]
-      fatal("No fname tag to HTML mapping (-tag2url cmd line arg) for tag fname #{tag.tag_filename} for tag name #{tag.name}") if html_fname.nil?
+      target_html_fname = tag_fname2url[tag.tag_filename]
+      fatal("No fname tag to HTML mapping (-tag2url cmd line arg) for tag fname #{tag.tag_filename} for tag name #{tag.name}") if target_html_fname.nil?
 
       tag_text = convert_newlines_to_html(convert_tags_tables_to_html(Adoc2HTML::convert(tag.text)))
 
-      # Convert adoc links to normative text in tag text to html links.
-      #
-      # Supported formats:
-      #   <<link>>
-      #   <<link,custom text>>
-      #
+      # Convert adoc links to HTML links.
       # Can assume that the link is to the same HTML standards document as the
-      # tag text that it is found in because these kind of links only link within their document.
-      #
-      # Note that I'm using the non-greedy regular expression (? after +) otherwise the regular expression
-      # will return multiple <<link>> in the same text as one.
-      tag_text.gsub!(/#{LT_UNICODE_STR}#{LT_UNICODE_STR}(.+?)#{GT_UNICODE_STR}#{GT_UNICODE_STR}/) do
-        # Look to see if custom text has been provided.
-        split_texts = $1.split(",").map(&:strip)
+      # tag text that it is found in because these kind of adoc links only link within their document.
+      tag_text = convert_adoc_links_to_html(tag_text, target_html_fname)
 
-        if split_texts.length == 0
-          fail("Hyperlink '#{$1}' is empty")
-        elsif split_texts.length == 1
-          tag2html_link(split_texts[0], split_texts[0], html_fname)
-        elsif split_texts.length == 2
-          tag2html_link(split_texts[0], split_texts[1], html_fname)
-        else
-          fail("Hyperlink '#{$1}' contains too many commas")
-        end
-      end
-
-      tag_link = tag2html_link(tag_ref, tag_ref, html_fname)
+      tag_link = tag2html_link(tag_ref, tag_ref, target_html_fname)
 
       f.puts(%Q{            <tr>}) unless row_started
       f.puts(%Q{              <td>#{tag_text}</td>})
@@ -1128,12 +1193,17 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
   f.puts(%Q{      </section>})
 end
 
-def tag2html_link(tag_ref, link_text, html_fname)
+# If no target_html_fname is provided, assumes anchor is in same HTML file as link (i.e., an HTML "fragment" link).
+def tag2html_link(tag_ref, link_text, target_html_fname = nil)
   fatal("Expected String for tag_ref but was passed a #{tag_ref.class}") unless tag_ref.is_a?(String)
   fatal("Expected String for link_text but was passed a #{link_text.class}") unless link_text.is_a?(String)
-  fatal("Expected String for html_fname but was passed a #{html_fname.class}") unless html_fname.is_a?(String)
+  unless target_html_fname.nil?
+    fatal("Expected String for target_html_fname but was passed a #{target_html_fname.class}") unless target_html_fname.is_a?(String)
+  end
 
-  return %Q{<a href="#{html_fname}##{tag_ref}">#{link_text}</a>}
+  target_html_fname = "" if target_html_fname.nil?
+
+  return %Q{<a href="#{target_html_fname}##{tag_ref}">#{link_text}</a>}
 end
 
 def html_script(f)
@@ -1297,6 +1367,37 @@ def convert_newlines_to_html(text)
   raise ArgumentError, "Expected String for text but was passed a #{text.class}" unless text.is_a?(String)
 
   text.gsub(/\n/, '<br>')
+end
+
+# Convert adoc links to HTML links.
+#
+# Supported adoc link formats:
+#   <<link>>
+#   <<link,custom text>>
+#
+# If target_html_fname is not provided, link will assume anchor is in the same HTML file as the link.
+def convert_adoc_links_to_html(text, target_html_fname = nil)
+  raise ArgumentError, "Passed class #{text.class} for text but require String" unless text.is_a?(String)
+  unless target_html_fname.nil?
+    raise ArgumentError, "Passed class #{target_html_fname.class} for target_html_fname but require String" unless target_html_fname.is_a?(String)
+  end
+
+  # Note that I'm using the non-greedy regular expression (? after +) otherwise the regular expression
+  # will return multiple <<link>> in the same text as one.
+  text.gsub(/(<<|#{LT_UNICODE_STR}#{LT_UNICODE_STR})(.+?)(>>|#{GT_UNICODE_STR}#{GT_UNICODE_STR})/) do
+    # Look to see if custom text has been provided.
+    split_texts = $2.split(",").map(&:strip)
+
+    if split_texts.length == 0
+      fail("Hyperlink '#{$2}' is empty")
+    elsif split_texts.length == 1
+      tag2html_link(split_texts[0], split_texts[0], target_html_fname)
+    elsif split_texts.length == 2
+      tag2html_link(split_texts[0], split_texts[1], target_html_fname)
+    else
+      fail("Hyperlink '#{$2}' contains too many commas")
+    end
+  end
 end
 
 #main()
