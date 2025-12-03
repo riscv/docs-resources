@@ -655,7 +655,7 @@ module Adoc2HTML
     result
   end
 
-  # Convert unconstrained bold, italics, monospaces notation.
+  # Convert unconstrained bold, italics, and monospace notation.
   # For example, **foo**bar -> <b>foo</b>bar
   # Supports nesting when recursive: true
   def convert_unconstrained(text)
@@ -664,7 +664,7 @@ module Adoc2HTML
     unconstrained_format_pattern(text, "`", recursive: true) { |content| "<code>#{content}</code>" }
   end
 
-  # Convert constrained bold, italics, monospaces notation.
+  # Convert constrained bold, italics, and monospace notation.
   # For example, *foo* -> <b>foo</b>
   # Supports nesting when recursive: true
   def convert_constrained(text)
