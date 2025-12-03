@@ -661,7 +661,7 @@ module Adoc2HTML
   def convert_unconstrained(text)
     text = unconstrained_format_pattern(text, "*", recursive: true) { |content| "<b>#{content}</b>" }
     text = unconstrained_format_pattern(text, "_", recursive: true) { |content| "<i>#{content}</i>" }
-    text = unconstrained_format_pattern(text, "`", recursive: true) { |content| "<code>#{content}</code>" }
+    unconstrained_format_pattern(text, "`", recursive: true) { |content| "<code>#{content}</code>" }
   end
 
   # Convert constrained bold, italics, monospaces notation.
@@ -670,7 +670,7 @@ module Adoc2HTML
   def convert_constrained(text)
     text = constrained_format_pattern(text, "*", recursive: true) { |content| "<b>#{content}</b>" }
     text = constrained_format_pattern(text, "_", recursive: true) { |content| "<i>#{content}</i>" }
-    text = constrained_format_pattern(text, "`", recursive: true) { |content| "<code>#{content}</code>" }
+    constrained_format_pattern(text, "`", recursive: true) { |content| "<code>#{content}</code>" }
   end
 
   # Convert superscript notation: 2^32^ -> 2<sup>32</sup>
