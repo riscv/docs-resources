@@ -12,13 +12,14 @@
 | [Zicsr, ABC] | Rule Instances
 | inside inline a| link:test.html#norm:inline[norm:inline]
 
-.2+| no_tag
-| Normative rule *without* tag/tags | Rule's 'summary' property
+.3+| no_tag
+| Normative rule *without* tag/tags and *nested **bold** cases*. | Rule's 'summary' property
 | This normative rule has no references to the standard. This should only be used in extraordinary circumstances.
 It does include a link to <<table1>> (another normative rule).
 Has basic adoc formatting such as *bold*, ita__lics__, `monospace`, 2^superscript^, ~subscript~, [.underline]#underline#,
 and &le; (Unicode text for less-than-equals-to) and &#8800; (Unicode decimal value for not-equal-to).
  | Rule's 'note' property
+| Let's try a nested *_bold italics_* case or all 3 *_`bold italic monospace`_* too. | Rule's 'description' property
 
 .1+| inline-with-hash
 | includes a hash # symbol. a| link:test.html#norm:inline-with-hash[norm:inline-with-hash]

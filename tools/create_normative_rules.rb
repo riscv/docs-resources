@@ -568,16 +568,16 @@ module Adoc2HTML
 
   # Apply constrained formatting pair transformation
   # Single delimiter, bounded by whitespace/punctuation
-  # Matches: *text*, _text_, ^text^, ~text~
   # Example: "That is *strong* stuff!" or "This is *strong*!"
   #
   # @param text [String] The text to transform
-  # @param delimiter [String] The formatting delimiter (e.g., '*', '_', '^', '~')
+  # @param delimiter [String] The formatting delimiter (e.g., '*', '_', '`')
+  # @param recursive [Boolean] Whether to recursively process nested formatting
   # @yield [content] Block that transforms the captured content
   # @yieldparam content [String] The text between the delimiters
   # @yieldreturn [String] The transformed content
   # @return [String] The text with formatting applied
-  def constrained_format_pattern(text, delimiter, &block)
+  def constrained_format_pattern(text, delimiter, recursive: false, &block)
     escaped_delimiter = Regexp.escape(delimiter)
     # (?:^|\s) - start of line or space before
     # \K - keep assertion (excludes preceding pattern from match)
@@ -586,32 +586,41 @@ module Adoc2HTML
     # #{escaped_delimiter} - single closing mark
     # (?=[,;".?!\s]|$) - followed by punctuation, space, or end of line
     pattern = /(?:^|\s)\K#{escaped_delimiter}(\S(?:(?!\s).*?(?<!\s))?)#{escaped_delimiter}(?=[,;".?!\s]|$)/
-    text.gsub(pattern) { block.call($1) }
+    text.gsub(pattern) do
+      content = $1
+      # Recursively process nested formatting if enabled
+      content = convert_nested(content) if recursive
+      block.call(content)
+    end
   end
 
   # Apply unconstrained formatting pair transformation
   # Double delimiter, can be used anywhere
-  # Matches: **text**, __text__, ^^text^^, ~~text~~
   # Example: "Sara**h**" or "**man**ual"
   #
   # @param text [String] The text to transform
-  # @param delimiter [String] The formatting delimiter (e.g., '*', '_', '^', '~')
+  # @param delimiter [String] The formatting delimiter (e.g., '*', '_', '`')
+  # @param recursive [Boolean] Whether to recursively process nested formatting
   # @yield [content] Block that transforms the captured content
   # @yieldparam content [String] The text between the delimiters
   # @yieldreturn [String] The transformed content
   # @return [String] The text with formatting applied
-  def unconstrained_format_pattern(text, delimiter, &block)
+  def unconstrained_format_pattern(text, delimiter, recursive: false, &block)
     escaped_delimiter = Regexp.escape(delimiter)
     # #{escaped_delimiter}{2} - double opening mark
     # (.+?) - any text (non-greedy)
     # #{escaped_delimiter}{2} - double closing mark
     pattern = /#{escaped_delimiter}{2}(.+?)#{escaped_delimiter}{2}/
-    text.gsub(pattern) { block.call($1) }
+    text.gsub(pattern) do
+      content = $1
+      # Recursively process nested formatting if enabled
+      content = convert_nested(content) if recursive
+      block.call(content)
+    end
   end
 
   # Apply superscript/subscript formatting transformation
   # Single delimiter, can be used anywhere, but text must be continuous (no spaces)
-  # Matches: ^text^, ~text~ where text contains no spaces
   # Example: "2^32^" or "X~i~"
   #
   # @param text [String] The text to transform
@@ -625,26 +634,43 @@ module Adoc2HTML
     # #{escaped_delimiter} - single opening mark
     # (\S+?) - continuous non-space text (no spaces allowed)
     # #{escaped_delimiter} - single closing mark
+    # Note: Superscript/subscript don't support nesting in AsciiDoc
     pattern = /#{escaped_delimiter}(\S+?)#{escaped_delimiter}/
     text.gsub(pattern) { block.call($1) }
   end
 
-  # Convert bold notation: *foo* -> <b>foo</b>
-  def convert_bold(text)
-    text = constrained_format_pattern(text, "*") { |content| "<b>#{content}</b>" }
-    text = unconstrained_format_pattern(text, "*") { |content| "<b>#{content}</b>" }
+  # Convert formatting within already-captured content.
+  # This processes unconstrained (double delimiters) first, then constrained (single delimiters),
+  # which is an order based on delimiter type, not on innermost-to-outermost nesting.
+  def convert_nested(text)
+    result = text.dup
+    # Process unconstrained first (double delimiters)
+    result = unconstrained_format_pattern(result, "*", recursive: true) { |content| "<b>#{content}</b>" }
+    result = unconstrained_format_pattern(result, "_", recursive: true) { |content| "<i>#{content}</i>" }
+    result = unconstrained_format_pattern(result, "`", recursive: true) { |content| "<code>#{content}</code>" }
+    # Then process constrained (single delimiters)
+    result = constrained_format_pattern(result, "*", recursive: true) { |content| "<b>#{content}</b>" }
+    result = constrained_format_pattern(result, "_", recursive: true) { |content| "<i>#{content}</i>" }
+    result = constrained_format_pattern(result, "`", recursive: true) { |content| "<code>#{content}</code>" }
+    result
   end
 
-  # Convert italics notation: _bar_ -> <i>bar</i>
-  def convert_italics(text)
-    text = constrained_format_pattern(text, "_") { |content| "<i>#{content}</i>" }
-    text = unconstrained_format_pattern(text, "_") { |content| "<i>#{content}</i>" }
+  # Convert unconstrained bold, italics, and monospace notation.
+  # For example, **foo**bar -> <b>foo</b>bar
+  # Supports nesting when recursive: true
+  def convert_unconstrained(text)
+    text = unconstrained_format_pattern(text, "*", recursive: true) { |content| "<b>#{content}</b>" }
+    text = unconstrained_format_pattern(text, "_", recursive: true) { |content| "<i>#{content}</i>" }
+    unconstrained_format_pattern(text, "`", recursive: true) { |content| "<code>#{content}</code>" }
   end
 
-  # Convert monospace notation: `zort` -> <code>zort</code>
-  def convert_monospace(text)
-    text = constrained_format_pattern(text, "`") { |content| "<code>#{content}</code>" }
-    text = unconstrained_format_pattern(text, "`") { |content| "<code>#{content}</code>" }
+  # Convert constrained bold, italics, and monospace notation.
+  # For example, *foo* -> <b>foo</b>
+  # Supports nesting when recursive: true
+  def convert_constrained(text)
+    text = constrained_format_pattern(text, "*", recursive: true) { |content| "<b>#{content}</b>" }
+    text = constrained_format_pattern(text, "_", recursive: true) { |content| "<i>#{content}</i>" }
+    constrained_format_pattern(text, "`", recursive: true) { |content| "<code>#{content}</code>" }
   end
 
   # Convert superscript notation: 2^32^ -> 2<sup>32</sup>
@@ -729,9 +755,8 @@ module Adoc2HTML
   # Apply all format conversions (keeping numeric entities).
   def convert(text)
     result = text.dup
-    result = convert_bold(result)
-    result = convert_italics(result)
-    result = convert_monospace(result)
+    result = convert_unconstrained(result)
+    result = convert_constrained(result)
     result = convert_superscript(result)
     result = convert_subscript(result)
     result = convert_underline(result)
