@@ -92,6 +92,8 @@ normative_rule_definitions:
     tag: "norm:table:many-rows"
   - name: table6
     tag: "norm:table:single-char-cells"
+  - name: table7
+    tag: "norm:table:column-first-order"
 
   # Unordered lists
   - name: unordered1

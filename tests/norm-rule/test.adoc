@@ -159,12 +159,29 @@ a| Cell is adoc
 |Name14|Color14
 |===
 
+// PASSES
 [[norm:table:single-char-cells]]
 |===
 |X1|X2
 
 | A|B
 |C| D
+|===
+
+// Put a hard line break (+) after each table cell to force newline within cell.
+// Seems to be used quite often in ISA manual to create a table without lines between rows
+// and the table contents provided in column order instead of row order.
+// This is really creating a table with just one row but the newlines make it look
+// like multiple rows.
+// FAILS
+[[norm:table:column-first-order]]
+[options="header"]
+|===
+|ColA|ColB
+|0 +
+1
+|Off +
+On
 |===
 
 == Chapter 3 - Tagging Unordered Lists

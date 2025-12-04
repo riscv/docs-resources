@@ -146,8 +146,10 @@ class TagsConverter
             end
             # Separate cells with "|"
           end.join("|")
-          # Separate rows by newlines.
-        end.join("\n")
+          # Separate rows by Unicode pilcrow (AKA paragraph) symbol corresponding to &para;
+          # Can't separate rows by newlines because AsciiDoc allows newlines inside table cells (via hard line break)
+          # and this is actually used in multiple places in the ISA manual to create column-first-tables.
+        end.join("¶")
         # Separate table sections by ===.
       end.join("\n===\n")
     else
