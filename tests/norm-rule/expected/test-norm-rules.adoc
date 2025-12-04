@@ -101,15 +101,13 @@ It's got 2 lines.
 
 .1+| table1
 | ===
-WITH anchor
-WITHOUT anchor
+WITH anchor¶WITHOUT anchor
 === a| link:test.html#norm:table:anchors-in-cells:entire-table[norm:table:anchors-in-cells:entire-table]
 
 .1+| table2
 | Header 1|Header 2
 ===
-Cell in column 1, row 1|Cell in column 2, row 1
-Cell in column 1, row 2|Cell in column 2, row 2
+Cell in column 1, row 1|Cell in column 2, row 1¶Cell in column 1, row 2|Cell in column 2, row 2
 === a| link:test.html#norm:table:no-anchors-in-cells:entire-table[norm:table:no-anchors-in-cells:entire-table]
 
 .1+| table3
@@ -121,25 +119,22 @@ Cell in column 1, row 2|Cell in column 2, row 2
 .1+| table5
 | Name|Color
 ===
-Roses|Red
-Violets|Blue
-Name1|Color1
-Name2|Color2
-Name3|Color3
-Name4|Color4
-Name5|Color5
-Name6|Color6
-Name7|Color7
-Name8|Color8
-Name9|Color9
-... a| link:test.html#norm:table:many-rows[norm:table:many-rows]
+Roses|Red¶Violets|Blue¶Name1|Color1¶Name2|Color2¶Name3|Color3¶Name4|Color4¶Name5|Color5¶Name6|Color6¶Name7|Color7¶Name8|Color8¶Name9|Color9¶Name10|Color10¶Name11|Color11¶Name12|Color12¶Name13|Color13¶Name14|Color14
+=== a| link:test.html#norm:table:many-rows[norm:table:many-rows]
 
 .1+| table6
 | X1|X2
 ===
-A|B
-C|D
+A|B¶C|D
 === a| link:test.html#norm:table:single-char-cells[norm:table:single-char-cells]
+
+.1+| table7
+| ColA|ColB
+===
+0
+1|Off
+On
+=== a| link:test.html#norm:table:column-first-order[norm:table:column-first-order]
 
 .1+| unordered1
 | Item A

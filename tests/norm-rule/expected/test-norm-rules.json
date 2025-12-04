@@ -361,7 +361,7 @@
       "tags": [
         {
           "name": "norm:table:anchors-in-cells:entire-table",
-          "text": "===\nWITH anchor\nWITHOUT anchor\n===",
+          "text": "===\nWITH anchor¶WITHOUT anchor\n===",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
         }
@@ -374,7 +374,7 @@
       "tags": [
         {
           "name": "norm:table:no-anchors-in-cells:entire-table",
-          "text": "Header 1|Header 2\n===\nCell in column 1, row 1|Cell in column 2, row 1\nCell in column 1, row 2|Cell in column 2, row 2\n===",
+          "text": "Header 1|Header 2\n===\nCell in column 1, row 1|Cell in column 2, row 1¶Cell in column 1, row 2|Cell in column 2, row 2\n===",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
         }
@@ -413,7 +413,7 @@
       "tags": [
         {
           "name": "norm:table:many-rows",
-          "text": "Name|Color\n===\nRoses|Red\nViolets|Blue\nName1|Color1\nName2|Color2\nName3|Color3\nName4|Color4\nName5|Color5\nName6|Color6\nName7|Color7\nName8|Color8\nName9|Color9\nName10|Color10\nName11|Color11\nName12|Color12\nName13|Color13\nName14|Color14\n===",
+          "text": "Name|Color\n===\nRoses|Red¶Violets|Blue¶Name1|Color1¶Name2|Color2¶Name3|Color3¶Name4|Color4¶Name5|Color5¶Name6|Color6¶Name7|Color7¶Name8|Color8¶Name9|Color9¶Name10|Color10¶Name11|Color11¶Name12|Color12¶Name13|Color13¶Name14|Color14\n===",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
         }
@@ -426,7 +426,20 @@
       "tags": [
         {
           "name": "norm:table:single-char-cells",
-          "text": "X1|X2\n===\nA|B\nC|D\n===",
+          "text": "X1|X2\n===\nA|B¶C|D\n===",
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
+        }
+      ]
+    },
+    {
+      "name": "table7",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:table:column-first-order",
+          "text": "ColA|ColB\n===\n0\n1|Off\nOn\n===",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
         }

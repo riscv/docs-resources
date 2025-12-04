@@ -1268,16 +1268,16 @@ end
 
 # Convert the tagged text containing entire tables. Uses format created by "tags" Asciidoctor backend.
 #
-# Two possible formats:
+# Possible formats:
 #
 #   Without heading:
 #
 #     ===
-#     ABC | DEF
+#     ABC | DEF¶
 #     GHI |JKL
 #     ===
 #
-#     Actual string from tags: "===\nABC | DEF\nGHI |JKL\n==="
+#     Actual string from tags: "===\nABC | DEF¶GHI |JKL\n==="
 #
 #   With heading:
 #
@@ -1287,14 +1287,26 @@ end
 #     ===
 #
 #     Actual string from tags: "H1 | H2\n===\nGHI | JKL\n==="
+#
+#   Newlines in table cells:
+#   (Creates table with just one row. Newlines after each cell give the appearance of multiple table rows.)
+#
+#     ColA|ColB
+#     ===
+#     0
+#     1|Off
+#     On
+#     ===
+#
+#     Actual string from tags: "ColA|ColB\n===\n0\n1|Off\nOn\n==="
 
 def convert_tags_tables_to_html(text)
   raise ArgumentError, "Expected String for text but was passed a #{text.class}" unless text.is_a?(String)
 
   text.gsub(/(.*?)===\n(.+)\n===/m) do
     # Found a "tags" formatted table
-    heading = $1.chomp          # Remove trailing newline
-    rows = $2.split("\n")       # Split into array of rows
+    heading = $1.chomp          # Remove potential trailing newline
+    rows = $2.split("¶")        # Split into array of rows. Using "paragraph" symbol since adoc can have newlines in table cells.
 
     ret = "<table>".dup    # Start html table
 
