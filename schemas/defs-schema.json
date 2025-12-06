@@ -32,6 +32,16 @@
             "type": "string",
             "$ref": "common-schema.json#/noteDesc"
           },
+          "clarification-text": {
+            "type": "string",
+            "$ref": "common-schema.json#/clarificationTextDesc"
+          },
+          "clarification-link": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https://(www.)?github.com/riscv/.+/issues/[0-9]+$",
+            "$ref": "common-schema.json#/clarificationLinkDesc"
+          },
           "description": {
             "type": "string",
             "$ref": "common-schema.json#/descriptionDesc"
@@ -79,6 +89,9 @@
             }
           }
         ],
+        "dependencies": {
+          "clarification-text": ["clarification-link"]
+        },
         "additionalProperties": false
       }
     }

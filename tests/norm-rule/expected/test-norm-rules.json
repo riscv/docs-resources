@@ -42,6 +42,35 @@
       ]
     },
     {
+      "name": "clarification-without-text",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "clarification-link": "https://www.github.com/riscv/jfkd/issues/67",
+      "tags": [
+        {
+          "name": "norm:clarification-without-text",
+          "text": "isn't clear enough.",
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
+        }
+      ]
+    },
+    {
+      "name": "clarification-with-text",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "clarification-text": "This is the optional clarifying text.",
+      "clarification-link": "https://github.com/riscv/jfkd/issues/67",
+      "tags": [
+        {
+          "name": "norm:clarification-with-text",
+          "text": "also isn't clear enough.",
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
+        }
+      ]
+    },
+    {
       "name": "paragraph-with-a-really-wide-rule-name",
       "def_filename": "tests/norm-rule/test.yaml",
       "chapter_name": "my-chapter_name",

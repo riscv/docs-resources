@@ -148,6 +148,8 @@ class NormativeRuleDef
   attr_reader :chapter_name           # String (mandatory)
   attr_reader :summary                # String (optional - a few words)
   attr_reader :note                   # String (optional - as long as needed)
+  attr_reader :clarification_text     # String (optional - as long as needed)
+  attr_reader :clarification_link     # String (optional - as long as needed)
   attr_reader :description            # String (optional - sentence, paragraph, or more)
   attr_reader :kind                   # String (optional, can be nil)
   attr_reader :instances              # Array<String> (optional - can be empty)
@@ -171,6 +173,16 @@ class NormativeRuleDef
     @note = data["note"]
     unless @note.nil?
       fatal("Provided #{@note.class} class for note in normative rule #{name} but need a String") unless @note.is_a?(String)
+    end
+
+    @clarification_link = data["clarification-link"]
+    unless @clarification_link.nil?
+      fatal("Provided #{@clarification_link.class} class for clarification_link in normative rule #{name} but need a String") unless @clarification_link.is_a?(String)
+    end
+
+    @clarification_text = data["clarification-text"]
+    unless @clarification_text.nil?
+      fatal("Provided #{@clarification_text.class} class for clarification_text in normative rule #{name} but need a String") unless @clarification_text.is_a?(String)
     end
 
     @description = data["description"]
@@ -435,6 +447,8 @@ def create_normative_rules_hash(defs, tags, tag_fname2url)
     hash["instances"] = d.instances unless d.instances.empty?
     hash["summary"] = d.summary unless d.summary.nil?
     hash["note"] = d.note unless d.note.nil?
+    hash["clarification-text"] = d.clarification_text unless d.clarification_text.nil?
+    hash["clarification-link"] = d.clarification_link unless d.clarification_link.nil?
     hash["description"] = d.description unless d.description.nil?
 
     unless d.tag_refs.nil?
@@ -502,6 +516,18 @@ def validate_defs_and_tags(defs, tags, warn_if_tags_no_rules)
       if d.name.start_with?(NORM_PREFIX)
         bad_norm_rule_name_cnt += 1
         error("Normative rule #{d.name} starts with \"#{NORM_PREFIX}\" prefix. This prefix is only for tag names, not rule names.")
+      end
+
+      unless d.clarification_text.nil?
+        if d.clarification_link.nil?
+          error("Normative rule #{d.name} has clarification-text but no clarification-link")
+        end
+      end
+
+      unless d.clarification_link.nil?
+        unless d.clarification_link =~ %r{^https://(www.)?github\.com/riscv/.+/issues/[0-9]+$}
+          error("Normative rule #{d.name} clarification-link of '#{d.clarification_link}' doesn't look like a RISC-V GitHub issue link")
+        end
       end
     end
 
@@ -837,6 +863,16 @@ def output_xlsx(filename, defs, tags)
       rule_def_sources.append("Rule Note")
     end
 
+    unless d.clarification_link.nil?
+      rule_defs.append(d.clarification_link.chomp)
+      rule_def_sources.append("Rule Clarification Link")
+    end
+
+    unless d.clarification_text.nil?
+      rule_defs.append(d.clarification_text.chomp)
+      rule_def_sources.append("Rule Clarification Text")
+    end
+
     unless d.description.nil?
       rule_defs.append(d.description.chomp)
       rule_def_sources.append("Rule Description")
@@ -904,6 +940,8 @@ def output_adoc(filename, defs, tags, tag_fname2url)
         info_rows =
           (nr.summary.nil? ? 0 : 1) +
           (nr.note.nil? ? 0 : 1) +
+          (nr.clarification_link.nil? ? 0 : 1) +
+          (nr.clarification_text.nil? ? 0 : 1) +
           (nr.description.nil? ? 0 : 1) +
           (nr.kind.nil? ? 0 : 1) +
           (nr.instances.empty? ? 0 : 1) +
@@ -914,6 +952,8 @@ def output_adoc(filename, defs, tags, tag_fname2url)
         f.puts("#{row_span}| #{nr.name}")
         f.puts("| #{nr.summary} | Rule's 'summary' property") unless nr.summary.nil?
         f.puts("| #{nr.note} | Rule's 'note' property") unless nr.note.nil?
+        f.puts("| #{nr.clarification_link} | Rule's 'clarification-link' property") unless nr.clarification_link.nil?
+        f.puts("| #{nr.clarification_text} | Rule's 'clarification-text' property") unless nr.clarification_text.nil?
         f.puts("| #{nr.description} | Rule's 'description' property") unless nr.description.nil?
         f.puts("| #{nr.kind} | Rule's 'kind' property") unless nr.kind.nil?
         f.puts('| [' + nr.instances.join(', ') + '] | Rule Instances') unless nr.instances.empty?
@@ -1060,7 +1100,7 @@ def html_head(f)
         .section{background:var(--card);border-radius:12px;padding:20px;margin-bottom:22px;box-shadow:0 1px 0 rgba(15,23,42,0.03)}
         .section h3{margin-top:0}
 
-        table{width:100%;border-collapse:collapse;margin-top:12px;table-layout: fixed}
+        table{border-collapse:collapse;margin-top:12px;table-layout: auto}
         th,td{padding:10px 12px;border:1px solid #e6edf3;text-align:left;overflow-wrap: break-word;white-space: normal}
         th{background:#f3f7fb;font-weight:700}
 
@@ -1127,6 +1167,8 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
     name_row_span =
       (nr.summary.nil? ? 0 : 1) +
       (nr.note.nil? ? 0 : 1) +
+      (nr.clarification_link.nil? ? 0 : 1) +
+      (nr.clarification_text.nil? ? 0 : 1) +
       (nr.description.nil? ? 0 : 1) +
       (nr.kind.nil? ? 0 : 1) +
       (nr.instances.empty? ? 0 : 1) +
@@ -1152,6 +1194,26 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
       f.puts(%Q{            <tr>}) unless row_started
       f.puts(%Q{              <td>#{text}</td>})
       f.puts(%Q{              <td>Rule's "note" property</td>})
+      f.puts(%Q{            </tr>})
+      row_started = false
+    end
+
+    unless nr.clarification_text.nil?
+      text = convert_adoc_links_to_html(convert_newlines_to_html(Adoc2HTML::convert(nr.clarification_text)))
+
+      f.puts(%Q{            <tr>}) unless row_started
+      f.puts(%Q{              <td>#{text}</td>})
+      f.puts(%Q{              <td>Rule's "clarification-text" property</td>})
+      f.puts(%Q{            </tr>})
+      row_started = false
+    end
+
+    unless nr.clarification_link.nil?
+      text = %Q{<a href="#{nr.clarification_link}">GitHub Issue</a>}
+
+      f.puts(%Q{            <tr>}) unless row_started
+      f.puts(%Q{              <td>#{text}</td>})
+      f.puts(%Q{              <td>Rule's "clarification-link" property</td>})
       f.puts(%Q{            </tr>})
       row_started = false
     end

@@ -23,6 +23,13 @@ normative_rule_definitions:
       and &le; (Unicode text for less-than-equals-to) and &#8800; (Unicode decimal value for not-equal-to).
   - name: inline-with-hash
     tag: "norm:inline-with-hash"
+  - name: clarification-without-text
+    tag: "norm:clarification-without-text"
+    clarification-link: https://www.github.com/riscv/jfkd/issues/67
+  - name: clarification-with-text
+    tag: "norm:clarification-with-text"
+    clarification-text: This is the optional clarifying text.
+    clarification-link: https://github.com/riscv/jfkd/issues/67
 
   # Paragraph
   - name: paragraph-with-a-really-wide-rule-name
