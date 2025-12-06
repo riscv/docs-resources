@@ -6,8 +6,14 @@
   "summaryDesc": {
     "description": "Short summary of the normative rule (just a few words)"
   },
+  "clarificationTextDesc": {
+    "description": "Provides text to supplement information available in the standards documentation.\nOnly use this until clarifying text is in the standards documentation or its authors have decided against adding it."
+  },
+  "clarificationLinkDesc": {
+    "description": "Provides link to clarification GitHub issue in the standards documentation repository"
+  },
   "noteDesc": {
-    "description": "A note about the normative rule"
+    "description": "A non-normative note about the normative rule"
   },
   "descriptionDesc": {
     "description": "Comprehensive description of the normative rule (sentence, paragraph, or longer)"

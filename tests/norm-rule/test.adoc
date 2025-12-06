@@ -26,6 +26,10 @@ Before bad inline [#norm:bad-inline-3]#inside bad inline:
 // PASSES
 Use inline anchor that [#norm:inline-with-hash]+includes a hash # symbol.+
 
+// PASSES
+This normative text [#norm:clarification-without-text]#isn't clear enough.#
+This normative text [#norm:clarification-with-text]#also isn't clear enough.#
+
 === Chapter 1.2 - Paragraph Tagging
 
 // PASSES

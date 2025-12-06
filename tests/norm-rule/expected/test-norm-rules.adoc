@@ -24,6 +24,15 @@ and &le; (Unicode text for less-than-equals-to) and &#8800; (Unicode decimal val
 .1+| inline-with-hash
 | includes a hash # symbol. a| link:test.html#norm:inline-with-hash[norm:inline-with-hash]
 
+.2+| clarification-without-text
+| https://www.github.com/riscv/jfkd/issues/67 | Rule's 'clarification-link' property
+| isn't clear enough. a| link:test.html#norm:clarification-without-text[norm:clarification-without-text]
+
+.3+| clarification-with-text
+| https://github.com/riscv/jfkd/issues/67 | Rule's 'clarification-link' property
+| This is the optional clarifying text. | Rule's 'clarification-text' property
+| also isn't clear enough. a| link:test.html#norm:clarification-with-text[norm:clarification-with-text]
+
 .2+| paragraph-with-a-really-wide-rule-name
 | Here's a [.underline]#description#.
 It's got 2 lines.

@@ -73,7 +73,7 @@
     .section{background:var(--card);border-radius:12px;padding:20px;margin-bottom:22px;box-shadow:0 1px 0 rgba(15,23,42,0.03)}
     .section h3{margin-top:0}
 
-    table{width:100%;border-collapse:collapse;margin-top:12px;table-layout: fixed}
+    table{border-collapse:collapse;margin-top:12px;table-layout: auto}
     th,td{padding:10px 12px;border:1px solid #e6edf3;text-align:left;overflow-wrap: break-word;white-space: normal}
     th{background:#f3f7fb;font-weight:700}
 
@@ -146,6 +146,28 @@
               <td rowspan=1 id="inline-with-hash">inline-with-hash</td>
               <td>includes a hash # symbol.</td>
               <td><a href="test.html#norm:inline-with-hash">norm:inline-with-hash</a></td>
+            </tr>
+            <tr>
+              <td rowspan=2 id="clarification-without-text">clarification-without-text</td>
+              <td><a href="https://www.github.com/riscv/jfkd/issues/67">GitHub Issue</a></td>
+              <td>Rule's "clarification-link" property</td>
+            </tr>
+            <tr>
+              <td>isn't clear enough.</td>
+              <td><a href="test.html#norm:clarification-without-text">norm:clarification-without-text</a></td>
+            </tr>
+            <tr>
+              <td rowspan=3 id="clarification-with-text">clarification-with-text</td>
+              <td>This is the optional clarifying text.</td>
+              <td>Rule's "clarification-text" property</td>
+            </tr>
+            <tr>
+              <td><a href="https://github.com/riscv/jfkd/issues/67">GitHub Issue</a></td>
+              <td>Rule's "clarification-link" property</td>
+            </tr>
+            <tr>
+              <td>also isn't clear enough.</td>
+              <td><a href="test.html#norm:clarification-with-text">norm:clarification-with-text</a></td>
             </tr>
             <tr>
               <td rowspan=2 id="paragraph-with-a-really-wide-rule-name">paragraph-with-a-really-wide-rule-name</td>
