@@ -996,7 +996,7 @@ def output_html(filename, defs, tags, tag_fname2url)
 
   File.open(filename, "w") do |f|
     #f.puts("= Normative Rules by Chapter")
-    html_head(f)
+    html_head(f, chapter_names)
     f.puts(%Q{<body>})
     f.puts(%Q{  <div class="app">})
 
@@ -1021,8 +1021,9 @@ def output_html(filename, defs, tags, tag_fname2url)
   end
 end
 
-def html_head(f)
+def html_head(f, chapter_names)
   fatal("Need File for f but passed a #{f.class}") unless f.is_a?(File)
+  fatal("Need Array for chapter_names but passed a #{chapter_names.class}") unless chapter_names.is_a?(Array)
 
   f.puts(<<~HTML
     <!doctype html>
@@ -1100,13 +1101,25 @@ def html_head(f)
         .section{background:var(--card);border-radius:12px;padding:20px;margin-bottom:22px;box-shadow:0 1px 0 rgba(15,23,42,0.03)}
         .section h3{margin-top:0}
 
+        /* Default table formatting for nested tables from adoc */
         table{border-collapse:collapse;margin-top:12px;table-layout: auto}
+
         th,td{padding:10px 12px;border:1px solid #e6edf3;text-align:left;overflow-wrap: break-word;white-space: normal}
         th{background:#f3f7fb;font-weight:700}
 
         .col-name { width: 20%; }
         .col-description { width: 60%; }
         .col-location { width: 20%; }
+
+        /* Chapter tables use all available width and divvied up using the percentages above */
+HTML
+  )
+
+  for i in 1..chapter_names.length
+    f.puts("    #table-#{i} > table { table-layout: fixed; width: 100% }")
+  end
+
+  f.puts(<<~HTML
 
         /* Responsive */
         @media (max-width:820px){
