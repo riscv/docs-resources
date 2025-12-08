@@ -30,7 +30,15 @@ normative_rule_definitions:
     tag: "norm:clarification-with-text"
     clarification-text: This is the optional clarifying text.
     clarification-link: https://github.com/riscv/jfkd/issues/67
-
+  - name: clarification-with-table
+    tag: "norm:clarification-with-text"
+    clarification-link: https://github.com/riscv/something/issues/67
+    clarification-text: |
+      Header1 | Header2
+      ===
+      R1C1   | R1C2¶
+      R2C1   | R2C2
+      ===
   # Paragraph
   - name: paragraph-with-a-really-wide-rule-name
     description: |

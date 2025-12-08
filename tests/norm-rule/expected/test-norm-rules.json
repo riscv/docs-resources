@@ -71,6 +71,21 @@
       ]
     },
     {
+      "name": "clarification-with-table",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "clarification-text": "Header1 | Header2\n===\nR1C1   | R1C2¶\nR2C1   | R2C2\n===\n",
+      "clarification-link": "https://github.com/riscv/something/issues/67",
+      "tags": [
+        {
+          "name": "norm:clarification-with-text",
+          "text": "also isn't clear enough.",
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
+        }
+      ]
+    },
+    {
       "name": "paragraph-with-a-really-wide-rule-name",
       "def_filename": "tests/norm-rule/test.yaml",
       "chapter_name": "my-chapter_name",
