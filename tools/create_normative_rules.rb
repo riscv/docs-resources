@@ -1192,7 +1192,7 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
     f.puts(%Q{              <td rowspan=#{name_row_span} id="#{nr.name}">#{nr.name}</td>})
 
     unless nr.summary.nil?
-      text = convert_adoc_links_to_html(convert_newlines_to_html(Adoc2HTML::convert(nr.summary)))
+      text = convert_def_text_to_html(nr.summary)
 
       f.puts(%Q{            <tr>}) unless row_started
       f.puts(%Q{              <td>#{text}</td>})
@@ -1202,7 +1202,7 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
     end
 
     unless nr.note.nil?
-      text = convert_adoc_links_to_html(convert_newlines_to_html(Adoc2HTML::convert(nr.note)))
+      text = convert_def_text_to_html(nr.note)
 
       f.puts(%Q{            <tr>}) unless row_started
       f.puts(%Q{              <td>#{text}</td>})
@@ -1212,7 +1212,7 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
     end
 
     unless nr.clarification_text.nil?
-      text = convert_adoc_links_to_html(convert_newlines_to_html(Adoc2HTML::convert(nr.clarification_text)))
+      text = convert_def_text_to_html(nr.clarification_text)
 
       f.puts(%Q{            <tr>}) unless row_started
       f.puts(%Q{              <td>#{text}</td>})
@@ -1232,7 +1232,7 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
     end
 
     unless nr.description.nil?
-      text = convert_adoc_links_to_html(convert_newlines_to_html(Adoc2HTML::convert(nr.description)))
+      text = convert_def_text_to_html(nr.description)
 
       f.puts(%Q{            <tr>}) unless row_started
       f.puts(%Q{              <td>#{text}</td>})
@@ -1341,6 +1341,59 @@ HTML
   )
 end
 
+# Cleanup the tag text to be suitably displayed.
+def limit_table_rows(text)
+  raise ArgumentError, "Expected String for text but was passed a #{text.class}" unless text.is_a?(String)
+
+  # This is the detection pattern for an entire table being tagged from the "tags.rb" AsciiDoctor backend.
+  if text.end_with?("\n===")
+    # Limit table size displayed.
+    truncate_after_newlines(text, MAX_TABLE_ROWS)
+  else
+    text
+  end
+end
+
+def truncate_after_newlines(text, max_newlines)
+  # Split the string into lines
+  lines = text.split("\n")
+
+  # Take only up to the allowed number of lines
+  truncated_lines = lines.first(max_newlines + 1)
+
+  # Join them back together with newline characters
+  truncated_text = truncated_lines.join("\n")
+
+  # If there were more lines than allowed, indicate truncation.
+  truncated_text += "\n..." if lines.size > max_newlines + 1
+
+  truncated_text
+end
+
+def count_parameters(defs)
+  raise ArgumentError, "Need NormativeRuleDefs for defs but passed a #{defs.class}" unless defs.is_a?(NormativeRuleDefs)
+
+  num_parameters = 0
+
+  defs.norm_rule_defs.each do |d|
+    num_parameters += 1 if d.kind == "parameter"
+  end
+
+  return num_parameters
+end
+
+# Convert all the various definition text formats to HTML.
+def convert_def_text_to_html(text)
+  raise ArgumentError, "Expected String for text but was passed a #{text.class}" unless text.is_a?(String)
+
+  text = Adoc2HTML::convert(text)
+  text = convert_tags_tables_to_html(text)
+  text = convert_newlines_to_html(text)
+  text = convert_adoc_links_to_html(text)
+
+  return text
+end
+
 # Convert the tagged text containing entire tables. Uses format created by "tags" Asciidoctor backend.
 #
 # Possible formats:
@@ -1431,47 +1484,6 @@ def extract_tags_table_cells(row)
   #   "|A|B" => ["", "A", "B"]
   #   "||C" => ["", "", "C"]
   row.split('|', -1).map(&:strip)
-end
-
-# Cleanup the tag text to be suitably displayed.
-def limit_table_rows(text)
-  raise ArgumentError, "Expected String for text but was passed a #{text.class}" unless text.is_a?(String)
-
-  # This is the detection pattern for an entire table being tagged from the "tags.rb" AsciiDoctor backend.
-  if text.end_with?("\n===")
-    # Limit table size displayed.
-    truncate_after_newlines(text, MAX_TABLE_ROWS)
-  else
-    text
-  end
-end
-
-def truncate_after_newlines(text, max_newlines)
-  # Split the string into lines
-  lines = text.split("\n")
-
-  # Take only up to the allowed number of lines
-  truncated_lines = lines.first(max_newlines + 1)
-
-  # Join them back together with newline characters
-  truncated_text = truncated_lines.join("\n")
-
-  # If there were more lines than allowed, indicate truncation.
-  truncated_text += "\n..." if lines.size > max_newlines + 1
-
-  truncated_text
-end
-
-def count_parameters(defs)
-  raise ArgumentError, "Need NormativeRuleDefs for defs but passed a #{defs.class}" unless defs.is_a?(NormativeRuleDefs)
-
-  num_parameters = 0
-
-  defs.norm_rule_defs.each do |d|
-    num_parameters += 1 if d.kind == "parameter"
-  end
-
-  return num_parameters
 end
 
 # Convert newlines to <br>.
