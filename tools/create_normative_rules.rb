@@ -1110,13 +1110,13 @@ def html_head(f, chapter_names)
 
         th,td {
           padding:10px 12px;
-          border:1px solid #e6edf3;text-align:left;overflow-wrap: break-word;white-space: normal}
+          border:1px solid #e6edf3;
           text-align:left;
           overflow-wrap: break-word;
           white-space: normal;
         }
 
-        th{
+        th {
           background:#f3f7fb;
           font-weight:700
         }
@@ -1215,72 +1215,56 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
       (nr.summary.nil? ? 0 : 1) +
       (nr.note.nil? ? 0 : 1) +
       (nr.clarification_link.nil? ? 0 : 1) +
-      (nr.clarification_text.nil? ? 0 : 1) +
       (nr.description.nil? ? 0 : 1) +
       (nr.kind.nil? ? 0 : 1) +
       (nr.instances.empty? ? 0 : 1) +
       nr.tag_refs.length
 
-    row_started = true
+    # Tracks if this is the first row for the normative rule.
+    # Required because normative rule name spans multiple rows so it is only provided on the first row.
+    # Each subsequent row sets first_row to false after omitting the opening <tr> tag (which is only needed for rows after the first).
+    first_row = true
+
+    # Output the normative rule name cell with rowspan.
     f.puts(%Q{            <tr>})
     f.puts(%Q{              <td rowspan=#{name_row_span} id="#{nr.name}">#{nr.name}</td>})
 
     unless nr.summary.nil?
       text = convert_def_text_to_html(nr.summary)
 
-      f.puts(%Q{            <tr>}) unless row_started
+      f.puts(%Q{            <tr>}) unless first_row
       f.puts(%Q{              <td>#{text}</td>})
       f.puts(%Q{              <td>Rule's "summary" property</td>})
       f.puts(%Q{            </tr>})
-      row_started = false
+      first_row = false
     end
 
     unless nr.note.nil?
       text = convert_def_text_to_html(nr.note)
 
-      f.puts(%Q{            <tr>}) unless row_started
+      f.puts(%Q{            <tr>}) unless first_row
       f.puts(%Q{              <td>#{text}</td>})
       f.puts(%Q{              <td>Rule's "note" property</td>})
       f.puts(%Q{            </tr>})
-      row_started = false
-    end
-
-    unless nr.clarification_text.nil?
-      text = convert_def_text_to_html(nr.clarification_text)
-
-      f.puts(%Q{            <tr>}) unless row_started
-      f.puts(%Q{              <td>#{text}</td>})
-      f.puts(%Q{              <td>Rule's "clarification-text" property</td>})
-      f.puts(%Q{            </tr>})
-      row_started = false
-    end
-
-    unless nr.clarification_link.nil?
-      text = %Q{<a href="#{nr.clarification_link}">GitHub Issue</a>}
-
-      f.puts(%Q{            <tr>}) unless row_started
-      f.puts(%Q{              <td>#{text}</td>})
-      f.puts(%Q{              <td>Rule's "clarification-link" property</td>})
-      f.puts(%Q{            </tr>})
-      row_started = false
+      first_row = false
     end
 
     unless nr.description.nil?
       text = convert_def_text_to_html(nr.description)
 
-      f.puts(%Q{            <tr>}) unless row_started
+      f.puts(%Q{            <tr>}) unless first_row
       f.puts(%Q{              <td>#{text}</td>})
       f.puts(%Q{              <td>Rule's "description" property</td>})
       f.puts(%Q{            </tr>})
-      row_started = false
+      first_row = false
     end
 
     unless nr.kind.nil?
-      f.puts(%Q{            <tr>}) unless row_started
+      f.puts(%Q{            <tr>}) unless first_row
       f.puts(%Q{              <td>#{nr.kind}</td>})
       f.puts(%Q{              <td>Rule's "kind" property</td>})
       f.puts(%Q{            </tr>})
-      row_started = false
+      first_row = false
     end
 
     unless nr.instances.empty?
@@ -1291,11 +1275,11 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
         instances_str = "[" + nr.instances.join(', ') + "]"
         rule_name = "instances"
       end
-      f.puts(%Q{            <tr>}) unless row_started
+      f.puts(%Q{            <tr>}) unless first_row
       f.puts(%Q{              <td>#{instances_str}</td>})
       f.puts(%Q{              <td>Rule's "#{rule_name}" property</td>})
       f.puts(%Q{            </tr>})
-      row_started = false
+      first_row = false
     end
 
     nr.tag_refs.each do |tag_ref|
@@ -1314,11 +1298,28 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
 
       tag_link = tag2html_link(tag_ref, tag_ref, target_html_fname)
 
-      f.puts(%Q{            <tr>}) unless row_started
+      f.puts(%Q{            <tr>}) unless first_row
       f.puts(%Q{              <td>#{tag_text}</td>})
       f.puts(%Q{              <td>#{tag_link}</td>})
       f.puts(%Q{            </tr>})
-      row_started = false
+      first_row = false
+    end
+
+    unless nr.clarification_link.nil?
+      # The clarification text can only exist if the clarification link also exists.
+      if nr.clarification_text.nil?
+        text = "(No clarification text provided)"
+      else
+        text = convert_def_text_to_html(nr.clarification_text)
+      end
+
+      link = %Q{<a href="#{nr.clarification_link}">Clarification GitHub Issue</a>}
+
+      f.puts(%Q{            <tr>}) unless first_row
+      f.puts(%Q{              <td>#{text}</td>})
+      f.puts(%Q{              <td>#{link}</td>})
+      f.puts(%Q{            </tr>})
+      first_row = false
     end
   end
 
