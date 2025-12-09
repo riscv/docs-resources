@@ -1296,6 +1296,10 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
       # tag text that it is found in because these kind of adoc links only link within their document.
       tag_text = convert_adoc_links_to_html(tag_text, target_html_fname)
 
+      if tag_text.strip.empty?
+        tag_text = "(No text available)"
+      end
+
       tag_link = tag2html_link(tag_ref, tag_ref, target_html_fname)
 
       f.puts(%Q{            <tr>}) unless first_row
