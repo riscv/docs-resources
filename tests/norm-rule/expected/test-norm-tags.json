@@ -4,6 +4,8 @@
     "norm:inline-with-hash": "includes a hash # symbol.",
     "norm:clarification-without-text": "isn't clear enough.",
     "norm:clarification-with-text": "also isn't clear enough.",
+    "norm:cat-colors": "Cats come in many colors.",
+    "norm:cat-claws": "This kind of animal has claws.",
     "norm:paragraph:no-inline-anchors": "Paragraph without inline anchors",
     "norm:paragraph:inline-anchors:inline-anchor": "inline anchor",
     "norm:paragraph:inline-anchors:entire": "Paragraph with inline anchor and something.",
@@ -72,7 +74,9 @@
               "norm:inline",
               "norm:inline-with-hash",
               "norm:clarification-without-text",
-              "norm:clarification-with-text"
+              "norm:clarification-with-text",
+              "norm:cat-colors",
+              "norm:cat-claws"
             ]
           },
           {

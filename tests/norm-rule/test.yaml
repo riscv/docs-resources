@@ -39,6 +39,27 @@ normative_rule_definitions:
       R1C1   | R1C2¶
       R2C1   | R2C2
       ===
+  - name: cat-colors
+    tag: "norm:cat-colors"
+  - name: cat-claws-one-line-1
+    tags: [{ name: "norm:cat-claws" }, { name: "norm:cat-colors", context: true }]
+  - name: cat-claws-one-line-2
+    tags: ["norm:cat-claws", { name: "norm:cat-colors", context: true }]
+  - name: cat-claws-multi-lines-1
+    tags:
+      - { name: "norm:cat-colors", context: true }
+      - { name: "norm:cat-claws" }
+  - name: cat-claws-multi-lines-2
+    tags:
+      - name: "norm:cat-claws"
+      - name: "norm:cat-colors"
+        context: true
+  - name: cat-claws-multi-lines-3
+    tags:
+      - name: "norm:cat-colors"
+        context: true
+      - "norm:cat-claws"
+
   # Paragraph
   - name: paragraph-with-a-really-wide-rule-name
     description: |

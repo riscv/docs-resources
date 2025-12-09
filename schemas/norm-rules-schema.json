@@ -65,6 +65,10 @@
                   "$ref": "common-schema.json#/tagName",
                   "description": "Name of the tag (an anchor in the standard's adoc files)"
                 },
+                "context": {
+                  "type": "boolean",
+                  "description": "Indicates tag provided for context to provide clarity for the non-context tag(s)"
+                },
                 "text": {
                   "type": "string",
                   "description": "The text from the standard associated with this tag"
@@ -78,7 +82,7 @@
                   "description": "URL to standards doc associated with tag_filename"
                 }
               },
-              "required": ["name"]
+              "required": ["name", "context"]
             }
           }
         },

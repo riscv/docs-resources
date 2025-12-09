@@ -30,6 +30,10 @@ Use inline anchor that [#norm:inline-with-hash]+includes a hash # symbol.+
 This normative text [#norm:clarification-without-text]#isn't clear enough.#
 This normative text [#norm:clarification-with-text]#also isn't clear enough.#
 
+// PASSES - Example where 2nd sentence needs 1st sentence for context.
+[#norm:cat-colors]#Cats come in many colors.#
+[#norm:cat-claws]#This kind of animal has claws.#
+
 === Chapter 1.2 - Paragraph Tagging
 
 // PASSES
