@@ -1222,7 +1222,7 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
 
     # Tracks if this is the first row for the normative rule.
     # Required because normative rule name spans multiple rows so it is only provided on the first row.
-    # Each subsequent row sets first_row to false after omitting the </tr> to end either the first row or a subsequent row.
+    # Each subsequent row sets first_row to false after omitting the opening <tr> tag (which is only needed for rows after the first).
     first_row = true
 
     # Output the normative rule name cell with rowspan.
