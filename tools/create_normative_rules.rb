@@ -1102,10 +1102,44 @@ def html_head(f, chapter_names)
         .section h3{margin-top:0}
 
         /* Default table formatting for nested tables from adoc */
-        table{border-collapse:collapse;margin-top:12px;table-layout: auto}
+        table {
+          border-collapse:collapse;
+          margin-top:12px;
+          table-layout: auto;
+        }
 
-        th,td{padding:10px 12px;border:1px solid #e6edf3;text-align:left;overflow-wrap: break-word;white-space: normal}
-        th{background:#f3f7fb;font-weight:700}
+        th,td {
+          padding:10px 12px;
+          border:1px solid #e6edf3;text-align:left;overflow-wrap: break-word;white-space: normal}
+          text-align:left;
+          overflow-wrap: break-word;
+          white-space: normal;
+        }
+
+        th{
+          background:#f3f7fb;
+          font-weight:700
+        }
+
+        /* Sticky caption */
+        table caption.sticky-caption {
+          position: sticky;
+          top: 0;
+          z-index: 20;
+          background: #ffffff;
+          padding: 8px 12px;
+          font-weight: bold;
+          text-align: left;
+          border-bottom: 1px solid #e6edf3;
+        }
+
+        /* Sticky table header BELOW caption */
+        table thead th {
+          position: sticky;
+          top: 38px;     /* height of caption (adjust if needed) */
+          z-index: 10;
+          background: #f3f7fb;
+        }
 
         .col-name { width: 20%; }
         .col-description { width: 60%; }
@@ -1164,8 +1198,8 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
 
   f.puts("")
   f.puts(%Q{      <section id="table-#{table_num}" class="section">})
-  f.puts(%Q{        <h3>#{chapter_name}</h3>})
   f.puts(%Q{        <table>})
+  f.puts(%Q{          <caption class="sticky-caption">#{chapter_name}</caption>})
   f.puts(%Q{          <colgroup>})
   f.puts(%Q{            <col class="col-name">})
   f.puts(%Q{            <col class="col-description">})
