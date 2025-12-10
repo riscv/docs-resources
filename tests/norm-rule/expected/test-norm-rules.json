@@ -13,6 +13,7 @@
       "tags": [
         {
           "name": "norm:inline",
+          "context": false,
           "text": "inside inline",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -35,6 +36,7 @@
       "tags": [
         {
           "name": "norm:inline-with-hash",
+          "context": false,
           "text": "includes a hash # symbol.",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -49,6 +51,7 @@
       "tags": [
         {
           "name": "norm:clarification-without-text",
+          "context": false,
           "text": "isn't clear enough.",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -64,6 +67,7 @@
       "tags": [
         {
           "name": "norm:clarification-with-text",
+          "context": false,
           "text": "also isn't clear enough.",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -79,7 +83,127 @@
       "tags": [
         {
           "name": "norm:clarification-with-text",
+          "context": false,
           "text": "also isn't clear enough.",
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
+        }
+      ]
+    },
+    {
+      "name": "cat-colors",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:cat-colors",
+          "context": false,
+          "text": "Cats come in many colors.",
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
+        }
+      ]
+    },
+    {
+      "name": "cat-claws-one-line-1",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:cat-claws",
+          "context": false,
+          "text": "This kind of animal has claws.",
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
+        },
+        {
+          "name": "norm:cat-colors",
+          "context": true,
+          "text": "Cats come in many colors.",
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
+        }
+      ]
+    },
+    {
+      "name": "cat-claws-one-line-2",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:cat-claws",
+          "context": false,
+          "text": "This kind of animal has claws.",
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
+        },
+        {
+          "name": "norm:cat-colors",
+          "context": true,
+          "text": "Cats come in many colors.",
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
+        }
+      ]
+    },
+    {
+      "name": "cat-claws-multi-lines-1",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:cat-colors",
+          "context": true,
+          "text": "Cats come in many colors.",
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
+        },
+        {
+          "name": "norm:cat-claws",
+          "context": false,
+          "text": "This kind of animal has claws.",
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
+        }
+      ]
+    },
+    {
+      "name": "cat-claws-multi-lines-2",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:cat-claws",
+          "context": false,
+          "text": "This kind of animal has claws.",
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
+        },
+        {
+          "name": "norm:cat-colors",
+          "context": true,
+          "text": "Cats come in many colors.",
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
+        }
+      ]
+    },
+    {
+      "name": "cat-claws-multi-lines-3",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:cat-colors",
+          "context": true,
+          "text": "Cats come in many colors.",
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
+        },
+        {
+          "name": "norm:cat-claws",
+          "context": false,
+          "text": "This kind of animal has claws.",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
         }
@@ -93,6 +217,7 @@
       "tags": [
         {
           "name": "norm:paragraph:no-inline-anchors",
+          "context": false,
           "text": "Paragraph without inline anchors",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -106,6 +231,7 @@
       "tags": [
         {
           "name": "norm:paragraph:inline-anchors:entire",
+          "context": false,
           "text": "Paragraph with inline anchor and something.",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -119,6 +245,7 @@
       "tags": [
         {
           "name": "norm:paragraph:inline-anchors:inline-anchor",
+          "context": false,
           "text": "inline anchor",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -132,6 +259,7 @@
       "tags": [
         {
           "name": "norm:formulae",
+          "context": false,
           "text": "This paragraph looks like a formulae to Excel because it has this &lt; sign in it. Make sure this gets written as a string, not a formulae in the XLSX or else it will create an error in Excel.",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -145,6 +273,7 @@
       "tags": [
         {
           "name": "norm:paragraph:tag_with_newlines",
+          "context": false,
           "text": "Here&#8217;s the first line. Here&#8217;s the second line.",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -158,6 +287,7 @@
       "tags": [
         {
           "name": "norm:def",
+          "context": false,
           "text": "This paragraph has two tags but we only ever get a tag for norm:def.",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -171,6 +301,7 @@
       "tags": [
         {
           "name": "norm:bold",
+          "context": false,
           "text": "ABC is a network - Bold is removed by tags backend so I don't see it",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -184,6 +315,7 @@
       "tags": [
         {
           "name": "norm:italics",
+          "context": false,
           "text": "Let's have fun today - Italics is removed by tags backend so I don't see it",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -197,6 +329,7 @@
       "tags": [
         {
           "name": "norm:superscript",
+          "context": false,
           "text": "both 2^32^ and ^32^ work",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -210,6 +343,7 @@
       "tags": [
         {
           "name": "norm:subscript",
+          "context": false,
           "text": "both ~log~ and log~2~ work",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -223,6 +357,7 @@
       "tags": [
         {
           "name": "norm:inline-underline",
+          "context": false,
           "text": "ABC [.underline]#inside tag# GHI",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -236,6 +371,7 @@
       "tags": [
         {
           "name": "norm:paragraph-underline",
+          "context": false,
           "text": "Paragraph underlined outside.",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -249,6 +385,7 @@
       "tags": [
         {
           "name": "norm:standalone_ampersand",
+          "context": false,
           "text": "ABC &amp; DEF",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -262,6 +399,7 @@
       "tags": [
         {
           "name": "norm:unicode_name",
+          "context": false,
           "text": "DEF &amp;ge; GHI",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -275,6 +413,7 @@
       "tags": [
         {
           "name": "norm:unicode_decimal_value",
+          "context": false,
           "text": "GHI &amp;#8805; JKL",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -288,6 +427,7 @@
       "tags": [
         {
           "name": "norm:unicode_hexadecimal_value",
+          "context": false,
           "text": "JKL &amp;#x2265; MNO",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -301,6 +441,7 @@
       "tags": [
         {
           "name": "norm:unicode_char",
+          "context": false,
           "text": "MNO ≥ PQR",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -314,6 +455,7 @@
       "tags": [
         {
           "name": "norm:macro_call",
+          "context": false,
           "text": "200 {ge} 100",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -327,6 +469,7 @@
       "tags": [
         {
           "name": "norm:hyperlink1",
+          "context": false,
           "text": "ABC &lt;&lt;norm:superscript&gt;&gt; DEF",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -340,6 +483,7 @@
       "tags": [
         {
           "name": "norm:hyperlink2",
+          "context": false,
           "text": "DEF &lt;&lt;norm:superscript,custom text&gt;&gt; GHI",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -353,6 +497,7 @@
       "tags": [
         {
           "name": "norm:hyperlink3",
+          "context": false,
           "text": "ABC &lt;&lt;non-norm-anchor&gt;&gt; DEF",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -366,6 +511,7 @@
       "tags": [
         {
           "name": "norm:hyperlink4",
+          "context": false,
           "text": "DEF &lt;&lt;non-norm-anchor,custom text&gt;&gt; GHI",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -379,6 +525,7 @@
       "tags": [
         {
           "name": "norm:hyperlink5",
+          "context": false,
           "text": "GHI &lt;&lt;norm:superscript&gt;&gt; and &lt;&lt;norm:subscript&gt;&gt; JKL",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -392,6 +539,7 @@
       "tags": [
         {
           "name": "norm:hyperlink6",
+          "context": false,
           "text": "JKL &lt;&lt;norm:superscript ,hello&gt;&gt; and &lt;&lt;norm:subscript, goodbye&gt;&gt; MNO",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -405,6 +553,7 @@
       "tags": [
         {
           "name": "norm:table:anchors-in-cells:entire-table",
+          "context": false,
           "text": "===\nWITH anchor¶WITHOUT anchor\n===",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -418,6 +567,7 @@
       "tags": [
         {
           "name": "norm:table:no-anchors-in-cells:entire-table",
+          "context": false,
           "text": "Header 1|Header 2\n===\nCell in column 1, row 1|Cell in column 2, row 1¶Cell in column 1, row 2|Cell in column 2, row 2\n===",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -431,6 +581,7 @@
       "tags": [
         {
           "name": "norm:table:anchors-in-cells:entire-table-tagged:cell",
+          "context": false,
           "text": "WITH anchor",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -444,6 +595,7 @@
       "tags": [
         {
           "name": "norm:table:anchors-in-cells:entire-table-not-tagged:cell",
+          "context": false,
           "text": "ABC DEF",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -457,6 +609,7 @@
       "tags": [
         {
           "name": "norm:table:many-rows",
+          "context": false,
           "text": "Name|Color\n===\nRoses|Red¶Violets|Blue¶Name1|Color1¶Name2|Color2¶Name3|Color3¶Name4|Color4¶Name5|Color5¶Name6|Color6¶Name7|Color7¶Name8|Color8¶Name9|Color9¶Name10|Color10¶Name11|Color11¶Name12|Color12¶Name13|Color13¶Name14|Color14\n===",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -470,6 +623,7 @@
       "tags": [
         {
           "name": "norm:table:single-char-cells",
+          "context": false,
           "text": "X1|X2\n===\nA|B¶C|D\n===",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -483,6 +637,7 @@
       "tags": [
         {
           "name": "norm:table:column-first-order",
+          "context": false,
           "text": "ColA|ColB\n===\n0\n1|Off\nOn\n===",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -496,6 +651,7 @@
       "tags": [
         {
           "name": "norm:unordered-list:no-anchors-in-items:entire-list",
+          "context": false,
           "text": "Item A\nItem B\nItem C",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -509,6 +665,7 @@
       "tags": [
         {
           "name": "norm:unordered-list:anchors-in-items:entire-list",
+          "context": false,
           "text": "Item 1\nItem 2\nItem 3",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -522,6 +679,7 @@
       "tags": [
         {
           "name": "norm:unordered-list:anchors-in-items:item1",
+          "context": false,
           "text": "Item 1",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -535,6 +693,7 @@
       "tags": [
         {
           "name": "norm:unordered-list:anchors-in-items:item2",
+          "context": false,
           "text": "Item 2",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -548,6 +707,7 @@
       "tags": [
         {
           "name": "norm:unordered-list:multiple-levels",
+          "context": false,
           "text": "Zca and not F\nZca, Zcf and F (but not D) is specified (RV32 only)\nZca, Zcf and Zcd if D is specified (RV32 only)\n\nthis configuration excludes Zcmp, Zcmt\nZca, Zcd if D is specified (RV64 only)\n\nthis configuration excludes Zcmp, Zcmt",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -561,6 +721,7 @@
       "tags": [
         {
           "name": "norm:ordered-list:no-anchors-in-items:entire-list",
+          "context": false,
           "text": "Item A\nItem B\nItem C",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -574,6 +735,7 @@
       "tags": [
         {
           "name": "norm:ordered-list:anchors-in-items:entire-list",
+          "context": false,
           "text": "Item 1\nItem 2\nItem 3",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -587,6 +749,7 @@
       "tags": [
         {
           "name": "norm:ordered-list:anchors-in-items:item1",
+          "context": false,
           "text": "Item 1",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -600,6 +763,7 @@
       "tags": [
         {
           "name": "norm:ordered-list:anchors-in-items:item2",
+          "context": false,
           "text": "Item 2",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -613,6 +777,7 @@
       "tags": [
         {
           "name": "norm:description-list:no-anchors-in-items:entire-list",
+          "context": false,
           "text": "Description-A\nItem A\nDescription-B\nItem B\nDescription-C\nItem C",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -626,6 +791,7 @@
       "tags": [
         {
           "name": "norm:description-list:anchors-in-items:entire-list",
+          "context": false,
           "text": "Description-1",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -639,12 +805,14 @@
       "tags": [
         {
           "name": "norm:description-list:anchors-in-items:item1",
+          "context": false,
           "text": "Item 1",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
         },
         {
           "name": "norm:description-list:anchors-in-items:item3",
+          "context": false,
           "text": "Item 3",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -658,12 +826,14 @@
       "tags": [
         {
           "name": "norm:description-list:anchors-in-items:item1",
+          "context": false,
           "text": "Item 1",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
         },
         {
           "name": "norm:description-list:anchors-in-items:item3",
+          "context": false,
           "text": "Item 3",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -677,6 +847,7 @@
       "tags": [
         {
           "name": "norm:admonition:single-paragraph-note",
+          "context": false,
           "text": "Single paragraph note\nthat spans lines.",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -690,6 +861,7 @@
       "tags": [
         {
           "name": "norm:admonition:no-anchors-in-notes:entire-note",
+          "context": false,
           "text": "Paragraph A\n\nParagraph B\n\nParagraph C",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -703,6 +875,7 @@
       "tags": [
         {
           "name": "norm:admonition:anchors-in-notes:entire-note",
+          "context": false,
           "text": "Paragraph 1\n\nParagraph 2\n\nParagraph 3",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -716,12 +889,14 @@
       "tags": [
         {
           "name": "norm:admonition:only-anchors-in-notes:note1",
+          "context": false,
           "text": "Paragraph X",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
         },
         {
           "name": "norm:admonition:only-anchors-in-notes:note3",
+          "context": false,
           "text": "Paragraph Z",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
@@ -740,12 +915,14 @@
       "tags": [
         {
           "name": "norm:admonition:anchors-in-notes:note1",
+          "context": false,
           "text": "Paragraph 1",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"
         },
         {
           "name": "norm:admonition:anchors-in-notes:note3",
+          "context": false,
           "text": "Paragraph 3",
           "tag_filename": "/build/test-norm-tags.json",
           "stds_doc_url": "test.html"

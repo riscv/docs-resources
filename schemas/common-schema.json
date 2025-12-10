@@ -56,11 +56,25 @@
     "type": "string",
     "$ref": "#/tagNamePattern"
   },
+  "tagObject": {
+    "type": "object",
+    "properties": {
+      "name": { "$ref": "#/tagName" },
+      "context": {
+        "type": "boolean",
+        "description": "Indicates tag provided for context to provide clarity for the non-context tag(s)"
+      }
+    },
+    "required": ["name"],
+    "additionalProperties": false
+  },
   "tagNameArray": {
     "type": "array",
     "items": {
-      "type": "string",
-      "$ref": "#/tagNamePattern"
+      "anyOf": [
+        { "$ref": "#/tagName" },
+        { "$ref": "#/tagObject" }
+      ]
     }
   }
 }
