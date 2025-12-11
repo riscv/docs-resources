@@ -42,13 +42,11 @@ normative_rule_definitions:
   - name: cat-colors
     tag: "norm:cat-colors"
   - name: cat-claws-one-line-1
-    tags: [{ name: "norm:cat-claws" }, { name: "norm:cat-colors", context: true }]
-  - name: cat-claws-one-line-2
-    tags: ["norm:cat-claws", { name: "norm:cat-colors", context: true }]
+    tags: [name: "norm:cat-claws", {name: "norm:cat-colors", context: true}]
   - name: cat-claws-multi-lines-1
     tags:
-      - { name: "norm:cat-colors", context: true }
-      - { name: "norm:cat-claws" }
+      - {name: "norm:cat-colors", context: true}
+      - {name: "norm:cat-claws"}
   - name: cat-claws-multi-lines-2
     tags:
       - name: "norm:cat-claws"

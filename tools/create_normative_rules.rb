@@ -2,7 +2,6 @@
 
 require "json"
 require "yaml"
-require "write_xlsx"
 
 PN = "create_normative_rules.rb"
 
@@ -272,8 +271,6 @@ def usage(exit_status = 1)
   puts "Usage: #{PN} [OPTION]... <output-filename>"
   puts "  --help                  Display this usage message"
   puts "  -j                      Set output format to JSON (default)"
-  puts "  -x                      Set output format to XLSX"
-  puts "  -a                      Set output format to AsciiDoc"
   puts "  -h                      Set output format to HTML"
   puts "  -w                      Warning instead of error if tags found without rules (Only use for debugging!)"
   puts "  -d fname                Normative rule definition filename (YAML format)"
@@ -308,10 +305,6 @@ def parse_argv
       usage 0
     when "-j"
       output_format = "json"
-    when "-x"
-      output_format = "xlsx"
-    when "-a"
-      output_format = "adoc"
     when "-h"
       output_format = "html"
     when "-w"
@@ -369,7 +362,7 @@ def parse_argv
     usage
   end
 
-  if (output_format == "json" || output_format == "adoc" || output_format == "html") && tag_fname2url.empty?
+  if (output_format == "json" || output_format == "html") && tag_fname2url.empty?
     info("Missing -tag2url command line options")
     usage
   end
@@ -600,20 +593,6 @@ def validate_defs_and_tags(defs, tags, warn_if_tags_no_rules)
   if (missing_tag_cnt > 0) || (bad_norm_rule_name_cnt > 0) || ((unref_cnt > 0) && !warn_if_tags_no_rules)
     fatal("Exiting due to errors")
   end
-
-  # Display counts of name lengths.
-  #info("")
-  #info("Normative rule name lengths:")
-  #rule_name_lengths.each_with_index do |count, index|
-  #  info("  rule_name_length[#{index}] => #{count}")
-  #end
-
-  # Display counts of name lengths.
-  #info("")
-  #info("Tag name lengths:")
-  #tag_name_lengths.each_with_index do |count, index|
-  #  info("  tag_name_length[#{index}] => #{count}")
-  #end
 end
 
 module Adoc2HTML
@@ -839,164 +818,6 @@ def output_json(filename, normative_rules_hash)
     fatal("#{e.message}")
   rescue ArgumentError => e
     fatal("#{e.message}")
-  end
-end
-
-# Store normative rule defs in XLSX output file
-def output_xlsx(filename, defs, tags)
-  fatal("Need String for filename but passed a #{filename.class}") unless filename.is_a?(String)
-  fatal("Need NormativeRuleDefs for defs but passed a #{defs.class}") unless defs.is_a?(NormativeRuleDefs)
-  fatal("Need NormativeTags for tags but passed a #{tags.class}") unless tags.is_a?(NormativeTags)
-
-  # Create a new Excel workbook
-  info("Creating Excel workbook #{filename}")
-  workbook = WriteXLSX.new(filename)
-
-  # Add a worksheet
-  worksheet = workbook.add_worksheet("Normative Rules")
-
-  # Define format for cells that want wrapping on.
-  wrap_format = workbook.add_format()
-  wrap_format.set_text_wrap()
-
-  # Define table column names
-  table_props = {
-    columns: [
-      { header: "Chapter Name" },
-      { header: "Rule Name" },
-      { header: "Rule Description" },
-      { header: "Origin of Description" },
-      { header: "Kind" },
-      { header: "Instances" }
-    ]
-  }
-
-  # Add normative rules in rows. One row for each tag if multiple tags.
-  row_num = 1
-  defs.norm_rule_defs.each do |d|
-    worksheet.write_string(row_num, 0, d.chapter_name)
-    worksheet.write_string(row_num, 1, d.name, wrap_format)
-
-    rule_defs = []
-    rule_def_sources = []
-
-    unless d.summary.nil?
-      rule_defs.append(d.summary.chomp)
-      rule_def_sources.append("Rule Summary")
-    end
-
-    unless d.note.nil?
-      rule_defs.append(d.note.chomp)
-      rule_def_sources.append("Rule Note")
-    end
-
-    unless d.clarification_link.nil?
-      rule_defs.append(d.clarification_link.chomp)
-      rule_def_sources.append("Rule Clarification Link")
-    end
-
-    unless d.clarification_text.nil?
-      rule_defs.append(d.clarification_text.chomp)
-      rule_def_sources.append("Rule Clarification Text")
-    end
-
-    unless d.description.nil?
-      rule_defs.append(d.description.chomp)
-      rule_def_sources.append("Rule Description")
-    end
-
-    tag_sources = []
-    d.tag_refs.each do |tag_ref|
-      tag = tags.get_tag(tag_ref.name)
-      fatal("Normative rule #{d.name} defined in file #{d.def_filename} references non-existent tag #{tag_ref.name}") if tag.nil?
-      rule_defs.append(limit_table_rows(tag.text).chomp)
-      tag_sources.append('"' + tag.name + '"')
-    end
-    rule_def_sources.append('[' + tag_sources.join(', ') + ']') unless tag_sources.empty?
-
-    worksheet.write_string(row_num, 2, rule_defs.join("\n"), wrap_format) unless rule_defs.empty?
-    worksheet.write_string(row_num, 3, rule_def_sources.join(", "), wrap_format) unless rule_def_sources.empty?
-    worksheet.write_string(row_num, 4, d.kind) unless d.kind.nil?
-    worksheet.write_string(row_num, 5, d.instances.join(', ')) unless d.instances.empty?
-
-    row_num += 1
-  end
-
-  num_rows = row_num - 1
-
-  # Make into a table. Assume columns A to F.
-  worksheet.add_table("A1:F#{num_rows}", table_props)
-
-  # Set column widths to hold data width.
-  worksheet.autofit
-
-  # Override autofit for really wide columns
-  worksheet.set_column(1, 1, 20) # name column
-  worksheet.set_column(2, 2, 80) # definition column
-  worksheet.set_column(3, 3, 40) # definition sources column
-
-  workbook.close
-end
-
-# Store normative rules in AsciiDoc output file.
-def output_adoc(filename, defs, tags, tag_fname2url)
-  fatal("Need String for filename but passed a #{filename.class}") unless filename.is_a?(String)
-  fatal("Need NormativeRuleDefs for defs but passed a #{defs.class}") unless defs.is_a?(NormativeRuleDefs)
-  fatal("Need NormativeTags for tags but passed a #{tags.class}") unless tags.is_a?(NormativeTags)
-  fatal("Need Hash for tag_fname2url but passed a #{tag_fname2url.class}") unless tag_fname2url.is_a?(Hash)
-
-  # Organize rules by chapter name. Each hash key is chapter name. Each hash entry is an Array<NormativeRuleDef>
-  defs_by_chapter_name = {}
-  defs.norm_rule_defs.each do |d|
-    defs_by_chapter_name[d.chapter_name] = [] if defs_by_chapter_name[d.chapter_name].nil?
-    defs_by_chapter_name[d.chapter_name].append(d)
-  end
-
-  File.open(filename, "w") do |f|
-    f.puts("= Normative Rules by Chapter")
-
-    defs_by_chapter_name.each do |chapter_name, nr_defs|
-      f.puts("")
-      f.puts("== #{chapter_name}")
-      f.puts("")
-      f.puts("[cols=\"20%,60%,20%\"]")
-      f.puts("|===")
-      f.puts("| Rule Name | Rule Description | Origin of Description")
-
-      nr_defs.each do |nr|
-        info_rows =
-          (nr.summary.nil? ? 0 : 1) +
-          (nr.note.nil? ? 0 : 1) +
-          (nr.clarification_link.nil? ? 0 : 1) +
-          (nr.clarification_text.nil? ? 0 : 1) +
-          (nr.description.nil? ? 0 : 1) +
-          (nr.kind.nil? ? 0 : 1) +
-          (nr.instances.empty? ? 0 : 1) +
-          nr.tag_refs.length
-        row_span = (info_rows > 0) ? ".#{info_rows}+" : ""
-
-        f.puts("")
-        f.puts("#{row_span}| #{nr.name}")
-        f.puts("| #{nr.summary} | Rule's 'summary' property") unless nr.summary.nil?
-        f.puts("| #{nr.note} | Rule's 'note' property") unless nr.note.nil?
-        f.puts("| #{nr.clarification_link} | Rule's 'clarification-link' property") unless nr.clarification_link.nil?
-        f.puts("| #{nr.clarification_text} | Rule's 'clarification-text' property") unless nr.clarification_text.nil?
-        f.puts("| #{nr.description} | Rule's 'description' property") unless nr.description.nil?
-        f.puts("| #{nr.kind} | Rule's 'kind' property") unless nr.kind.nil?
-        f.puts('| [' + nr.instances.join(', ') + '] | Rule Instances') unless nr.instances.empty?
-        nr.tag_refs.each do |tag_ref|
-          tag = tags.get_tag(tag_ref.name)
-          fatal("Normative rule #{nr.name} defined in file #{nr.def_filename} references non-existent tag #{tag_ref.name}") if tag.nil?
-
-          url = tag_fname2url[tag.tag_filename]
-          fatal("No fname tag to URL mapping (-tag2url cmd line arg) for tag fname #{tag.tag_filename} for tag name #{tag.name}") if url.nil?
-
-          f.puts("| #{limit_table_rows(tag.text)} a| link:#{url}" + "#" + tag_ref.name + "[#{tag_ref.name}]")
-        end
-      end
-
-      f.puts("|===")
-    end
   end
 end
 
@@ -1617,10 +1438,6 @@ case output_format
 when "json"
   normative_rules_hash = create_normative_rules_hash(defs, tags, tag_fname2url)
   output_json(output_fname, normative_rules_hash)
-when "xlsx"
-  output_xlsx(output_fname, defs, tags)
-when "adoc"
-  output_adoc(output_fname, defs, tags, tag_fname2url)
 when "html"
   output_html(output_fname, defs, tags, tag_fname2url)
 else

@@ -42,8 +42,6 @@ DUPLICATE_TEST_ADOC_INPUT_FNAME := duplicate.adoc
 MAIN_NORM_TAGS_OUTPUT_FNAME := test$(DOC_NORM_TAG_SUFFIX)
 DUPLICATE_NORM_TAGS_OUTPUT_FNAME := duplicate-tags.json
 NORM_RULE_JSON_OUTPUT_FNAME := test-norm-rules.json
-NORM_RULE_XLSX_OUTPUT_FNAME := test-norm-rules.xlsx
-NORM_RULE_ADOC_OUTPUT_FNAME := test-norm-rules.adoc
 NORM_RULE_HTML_OUTPUT_FNAME := test-norm-rules.html
 NORM_RULE_TAGS_NO_RULES_OUTPUT_FNAME := test-norm-rules_tags_no_rules.json
 
@@ -52,8 +50,6 @@ BUILT_MAIN_TEST_HTML := $(BUILD_DIR)/$(MAIN_TEST_HTML_FNAME)
 BUILT_NORM_TAGS_MAIN := $(BUILD_DIR)/$(MAIN_NORM_TAGS_OUTPUT_FNAME)
 BUILT_NORM_TAGS_DUPLICATE := $(BUILD_DIR)/$(DUPLICATE_NORM_TAGS_OUTPUT_FNAME)
 BUILT_NORM_RULES_JSON := $(BUILD_DIR)/$(NORM_RULE_JSON_OUTPUT_FNAME)
-BUILT_NORM_RULES_XLSX := $(BUILD_DIR)/$(NORM_RULE_XLSX_OUTPUT_FNAME)
-BUILT_NORM_RULES_ADOC := $(BUILD_DIR)/$(NORM_RULE_ADOC_OUTPUT_FNAME)
 BUILT_NORM_RULES_HTML := $(BUILD_DIR)/$(NORM_RULE_HTML_OUTPUT_FNAME)
 BUILT_NORM_RULES_TAGS_NO_RULES := $(BUILD_DIR)/$(NORM_RULE_TAGS_NO_RULES_OUTPUT_FNAME)
 
@@ -61,8 +57,6 @@ BUILT_NORM_RULES_TAGS_NO_RULES := $(BUILD_DIR)/$(NORM_RULE_TAGS_NO_RULES_OUTPUT_
 # Use make target "update-expected" to update from build dir contents.
 EXPECTED_NORM_TAGS := $(NORM_RULE_EXPECTED_DIR)/$(MAIN_NORM_TAGS_OUTPUT_FNAME)
 EXPECTED_NORM_RULES_JSON := $(NORM_RULE_EXPECTED_DIR)/$(NORM_RULE_JSON_OUTPUT_FNAME)
-EXPECTED_NORM_RULES_XLSX := $(NORM_RULE_EXPECTED_DIR)/$(NORM_RULE_XLSX_OUTPUT_FNAME)
-EXPECTED_NORM_RULES_ADOC := $(NORM_RULE_EXPECTED_DIR)/$(NORM_RULE_ADOC_OUTPUT_FNAME)
 EXPECTED_NORM_RULES_HTML := $(NORM_RULE_EXPECTED_DIR)/$(NORM_RULE_HTML_OUTPUT_FNAME)
 
 # Normative rule definition input YAML files.
@@ -144,18 +138,16 @@ all: test
 test: build-tests compare-tests
 
 # Build tests
-.PHONY: build-tests build-test-tags build-test-norm-rules-json build-test-norm-rules-xlsx
-build-tests: build-test-tags build-test-norm-rules-json build-test-norm-rules-xlsx build-test-norm-rules-adoc build-test-norm-rules-html build-test-tags-without-rules
+.PHONY: build-tests build-test-tags build-test-norm-rules-json build-test-norm-rules-html build-test-tags-without-rules
+build-tests: build-test-tags build-test-norm-rules-json build-test-norm-rules-html build-test-tags-without-rules
 build-test-tags: $(BUILT_NORM_TAGS_MAIN) $(BUILT_NORM_TAGS_DUPLICATE)
 build-test-norm-rules-json: $(BUILT_NORM_RULES_JSON)
-build-test-norm-rules-xlsx: $(BUILT_NORM_RULES_XLSX)
-build-test-norm-rules-adoc: $(BUILT_NORM_RULES_ADOC)
 build-test-norm-rules-html: $(BUILT_NORM_RULES_HTML)
 build-test-tags-without-rules: $(BUILT_NORM_RULES_TAGS_NO_RULES)
 
 # Compare tests against expected
-.PHONY: compare-tests
-compare-tests: compare-test-tags compare-test-norm-rules-json compare-test-norm-rules-adoc compare-test-norm-rules-html
+.PHONY: compare-tests compare-test-tags compare-test-norm-rules-json compare-test-norm-rules-html
+compare-tests: compare-test-tags compare-test-norm-rules-json compare-test-norm-rules-html
 
 compare-test-tags: $(EXPECTED_NORM_TAGS) $(BUILT_NORM_TAGS_MAIN)
 	@echo "CHECKING BUILT TAGS AGAINST EXPECTED TAGS"
@@ -167,29 +159,19 @@ compare-test-norm-rules-json: $(EXPECTED_NORM_RULES_JSON) $(BUILT_NORM_RULES_JSO
 	@echo "CHECKING JSON BUILT NORM RULES AGAINST EXPECTED NORM RULES"
 	diff $(EXPECTED_NORM_RULES_JSON) $(BUILT_NORM_RULES_JSON) && echo "diff PASSED" || (echo "diff FAILED"; exit 1)
 
-compare-test-norm-rules-adoc: $(EXPECTED_NORM_RULES_ADOC) $(BUILT_NORM_RULES_ADOC)
-	@echo "CHECKING ADOC BUILT NORM RULES AGAINST EXPECTED NORM RULES"
-	diff $(EXPECTED_NORM_RULES_ADOC) $(BUILT_NORM_RULES_ADOC) && echo "diff PASSED" || (echo "diff FAILED"; exit 1)
-
 compare-test-norm-rules-html: $(EXPECTED_NORM_RULES_HTML) $(BUILT_NORM_RULES_HTML)
 	@echo "CHECKING HTML BUILT NORM RULES AGAINST EXPECTED NORM RULES"
 	diff $(EXPECTED_NORM_RULES_HTML) $(BUILT_NORM_RULES_HTML) && echo "diff PASSED" || (echo "diff FAILED"; exit 1)
 
 # Update expected files from built files
-.PHONY: update-expected
-update-expected: update-test-tags update-test-norm-rules-json update-test-norm-rules-xlsx update-test-norm-rules-adoc update-test-norm-rules-html
+.PHONY: update-expected update-test-tags update-test-norm-rules-json update-test-norm-rules-html
+update-expected: update-test-tags update-test-norm-rules-json update-test-norm-rules-html
 
 update-test-tags: $(BUILT_NORM_TAGS_MAIN)
 	cp -f $(BUILT_NORM_TAGS_MAIN) $(EXPECTED_NORM_TAGS)
 
 update-test-norm-rules-json: $(BUILT_NORM_RULES_JSON)
 	cp -f $(BUILT_NORM_RULES_JSON) $(EXPECTED_NORM_RULES_JSON)
-
-update-test-norm-rules-xlsx: $(BUILT_NORM_RULES_XLSX)
-	cp -f $(BUILT_NORM_RULES_XLSX) $(EXPECTED_NORM_RULES_XLSX)
-
-update-test-norm-rules-adoc: $(BUILT_NORM_RULES_ADOC)
-	cp -f $(BUILT_NORM_RULES_ADOC) $(EXPECTED_NORM_RULES_ADOC)
 
 update-test-norm-rules-html: $(BUILT_NORM_RULES_HTML)
 	cp -f $(BUILT_NORM_RULES_HTML) $(EXPECTED_NORM_RULES_HTML)
@@ -213,21 +195,6 @@ $(BUILT_NORM_RULES_JSON): $(BUILT_NORM_TAGS_MAIN) $(GOOD_NORM_RULE_DEF_FILES)
 	cp -f $(BUILT_NORM_TAGS_MAIN) $@.workdir
 	mkdir -p $@.workdir/build
 	$(DOCKER_CMD) $(DOCKER_QUOTE) $(CREATE_NORM_RULE_RUBY) -j $(NORM_TAG_FILE_ARGS) $(GOOD_NORM_RULE_DEF_ARGS) $(NORM_RULE_DOC2URL_ARGS) $@ $(DOCKER_QUOTE)
-	$(WORKDIR_TEARDOWN)
-
-# Build normative rules with XLSX output format
-$(BUILT_NORM_RULES_XLSX): $(BUILT_NORM_TAGS_MAIN) $(GOOD_NORM_RULE_DEF_FILES)
-	$(WORKDIR_SETUP)
-	cp -f $(BUILT_NORM_TAGS_MAIN) $@.workdir
-	mkdir -p $@.workdir/build
-	$(DOCKER_CMD) $(DOCKER_QUOTE) $(CREATE_NORM_RULE_RUBY) -x $(NORM_TAG_FILE_ARGS) $(GOOD_NORM_RULE_DEF_ARGS) $(NORM_RULE_DOC2URL_ARGS) $@ $(DOCKER_QUOTE)
-	$(WORKDIR_TEARDOWN)
-
-$(BUILT_NORM_RULES_ADOC): $(BUILT_NORM_TAGS_MAIN) $(GOOD_NORM_RULE_DEF_FILES)
-	$(WORKDIR_SETUP)
-	cp -f $(BUILT_NORM_TAGS_MAIN) $@.workdir
-	mkdir -p $@.workdir/build
-	$(DOCKER_CMD) $(DOCKER_QUOTE) $(CREATE_NORM_RULE_RUBY) -a $(NORM_TAG_FILE_ARGS) $(GOOD_NORM_RULE_DEF_ARGS) $(NORM_RULE_DOC2URL_ARGS) $@ $(DOCKER_QUOTE)
 	$(WORKDIR_TEARDOWN)
 
 $(BUILT_NORM_RULES_HTML): $(BUILT_MAIN_TEST_HTML) $(GOOD_NORM_RULE_DEF_FILES)
