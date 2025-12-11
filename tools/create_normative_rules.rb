@@ -1162,15 +1162,15 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
     unless nr.clarification_link.nil?
       # The clarification text can only exist if the clarification link also exists.
       if nr.clarification_text.nil?
-        text = "(No clarification text provided)"
+        text = "(No clarification text available)"
       else
         text = convert_def_text_to_html(nr.clarification_text)
       end
 
-      link = %Q{<a href="#{nr.clarification_link}">Clarification GitHub Issue</a>}
+      link = %Q{<a href="#{nr.clarification_link}">GitHub Issue</a>}
 
       f.puts(%Q{            <tr>}) unless first_row
-      f.puts(%Q{              <td>#{text}</td>})
+      f.puts(%Q{              <td>[CLARIFICATION] #{text}</td>})
       f.puts(%Q{              <td>#{link}</td>})
       f.puts(%Q{            </tr>})
       first_row = false
