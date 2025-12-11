@@ -126,27 +126,6 @@
       ]
     },
     {
-      "name": "cat-claws-one-line-2",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
-      "tags": [
-        {
-          "name": "norm:cat-claws",
-          "context": false,
-          "text": "This kind of animal has claws.",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
-        },
-        {
-          "name": "norm:cat-colors",
-          "context": true,
-          "text": "Cats come in many colors.",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
-        }
-      ]
-    },
-    {
       "name": "cat-claws-multi-lines-1",
       "def_filename": "tests/norm-rule/test.yaml",
       "chapter_name": "my-chapter_name",
