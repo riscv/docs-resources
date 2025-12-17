@@ -1,0 +1,20 @@
+{
+  "summary": {
+    "total_changes": 3,
+    "added": 1,
+    "deleted": 1,
+    "modified": 1
+  },
+  "added": {
+    "norm:new-tag": "This is a new tag for testing"
+  },
+  "deleted": {
+    "norm:inline-with-hash": "includes a hash # symbol."
+  },
+  "modified": {
+    "norm:inline": {
+      "old": "inside inline",
+      "new": "inside inline - MODIFIED"
+    }
+  }
+}

@@ -20,6 +20,7 @@ BUILD_DIR := build
 TESTS_DIR := tests
 NORM_RULE_TESTS_DIR := $(TESTS_DIR)/norm-rule
 TAGS_TESTS_DIR := $(TESTS_DIR)/tags
+TAG_CHANGES_TESTS_DIR := $(TESTS_DIR)/tag-changes
 NORM_RULE_DEF_DIR := $(NORM_RULE_TESTS_DIR)
 NORM_RULE_EXPECTED_DIR := $(NORM_RULE_TESTS_DIR)/expected
 
@@ -27,6 +28,8 @@ NORM_RULE_EXPECTED_DIR := $(NORM_RULE_TESTS_DIR)/expected
 TAGS_BACKEND := tags.rb
 CREATE_NORM_RULE_TOOL := $(TOOLS_DIR)/create_normative_rules.rb
 CREATE_NORM_RULE_RUBY := ruby $(CREATE_NORM_RULE_TOOL)
+DETECT_TAG_CHANGES_TOOL := $(TOOLS_DIR)/detect_tag_changes.rb
+DETECT_TAG_CHANGES_RUBY := ruby $(DETECT_TAG_CHANGES_TOOL)
 
 # Stuff for building mock standards document in HTML to have links into it.
 DOCS = test
@@ -44,6 +47,14 @@ DUPLICATE_NORM_TAGS_OUTPUT_FNAME := duplicate-tags.json
 NORM_RULE_JSON_OUTPUT_FNAME := test-norm-rules.json
 NORM_RULE_HTML_OUTPUT_FNAME := test-norm-rules.html
 NORM_RULE_TAGS_NO_RULES_OUTPUT_FNAME := test-norm-rules_tags_no_rules.json
+
+# Tag change detection test files
+TAG_CHANGES_TEST_OLD := test-norm-tags-old.json
+TAG_CHANGES_TEST_NEW := test-norm-tags-new.json
+TAG_CHANGES_OUTPUT := tag-changes.json
+TAG_CHANGES_TEST_OLD_PATH := $(TAG_CHANGES_TESTS_DIR)/$(TAG_CHANGES_TEST_OLD)
+TAG_CHANGES_TEST_NEW_PATH := $(TAG_CHANGES_TESTS_DIR)/$(TAG_CHANGES_TEST_NEW)
+TAG_CHANGES_OUTPUT_PATH := $(BUILD_DIR)/$(TAG_CHANGES_OUTPUT)
 
 # Built output files
 BUILT_MAIN_TEST_HTML := $(BUILD_DIR)/$(MAIN_TEST_HTML_FNAME)
@@ -135,7 +146,7 @@ all: test
 
 # Build tests and compare against expected
 .PHONY: test
-test: build-tests compare-tests
+test: build-tests compare-tests test-tag-changes
 
 # Build tests
 .PHONY: build-tests build-test-tags build-test-norm-rules-json build-test-norm-rules-html build-test-tags-without-rules
@@ -162,6 +173,30 @@ compare-test-norm-rules-json: $(EXPECTED_NORM_RULES_JSON) $(BUILT_NORM_RULES_JSO
 compare-test-norm-rules-html: $(EXPECTED_NORM_RULES_HTML) $(BUILT_NORM_RULES_HTML)
 	@echo "CHECKING HTML BUILT NORM RULES AGAINST EXPECTED NORM RULES"
 	diff $(EXPECTED_NORM_RULES_HTML) $(BUILT_NORM_RULES_HTML) && echo "diff PASSED" || (echo "diff FAILED"; exit 1)
+
+# Test tag change detection
+.PHONY: test-tag-changes test-tag-changes-basic test-tag-changes-text test-tag-changes-json
+test-tag-changes: test-tag-changes-basic test-tag-changes-text test-tag-changes-json
+
+test-tag-changes-basic: $(TAG_CHANGES_TEST_OLD_PATH) $(TAG_CHANGES_TEST_NEW_PATH)
+	@echo "TESTING TAG CHANGE DETECTION - BASIC OUTPUT"
+	$(DETECT_TAG_CHANGES_RUBY) $(TAG_CHANGES_TEST_OLD_PATH) $(TAG_CHANGES_TEST_NEW_PATH) && echo "test-tag-changes-basic FAILED (expected changes detected)" || echo "test-tag-changes-basic PASSED"
+
+test-tag-changes-text: $(TAG_CHANGES_TEST_OLD_PATH) $(TAG_CHANGES_TEST_NEW_PATH)
+	@echo "TESTING TAG CHANGE DETECTION - WITH TEXT OUTPUT"
+	$(DETECT_TAG_CHANGES_RUBY) --show-text $(TAG_CHANGES_TEST_OLD_PATH) $(TAG_CHANGES_TEST_NEW_PATH) && echo "test-tag-changes-text FAILED (expected changes detected)" || echo "test-tag-changes-text PASSED"
+
+test-tag-changes-json: $(TAG_CHANGES_TEST_OLD_PATH) $(TAG_CHANGES_TEST_NEW_PATH)
+	@echo "TESTING TAG CHANGE DETECTION - JSON EXPORT"
+	$(DETECT_TAG_CHANGES_RUBY) --output $(TAG_CHANGES_OUTPUT_PATH) $(TAG_CHANGES_TEST_OLD_PATH) $(TAG_CHANGES_TEST_NEW_PATH) && echo "test-tag-changes-json FAILED (expected changes detected)" || (test -f $(TAG_CHANGES_OUTPUT_PATH) && echo "test-tag-changes-json PASSED" || echo "test-tag-changes-json FAILED (output not created)")
+
+test-tag-changes-no-changes: $(TAG_CHANGES_TEST_OLD_PATH)
+	@echo "TESTING TAG CHANGE DETECTION - NO CHANGES"
+	$(DETECT_TAG_CHANGES_RUBY) $(TAG_CHANGES_TEST_OLD_PATH) $(TAG_CHANGES_TEST_OLD_PATH) && echo "test-tag-changes-no-changes PASSED" || echo "test-tag-changes-no-changes FAILED (no changes should be detected)"
+
+test-tag-changes-prefix: $(TAG_CHANGES_TEST_OLD_PATH) $(TAG_CHANGES_TEST_NEW_PATH)
+	@echo "TESTING TAG CHANGE DETECTION - PREFIX FILTER"
+	$(DETECT_TAG_CHANGES_RUBY) --prefix "norm:inline" $(TAG_CHANGES_TEST_OLD_PATH) $(TAG_CHANGES_TEST_NEW_PATH) && echo "test-tag-changes-prefix FAILED (expected changes detected)" || echo "test-tag-changes-prefix PASSED"
 
 # Update expected files from built files
 .PHONY: update-expected update-test-tags update-test-norm-rules-json update-test-norm-rules-html
