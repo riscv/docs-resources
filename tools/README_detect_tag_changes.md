@@ -14,7 +14,6 @@
 
 - `-v, --verbose` - Enable verbose output
 - `-t, --show-text` - Show tag text in the output (displays the actual content of tags)
-- `-p, --prefix PREFIX` - Only compare tags starting with PREFIX (e.g., "norm:table")
 - `-o, --output FILE` - Export changes to a JSON file
 - `-h, --help` - Show help message
 
@@ -39,13 +38,6 @@ Display the actual text content of changed tags:
 ./detect_tag_changes.rb --show-text build/old-tags.json build/new-tags.json
 ```
 
-### Filter by Prefix
-
-Only compare tags with a specific prefix:
-```bash
-./detect_tag_changes.rb --prefix "norm:table" build/old-tags.json build/new-tags.json
-```
-
 ### Export to JSON
 
 Save changes to a JSON file for further processing:
@@ -57,7 +49,7 @@ Save changes to a JSON file for further processing:
 
 Use multiple options together:
 ```bash
-./detect_tag_changes.rb -t -p "norm:" -o changes.json old.json new.json
+./detect_tag_changes.rb -t -o changes.json old.json new.json
 ```
 
 ## Output Format
@@ -157,17 +149,6 @@ Generate a JSON report for automated analysis or review:
     --show-text \
     previous-release/tags.json \
     current/tags.json
-```
-
-### Selective Comparison
-
-Focus on specific tag categories:
-```bash
-# Only check table-related tags
-./detect_tag_changes.rb --prefix "norm:table" old.json new.json
-
-# Only check normative tags
-./detect_tag_changes.rb --prefix "norm:" old.json new.json
 ```
 
 ## Integration with Existing Tools

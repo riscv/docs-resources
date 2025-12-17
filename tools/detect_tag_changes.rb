@@ -29,7 +29,6 @@ class TagChangeDetector
   def initialize(options = {})
     @verbose = options[:verbose] || false
     @show_text = options[:show_text] || false
-    @prefix_filter = options[:prefix_filter]
   end
 
   # Load tags from a JSON file
@@ -198,7 +197,6 @@ def parse_options
   options = {
     verbose: false,
     show_text: false,
-    prefix_filter: nil,
     output_file: nil
   }
 
@@ -215,10 +213,6 @@ def parse_options
 
     opts.on("-t", "--show-text", "Show tag text in the output") do
       options[:show_text] = true
-    end
-
-    opts.on("-p", "--prefix PREFIX", "Only compare tags starting with PREFIX") do |prefix|
-      options[:prefix_filter] = prefix
     end
 
     opts.on("-o", "--output FILE", "Export changes to JSON file") do |file|
@@ -250,8 +244,7 @@ if __FILE__ == $0
 
   detector = TagChangeDetector.new(
     verbose: options[:verbose],
-    show_text: options[:show_text],
-    prefix_filter: options[:prefix_filter]
+    show_text: options[:show_text]
   )
 
   # Load both tag files

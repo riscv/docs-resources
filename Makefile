@@ -194,10 +194,6 @@ test-tag-changes-no-changes: $(TAG_CHANGES_TEST_OLD_PATH)
 	@echo "TESTING TAG CHANGE DETECTION - NO CHANGES"
 	$(DETECT_TAG_CHANGES_RUBY) $(TAG_CHANGES_TEST_OLD_PATH) $(TAG_CHANGES_TEST_OLD_PATH) && echo "test-tag-changes-no-changes PASSED" || echo "test-tag-changes-no-changes FAILED (no changes should be detected)"
 
-test-tag-changes-prefix: $(TAG_CHANGES_TEST_OLD_PATH) $(TAG_CHANGES_TEST_NEW_PATH)
-	@echo "TESTING TAG CHANGE DETECTION - PREFIX FILTER"
-	$(DETECT_TAG_CHANGES_RUBY) --prefix "norm:inline" $(TAG_CHANGES_TEST_OLD_PATH) $(TAG_CHANGES_TEST_NEW_PATH) && echo "test-tag-changes-prefix FAILED (expected changes detected)" || echo "test-tag-changes-prefix PASSED"
-
 # Update expected files from built files
 .PHONY: update-expected update-test-tags update-test-norm-rules-json update-test-norm-rules-html
 update-expected: update-test-tags update-test-norm-rules-json update-test-norm-rules-html
