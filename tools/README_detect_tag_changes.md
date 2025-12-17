@@ -7,7 +7,7 @@
 ## Usage
 
 ```bash
-./detect_tag_changes.rb [options] OLD_TAGS.json NEW_TAGS.json
+./detect_tag_changes.rb [options] REFERENCE_TAGS.json CURRENT_TAGS.json
 ```
 
 ### Options
@@ -28,28 +28,37 @@
 
 Compare two tag files:
 ```bash
-./detect_tag_changes.rb build/old-tags.json build/new-tags.json
+./detect_tag_changes.rb build/reference-tags.json build/current-tags.json
 ```
 
 ### Show Tag Text
 
 Display the actual text content of changed tags:
 ```bash
-./detect_tag_changes.rb --show-text build/old-tags.json build/new-tags.json
+./detect_tag_changes.rb --show-text build/reference-tags.json build/current-tags.json
 ```
 
 ### Export to JSON
 
 Save changes to a JSON file for further processing:
 ```bash
-./detect_tag_changes.rb --output changes.json build/old-tags.json build/new-tags.json
+./detect_tag_changes.rb --output changes.json build/reference-tags.json build/current-tags.json
 ```
+
+### Update Reference File
+
+Automatically merge additions into the reference file:
+```bash
+./detect_tag_changes.rb reference.json current.json --update-reference
+```
+
+This updates `reference.json` by adding any new tags that are in `current.json` but not in `reference.json`. Useful for maintaining a reference that incorporates new additions.
 
 ### Combined Options
 
 Use multiple options together:
 ```bash
-./detect_tag_changes.rb -t -o changes.json old.json new.json
+./detect_tag_changes.rb -t -o changes.json -u reference.json current.json
 ```
 
 ## Output Format
@@ -58,8 +67,8 @@ Use multiple options together:
 
 The script provides a formatted report showing:
 
-1. **Added Tags**: Tags present in the new file but not in the old file
-2. **Deleted Tags**: Tags present in the old file but not in the new file
+1. **Added Tags**: Tags present in the current file but not in the reference file
+2. **Deleted Tags**: Tags present in the reference file but not in the current file
 3. **Modified Tags**: Tags present in both files but with different text content
 4. **Summary**: Count of total changes, additions, deletions, and modifications
 
@@ -68,8 +77,8 @@ Example output:
 ================================================================================
 Tag Changes Report
 ================================================================================
-Old file: build/test-norm-tags-v1.json
-New file: build/test-norm-tags-v2.json
+Reference file: build/test-norm-tags-v1.json
+Current file: build/test-norm-tags-v2.json
 ================================================================================
 
 Added Tags (1):
@@ -112,8 +121,8 @@ When using the `--output` option, the script generates a JSON file with this str
   },
   "modified": {
     "tag-name": {
-      "old": "original text",
-      "new": "updated text"
+      "reference": "original text",
+      "current": "updated text"
     }
   }
 }
@@ -132,7 +141,7 @@ Track changes to normative tags across document versions:
 
 Use in continuous integration to detect unintended changes:
 ```bash
-if ./detect_tag_changes.rb baseline-tags.json current-tags.json; then
+if ./detect_tag_changes.rb reference-tags.json current-tags.json; then
     echo "No changes detected"
 else
     echo "Tag changes detected - review required"
@@ -150,6 +159,26 @@ Generate a JSON report for automated analysis or review:
     previous-release/tags.json \
     current/tags.json
 ```
+
+### Reference Maintenance
+
+Maintain a reference that automatically incorporates new additions:
+```bash
+# Check for changes and update reference with new tags
+./detect_tag_changes.rb \
+    --update-reference \
+    --output review/changes.json \
+    reference-tags.json \
+    current-tags.json
+
+# Exit code 1 means modifications/deletions detected (needs review)
+# Exit code 0 means no changes or only additions (reference auto-updated)
+```
+
+This workflow is useful in CI/CD pipelines where:
+- New tags in the current file are automatically merged into the reference
+- Modifications or deletions trigger alerts for manual review
+- The reference always stays up-to-date with approved additions
 
 ## Integration with Existing Tools
 

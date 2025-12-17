@@ -11,8 +11,8 @@ class TagChanges
   attr_reader :added, :deleted, :modified
 
   def initialize
-    @added = {}      # Tags present in new but not in old
-    @deleted = {}    # Tags present in old but not in new
+    @added = {}      # Tags present in current but not in reference
+    @deleted = {}    # Tags present in reference but not in current
     @modified = {}   # Tags present in both but with different text
   end
 
@@ -55,34 +55,34 @@ class TagChangeDetector
   end
 
   # Compare two tag sets and identify changes
-  # @param old_tags [Hash<String, String>] Original tags
-  # @param new_tags [Hash<String, String>] Updated tags
+  # @param reference_tags [Hash<String, String>] Original tags
+  # @param current_tags [Hash<String, String>] Updated tags
   # @return [TagChanges] Object containing all changes
-  def detect_changes(old_tags, new_tags)
+  def detect_changes(reference_tags, current_tags)
     changes = TagChanges.new
 
-    old_keys = old_tags.keys.to_set
-    new_keys = new_tags.keys.to_set
+    reference_keys = reference_tags.keys.to_set
+    current_keys = current_tags.keys.to_set
 
-    # Find added tags (in new but not in old)
-    (new_keys - old_keys).each do |tag_name|
-      changes.added[tag_name] = new_tags[tag_name]
+    # Find added tags (in current but not in reference)
+    (current_keys - reference_keys).each do |tag_name|
+      changes.added[tag_name] = current_tags[tag_name]
     end
 
-    # Find deleted tags (in old but not in new)
-    (old_keys - new_keys).each do |tag_name|
-      changes.deleted[tag_name] = old_tags[tag_name]
+    # Find deleted tags (in reference but not in current)
+    (reference_keys - current_keys).each do |tag_name|
+      changes.deleted[tag_name] = reference_tags[tag_name]
     end
 
     # Find modified tags (in both but different text)
-    (old_keys & new_keys).each do |tag_name|
-      old_text = old_tags[tag_name]
-      new_text = new_tags[tag_name]
+    (reference_keys & current_keys).each do |tag_name|
+      reference_text = reference_tags[tag_name]
+      current_text = current_tags[tag_name]
 
-      if old_text != new_text
+      if reference_text != current_text
         changes.modified[tag_name] = {
-          "old" => old_text,
-          "new" => new_text
+          "reference" => reference_text,
+          "current" => current_text
         }
       end
     end
@@ -92,14 +92,14 @@ class TagChangeDetector
 
   # Format and display changes
   # @param changes [TagChanges] Changes to display
-  # @param old_file [String] Name of old file (for display)
-  # @param new_file [String] Name of new file (for display)
-  def display_changes(changes, old_file, new_file)
+  # @param reference_file [String] Name of reference file (for display)
+  # @param current_file [String] Name of current file (for display)
+  def display_changes(changes, reference_file, current_file)
     puts "=" * 80
     puts "Tag Changes Report"
     puts "=" * 80
-    puts "Old file: #{old_file}"
-    puts "New file: #{new_file}"
+    puts "Reference file: #{reference_file}"
+    puts "Current file: #{current_file}"
     puts "=" * 80
     puts
 
@@ -143,8 +143,8 @@ class TagChangeDetector
       changes.modified.sort.each do |tag_name, texts|
         puts "  ~ #{tag_name}"
         if @show_text
-          puts "      Old: #{truncate_text(texts['old'])}"
-          puts "      New: #{truncate_text(texts['new'])}"
+          puts "      Reference: #{truncate_text(texts['reference'])}"
+          puts "      Current: #{truncate_text(texts['current'])}"
           puts
         end
       end
@@ -180,6 +180,37 @@ class TagChangeDetector
     puts "Changes exported to: #{output_file}"
   end
 
+  # Update a tags file by adding new tags from additions
+  # @param file_path [String] Path to the file to update
+  # @param changes [TagChanges] Changes detected
+  def update_tags_file(file_path, changes)
+    if changes.added.empty?
+      puts "No additions to merge into #{file_path}"
+      return
+    end
+
+    unless File.exist?(file_path)
+      abort("Error: Cannot update file - not found: #{file_path}")
+    end
+
+    begin
+      data = JSON.parse(File.read(file_path))
+      original_count = data["tags"].size
+
+      # Add new tags
+      changes.added.each do |tag_name, tag_text|
+        data["tags"][tag_name] = tag_text
+      end
+
+      # Write back to file
+      File.write(file_path, JSON.pretty_generate(data))
+      new_count = data["tags"].size
+      puts "Updated #{file_path}: added #{changes.added.size} new tags (#{original_count} -> #{new_count} total tags)"
+    rescue JSON::ParserError => e
+      abort("Error: Failed to parse JSON from #{file_path}: #{e.message}")
+    end
+  end
+
   private
 
   # Truncate text for display
@@ -197,11 +228,12 @@ def parse_options
   options = {
     verbose: false,
     show_text: false,
-    output_file: nil
+    output_file: nil,
+    update_reference: false
   }
 
   parser = OptionParser.new do |opts|
-    opts.banner = "Usage: #{File.basename($0)} [options] OLD_TAGS.json NEW_TAGS.json"
+    opts.banner = "Usage: #{File.basename($0)} [options] REFERENCE_TAGS.json CURRENT_TAGS.json"
     opts.separator ""
     opts.separator "Detect changes in normative tags between two JSON files"
     opts.separator ""
@@ -219,6 +251,10 @@ def parse_options
       options[:output_file] = file
     end
 
+    opts.on("-u", "--update-reference", "Update the reference tags file by adding any additions found in the current file") do
+      options[:update_reference] = true
+    end
+
     opts.on("-h", "--help", "Show this help message") do
       puts opts
       exit
@@ -232,8 +268,8 @@ def parse_options
     exit 1
   end
 
-  options[:old_file] = ARGV[0]
-  options[:new_file] = ARGV[1]
+  options[:reference_file] = ARGV[0]
+  options[:current_file] = ARGV[1]
 
   options
 end
@@ -248,18 +284,23 @@ if __FILE__ == $0
   )
 
   # Load both tag files
-  old_tags = detector.load_tags(options[:old_file])
-  new_tags = detector.load_tags(options[:new_file])
+  reference_tags = detector.load_tags(options[:reference_file])
+  current_tags = detector.load_tags(options[:current_file])
 
   # Detect changes
-  changes = detector.detect_changes(old_tags, new_tags)
+  changes = detector.detect_changes(reference_tags, current_tags)
 
   # Display changes
-  detector.display_changes(changes, options[:old_file], options[:new_file])
+  detector.display_changes(changes, options[:reference_file], options[:current_file])
 
   # Export if requested
   if options[:output_file]
     detector.export_changes(changes, options[:output_file])
+  end
+
+  # Update reference file if requested
+  if options[:update_reference]
+    detector.update_tags_file(options[:reference_file], changes)
   end
 
   # Exit with appropriate status code
