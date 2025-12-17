@@ -102,6 +102,22 @@ class TagsConverter
 
   private
 
+  # Map inline quoted types to their opening and closing tags.
+  # These are chosen so that they sort of work as asciidoc.
+  (QUOTE_TAGS = {
+    monospaced: ['`', '`'],
+    emphasis: ['_', '_'],
+    strong: ['*', '*'],
+    double: ['"', '"'],
+    single: ['\'', '\''],
+    mark: ['##', '##'], # yellow highlight
+    superscript: ['^', '^'],
+    subscript: ['~', '~'],
+    # There's also 'asciimath' and 'latexmath' and maybe more (hard to tell
+    # due to Ruby's dynamic typing). The RISC-V ISA manual currently doesn't
+    # use these though.
+  }).default = ['', '']
+
   # Return the text content of a node. Adapted from `text-converter.rb`
   # in the docs: https://docs.asciidoctor.org/asciidoctor/latest/convert/custom/
   #
@@ -153,14 +169,38 @@ class TagsConverter
         # Separate table sections by ===.
       end.join("\n===\n")
     else
-      node.inline? ? node.text : ["\n", node.content].compact.join
+      if node.inline? then
+        if node.text.nil? then
+          nil
+        else
+          # Awkwardly Asciidoctor does not apply substitutions (e.g. `{ge}`) to
+          # inline nodes. Instead the substitutions get applied by the parent block,
+          # which means ordinarily there would be no way to extract the plain text
+          # of just the inline node with the subtitutions applied.
+          #
+          # Therefore here we try to apply them manually. This assumes all sorts
+          # of things that we can't know for sure due to Ruby's lack of static
+          # type hints - is `node.parent` always valid for inline nodes? Does
+          # it always have `@subs`? Do all inline nodes have `apply_subs`?
+          #
+          # This seems to work for now at least.
+          text = node.apply_subs(node.text, node.parent.instance_variable_get(:@subs))
+
+          # We also need to add opening and closing characters for inline quoted
+          # text (monospace, bold, italic etc).
+          open, close = QUOTE_TAGS[node.type]
+          %(#{open}#{text}#{close})
+        end
+      else
+        ["\n", node.content].compact.join
+      end
     end
 
     content_or_nil.nil? ? "" : content_or_nil
   end
 
   # Convert newlines to spaces.
-  def normalize_space text
+  def normalize_space(text)
     text.tr("\n", " ")
   end
 end
