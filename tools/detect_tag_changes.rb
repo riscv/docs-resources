@@ -78,8 +78,11 @@ class TagChangeDetector
       reference_text = reference_tags[tag_name]
       current_text = current_tags[tag_name]
 
-      # Compare normalized text (ignoring whitespace differences)
-      if normalize_whitespace(reference_text) != normalize_whitespace(current_text)
+      # Compare normalized text (ignoring whitespace and AsciiDoc formatting differences)
+      normalized_ref = normalize_text(reference_text)
+      normalized_cur = normalize_text(current_text)
+
+      if normalized_ref != normalized_cur
         changes.modified[tag_name] = {
           "reference" => reference_text,
           "current" => current_text
@@ -193,11 +196,55 @@ class TagChangeDetector
 
   private
 
+  # Normalize text for comparison (whitespace and AsciiDoc formatting)
+  # @param text [String] Text to normalize
+  # @return [String] Normalized text
+  def normalize_text(text)
+    # First strip AsciiDoc formatting, then normalize whitespace
+    strip_asciidoc_formatting(normalize_whitespace(text))
+  end
+
   # Normalize whitespace for comparison
   # @param text [String] Text to normalize
   # @return [String] Text with normalized whitespace
   def normalize_whitespace(text)
     text.strip.gsub(/\s+/, ' ')
+  end
+
+  # Strip AsciiDoc formatting marks
+  # @param text [String] Text to strip formatting from
+  # @return [String] Text without AsciiDoc formatting
+  def strip_asciidoc_formatting(text)
+    result = text.dup
+
+    # Remove bold: **text** (unconstrained) or *text* (constrained)
+    result.gsub!(/\*\*([^\*]+?)\*\*/, '\1')
+    result.gsub!(/\*([^\*]+?)\*/, '\1')
+
+    # Remove italic: __text__ (unconstrained) or _text_ (constrained, not in middle of words)
+    result.gsub!(/__([^_]+?)__/, '\1')
+    result.gsub!(/(?<!\w)_([^_]+?)_(?!\w)/, '\1')
+
+    # Remove monospace: `text`
+    result.gsub!(/`([^`]+?)`/, '\1')
+
+    # Remove superscript: ^text^
+    result.gsub!(/\^([^\^]+?)\^/, '\1')
+
+    # Remove subscript: ~text~
+    result.gsub!(/~([^~]+?)~/, '\1')
+
+    # Remove role-based formatting: [role]#text#
+    result.gsub!(/\[[^\]]+\]#([^#]+?)#/, '\1')
+
+    # Remove cross-references: <<anchor,text>> or <<anchor>>
+    result.gsub!(/&lt;&lt;[^,&]+,([^&]+)&gt;&gt;/, '\1')
+    result.gsub!(/&lt;&lt;[^&]+&gt;&gt;/, '')
+
+    # Remove passthrough: +++text+++
+    result.gsub!(/\+\+\+([^\+]+?)\+\+\+/, '\1')
+
+    result.strip
   end
 
   # Truncate text for display

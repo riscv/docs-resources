@@ -173,8 +173,8 @@ compare-test-norm-rules-html: $(EXPECTED_NORM_RULES_HTML) $(BUILT_NORM_RULES_HTM
 	diff $(EXPECTED_NORM_RULES_HTML) $(BUILT_NORM_RULES_HTML) && echo "diff PASSED" || (echo "diff FAILED"; exit 1)
 
 # Test tag change detection
-.PHONY: test-tag-changes test-tag-changes-basic test-tag-changes-text test-tag-changes-additions-only test-tag-changes-update test-tag-changes-whitespace-only
-test-tag-changes: test-tag-changes-basic test-tag-changes-text test-tag-changes-additions-only test-tag-changes-whitespace-only test-tag-changes-update
+.PHONY: test-tag-changes test-tag-changes-basic test-tag-changes-text test-tag-changes-additions-only test-tag-changes-whitespace-only test-tag-changes-formatting-only test-tag-changes-update
+test-tag-changes: test-tag-changes-basic test-tag-changes-text test-tag-changes-additions-only test-tag-changes-whitespace-only test-tag-changes-formatting-only test-tag-changes-update
 
 test-tag-changes-basic: $(TAG_CHANGES_TEST_REFERENCE_PATH) $(TAG_CHANGES_TEST_CURRENT_PATH)
 	@echo "TESTING TAG CHANGE DETECTION - BASIC OUTPUT (with modifications/deletions)"
@@ -195,6 +195,10 @@ test-tag-changes-additions-only: $(TAG_CHANGES_TEST_REFERENCE_PATH)
 test-tag-changes-whitespace-only: $(TAG_CHANGES_TEST_REFERENCE_PATH)
 	@echo "TESTING TAG CHANGE DETECTION - WHITESPACE ONLY (expect exit 0)"
 	$(DETECT_TAG_CHANGES_RUBY) $(TAG_CHANGES_TEST_REFERENCE_PATH) $(TAG_CHANGES_TESTS_DIR)/whitespace-only.json && echo "test-tag-changes-whitespace-only PASSED" || echo "test-tag-changes-whitespace-only FAILED (whitespace-only changes should return exit 0)"
+
+test-tag-changes-formatting-only: $(TAG_CHANGES_TEST_REFERENCE_PATH)
+	@echo "TESTING TAG CHANGE DETECTION - FORMATTING ONLY (expect exit 0)"
+	$(DETECT_TAG_CHANGES_RUBY) $(TAG_CHANGES_TEST_REFERENCE_PATH) $(TAG_CHANGES_TESTS_DIR)/formatting-only.json && echo "test-tag-changes-formatting-only PASSED" || echo "test-tag-changes-formatting-only FAILED (formatting-only changes should return exit 0)"
 
 test-tag-changes-update: $(TAG_CHANGES_TEST_REFERENCE_PATH)
 	@echo "TESTING TAG CHANGE DETECTION - UPDATE FILE"
