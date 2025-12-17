@@ -27,7 +27,6 @@ end
 
 class TagChangeDetector
   def initialize(options = {})
-    @verbose = options[:verbose] || false
     @show_text = options[:show_text] || false
   end
 
@@ -160,26 +159,6 @@ class TagChangeDetector
     puts "=" * 80
   end
 
-  # Export changes to a JSON file
-  # @param changes [TagChanges] Changes to export
-  # @param output_file [String] Path to output file
-  def export_changes(changes, output_file)
-    output = {
-      "summary" => {
-        "total_changes" => changes.total_changes,
-        "added" => changes.added.size,
-        "deleted" => changes.deleted.size,
-        "modified" => changes.modified.size
-      },
-      "added" => changes.added,
-      "deleted" => changes.deleted,
-      "modified" => changes.modified
-    }
-
-    File.write(output_file, JSON.pretty_generate(output))
-    puts "Changes exported to: #{output_file}"
-  end
-
   # Update a tags file by adding new tags from additions
   # @param file_path [String] Path to the file to update
   # @param changes [TagChanges] Changes detected
@@ -226,9 +205,7 @@ end
 # Parse command-line arguments
 def parse_options
   options = {
-    verbose: false,
     show_text: false,
-    output_file: nil,
     update_reference: false
   }
 
@@ -239,16 +216,8 @@ def parse_options
     opts.separator ""
     opts.separator "Options:"
 
-    opts.on("-v", "--verbose", "Enable verbose output") do
-      options[:verbose] = true
-    end
-
     opts.on("-t", "--show-text", "Show tag text in the output") do
       options[:show_text] = true
-    end
-
-    opts.on("-o", "--output FILE", "Export changes to JSON file") do |file|
-      options[:output_file] = file
     end
 
     opts.on("-u", "--update-reference", "Update the reference tags file by adding any additions found in the current file") do
@@ -279,7 +248,6 @@ if __FILE__ == $0
   options = parse_options
 
   detector = TagChangeDetector.new(
-    verbose: options[:verbose],
     show_text: options[:show_text]
   )
 
@@ -292,11 +260,6 @@ if __FILE__ == $0
 
   # Display changes
   detector.display_changes(changes, options[:reference_file], options[:current_file])
-
-  # Export if requested
-  if options[:output_file]
-    detector.export_changes(changes, options[:output_file])
-  end
 
   # Update reference file if requested
   if options[:update_reference]

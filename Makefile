@@ -175,8 +175,8 @@ compare-test-norm-rules-html: $(EXPECTED_NORM_RULES_HTML) $(BUILT_NORM_RULES_HTM
 	diff $(EXPECTED_NORM_RULES_HTML) $(BUILT_NORM_RULES_HTML) && echo "diff PASSED" || (echo "diff FAILED"; exit 1)
 
 # Test tag change detection
-.PHONY: test-tag-changes test-tag-changes-basic test-tag-changes-text test-tag-changes-json test-tag-changes-additions-only test-tag-changes-update
-test-tag-changes: test-tag-changes-basic test-tag-changes-text test-tag-changes-json test-tag-changes-additions-only test-tag-changes-update
+.PHONY: test-tag-changes test-tag-changes-basic test-tag-changes-text test-tag-changes-additions-only test-tag-changes-update
+test-tag-changes: test-tag-changes-basic test-tag-changes-text test-tag-changes-additions-only test-tag-changes-update
 
 test-tag-changes-basic: $(TAG_CHANGES_TEST_REFERENCE_PATH) $(TAG_CHANGES_TEST_CURRENT_PATH)
 	@echo "TESTING TAG CHANGE DETECTION - BASIC OUTPUT (with modifications/deletions)"
@@ -185,10 +185,6 @@ test-tag-changes-basic: $(TAG_CHANGES_TEST_REFERENCE_PATH) $(TAG_CHANGES_TEST_CU
 test-tag-changes-text: $(TAG_CHANGES_TEST_REFERENCE_PATH) $(TAG_CHANGES_TEST_CURRENT_PATH)
 	@echo "TESTING TAG CHANGE DETECTION - WITH TEXT OUTPUT (with modifications/deletions)"
 	$(DETECT_TAG_CHANGES_RUBY) --show-text $(TAG_CHANGES_TEST_REFERENCE_PATH) $(TAG_CHANGES_TEST_CURRENT_PATH) && echo "test-tag-changes-text FAILED (expected exit 1 for modifications/deletions)" || echo "test-tag-changes-text PASSED"
-
-test-tag-changes-json: $(TAG_CHANGES_TEST_REFERENCE_PATH) $(TAG_CHANGES_TEST_CURRENT_PATH)
-	@echo "TESTING TAG CHANGE DETECTION - JSON EXPORT (with modifications/deletions)"
-	$(DETECT_TAG_CHANGES_RUBY) --output $(TAG_CHANGES_OUTPUT_PATH) $(TAG_CHANGES_TEST_REFERENCE_PATH) $(TAG_CHANGES_TEST_CURRENT_PATH) && echo "test-tag-changes-json FAILED (expected exit 1 for modifications/deletions)" || (test -f $(TAG_CHANGES_OUTPUT_PATH) && echo "test-tag-changes-json PASSED" || echo "test-tag-changes-json FAILED (output not created)")
 
 test-tag-changes-no-changes: $(TAG_CHANGES_TEST_REFERENCE_PATH)
 	@echo "TESTING TAG CHANGE DETECTION - NO CHANGES (expect exit 0)"
@@ -201,8 +197,9 @@ test-tag-changes-additions-only: $(TAG_CHANGES_TEST_REFERENCE_PATH)
 test-tag-changes-update: $(TAG_CHANGES_TEST_REFERENCE_PATH)
 	@echo "TESTING TAG CHANGE DETECTION - UPDATE FILE"
 	@cp -f $(TAG_CHANGES_TEST_REFERENCE_PATH) $(BUILD_DIR)/test-reference.json
-	$(DETECT_TAG_CHANGES_RUBY) $(BUILD_DIR)/test-reference.json $(TAG_CHANGES_TESTS_DIR)/test-norm-tags-additions-only.json --update-reference > /dev/null 2>&1 && ruby -rjson -e 'data = JSON.parse(File.read("$(BUILD_DIR)/test-reference.json")); exit(data["tags"].key?("norm:added-only-tag") ? 0 : 1)' && echo "test-tag-changes-update PASSED" || echo "test-tag-changes-update FAILED"
-	@rm -f $(BUILD_DIR)/test-reference.json
+	@$(DETECT_TAG_CHANGES_RUBY) $(BUILD_DIR)/test-reference.json $(TAG_CHANGES_TESTS_DIR)/test-norm-tags-additions-only.json --update-reference > /dev/null 2>&1
+	@ruby -rjson -e 'data = JSON.parse(File.read("$(BUILD_DIR)/test-reference.json")); exit(data["tags"].key?("norm:added-only-tag") ? 0 : 1)' || (echo "test-tag-changes-update FAILED (tag not added)"; exit 1)
+	@$(DETECT_TAG_CHANGES_RUBY) $(BUILD_DIR)/test-reference.json $(TAG_CHANGES_TESTS_DIR)/test-norm-tags-additions-only.json > /dev/null 2>&1 && echo "test-tag-changes-update PASSED" || (echo "test-tag-changes-update FAILED (differences detected after update)"; exit 1)
 
 # Update expected files from built files
 .PHONY: update-expected update-test-tags update-test-norm-rules-json update-test-norm-rules-html

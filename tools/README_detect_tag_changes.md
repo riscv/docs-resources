@@ -12,9 +12,7 @@
 
 ### Options
 
-- `-v, --verbose` - Enable verbose output
 - `-t, --show-text` - Show tag text in the output (displays the actual content of tags)
-- `-o, --output FILE` - Export changes to a JSON file
 - `-h, --help` - Show help message
 
 ### Exit Codes
@@ -38,13 +36,6 @@ Display the actual text content of changed tags:
 ./detect_tag_changes.rb --show-text build/reference-tags.json build/current-tags.json
 ```
 
-### Export to JSON
-
-Save changes to a JSON file for further processing:
-```bash
-./detect_tag_changes.rb --output changes.json build/reference-tags.json build/current-tags.json
-```
-
 ### Update Reference File
 
 Automatically merge additions into the reference file:
@@ -58,7 +49,7 @@ This updates `reference.json` by adding any new tags that are in `current.json` 
 
 Use multiple options together:
 ```bash
-./detect_tag_changes.rb -t -o changes.json -u reference.json current.json
+./detect_tag_changes.rb -t -u reference.json current.json
 ```
 
 ## Output Format
@@ -101,33 +92,6 @@ Summary: 3 total changes
 ================================================================================
 ```
 
-### JSON Export Format
-
-When using the `--output` option, the script generates a JSON file with this structure:
-
-```json
-{
-  "summary": {
-    "total_changes": 3,
-    "added": 1,
-    "deleted": 1,
-    "modified": 1
-  },
-  "added": {
-    "tag-name": "tag text content"
-  },
-  "deleted": {
-    "tag-name": "tag text content"
-  },
-  "modified": {
-    "tag-name": {
-      "reference": "original text",
-      "current": "updated text"
-    }
-  }
-}
-```
-
 ## Use Cases
 
 ### Version Control
@@ -151,10 +115,9 @@ fi
 
 ### Review Process
 
-Generate a JSON report for automated analysis or review:
+Generate a detailed report for review:
 ```bash
 ./detect_tag_changes.rb \
-    --output review/tag-changes.json \
     --show-text \
     previous-release/tags.json \
     current/tags.json
@@ -167,7 +130,6 @@ Maintain a reference that automatically incorporates new additions:
 # Check for changes and update reference with new tags
 ./detect_tag_changes.rb \
     --update-reference \
-    --output review/changes.json \
     reference-tags.json \
     current-tags.json
 
@@ -223,7 +185,6 @@ cp build/test-norm-tags.json build/test-v1.json
 # Run tests
 ./detect_tag_changes.rb build/test-v1.json build/test-v2.json
 ./detect_tag_changes.rb --show-text build/test-v1.json build/test-v2.json
-./detect_tag_changes.rb --output test-changes.json build/test-v1.json build/test-v2.json
 ```
 
 ## Contributing
