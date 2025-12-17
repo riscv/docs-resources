@@ -78,7 +78,8 @@ class TagChangeDetector
       reference_text = reference_tags[tag_name]
       current_text = current_tags[tag_name]
 
-      if reference_text != current_text
+      # Compare normalized text (ignoring whitespace differences)
+      if normalize_whitespace(reference_text) != normalize_whitespace(current_text)
         changes.modified[tag_name] = {
           "reference" => reference_text,
           "current" => current_text
@@ -191,6 +192,13 @@ class TagChangeDetector
   end
 
   private
+
+  # Normalize whitespace for comparison
+  # @param text [String] Text to normalize
+  # @return [String] Text with normalized whitespace
+  def normalize_whitespace(text)
+    text.strip.gsub(/\s+/, ' ')
+  end
 
   # Truncate text for display
   # @param text [String] Text to truncate
