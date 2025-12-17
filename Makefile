@@ -175,24 +175,28 @@ compare-test-norm-rules-html: $(EXPECTED_NORM_RULES_HTML) $(BUILT_NORM_RULES_HTM
 	diff $(EXPECTED_NORM_RULES_HTML) $(BUILT_NORM_RULES_HTML) && echo "diff PASSED" || (echo "diff FAILED"; exit 1)
 
 # Test tag change detection
-.PHONY: test-tag-changes test-tag-changes-basic test-tag-changes-text test-tag-changes-json
-test-tag-changes: test-tag-changes-basic test-tag-changes-text test-tag-changes-json
+.PHONY: test-tag-changes test-tag-changes-basic test-tag-changes-text test-tag-changes-json test-tag-changes-additions-only
+test-tag-changes: test-tag-changes-basic test-tag-changes-text test-tag-changes-json test-tag-changes-additions-only
 
 test-tag-changes-basic: $(TAG_CHANGES_TEST_OLD_PATH) $(TAG_CHANGES_TEST_NEW_PATH)
-	@echo "TESTING TAG CHANGE DETECTION - BASIC OUTPUT"
-	$(DETECT_TAG_CHANGES_RUBY) $(TAG_CHANGES_TEST_OLD_PATH) $(TAG_CHANGES_TEST_NEW_PATH) && echo "test-tag-changes-basic FAILED (expected changes detected)" || echo "test-tag-changes-basic PASSED"
+	@echo "TESTING TAG CHANGE DETECTION - BASIC OUTPUT (with modifications/deletions)"
+	$(DETECT_TAG_CHANGES_RUBY) $(TAG_CHANGES_TEST_OLD_PATH) $(TAG_CHANGES_TEST_NEW_PATH) && echo "test-tag-changes-basic FAILED (expected exit 1 for modifications/deletions)" || echo "test-tag-changes-basic PASSED"
 
 test-tag-changes-text: $(TAG_CHANGES_TEST_OLD_PATH) $(TAG_CHANGES_TEST_NEW_PATH)
-	@echo "TESTING TAG CHANGE DETECTION - WITH TEXT OUTPUT"
-	$(DETECT_TAG_CHANGES_RUBY) --show-text $(TAG_CHANGES_TEST_OLD_PATH) $(TAG_CHANGES_TEST_NEW_PATH) && echo "test-tag-changes-text FAILED (expected changes detected)" || echo "test-tag-changes-text PASSED"
+	@echo "TESTING TAG CHANGE DETECTION - WITH TEXT OUTPUT (with modifications/deletions)"
+	$(DETECT_TAG_CHANGES_RUBY) --show-text $(TAG_CHANGES_TEST_OLD_PATH) $(TAG_CHANGES_TEST_NEW_PATH) && echo "test-tag-changes-text FAILED (expected exit 1 for modifications/deletions)" || echo "test-tag-changes-text PASSED"
 
 test-tag-changes-json: $(TAG_CHANGES_TEST_OLD_PATH) $(TAG_CHANGES_TEST_NEW_PATH)
-	@echo "TESTING TAG CHANGE DETECTION - JSON EXPORT"
-	$(DETECT_TAG_CHANGES_RUBY) --output $(TAG_CHANGES_OUTPUT_PATH) $(TAG_CHANGES_TEST_OLD_PATH) $(TAG_CHANGES_TEST_NEW_PATH) && echo "test-tag-changes-json FAILED (expected changes detected)" || (test -f $(TAG_CHANGES_OUTPUT_PATH) && echo "test-tag-changes-json PASSED" || echo "test-tag-changes-json FAILED (output not created)")
+	@echo "TESTING TAG CHANGE DETECTION - JSON EXPORT (with modifications/deletions)"
+	$(DETECT_TAG_CHANGES_RUBY) --output $(TAG_CHANGES_OUTPUT_PATH) $(TAG_CHANGES_TEST_OLD_PATH) $(TAG_CHANGES_TEST_NEW_PATH) && echo "test-tag-changes-json FAILED (expected exit 1 for modifications/deletions)" || (test -f $(TAG_CHANGES_OUTPUT_PATH) && echo "test-tag-changes-json PASSED" || echo "test-tag-changes-json FAILED (output not created)")
 
 test-tag-changes-no-changes: $(TAG_CHANGES_TEST_OLD_PATH)
-	@echo "TESTING TAG CHANGE DETECTION - NO CHANGES"
-	$(DETECT_TAG_CHANGES_RUBY) $(TAG_CHANGES_TEST_OLD_PATH) $(TAG_CHANGES_TEST_OLD_PATH) && echo "test-tag-changes-no-changes PASSED" || echo "test-tag-changes-no-changes FAILED (no changes should be detected)"
+	@echo "TESTING TAG CHANGE DETECTION - NO CHANGES (expect exit 0)"
+	$(DETECT_TAG_CHANGES_RUBY) $(TAG_CHANGES_TEST_OLD_PATH) $(TAG_CHANGES_TEST_OLD_PATH) && echo "test-tag-changes-no-changes PASSED" || echo "test-tag-changes-no-changes FAILED (no changes should return exit 0)"
+
+test-tag-changes-additions-only: $(TAG_CHANGES_TEST_OLD_PATH)
+	@echo "TESTING TAG CHANGE DETECTION - ADDITIONS ONLY (expect exit 0)"
+	$(DETECT_TAG_CHANGES_RUBY) $(TAG_CHANGES_TEST_OLD_PATH) $(TAG_CHANGES_TESTS_DIR)/test-norm-tags-additions-only.json && echo "test-tag-changes-additions-only PASSED" || echo "test-tag-changes-additions-only FAILED (additions only should return exit 0)"
 
 # Update expected files from built files
 .PHONY: update-expected update-test-tags update-test-norm-rules-json update-test-norm-rules-html

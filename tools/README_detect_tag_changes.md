@@ -19,8 +19,8 @@
 
 ### Exit Codes
 
-- `0` - No changes detected
-- `1` - Changes detected (useful for CI/CD pipelines)
+- `0` - No changes detected or only additions detected
+- `1` - Modifications or deletions detected (useful for CI/CD pipelines to flag breaking changes)
 
 ## Examples
 

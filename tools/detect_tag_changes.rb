@@ -263,5 +263,8 @@ if __FILE__ == $0
   end
 
   # Exit with appropriate status code
-  exit(changes.any_changes? ? 1 : 0)
+  # Return 0 if no changes or only additions
+  # Return 1 if any modifications or deletions detected
+  has_modifications_or_deletions = !changes.modified.empty? || !changes.deleted.empty?
+  exit(has_modifications_or_deletions ? 1 : 0)
 end
