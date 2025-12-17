@@ -3,6 +3,7 @@
 
 require "json"
 require "optparse"
+require "set"
 
 # Script to detect changes in normative tags extracted from asciidoc files
 # Compares two tag JSON files and reports additions, deletions, and modifications
@@ -40,14 +41,7 @@ class TagChangeDetector
 
     begin
       data = JSON.parse(File.read(filename))
-      tags = data["tags"] || {}
-
-      # Apply prefix filter if specified
-      if @prefix_filter
-        tags = tags.select { |tag_name, _| tag_name.start_with?(@prefix_filter) }
-      end
-
-      tags
+      data["tags"] || {}
     rescue JSON::ParserError => e
       abort("Error: Failed to parse JSON from #{filename}: #{e.message}")
     end
@@ -200,7 +194,7 @@ class TagChangeDetector
   # @param text [String] Text to normalize
   # @return [String] Normalized text
   def normalize_text(text)
-    # First strip AsciiDoc formatting, then normalize whitespace
+    # First normalize whitespace, then strip AsciiDoc formatting
     strip_asciidoc_formatting(normalize_whitespace(text))
   end
 

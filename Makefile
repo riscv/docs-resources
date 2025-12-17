@@ -173,8 +173,8 @@ compare-test-norm-rules-html: $(EXPECTED_NORM_RULES_HTML) $(BUILT_NORM_RULES_HTM
 	diff $(EXPECTED_NORM_RULES_HTML) $(BUILT_NORM_RULES_HTML) && echo "diff PASSED" || (echo "diff FAILED"; exit 1)
 
 # Test tag change detection
-.PHONY: test-tag-changes test-tag-changes-basic test-tag-changes-text test-tag-changes-additions-only test-tag-changes-whitespace-only test-tag-changes-formatting-only test-tag-changes-update
-test-tag-changes: test-tag-changes-basic test-tag-changes-text test-tag-changes-additions-only test-tag-changes-whitespace-only test-tag-changes-formatting-only test-tag-changes-update
+.PHONY: test-tag-changes test-tag-changes-basic test-tag-changes-text test-tag-changes-no-changes test-tag-changes-additions-only test-tag-changes-whitespace-only test-tag-changes-formatting-only test-tag-changes-update
+test-tag-changes: test-tag-changes-basic test-tag-changes-text test-tag-changes-no-changes test-tag-changes-additions-only test-tag-changes-whitespace-only test-tag-changes-formatting-only test-tag-changes-update
 
 test-tag-changes-basic: $(TAG_CHANGES_TEST_REFERENCE_PATH) $(TAG_CHANGES_TEST_CURRENT_PATH)
 	@echo "TESTING TAG CHANGE DETECTION - BASIC OUTPUT (with modifications/deletions)"
