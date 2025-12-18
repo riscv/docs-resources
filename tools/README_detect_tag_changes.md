@@ -54,12 +54,8 @@ Get detailed processing information during execution:
 ```
 
 Verbose output includes:
-- File loading progress and tag counts
-- Change detection progress
+- Summaries
 - Detailed information about each added tag during updates
-- Step-by-step processing information
-
-Useful for debugging, understanding script behavior, or monitoring long-running operations.
 
 ## Output Format
 

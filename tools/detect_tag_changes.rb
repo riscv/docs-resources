@@ -72,7 +72,6 @@ class TagChangeDetector
 
     # Find modified tags (in both but different text)
     common_keys = reference_keys & current_keys
-    modified_count = 0
     common_keys.each do |tag_name|
       reference_text = reference_tags[tag_name]
       current_text = current_tags[tag_name]
@@ -82,7 +81,6 @@ class TagChangeDetector
       normalized_cur = normalize_text(current_text)
 
       if normalized_ref != normalized_cur
-        modified_count += 1
         changes.modified[tag_name] = {
           "reference" => reference_text,
           "current" => current_text
