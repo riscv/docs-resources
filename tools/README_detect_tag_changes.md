@@ -12,8 +12,9 @@
 
 ### Options
 
-- `-t, --show-text` - Show tag text in the output (displays the actual content of tags)
-- `-h, --help` - Show help message
+- `-u, --update-reference` - Update the reference tags file by adding any additions found in the current file
+- `-v, --verbose`          - Show verbose output with detailed processing information
+- `-h, --help`             - Show help message
 
 ### Exit Codes
 
@@ -29,13 +30,6 @@ Compare two tag files:
 ./detect_tag_changes.rb build/reference-tags.json build/current-tags.json
 ```
 
-### Show Tag Text
-
-Display the actual text content of changed tags:
-```bash
-./detect_tag_changes.rb --show-text build/reference-tags.json build/current-tags.json
-```
-
 ### Update Reference File
 
 Automatically merge additions into the reference file:
@@ -49,8 +43,23 @@ This updates `reference.json` by adding any new tags that are in `current.json` 
 
 Use multiple options together:
 ```bash
-./detect_tag_changes.rb -t -u reference.json current.json
+./detect_tag_changes.rb -u -v reference.json current.json
 ```
+
+### Verbose Mode
+
+Get detailed processing information during execution:
+```bash
+./detect_tag_changes.rb --verbose reference.json current.json
+```
+
+Verbose output includes:
+- File loading progress and tag counts
+- Change detection progress
+- Detailed information about each added tag during updates
+- Step-by-step processing information
+
+Useful for debugging, understanding script behavior, or monitoring long-running operations.
 
 ## Output Format
 

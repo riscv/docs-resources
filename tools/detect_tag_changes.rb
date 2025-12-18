@@ -28,7 +28,7 @@ end
 
 class TagChangeDetector
   def initialize(options = {})
-    @show_text = options[:show_text] || false
+    @verbose = options[:verbose] || false
   end
 
   # Load tags from a JSON file
@@ -41,7 +41,8 @@ class TagChangeDetector
 
     begin
       data = JSON.parse(File.read(filename))
-      data["tags"] || {}
+      tags = data["tags"] || {}
+      tags
     rescue JSON::ParserError => e
       abort("Error: Failed to parse JSON from #{filename}: #{e.message}")
     end
@@ -58,17 +59,21 @@ class TagChangeDetector
     current_keys = current_tags.keys.to_set
 
     # Find added tags (in current but not in reference)
-    (current_keys - reference_keys).each do |tag_name|
+    added_keys = current_keys - reference_keys
+    added_keys.each do |tag_name|
       changes.added[tag_name] = current_tags[tag_name]
     end
 
     # Find deleted tags (in reference but not in current)
-    (reference_keys - current_keys).each do |tag_name|
+    deleted_keys = reference_keys - current_keys
+    deleted_keys.each do |tag_name|
       changes.deleted[tag_name] = reference_tags[tag_name]
     end
 
     # Find modified tags (in both but different text)
-    (reference_keys & current_keys).each do |tag_name|
+    common_keys = reference_keys & current_keys
+    modified_count = 0
+    common_keys.each do |tag_name|
       reference_text = reference_tags[tag_name]
       current_text = current_tags[tag_name]
 
@@ -77,6 +82,7 @@ class TagChangeDetector
       normalized_cur = normalize_text(current_text)
 
       if normalized_ref != normalized_cur
+        modified_count += 1
         changes.modified[tag_name] = {
           "reference" => reference_text,
           "current" => current_text
@@ -91,14 +97,17 @@ class TagChangeDetector
   # @param changes [TagChanges] Changes to display
   # @param reference_file [String] Name of reference file (for display)
   # @param current_file [String] Name of current file (for display)
-  def display_changes(changes, reference_file, current_file)
-    puts "=" * 80
-    puts "Tag Changes Report"
-    puts "=" * 80
+  # @param verbose [Boolean] Whether to show verbose output
+  def display_changes(changes, reference_file, current_file, verbose)
+    if verbose
+      puts "=" * 80
+      puts "Tag Changes Report"
+      puts "=" * 80
+      puts
+    end
+
     puts "Reference file: #{reference_file}"
     puts "Current file: #{current_file}"
-    puts "=" * 80
-    puts
 
     unless changes.any_changes?
       puts "No changes detected."
@@ -107,55 +116,47 @@ class TagChangeDetector
 
     # Display added tags
     unless changes.added.empty?
-      puts "Added Tags (#{changes.added.size}):"
-      puts "-" * 80
+      count = changes.added.size
+      puts "Added #{count} tag#{count > 1 ? 's' : ''}:"
       changes.added.sort.each do |tag_name, text|
-        puts "  + #{tag_name}"
-        if @show_text
-          puts "      Text: #{truncate_text(text)}"
-          puts
-        end
+        puts %Q[  * "#{tag_name}": "#{truncate_text(text)}"]
       end
       puts
     end
 
     # Display deleted tags
     unless changes.deleted.empty?
-      puts "Deleted Tags (#{changes.deleted.size}):"
-      puts "-" * 80
+      count = changes.deleted.size
+      puts "Deleted #{count} tag#{count > 1 ? 's' : ''}:"
       changes.deleted.sort.each do |tag_name, text|
-        puts "  - #{tag_name}"
-        if @show_text
-          puts "      Text: #{truncate_text(text)}"
-          puts
-        end
+        puts %Q[  * "#{tag_name}": "#{truncate_text(text)}"]
       end
       puts
     end
 
     # Display modified tags
     unless changes.modified.empty?
-      puts "Modified Tags (#{changes.modified.size}):"
-      puts "-" * 80
+      count = changes.modified.size
+      puts "Modified #{count} tag#{count > 1 ? 's' : ''}:"
       changes.modified.sort.each do |tag_name, texts|
-        puts "  ~ #{tag_name}"
-        if @show_text
-          puts "      Reference: #{truncate_text(texts['reference'])}"
-          puts "      Current: #{truncate_text(texts['current'])}"
-          puts
-        end
+        puts %Q[  * "#{tag_name}":]
+        puts %Q[      Reference: "#{truncate_text(texts['reference'])}"]
+        puts %Q[      Current:   "#{truncate_text(texts['current'])}"]
       end
       puts
     end
 
     # Summary
-    puts "=" * 80
-    puts "Summary: #{changes.total_changes} total changes"
-    puts "  Added:    #{changes.added.size}"
-    puts "  Deleted:  #{changes.deleted.size}"
-    puts "  Modified: #{changes.modified.size}"
-    puts "=" * 80
+    if verbose
+      puts "=" * 80
+      puts "Summary: #{changes.total_changes} total changes"
+      puts "  Added:    #{changes.added.size}"
+      puts "  Deleted:  #{changes.deleted.size}"
+      puts "  Modified: #{changes.modified.size}"
+      puts "=" * 80
+    end
   end
+
 
   # Update a tags file by adding new tags from additions
   # @param file_path [String] Path to the file to update
@@ -163,6 +164,7 @@ class TagChangeDetector
   def update_tags_file(file_path, changes)
     if changes.added.empty?
       puts "No additions to merge into #{file_path}"
+      puts "Skipping file update - no additions" if @verbose
       return
     end
 
@@ -170,16 +172,20 @@ class TagChangeDetector
       abort("Error: Cannot update file - not found: #{file_path}")
     end
 
+    puts "Updating reference file: #{file_path}" if @verbose
+
     begin
       data = JSON.parse(File.read(file_path))
       original_count = data["tags"].size
 
       # Add new tags
       changes.added.each do |tag_name, tag_text|
+        puts "  Adding tag: #{tag_name}" if @verbose
         data["tags"][tag_name] = tag_text
       end
 
       # Write back to file
+      puts "Writing updated file..." if @verbose
       File.write(file_path, JSON.pretty_generate(data))
       new_count = data["tags"].size
       puts "Updated #{file_path}: added #{changes.added.size} new tags (#{original_count} -> #{new_count} total tags)"
@@ -254,8 +260,8 @@ end
 # Parse command-line arguments
 def parse_options
   options = {
-    show_text: false,
-    update_reference: false
+    update_reference: false,
+    verbose: false
   }
 
   parser = OptionParser.new do |opts|
@@ -265,12 +271,12 @@ def parse_options
     opts.separator ""
     opts.separator "Options:"
 
-    opts.on("-t", "--show-text", "Show tag text in the output") do
-      options[:show_text] = true
-    end
-
     opts.on("-u", "--update-reference", "Update the reference tags file by adding any additions found in the current file") do
       options[:update_reference] = true
+    end
+
+    opts.on("-v", "--verbose", "Show verbose output with detailed processing information") do
+      options[:verbose] = true
     end
 
     opts.on("-h", "--help", "Show this help message") do
@@ -297,7 +303,7 @@ if __FILE__ == $0
   options = parse_options
 
   detector = TagChangeDetector.new(
-    show_text: options[:show_text]
+    verbose: options[:verbose]
   )
 
   # Load both tag files
@@ -308,7 +314,7 @@ if __FILE__ == $0
   changes = detector.detect_changes(reference_tags, current_tags)
 
   # Display changes
-  detector.display_changes(changes, options[:reference_file], options[:current_file])
+  detector.display_changes(changes, options[:reference_file], options[:current_file], options[:verbose])
 
   # Update reference file if requested
   if options[:update_reference]
