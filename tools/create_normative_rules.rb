@@ -1044,10 +1044,23 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
   fatal("Need NormativeTags for tags but passed a #{tags.class}") unless tags.is_a?(NormativeTags)
   fatal("Need Hash for tag_fname2url but passed a #{tag_fname2url.class}") unless tag_fname2url.is_a?(Hash)
 
+  num_rules = nr_defs.length
+  num_params = 0
+  nr_defs.each do |nr|
+    unless nr.kind.nil?
+      num_params += 1 if nr.kind == "parameter"
+    end
+  end
+
+  num_rules_str = "#{num_rules} normative rule#{num_rules == 1 ? "" : "s"}"
+  num_params_str = "including #{num_params} parameter#{num_params == 1 ? "" : "s"}"
+
+  chapter_caption = "Chapter #{chapter_name} (#{num_rules_str} #{num_params_str})"
+
   f.puts("")
   f.puts(%Q{      <section id="table-#{table_num}" class="section">})
   f.puts(%Q{        <table>})
-  f.puts(%Q{          <caption class="sticky-caption">#{chapter_name}</caption>})
+  f.puts(%Q{          <caption class="sticky-caption">#{chapter_caption}</caption>})
   f.puts(%Q{          <colgroup>})
   f.puts(%Q{            <col class="col-name">})
   f.puts(%Q{            <col class="col-description">})
