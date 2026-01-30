@@ -829,7 +829,7 @@ def output_html(filename, defs, tags, tag_fname2url)
   fatal("Need Hash for tag_fname2url but passed a #{tag_fname2url.class}") unless tag_fname2url.is_a?(Hash)
 
   # Organize rules by chapter name. Each hash key is chapter name. Each hash entry is an Array<NormativeRuleDef>
-  # Also count total number of normative rules and parameters.
+  # Also create array of parameters.
   defs_by_chapter_name = {}
   chapter_names = []
   parameters = []
@@ -1069,15 +1069,15 @@ def html_norm_rule_table(f, table_name, chapter_name, nr_defs, tags, tag_fname2u
   html_norm_rule_table_footer(f)
 end
 
-def html_parameter_table(f, table_name, chapter_suffix, parameters, tags, tag_fname2url)
+def html_parameter_table(f, table_name, caption_suffix, parameters, tags, tag_fname2url)
   fatal("Need File for f but passed a #{f.class}") unless f.is_a?(File)
   fatal("Need String for table_name but passed a #{table_name.class}") unless table_name.is_a?(String)
-  fatal("Need String for chapter_suffix but passed a #{chapter_suffix.class}") unless chapter_suffix.is_a?(String)
+  fatal("Need String for caption_suffix but passed a #{caption_suffix.class}") unless caption_suffix.is_a?(String)
   fatal("Need Array for parameters but passed a #{parameters.class}") unless parameters.is_a?(Array)
   fatal("Need NormativeTags for tags but passed a #{tags.class}") unless tags.is_a?(NormativeTags)
   fatal("Need Hash for tag_fname2url but passed a #{tag_fname2url.class}") unless tag_fname2url.is_a?(Hash)
 
-  html_norm_rule_table_header(f, table_name, "All #{parameters.length} Parameters#{chapter_suffix}")
+  html_norm_rule_table_header(f, table_name, "All #{parameters.length} Parameters#{caption_suffix}")
   parameters.each do |p|
     html_norm_rule_table_row(f, p, tags, tag_fname2url, true)
   end
