@@ -865,7 +865,7 @@ def output_html(filename, defs, tags, tag_fname2url)
       table_num=table_num+1
     end
 
-    html_parameter_table(f, "table-parameters-a-z", " (A-Z)", parameters, tags, tag_fname2url)
+    html_parameter_table(f, "table-parameters-a-z", " (A-Z)", parameters)
 
     f.puts(%Q{    </main>})
     f.puts(%Q{  </div>})
@@ -1069,13 +1069,11 @@ def html_norm_rule_table(f, table_name, chapter_name, nr_defs, tags, tag_fname2u
   html_table_footer(f)
 end
 
-def html_parameter_table(f, table_name, caption_suffix, parameters, tags, tag_fname2url)
+def html_parameter_table(f, table_name, caption_suffix, parameters)
   fatal("Need File for f but passed a #{f.class}") unless f.is_a?(File)
   fatal("Need String for table_name but passed a #{table_name.class}") unless table_name.is_a?(String)
   fatal("Need String for caption_suffix but passed a #{caption_suffix.class}") unless caption_suffix.is_a?(String)
   fatal("Need Array for parameters but passed a #{parameters.class}") unless parameters.is_a?(Array)
-  fatal("Need NormativeTags for tags but passed a #{tags.class}") unless tags.is_a?(NormativeTags)
-  fatal("Need Hash for tag_fname2url but passed a #{tag_fname2url.class}") unless tag_fname2url.is_a?(Hash)
 
   html_parameter_table_header(f, table_name, "All #{parameters.length} Parameters#{caption_suffix}")
   parameters.each do |p|
