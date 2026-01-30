@@ -864,7 +864,7 @@ def output_html(filename, defs, tags, tag_fname2url)
     table_num=1
     chapter_names.each do |chapter_name|
       nr_defs = defs_by_chapter_name[chapter_name]
-      html_norm_rule_table(f, "table-#{table_num}", chapter_name, nr_defs, parameters.length, tags, tag_fname2url)
+      html_norm_rule_table(f, "table-#{table_num}", chapter_name, nr_defs, tags, tag_fname2url)
       table_num=table_num+1
     end
 
@@ -1034,7 +1034,7 @@ def html_sidebar(f, chapter_names)
   f.puts("")
   f.puts(%Q{  <aside class="sidebar">})
   f.puts(%Q{    <h2>Chapters</h2>})
-  f.puts(%Q{    <nav class="nav" id="nav">})
+  f.puts(%Q{    <nav class="nav" id="nav-chapters">})
 
   table_num=1
 
@@ -1045,27 +1045,27 @@ def html_sidebar(f, chapter_names)
 
   f.puts(%Q{    </nav>})
   f.puts(%Q{    <h2>Parameters</h2>})
-  f.puts(%Q{    <nav class="nav" id="nav">})
+  f.puts(%Q{    <nav class="nav" id="nav-parameters-a-z">})
   f.puts(%Q{      <a href="#table-parameters-a-z" data-target="table-parameters-a-z">All Parameters (A-Z)</a>})
   f.puts(%Q{    </nav>})
   f.puts('  </aside>')
 end
 
-def html_norm_rule_table(f, table_name, chapter_name, nr_defs, num_params, tags, tag_fname2url)
+def html_norm_rule_table(f, table_name, chapter_name, nr_defs, tags, tag_fname2url)
   fatal("Need File for f but passed a #{f.class}") unless f.is_a?(File)
   fatal("Need String for table_name but passed a #{table_name.class}") unless table_name.is_a?(String)
   fatal("Need String for chapter_name but passed a #{chapter_name.class}") unless chapter_name.is_a?(String)
   fatal("Need Array for nr_defs but passed a #{nr_defs.class}") unless nr_defs.is_a?(Array)
-  fatal("Need Integer for num_params but passed a #{num_params.class}") unless num_params.is_a?(Integer)
   fatal("Need NormativeTags for tags but passed a #{tags.class}") unless tags.is_a?(NormativeTags)
   fatal("Need Hash for tag_fname2url but passed a #{tag_fname2url.class}") unless tag_fname2url.is_a?(Hash)
 
   num_rules = nr_defs.length
+  num_params = count_parameters(nr_defs)
 
   num_rules_str = "#{num_rules} normative rule#{num_rules == 1 ? "" : "s"}"
-  num_params_str = "including #{num_params} parameter#{num_params == 1 ? "" : "s"}"
+  num_params_str = "#{num_params} parameter#{num_params == 1 ? "" : "s"}"
 
-  html_norm_rule_table_header(f, table_name, "Chapter #{chapter_name} (#{num_rules_str} #{num_params_str})")
+  html_norm_rule_table_header(f, table_name, "Chapter #{chapter_name} (#{num_rules_str} including #{num_params_str})")
   nr_defs.each do |nr|
     html_norm_rule_table_row(f, nr, tags, tag_fname2url, true)
   end
@@ -1319,11 +1319,11 @@ def truncate_after_newlines(text, max_newlines)
 end
 
 def count_parameters(defs)
-  raise ArgumentError, "Need NormativeRuleDefs for defs but passed a #{defs.class}" unless defs.is_a?(NormativeRuleDefs)
+  raise ArgumentError, "Need Array<NormativeRuleDef> for defs but passed a #{defs.class}" unless defs.is_a?(Array)
 
   num_parameters = 0
 
-  defs.norm_rule_defs.each do |d|
+  defs.each do |d|
     num_parameters += 1 if d.kind == "parameter"
   end
 
@@ -1491,7 +1491,7 @@ tags = load_tags(tag_fnames)
 validate_defs_and_tags(defs, tags, warn_if_tags_no_rules)
 
 info("Storing #{defs.norm_rule_defs.count} normative rules into file #{output_fname}")
-info("Includes #{count_parameters(defs)} parameters")
+info("Includes #{count_parameters(defs.norm_rule_defs)} parameters")
 
 case output_format
 when "json"
