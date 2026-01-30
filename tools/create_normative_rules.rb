@@ -1068,7 +1068,7 @@ def html_norm_rule_table(f, table_name, chapter_name, nr_defs, tags, tag_fname2u
 
   html_norm_rule_table_header(f, table_name, "Chapter #{chapter_name} (#{num_rules_str} including #{num_params_str})")
   nr_defs.each do |nr|
-    html_norm_rule_table_row(f, nr, tags, tag_fname2url, true)
+    html_norm_rule_table_row(f, nr, tags, tag_fname2url, false)
   end
   html_norm_rule_table_footer(f)
 end
@@ -1083,7 +1083,7 @@ def html_parameter_table(f, table_name, chapter_suffix, parameters, tags, tag_fn
 
   html_norm_rule_table_header(f, table_name, "All #{parameters.length} Parameters#{chapter_suffix}")
   parameters.each do |p|
-    html_norm_rule_table_row(f, p, tags, tag_fname2url, false)
+    html_norm_rule_table_row(f, p, tags, tag_fname2url, true)
   end
   html_norm_rule_table_footer(f)
 end
@@ -1108,13 +1108,15 @@ def html_norm_rule_table_header(f, table_name, table_caption)
   f.puts(%Q{          <tbody>})
 end
 
-def html_norm_rule_table_row(f, nr, tags, tag_fname2url, display_param_kind)
+def html_norm_rule_table_row(f, nr, tags, tag_fname2url, param_table)
   fatal("Need File for f but passed a #{f.class}") unless f.is_a?(File)
   fatal("Need NormativeRuleDef for nr but passed a #{nr.class}") unless nr.is_a?(NormativeRuleDef)
   fatal("Need NormativeTags for tags but passed a #{tags.class}") unless tags.is_a?(NormativeTags)
   fatal("Need Hash for tag_fname2url but passed a #{tag_fname2url.class}") unless tag_fname2url.is_a?(Hash)
+  fatal("Need Boolean for param_table but passed a #{param_table.class}") unless param_table.is_a?(TrueClass) || param_table.is_a?(FalseClass)
 
-  show_kind = !nr.kind.nil? && ((nr.kind != "parameter") || display_param_kind)
+  # Don't bother showing the kind if this is a parameter table and the kind is "parameter" (redundant information).
+  show_kind = !nr.kind.nil? && ((nr.kind != "parameter") || !param_table)
 
   name_row_span =
     (show_kind ? 1 : 0) +
@@ -1130,9 +1132,12 @@ def html_norm_rule_table_row(f, nr, tags, tag_fname2url, display_param_kind)
   # Each subsequent row sets first_row to false after omitting the opening <tr> tag (which is only needed for rows after the first).
   first_row = true
 
+  # Create unique HTML id for the normative rule name cell.
+  id = param_table ? "param-#{nr.name}" : "#{nr.name}"
+
   # Output the normative rule name cell with rowspan.
   f.puts(%Q{            <tr>})
-  f.puts(%Q{              <td rowspan=#{name_row_span} id="#{nr.name}">#{nr.name}</td>})
+  f.puts(%Q{              <td rowspan=#{name_row_span} id="#{id}">#{nr.name}</td>})
 
   unless nr.summary.nil?
     text = convert_def_text_to_html(nr.summary)
