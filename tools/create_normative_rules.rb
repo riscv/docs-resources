@@ -842,11 +842,7 @@ def output_html(filename, defs, tags, tag_fname2url)
     end
     defs_by_chapter_name[d.chapter_name].append(d)
 
-    unless d.kind.nil?
-      if d.kind == "parameter"
-        parameters.append(d)
-      end
-    end
+    parameters.append(d) if d.kind == "parameter"
   end
 
   chapter_names.sort!
