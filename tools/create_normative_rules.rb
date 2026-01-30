@@ -859,7 +859,8 @@ def output_html(filename, defs, tags, tag_fname2url)
 
     html_sidebar(f, chapter_names)
     f.puts(%Q{    <main>})
-    f.puts(%Q{      <h1 style="font-size: 24px; font-weight: bold;">Grand total of #{defs.norm_rule_defs.length} normative rules including #{parameters.length} parameters</h1>})
+    f.puts(%Q{      <style>.grand-total-heading { font-size: 24px; font-weight: bold; }</style>})
+    f.puts(%Q{      <h1 class="grand-total-heading">Grand total of #{defs.norm_rule_defs.length} normative rules including #{parameters.length} parameters</h1>})
 
     table_num=1
     chapter_names.each do |chapter_name|
