@@ -33,6 +33,7 @@
       "name": "inline-with-hash",
       "def_filename": "tests/norm-rule/test.yaml",
       "chapter_name": "my-chapter_name",
+      "kind": "parameter",
       "tags": [
         {
           "name": "norm:inline-with-hash",
@@ -94,6 +95,7 @@
       "name": "cat-colors",
       "def_filename": "tests/norm-rule/test.yaml",
       "chapter_name": "my-chapter_name",
+      "kind": "parameter",
       "tags": [
         {
           "name": "norm:cat-colors",
@@ -192,6 +194,7 @@
       "name": "paragraph-with-a-really-wide-rule-name",
       "def_filename": "tests/norm-rule/test.yaml",
       "chapter_name": "my-chapter_name",
+      "kind": "parameter",
       "description": "Here's a [.underline]#description#.\nIt's got 2 lines.\n",
       "tags": [
         {
@@ -235,6 +238,7 @@
       "name": "formulae",
       "def_filename": "tests/norm-rule/test.yaml",
       "chapter_name": "my-chapter_name",
+      "kind": "parameter",
       "tags": [
         {
           "name": "norm:formulae",
@@ -249,6 +253,7 @@
       "name": "rule_with_newlines",
       "def_filename": "tests/norm-rule/test.yaml",
       "chapter_name": "my-chapter_name",
+      "kind": "parameter",
       "tags": [
         {
           "name": "norm:paragraph:tag_with_newlines",
