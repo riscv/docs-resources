@@ -829,8 +829,11 @@ def output_html(filename, defs, tags, tag_fname2url)
   fatal("Need Hash for tag_fname2url but passed a #{tag_fname2url.class}") unless tag_fname2url.is_a?(Hash)
 
   # Organize rules by chapter name. Each hash key is chapter name. Each hash entry is an Array<NormativeRuleDef>
+  # Also count total number of normative rules and parameters.
   defs_by_chapter_name = {}
-  chapter_names=[]
+  chapter_names = []
+  parameters = []
+
   defs.norm_rule_defs.each do |d|
     if defs_by_chapter_name[d.chapter_name].nil?
       # Haven't seen this chapter name yet.
@@ -838,34 +841,42 @@ def output_html(filename, defs, tags, tag_fname2url)
       chapter_names.append(d.chapter_name)
     end
     defs_by_chapter_name[d.chapter_name].append(d)
+
+    unless d.kind.nil?
+      if d.kind == "parameter"
+        parameters.append(d)
+      end
+    end
   end
 
   chapter_names.sort!
+  parameters.sort_by! { |p| p.name }
 
   File.open(filename, "w") do |f|
-    #f.puts("= Normative Rules by Chapter")
     html_head(f, chapter_names)
     f.puts(%Q{<body>})
     f.puts(%Q{  <div class="app">})
 
     html_sidebar(f, chapter_names)
-    f.puts("    <main>")
+    f.puts(%Q{    <main>})
+    f.puts(%Q{      <h1 style="font-size: 24px; font-weight: bold;">Grand total of #{defs.norm_rule_defs.length} normative rules including #{parameters.length} parameters</h1>})
 
     table_num=1
-
     chapter_names.each do |chapter_name|
       nr_defs = defs_by_chapter_name[chapter_name]
-      html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
+      html_norm_rule_table(f, "table-#{table_num}", chapter_name, nr_defs, parameters.length, tags, tag_fname2url)
       table_num=table_num+1
     end
 
-    f.puts("    </main>")
-    f.puts("  </div>")
+    html_parameter_table(f, "table-parameters-a-z", " (A-Z)", parameters, tags, tag_fname2url)
+
+    f.puts(%Q{    </main>})
+    f.puts(%Q{  </div>})
 
     html_script(f)
 
-    f.puts("</body>")
-    f.puts("</html>")
+    f.puts(%Q{</body>})
+    f.puts(%Q{</html>})
   end
 end
 
@@ -1032,35 +1043,59 @@ def html_sidebar(f, chapter_names)
     table_num = table_num+1
   end
 
-  f.puts('    </nav>')
+  f.puts(%Q{    </nav>})
+  f.puts(%Q{    <h2>Parameters</h2>})
+  f.puts(%Q{    <nav class="nav" id="nav">})
+  f.puts(%Q{      <a href="#table-parameters-a-z" data-target="table-parameters-a-z">All Parameters (A-Z)</a>})
+  f.puts(%Q{    </nav>})
   f.puts('  </aside>')
 end
 
-def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
+def html_norm_rule_table(f, table_name, chapter_name, nr_defs, num_params, tags, tag_fname2url)
   fatal("Need File for f but passed a #{f.class}") unless f.is_a?(File)
-  fatal("Need Integer for table_num but passed a #{table_num.class}") unless table_num.is_a?(Integer)
+  fatal("Need String for table_name but passed a #{table_name.class}") unless table_name.is_a?(String)
   fatal("Need String for chapter_name but passed a #{chapter_name.class}") unless chapter_name.is_a?(String)
   fatal("Need Array for nr_defs but passed a #{nr_defs.class}") unless nr_defs.is_a?(Array)
+  fatal("Need Integer for num_params but passed a #{num_params.class}") unless num_params.is_a?(Integer)
   fatal("Need NormativeTags for tags but passed a #{tags.class}") unless tags.is_a?(NormativeTags)
   fatal("Need Hash for tag_fname2url but passed a #{tag_fname2url.class}") unless tag_fname2url.is_a?(Hash)
 
   num_rules = nr_defs.length
-  num_params = 0
-  nr_defs.each do |nr|
-    unless nr.kind.nil?
-      num_params += 1 if nr.kind == "parameter"
-    end
-  end
 
   num_rules_str = "#{num_rules} normative rule#{num_rules == 1 ? "" : "s"}"
   num_params_str = "including #{num_params} parameter#{num_params == 1 ? "" : "s"}"
 
-  chapter_caption = "Chapter #{chapter_name} (#{num_rules_str} #{num_params_str})"
+  html_norm_rule_table_header(f, table_name, "Chapter #{chapter_name} (#{num_rules_str} #{num_params_str})")
+  nr_defs.each do |nr|
+    html_norm_rule_table_row(f, nr, tags, tag_fname2url, true)
+  end
+  html_norm_rule_table_footer(f)
+end
+
+def html_parameter_table(f, table_name, chapter_suffix, parameters, tags, tag_fname2url)
+  fatal("Need File for f but passed a #{f.class}") unless f.is_a?(File)
+  fatal("Need String for table_name but passed a #{table_name.class}") unless table_name.is_a?(String)
+  fatal("Need String for chapter_suffix but passed a #{chapter_suffix.class}") unless chapter_suffix.is_a?(String)
+  fatal("Need Array for parameters but passed a #{parameters.class}") unless parameters.is_a?(Array)
+  fatal("Need NormativeTags for tags but passed a #{tags.class}") unless tags.is_a?(NormativeTags)
+  fatal("Need Hash for tag_fname2url but passed a #{tag_fname2url.class}") unless tag_fname2url.is_a?(Hash)
+
+  html_norm_rule_table_header(f, table_name, "All #{parameters.length} Parameters#{chapter_suffix}")
+  parameters.each do |p|
+    html_norm_rule_table_row(f, p, tags, tag_fname2url, false)
+  end
+  html_norm_rule_table_footer(f)
+end
+
+def html_norm_rule_table_header(f, table_name, table_caption)
+  fatal("Need File for f but passed a #{f.class}") unless f.is_a?(File)
+  fatal("Need String for table_name but passed a #{table_name.class}") unless table_name.is_a?(String)
+  fatal("Need String for table_caption but passed a #{table_caption.class}") unless table_caption.is_a?(String)
 
   f.puts("")
-  f.puts(%Q{      <section id="table-#{table_num}" class="section">})
+  f.puts(%Q{      <section id="#{table_name}" class="section">})
   f.puts(%Q{        <table>})
-  f.puts(%Q{          <caption class="sticky-caption">#{chapter_caption}</caption>})
+  f.puts(%Q{          <caption class="sticky-caption">#{table_caption}</caption>})
   f.puts(%Q{          <colgroup>})
   f.puts(%Q{            <col class="col-name">})
   f.puts(%Q{            <col class="col-description">})
@@ -1070,125 +1105,136 @@ def html_chapter_table(f, table_num, chapter_name, nr_defs, tags, tag_fname2url)
   f.puts(%Q{            <tr><th>Rule Name</th><th>Rule Description</th><th>Origin of Description</th></tr>})
   f.puts(%Q{          </thead>})
   f.puts(%Q{          <tbody>})
+end
 
-  nr_defs.each do |nr|
-    name_row_span =
-      (nr.summary.nil? ? 0 : 1) +
-      (nr.note.nil? ? 0 : 1) +
-      (nr.clarification_link.nil? ? 0 : 1) +
-      (nr.description.nil? ? 0 : 1) +
-      (nr.kind.nil? ? 0 : 1) +
-      (nr.instances.empty? ? 0 : 1) +
-      nr.tag_refs.length
+def html_norm_rule_table_row(f, nr, tags, tag_fname2url, display_param_kind)
+  fatal("Need File for f but passed a #{f.class}") unless f.is_a?(File)
+  fatal("Need NormativeRuleDef for nr but passed a #{nr.class}") unless nr.is_a?(NormativeRuleDef)
+  fatal("Need NormativeTags for tags but passed a #{tags.class}") unless tags.is_a?(NormativeTags)
+  fatal("Need Hash for tag_fname2url but passed a #{tag_fname2url.class}") unless tag_fname2url.is_a?(Hash)
 
-    # Tracks if this is the first row for the normative rule.
-    # Required because normative rule name spans multiple rows so it is only provided on the first row.
-    # Each subsequent row sets first_row to false after omitting the opening <tr> tag (which is only needed for rows after the first).
-    first_row = true
+  show_kind = !nr.kind.nil? && ((nr.kind != "parameter") || display_param_kind)
 
-    # Output the normative rule name cell with rowspan.
-    f.puts(%Q{            <tr>})
-    f.puts(%Q{              <td rowspan=#{name_row_span} id="#{nr.name}">#{nr.name}</td>})
+  name_row_span =
+    (show_kind ? 1 : 0) +
+    (nr.summary.nil? ? 0 : 1) +
+    (nr.note.nil? ? 0 : 1) +
+    (nr.clarification_link.nil? ? 0 : 1) +
+    (nr.description.nil? ? 0 : 1) +
+    (nr.instances.empty? ? 0 : 1) +
+    nr.tag_refs.length
 
-    unless nr.summary.nil?
-      text = convert_def_text_to_html(nr.summary)
+  # Tracks if this is the first row for the normative rule.
+  # Required because normative rule name spans multiple rows so it is only provided on the first row.
+  # Each subsequent row sets first_row to false after omitting the opening <tr> tag (which is only needed for rows after the first).
+  first_row = true
 
-      f.puts(%Q{            <tr>}) unless first_row
-      f.puts(%Q{              <td>#{text}</td>})
-      f.puts(%Q{              <td>Rule's "summary" property</td>})
-      f.puts(%Q{            </tr>})
-      first_row = false
-    end
+  # Output the normative rule name cell with rowspan.
+  f.puts(%Q{            <tr>})
+  f.puts(%Q{              <td rowspan=#{name_row_span} id="#{nr.name}">#{nr.name}</td>})
 
-    unless nr.note.nil?
-      text = convert_def_text_to_html(nr.note)
+  unless nr.summary.nil?
+    text = convert_def_text_to_html(nr.summary)
 
-      f.puts(%Q{            <tr>}) unless first_row
-      f.puts(%Q{              <td>#{text}</td>})
-      f.puts(%Q{              <td>Rule's "note" property</td>})
-      f.puts(%Q{            </tr>})
-      first_row = false
-    end
-
-    unless nr.description.nil?
-      text = convert_def_text_to_html(nr.description)
-
-      f.puts(%Q{            <tr>}) unless first_row
-      f.puts(%Q{              <td>#{text}</td>})
-      f.puts(%Q{              <td>Rule's "description" property</td>})
-      f.puts(%Q{            </tr>})
-      first_row = false
-    end
-
-    unless nr.kind.nil?
-      f.puts(%Q{            <tr>}) unless first_row
-      f.puts(%Q{              <td>#{nr.kind}</td>})
-      f.puts(%Q{              <td>Rule's "kind" property</td>})
-      f.puts(%Q{            </tr>})
-      first_row = false
-    end
-
-    unless nr.instances.empty?
-      if nr.instances.size == 1
-        instances_str = nr.instances[0]
-        rule_name = "instance"
-      else
-        instances_str = "[" + nr.instances.join(', ') + "]"
-        rule_name = "instances"
-      end
-      f.puts(%Q{            <tr>}) unless first_row
-      f.puts(%Q{              <td>#{instances_str}</td>})
-      f.puts(%Q{              <td>Rule's "#{rule_name}" property</td>})
-      f.puts(%Q{            </tr>})
-      first_row = false
-    end
-
-    nr.tag_refs.each do |tag_ref|
-      tag = tags.get_tag(tag_ref.name)
-      fatal("Normative rule #{nr.name} defined in file #{nr.def_filename} references non-existent tag #{tag_ref.name}") if tag.nil?
-
-      target_html_fname = tag_fname2url[tag.tag_filename]
-      fatal("No fname tag to HTML mapping (-tag2url cmd line arg) for tag fname #{tag.tag_filename} for tag name #{tag.name}") if target_html_fname.nil?
-
-      tag_text = convert_newlines_to_html(convert_tags_tables_to_html(Adoc2HTML::convert(tag.text)))
-
-      # Convert adoc links to HTML links.
-      # Can assume that the link is to the same HTML standards document as the
-      # tag text that it is found in because these kind of adoc links only link within their document.
-      tag_text = convert_adoc_links_to_html(tag_text, target_html_fname)
-
-      if tag_text.strip.empty?
-        tag_text = "(No text available)"
-      end
-
-      tag_text = ("[CONTEXT] " + tag_text) if tag_ref.context?
-
-      tag_link = tag2html_link(tag_ref.name, tag_ref.name, target_html_fname)
-
-      f.puts(%Q{            <tr>}) unless first_row
-      f.puts(%Q{              <td>#{tag_text}</td>})
-      f.puts(%Q{              <td>#{tag_link}</td>})
-      f.puts(%Q{            </tr>})
-      first_row = false
-    end
-
-    unless nr.clarification_link.nil?
-      # The clarification text can only exist if the clarification link also exists.
-      if nr.clarification_text.nil?
-        text = "(No clarification text available)"
-      else
-        text = convert_def_text_to_html(nr.clarification_text)
-      end
-
-      link = %Q{<a href="#{nr.clarification_link}">GitHub Issue</a>}
-
-      f.puts(%Q{            <tr>}) unless first_row
-      f.puts(%Q{              <td>[CLARIFICATION] #{text}</td>})
-      f.puts(%Q{              <td>#{link}</td>})
-      f.puts(%Q{            </tr>})
-      first_row = false
-    end
+    f.puts(%Q{            <tr>}) unless first_row
+    f.puts(%Q{              <td>#{text}</td>})
+    f.puts(%Q{              <td>Rule's "summary" property</td>})
+    f.puts(%Q{            </tr>})
+    first_row = false
   end
+
+  unless nr.note.nil?
+    text = convert_def_text_to_html(nr.note)
+
+    f.puts(%Q{            <tr>}) unless first_row
+    f.puts(%Q{              <td>#{text}</td>})
+    f.puts(%Q{              <td>Rule's "note" property</td>})
+    f.puts(%Q{            </tr>})
+    first_row = false
+  end
+
+  unless nr.description.nil?
+    text = convert_def_text_to_html(nr.description)
+
+    f.puts(%Q{            <tr>}) unless first_row
+    f.puts(%Q{              <td>#{text}</td>})
+    f.puts(%Q{              <td>Rule's "description" property</td>})
+    f.puts(%Q{            </tr>})
+    first_row = false
+  end
+
+  if show_kind
+    f.puts(%Q{            <tr>}) unless first_row
+    f.puts(%Q{              <td>#{nr.kind}</td>})
+    f.puts(%Q{              <td>Rule's "kind" property</td>})
+    f.puts(%Q{            </tr>})
+    first_row = false
+  end
+
+  unless nr.instances.empty?
+    if nr.instances.size == 1
+      instances_str = nr.instances[0]
+      rule_name = "instance"
+    else
+      instances_str = "[" + nr.instances.join(', ') + "]"
+      rule_name = "instances"
+    end
+    f.puts(%Q{            <tr>}) unless first_row
+    f.puts(%Q{              <td>#{instances_str}</td>})
+    f.puts(%Q{              <td>Rule's "#{rule_name}" property</td>})
+    f.puts(%Q{            </tr>})
+    first_row = false
+  end
+
+  nr.tag_refs.each do |tag_ref|
+    tag = tags.get_tag(tag_ref.name)
+    fatal("Normative rule #{nr.name} defined in file #{nr.def_filename} references non-existent tag #{tag_ref.name}") if tag.nil?
+
+    target_html_fname = tag_fname2url[tag.tag_filename]
+    fatal("No fname tag to HTML mapping (-tag2url cmd line arg) for tag fname #{tag.tag_filename} for tag name #{tag.name}") if target_html_fname.nil?
+
+    tag_text = convert_newlines_to_html(convert_tags_tables_to_html(Adoc2HTML::convert(tag.text)))
+
+    # Convert adoc links to HTML links.
+    # Can assume that the link is to the same HTML standards document as the
+    # tag text that it is found in because these kind of adoc links only link within their document.
+    tag_text = convert_adoc_links_to_html(tag_text, target_html_fname)
+
+    if tag_text.strip.empty?
+      tag_text = "(No text available)"
+    end
+
+    tag_text = ("[CONTEXT] " + tag_text) if tag_ref.context?
+
+    tag_link = tag2html_link(tag_ref.name, tag_ref.name, target_html_fname)
+
+    f.puts(%Q{            <tr>}) unless first_row
+    f.puts(%Q{              <td>#{tag_text}</td>})
+    f.puts(%Q{              <td>#{tag_link}</td>})
+    f.puts(%Q{            </tr>})
+    first_row = false
+  end
+
+  unless nr.clarification_link.nil?
+    # The clarification text can only exist if the clarification link also exists.
+    if nr.clarification_text.nil?
+      text = "(No clarification text available)"
+    else
+      text = convert_def_text_to_html(nr.clarification_text)
+    end
+
+    link = %Q{<a href="#{nr.clarification_link}">GitHub Issue</a>}
+
+    f.puts(%Q{            <tr>}) unless first_row
+    f.puts(%Q{              <td>[CLARIFICATION] #{text}</td>})
+    f.puts(%Q{              <td>#{link}</td>})
+    f.puts(%Q{            </tr>})
+    first_row = false
+  end
+end
+
+def html_norm_rule_table_footer(f)
+  fatal("Need File for f but passed a #{f.class}") unless f.is_a?(File)
 
   f.puts(%Q{          </tbody>})
   f.puts(%Q{        </table>})

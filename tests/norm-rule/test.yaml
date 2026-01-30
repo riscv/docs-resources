@@ -23,6 +23,7 @@ normative_rule_definitions:
       and &le; (Unicode text for less-than-equals-to) and &#8800; (Unicode decimal value for not-equal-to).
   - name: inline-with-hash
     tag: "norm:inline-with-hash"
+    kind: parameter
   - name: clarification-without-text
     tag: "norm:clarification-without-text"
     clarification-link: https://www.github.com/riscv/jfkd/issues/67
@@ -41,6 +42,7 @@ normative_rule_definitions:
       ===
   - name: cat-colors
     tag: "norm:cat-colors"
+    kind: parameter
   - name: cat-claws-one-line-1
     tags: [name: "norm:cat-claws", {name: "norm:cat-colors", context: true}]
   - name: cat-claws-multi-lines-1
@@ -64,14 +66,17 @@ normative_rule_definitions:
       Here's a [.underline]#description#.
       It's got 2 lines.
     tag: "norm:paragraph:no-inline-anchors"
+    kind: parameter
   - name: inline-anchors-in-paragraph-entire
     tag: "norm:paragraph:inline-anchors:entire"
   - name: inline-anchors-in-paragraph-inline-anchor
     tag: "norm:paragraph:inline-anchors:inline-anchor"
   - name: formulae
     tag: "norm:formulae"
+    kind: parameter
   - name: rule_with_newlines
     tag: "norm:paragraph:tag_with_newlines"
+    kind: parameter
   - name: double_tags
     tag: "norm:def"
 
