@@ -245,7 +245,7 @@ end # class NormativeRuleDef
 
 # Create fatal if kind not recognized. The name is nil if this is called in the normative rule definition.
 def check_allowed_types(kind, nr_name, name)
-  allowed_types = ["extension", "instruction", "csr", "csr_field", "parameter"]
+  allowed_types = ["extension", "extension_dependency", "instruction", "csr", "csr_field", "parameter"]
 
   unless allowed_types.include?(kind)
     tag_str = name.nil? ? "" : "tag #{name} in "

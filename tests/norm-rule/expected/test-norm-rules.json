@@ -45,6 +45,63 @@
       ]
     },
     {
+      "name": "csr_field_warl",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:csr_field_warl",
+          "context": false,
+          "text": "This field is write-any-read-legal.",
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
+        }
+      ]
+    },
+    {
+      "name": "csr_field_wlrl",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:csr_field_wlrl",
+          "context": false,
+          "text": "This field is write-legal-read-legal.",
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
+        }
+      ]
+    },
+    {
+      "name": "csr_field_wpri",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "tags": [
+        {
+          "name": "norm:csr_field_wpri",
+          "context": false,
+          "text": "This field is write-preserve-read-ignore.",
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
+        }
+      ]
+    },
+    {
+      "name": "extension-dependency",
+      "def_filename": "tests/norm-rule/test.yaml",
+      "chapter_name": "my-chapter_name",
+      "kind": "extension_dependency",
+      "tags": [
+        {
+          "name": "norm:extension-dependency",
+          "context": false,
+          "text": "The F extensions depends on the Zicsr extension.",
+          "tag_filename": "/build/test-norm-tags.json",
+          "stds_doc_url": "test.html"
+        }
+      ]
+    },
+    {
       "name": "clarification-without-text",
       "def_filename": "tests/norm-rule/test.yaml",
       "chapter_name": "my-chapter_name",

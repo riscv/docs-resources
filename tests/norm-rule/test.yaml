@@ -24,6 +24,18 @@ normative_rule_definitions:
   - name: inline-with-hash
     tag: "norm:inline-with-hash"
     kind: parameter
+  - name: csr_field_warl
+    tag: "norm:csr_field_warl"
+    field-type: WARL
+  - name: csr_field_wlrl
+    tag: "norm:csr_field_wlrl"
+    field-type: WLRL
+  - name: csr_field_wpri
+    tag: "norm:csr_field_wpri"
+    field-type: WPRI
+  - name: extension-dependency
+    tag: "norm:extension-dependency"
+    kind: extension_dependency
   - name: clarification-without-text
     tag: "norm:clarification-without-text"
     clarification-link: https://www.github.com/riscv/jfkd/issues/67
