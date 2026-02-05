@@ -62,6 +62,12 @@
               { "$ref": "common-schema.json#/instancesRuleDesc" }
             ]
           },
+          "field-type": {
+            "allOf": [
+              { "$ref": "common-schema.json#/fieldType" },
+              { "$ref": "common-schema.json#/fieldTypeDesc" }
+            ]
+          },
           "tag": {
             "$ref": "common-schema.json#/tagName",
             "description": "Name of tag containing normative text"

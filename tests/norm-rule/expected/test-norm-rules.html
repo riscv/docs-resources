@@ -103,6 +103,7 @@
       font-weight: bold;
       text-align: left;
       border-bottom: 1px solid #e6edf3;
+      white-space: nowrap;
     }
 
     /* Sticky table header BELOW caption */
@@ -138,16 +139,26 @@
     </nav>
     <h2>Parameters</h2>
     <nav class="nav" id="nav-parameters-a-z">
-      <a href="#table-parameters-a-z" data-target="table-parameters-a-z">All Parameters (A-Z)</a>
+      <a href="#table-parameters-a-z" data-target="table-parameters-a-z">6 Parameters (A-Z)</a>
+    </nav>
+    <h2>Field Types</h2>
+    <nav class="nav" id="nav-field-type-WARL">
+      <a href="#table-field-type-WARL" data-target="table-field-type-WARL">1 WARL field</a>
+    </nav>
+    <nav class="nav" id="nav-field-type-WLRL">
+      <a href="#table-field-type-WLRL" data-target="table-field-type-WLRL">1 WLRL field</a>
+    </nav>
+    <nav class="nav" id="nav-field-type-WPRI">
+      <a href="#table-field-type-WPRI" data-target="table-field-type-WPRI">1 WPRI field</a>
     </nav>
   </aside>
     <main>
       <style>.grand-total-heading { font-size: 24px; font-weight: bold; }</style>
-      <h1 class="grand-total-heading">Grand total of 60 normative rules including 6 parameters</h1>
+      <h1 class="grand-total-heading">Grand total of 64 normative rules including 6 parameters</h1>
 
       <section id="table-1" class="section">
         <table>
-          <caption class="sticky-caption">Chapter my-chapter_name (60 normative rules including 6 parameters)</caption>
+          <caption class="sticky-caption">Chapter my-chapter_name (64 normative rules including 6 parameters, 1 WARL field, 1 WLRL field, 1 WPRI field)</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-description">
@@ -195,6 +206,42 @@
             <tr>
               <td>includes a hash # symbol.</td>
               <td><a href="test.html#norm:inline-with-hash">norm:inline-with-hash</a></td>
+            </tr>
+            <tr>
+              <td rowspan=2 id="csr_field_warl">csr_field_warl</td>
+              <td>WARL</td>
+              <td>Rule's "field_type" property</td>
+            </tr>
+            <tr>
+              <td>This field is write-any-read-legal.</td>
+              <td><a href="test.html#norm:csr_field_warl">norm:csr_field_warl</a></td>
+            </tr>
+            <tr>
+              <td rowspan=2 id="csr_field_wlrl">csr_field_wlrl</td>
+              <td>WLRL</td>
+              <td>Rule's "field_type" property</td>
+            </tr>
+            <tr>
+              <td>This field is write-legal-read-legal.</td>
+              <td><a href="test.html#norm:csr_field_wlrl">norm:csr_field_wlrl</a></td>
+            </tr>
+            <tr>
+              <td rowspan=2 id="csr_field_wpri">csr_field_wpri</td>
+              <td>WPRI</td>
+              <td>Rule's "field_type" property</td>
+            </tr>
+            <tr>
+              <td>This field is write-preserve-read-ignore.</td>
+              <td><a href="test.html#norm:csr_field_wpri">norm:csr_field_wpri</a></td>
+            </tr>
+            <tr>
+              <td rowspan=2 id="extension-dependency">extension-dependency</td>
+              <td>extension_dependency</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>The F extensions depends on the Zicsr extension.</td>
+              <td><a href="test.html#norm:extension-dependency">norm:extension-dependency</a></td>
             </tr>
             <tr>
               <td rowspan=2 id="clarification-without-text">clarification-without-text</td>
@@ -564,60 +611,69 @@
       <section id="table-parameters-a-z" class="section">
         <table>
           <caption class="sticky-caption">All 6 Parameters (A-Z)</caption>
-          <colgroup>
-            <col class="col-name">
-            <col class="col-description">
-            <col class="col-location">
-          </colgroup>
           <thead>
-            <tr><th>Rule Name</th><th>Rule Description</th><th>Origin of Description</th></tr>
+            <tr><th>Parameter Name</th></tr>
           </thead>
           <tbody>
             <tr>
-              <td rowspan=4 id="param-admon5">admon5</td>
-              <td>One line description</td>
-              <td>Rule's "description" property</td>
+              <td><a href="#admon5">admon5</a></td>
             </tr>
             <tr>
-              <td>my_parameter</td>
-              <td>Rule's "instance" property</td>
+              <td><a href="#cat-colors">cat-colors</a></td>
             </tr>
             <tr>
-              <td>Paragraph 1</td>
-              <td><a href="test.html#norm:admonition:anchors-in-notes:note1">norm:admonition:anchors-in-notes:note1</a></td>
+              <td><a href="#formulae">formulae</a></td>
             </tr>
             <tr>
-              <td>Paragraph 3</td>
-              <td><a href="test.html#norm:admonition:anchors-in-notes:note3">norm:admonition:anchors-in-notes:note3</a></td>
+              <td><a href="#inline-with-hash">inline-with-hash</a></td>
             </tr>
             <tr>
-              <td rowspan=1 id="param-cat-colors">cat-colors</td>
-              <td>Cats come in many colors.</td>
-              <td><a href="test.html#norm:cat-colors">norm:cat-colors</a></td>
+              <td><a href="#paragraph-with-a-really-wide-rule-name">paragraph-with-a-really-wide-rule-name</a></td>
             </tr>
             <tr>
-              <td rowspan=1 id="param-formulae">formulae</td>
-              <td>This paragraph looks like a formulae to Excel because it has this &#60; sign in it. Make sure this gets written as a string, not a formulae in the XLSX or else it will create an error in Excel.</td>
-              <td><a href="test.html#norm:formulae">norm:formulae</a></td>
+              <td><a href="#rule_with_newlines">rule_with_newlines</a></td>
             </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="table-field-type-WARL" class="section">
+        <table>
+          <caption class="sticky-caption">1 WARL field</caption>
+          <thead>
+            <tr><th>WARL Name</th></tr>
+          </thead>
+          <tbody>
             <tr>
-              <td rowspan=1 id="param-inline-with-hash">inline-with-hash</td>
-              <td>includes a hash # symbol.</td>
-              <td><a href="test.html#norm:inline-with-hash">norm:inline-with-hash</a></td>
+              <td><a href="#csr_field_warl">csr_field_warl</a></td>
             </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="table-field-type-WLRL" class="section">
+        <table>
+          <caption class="sticky-caption">1 WLRL field</caption>
+          <thead>
+            <tr><th>WLRL Name</th></tr>
+          </thead>
+          <tbody>
             <tr>
-              <td rowspan=2 id="param-paragraph-with-a-really-wide-rule-name">paragraph-with-a-really-wide-rule-name</td>
-              <td>Here's a <span class="underline">description</span>.<br>It's got 2 lines.<br></td>
-              <td>Rule's "description" property</td>
+              <td><a href="#csr_field_wlrl">csr_field_wlrl</a></td>
             </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="table-field-type-WPRI" class="section">
+        <table>
+          <caption class="sticky-caption">1 WPRI field</caption>
+          <thead>
+            <tr><th>WPRI Name</th></tr>
+          </thead>
+          <tbody>
             <tr>
-              <td>Paragraph without inline anchors</td>
-              <td><a href="test.html#norm:paragraph:no-inline-anchors">norm:paragraph:no-inline-anchors</a></td>
-            </tr>
-            <tr>
-              <td rowspan=1 id="param-rule_with_newlines">rule_with_newlines</td>
-              <td>Here&#8217;s the first line. Here&#8217;s the second line.</td>
-              <td><a href="test.html#norm:paragraph:tag_with_newlines">norm:paragraph:tag_with_newlines</a></td>
+              <td><a href="#csr_field_wpri">csr_field_wpri</a></td>
             </tr>
           </tbody>
         </table>

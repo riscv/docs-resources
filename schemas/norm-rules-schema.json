@@ -55,6 +55,12 @@
               { "$ref": "common-schema.json#/instancesRuleDesc" }
             ]
           },
+          "field-type": {
+            "allOf": [
+              { "$ref": "common-schema.json#/fieldType" },
+              { "$ref": "common-schema.json#/fieldTypeDesc" }
+            ]
+          },
           "tags": {
             "type": "array",
             "description": "List of normative rule tags",

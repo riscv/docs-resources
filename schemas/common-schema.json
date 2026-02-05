@@ -19,13 +19,16 @@
     "description": "Comprehensive description of the normative rule (sentence, paragraph, or longer)"
   },
   "kindRuleDesc": {
-    "description": "The kind of standards object associated with this normative rule"
+    "description": "The kind of standards object associated with this normative rule\nChoices are extension, extension_dependency, instruction, csr, csr_field, or parameter."
   },
   "instanceRuleDesc": {
     "description": "The name of a standards object of the specified kind associated with this normative rule"
   },
   "instancesRuleDesc": {
     "description": "The names of standards objects of the specified kind associated with this normative rule"
+  },
+  "fieldTypeDesc": {
+    "description": "Identifies normative rules associated with WARL, WLRL, and WPRI CSR fields."
   },
   "stringArray": {
     "type": "array",
@@ -39,7 +42,11 @@
   },
   "stdsObjectKind":  {
     "type": "string",
-    "enum": ["extension", "instruction", "csr", "csr_field", "parameter"]
+    "enum": ["extension", "extension_dependency", "instruction", "csr", "csr_field", "parameter"]
+  },
+  "fieldType":  {
+    "type": "string",
+    "enum": ["WARL", "WLRL", "WPRI"]
   },
   "ruleName": {
     "type": "string",

@@ -16,6 +16,12 @@ NORM_PREFIX = "norm:"
 
 MAX_TABLE_ROWS = 12         # Max rows of a table displayed in a cell.
 
+# Enums
+KINDS = ["extension", "extension_dependency", "instruction", "csr", "csr_field", "parameter"]
+FIELD_TYPES = ["WARL", "WLRL", "WPRI"]
+
+
+
 ###################################
 # Classes for Normative Rule Tags #
 ###################################
@@ -168,6 +174,7 @@ class NormativeRuleDef
   attr_reader :description            # String (optional - sentence, paragraph, or more)
   attr_reader :kind                   # String (optional, can be nil)
   attr_reader :instances              # Array<String> (optional - can be empty)
+  attr_reader :field_type             # String (optional, can be nil)
   attr_reader :tag_refs               # Array<TagRef> (optional - can be empty)
 
   def initialize(name, def_filename, chapter_name, data)
@@ -208,7 +215,13 @@ class NormativeRuleDef
     @kind = data["kind"]
     unless @kind.nil?
       fatal("Provided #{@kind.class} class for kind in normative rule #{name} but need a String") unless @kind.is_a?(String)
-      check_allowed_types(@kind, @name, nil)
+      check_kind(@kind, @name, nil)
+    end
+
+    @field_type = data["field-type"]
+    unless @field_type.nil?
+      fatal("Provided #{@field_type.class} class for field_type in normative rule #{name} but need a String") unless @field_type.is_a?(String)
+      check_field_type(@field_type, @name, nil)
     end
 
     @instances = []
@@ -244,13 +257,20 @@ class NormativeRuleDef
 end # class NormativeRuleDef
 
 # Create fatal if kind not recognized. The name is nil if this is called in the normative rule definition.
-def check_allowed_types(kind, nr_name, name)
-  allowed_types = ["extension", "instruction", "csr", "csr_field", "parameter"]
-
-  unless allowed_types.include?(kind)
+def check_kind(kind, nr_name, name)
+  unless KINDS.include?(kind)
     tag_str = name.nil? ? "" : "tag #{name} in "
-    allowed_str = allowed_types.join(",")
-    fatal("Don't recognize kind '#{kind}' for #{tag_str}normative rule #{nr_name}\n#{PN}: Allowed types are: #{allowed_str}")
+    allowed_str = KINDS.join(",")
+    fatal("Don't recognize kind '#{kind}' for #{tag_str}normative rule #{nr_name}\n#{PN}: Allowed kinds are: #{allowed_str}")
+  end
+end
+
+# Create fatal if field_type not recognized. The name is nil if this is called in the normative rule definition.
+def check_field_type(field_type, nr_name, name)
+  unless FIELD_TYPES.include?(field_type)
+    tag_str = name.nil? ? "" : "tag #{name} in "
+    allowed_str = FIELD_TYPES.join(",")
+    fatal("Don't recognize field-type '#{field_type}' for #{tag_str}normative rule #{nr_name}\n#{PN}: Allowed field-types are: #{allowed_str}")
   end
 end
 
@@ -465,6 +485,7 @@ def create_normative_rules_hash(defs, tags, tag_fname2url)
     # Now add optional arguments.
     hash["kind"] = d.kind unless d.kind.nil?
     hash["instances"] = d.instances unless d.instances.empty?
+    hash["field-type"] = d.field_type unless d.field_type.nil?
     hash["summary"] = d.summary unless d.summary.nil?
     hash["note"] = d.note unless d.note.nil?
     hash["clarification-text"] = d.clarification_text unless d.clarification_text.nil?
@@ -828,12 +849,20 @@ def output_html(filename, defs, tags, tag_fname2url)
   fatal("Need NormativeTags for tags but passed a #{tags.class}") unless tags.is_a?(NormativeTags)
   fatal("Need Hash for tag_fname2url but passed a #{tag_fname2url.class}") unless tag_fname2url.is_a?(Hash)
 
-  # Organize rules by chapter name. Each hash key is chapter name. Each hash entry is an Array<NormativeRuleDef>
-  # Also create array of parameters.
+  # Organize rules by chapter name. Each hash key is chapter name. Each hash entry is an Array<NormativeRuleDef>.
   defs_by_chapter_name = {}
   chapter_names = []
+
+  # Organize rules by field type. Each hash key is field type. Each hash entry is an Array<NormativeRuleDef>.
+  defs_by_field_type = {}
+  FIELD_TYPES.each do |ft|
+    defs_by_field_type[ft] = []
+  end
+
+  # Create array of parameter normative rules. Each array entry is a NormativeRuleDef.
   parameters = []
 
+  # Go through all normative rule definitions and put into appropriate data structures.
   defs.norm_rule_defs.each do |d|
     if defs_by_chapter_name[d.chapter_name].nil?
       # Haven't seen this chapter name yet.
@@ -842,9 +871,12 @@ def output_html(filename, defs, tags, tag_fname2url)
     end
     defs_by_chapter_name[d.chapter_name].append(d)
 
+    defs_by_field_type[d.field_type].append(d) unless d.field_type.nil?
+
     parameters.append(d) if d.kind == "parameter"
   end
 
+  # Sort alphabetically for consistent output.
   chapter_names.sort!
   parameters.sort_by! { |p| p.name }
 
@@ -853,7 +885,7 @@ def output_html(filename, defs, tags, tag_fname2url)
     f.puts(%Q{<body>})
     f.puts(%Q{  <div class="app">})
 
-    html_sidebar(f, chapter_names)
+    html_sidebar(f, defs, chapter_names)
     f.puts(%Q{    <main>})
     f.puts(%Q{      <style>.grand-total-heading { font-size: 24px; font-weight: bold; }</style>})
     f.puts(%Q{      <h1 class="grand-total-heading">Grand total of #{defs.norm_rule_defs.length} normative rules including #{parameters.length} parameters</h1>})
@@ -866,6 +898,11 @@ def output_html(filename, defs, tags, tag_fname2url)
     end
 
     html_parameter_table(f, "table-parameters-a-z", " (A-Z)", parameters)
+
+    FIELD_TYPES.each do |ft|
+      nr_defs = defs_by_field_type[ft]
+      html_field_type_table(f, "table-field-type-#{ft}", ft, nr_defs) if nr_defs.length > 0
+    end
 
     f.puts(%Q{    </main>})
     f.puts(%Q{  </div>})
@@ -987,6 +1024,7 @@ def html_head(f, chapter_names)
           font-weight: bold;
           text-align: left;
           border-bottom: 1px solid #e6edf3;
+          white-space: nowrap;
         }
 
         /* Sticky table header BELOW caption */
@@ -1023,8 +1061,9 @@ HTML
   )
 end
 
-def html_sidebar(f, chapter_names)
+def html_sidebar(f, defs, chapter_names)
   fatal("Need File for f but passed a #{f.class}") unless f.is_a?(File)
+  fatal("Need NormativeRuleDefs for defs but passed a #{defs.class}") unless defs.is_a?(NormativeRuleDefs)
   fatal("Need Array for chapter_names but passed a #{chapter_names.class}") unless chapter_names.is_a?(Array)
 
   # Use Ruby $Q{...} instead of double quotes to allow freely mixing embedded double quotes and Ruby's #{} operator.
@@ -1040,11 +1079,33 @@ def html_sidebar(f, chapter_names)
     table_num = table_num+1
   end
 
-  f.puts(%Q{    </nav>})
-  f.puts(%Q{    <h2>Parameters</h2>})
-  f.puts(%Q{    <nav class="nav" id="nav-parameters-a-z">})
-  f.puts(%Q{      <a href="#table-parameters-a-z" data-target="table-parameters-a-z">All Parameters (A-Z)</a>})
-  f.puts(%Q{    </nav>})
+  parameter_count = count_parameters(defs.norm_rule_defs)
+  unless parameter_count == 0
+    f.puts(%Q{    </nav>})
+    f.puts(%Q{    <h2>Parameters</h2>})
+    f.puts(%Q{    <nav class="nav" id="nav-parameters-a-z">})
+    f.puts(%Q{      <a href="#table-parameters-a-z" data-target="table-parameters-a-z">#{parameter_count} Parameter#{parameter_count == 1 ? "" : "s"} (A-Z)</a>})
+    f.puts(%Q{    </nav>})
+  end
+
+  total_field_types = 0
+  FIELD_TYPES.each do |ft|
+    total_field_types += count_field_types(defs.norm_rule_defs, ft)
+  end
+
+  unless total_field_types == 0
+    f.puts(%Q{    <h2>Field Types</h2>})
+
+    FIELD_TYPES.each do |ft|
+      count = count_field_types(defs.norm_rule_defs, ft)
+      unless count == 0
+        f.puts(%Q{    <nav class="nav" id="nav-field-type-#{ft}">})
+        f.puts(%Q{      <a href="#table-field-type-#{ft}" data-target="table-field-type-#{ft}">#{count} #{ft} field#{count == 1 ? "" : "s"}</a>})
+        f.puts(%Q{    </nav>})
+      end
+    end
+  end
+
   f.puts('  </aside>')
 end
 
@@ -1060,24 +1121,47 @@ def html_norm_rule_table(f, table_name, chapter_name, nr_defs, tags, tag_fname2u
   num_params = count_parameters(nr_defs)
 
   num_rules_str = "#{num_rules} normative rule#{num_rules == 1 ? "" : "s"}"
-  num_params_str = "#{num_params} parameter#{num_params == 1 ? "" : "s"}"
 
-  html_norm_rule_table_header(f, table_name, "Chapter #{chapter_name} (#{num_rules_str} including #{num_params_str})")
+  includes_str = "#{num_params} parameter#{num_params == 1 ? "" : "s"}"
+
+  num_field_types = {}
+  FIELD_TYPES.each do |ft|
+    num_field_types[ft] = count_field_types(nr_defs, ft)
+  end
+
+  FIELD_TYPES.each do |ft|
+    includes_str << ", #{num_field_types[ft]} #{ft} field#{num_field_types[ft] == 1 ? "" : "s"}" if num_field_types[ft] > 0
+  end
+
+  html_norm_rule_table_header(f, table_name, "Chapter #{chapter_name} (#{num_rules_str} including #{includes_str})")
   nr_defs.each do |nr|
     html_norm_rule_table_row(f, nr, tags, tag_fname2url)
   end
   html_table_footer(f)
 end
 
-def html_parameter_table(f, table_name, caption_suffix, parameters)
+def html_parameter_table(f, table_name, caption_suffix, nr_defs)
   fatal("Need File for f but passed a #{f.class}") unless f.is_a?(File)
   fatal("Need String for table_name but passed a #{table_name.class}") unless table_name.is_a?(String)
   fatal("Need String for caption_suffix but passed a #{caption_suffix.class}") unless caption_suffix.is_a?(String)
-  fatal("Need Array for parameters but passed a #{parameters.class}") unless parameters.is_a?(Array)
+  fatal("Need Array for nr_defs but passed a #{nr_defs.class}") unless nr_defs.is_a?(Array)
 
-  html_parameter_table_header(f, table_name, "All #{parameters.length} Parameters#{caption_suffix}")
-  parameters.each do |p|
-    html_parameter_table_row(f, p)
+  html_parameter_table_header(f, table_name, "All #{nr_defs.length} Parameters#{caption_suffix}")
+  nr_defs.each do |d|
+    html_parameter_table_row(f, d)
+  end
+  html_table_footer(f)
+end
+
+def html_field_type_table(f, table_name, ft, nr_defs)
+  fatal("Need File for f but passed a #{f.class}") unless f.is_a?(File)
+  fatal("Need String for table_name but passed a #{table_name.class}") unless table_name.is_a?(String)
+  fatal("Need String for ft but passed a #{ft.class}") unless ft.is_a?(String)
+  fatal("Need Array for nr_defs but passed a #{nr_defs.class}") unless nr_defs.is_a?(Array)
+
+  html_field_type_table_header(f, table_name, ft, "#{nr_defs.length} #{ft} field#{nr_defs.length == 1 ? "" : "s"}")
+  nr_defs.each do |d|
+    html_field_type_table_row(f, d)
   end
   html_table_footer(f)
 end
@@ -1117,6 +1201,22 @@ def html_parameter_table_header(f, table_name, table_caption)
   f.puts(%Q{          <tbody>})
 end
 
+def html_field_type_table_header(f, table_name, ft, table_caption)
+  fatal("Need File for f but passed a #{f.class}") unless f.is_a?(File)
+  fatal("Need String for table_name but passed a #{table_name.class}") unless table_name.is_a?(String)
+  fatal("Need String for ft but passed a #{ft.class}") unless ft.is_a?(String)
+  fatal("Need String for table_caption but passed a #{table_caption.class}") unless table_caption.is_a?(String)
+
+  f.puts("")
+  f.puts(%Q{      <section id="#{table_name}" class="section">})
+  f.puts(%Q{        <table>})
+  f.puts(%Q{          <caption class="sticky-caption">#{table_caption}</caption>})
+  f.puts(%Q{          <thead>})
+  f.puts(%Q{            <tr><th>#{ft} Name</th></tr>})
+  f.puts(%Q{          </thead>})
+  f.puts(%Q{          <tbody>})
+end
+
 def html_norm_rule_table_row(f, nr, tags, tag_fname2url)
   fatal("Need File for f but passed a #{f.class}") unless f.is_a?(File)
   fatal("Need NormativeRuleDef for nr but passed a #{nr.class}") unless nr.is_a?(NormativeRuleDef)
@@ -1130,6 +1230,7 @@ def html_norm_rule_table_row(f, nr, tags, tag_fname2url)
     (nr.description.nil? ? 0 : 1) +
     (nr.kind.nil? ? 0 : 1) +
     (nr.instances.empty? ? 0 : 1) +
+    (nr.field_type.nil? ? 0 : 1) +
     nr.tag_refs.length
 
   # Tracks if this is the first row for the normative rule.
@@ -1194,6 +1295,14 @@ def html_norm_rule_table_row(f, nr, tags, tag_fname2url)
     first_row = false
   end
 
+  unless nr.field_type.nil?
+    f.puts(%Q{              <td>#{nr.field_type}</td>})
+
+    f.puts(%Q{              <td>Rule's "field_type" property</td>})
+    f.puts(%Q{            </tr>})
+    first_row = false
+  end
+
   nr.tag_refs.each do |tag_ref|
     tag = tags.get_tag(tag_ref.name)
     fatal("Normative rule #{nr.name} defined in file #{nr.def_filename} references non-existent tag #{tag_ref.name}") if tag.nil?
@@ -1241,12 +1350,21 @@ def html_norm_rule_table_row(f, nr, tags, tag_fname2url)
   end
 end
 
-def html_parameter_table_row(f, p)
+def html_parameter_table_row(f, d)
   fatal("Need File for f but passed a #{f.class}") unless f.is_a?(File)
-  fatal("Need NormativeRuleDef for p but passed a #{p.class}") unless p.is_a?(NormativeRuleDef)
+  fatal("Need NormativeRuleDef for d but passed a #{d.class}") unless d.is_a?(NormativeRuleDef)
 
   f.puts(%Q{            <tr>})
-  f.puts(%Q{              <td><a href="##{p.name}">#{p.name}</a></td>})
+  f.puts(%Q{              <td><a href="##{d.name}">#{d.name}</a></td>})
+  f.puts(%Q{            </tr>})
+end
+
+def html_field_type_table_row(f, d)
+  fatal("Need File for f but passed a #{f.class}") unless f.is_a?(File)
+  fatal("Need NormativeRuleDef for d but passed a #{d.class}") unless d.is_a?(NormativeRuleDef)
+
+  f.puts(%Q{            <tr>})
+  f.puts(%Q{              <td><a href="##{d.name}">#{d.name}</a></td>})
   f.puts(%Q{            </tr>})
 end
 
@@ -1338,13 +1456,26 @@ end
 def count_parameters(defs)
   raise ArgumentError, "Need Array<NormativeRuleDef> for defs but passed a #{defs.class}" unless defs.is_a?(Array)
 
-  num_parameters = 0
+  count = 0
 
   defs.each do |d|
-    num_parameters += 1 if d.kind == "parameter"
+    count += 1 if d.kind == "parameter"
   end
 
-  return num_parameters
+  return count
+end
+
+def count_field_types(defs, field_type)
+  raise ArgumentError, "Need Array<NormativeRuleDef> for defs but passed a #{defs.class}" unless defs.is_a?(Array)
+  raise ArgumentError, "Need String for field_type but passed a #{field_type.class}" unless field_type.is_a?(String)
+
+  count = 0
+
+  defs.each do |d|
+    count += 1 if d.field_type == field_type
+  end
+
+  return count
 end
 
 # Convert all the various definition text formats to HTML.
@@ -1509,6 +1640,10 @@ validate_defs_and_tags(defs, tags, warn_if_tags_no_rules)
 
 info("Storing #{defs.norm_rule_defs.count} normative rules into file #{output_fname}")
 info("Includes #{count_parameters(defs.norm_rule_defs)} parameters")
+FIELD_TYPES.each do |ft|
+  count = count_field_types(defs.norm_rule_defs, ft)
+  info("Includes #{count} #{ft} normative rule#{count == 1 ? "" : "s"  }")
+end
 
 case output_format
 when "json"
