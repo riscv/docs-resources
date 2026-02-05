@@ -48,6 +48,7 @@
       "name": "csr_field_warl",
       "def_filename": "tests/norm-rule/test.yaml",
       "chapter_name": "my-chapter_name",
+      "field-type": "WARL",
       "tags": [
         {
           "name": "norm:csr_field_warl",
@@ -62,6 +63,7 @@
       "name": "csr_field_wlrl",
       "def_filename": "tests/norm-rule/test.yaml",
       "chapter_name": "my-chapter_name",
+      "field-type": "WLRL",
       "tags": [
         {
           "name": "norm:csr_field_wlrl",
@@ -76,6 +78,7 @@
       "name": "csr_field_wpri",
       "def_filename": "tests/norm-rule/test.yaml",
       "chapter_name": "my-chapter_name",
+      "field-type": "WPRI",
       "tags": [
         {
           "name": "norm:csr_field_wpri",

@@ -28,7 +28,7 @@
     "description": "The names of standards objects of the specified kind associated with this normative rule"
   },
   "fieldTypeDesc": {
-    "description": "Indentifies normative rules associated with WARL, WLRL, and WPRI CSR fields."
+    "description": "Identifies normative rules associated with WARL, WLRL, and WPRI CSR fields."
   },
   "stringArray": {
     "type": "array",

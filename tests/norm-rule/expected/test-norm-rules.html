@@ -103,6 +103,7 @@
       font-weight: bold;
       text-align: left;
       border-bottom: 1px solid #e6edf3;
+      white-space: nowrap;
     }
 
     /* Sticky table header BELOW caption */
@@ -138,7 +139,17 @@
     </nav>
     <h2>Parameters</h2>
     <nav class="nav" id="nav-parameters-a-z">
-      <a href="#table-parameters-a-z" data-target="table-parameters-a-z">All Parameters (A-Z)</a>
+      <a href="#table-parameters-a-z" data-target="table-parameters-a-z">6 Parameters (A-Z)</a>
+    </nav>
+    <h2>Field Types</h2>
+    <nav class="nav" id="nav-field-type-WARL">
+      <a href="#table-field-type-WARL" data-target="table-field-type-WARL">1 WARL field</a>
+    </nav>
+    <nav class="nav" id="nav-field-type-WLRL">
+      <a href="#table-field-type-WLRL" data-target="table-field-type-WLRL">1 WLRL field</a>
+    </nav>
+    <nav class="nav" id="nav-field-type-WPRI">
+      <a href="#table-field-type-WPRI" data-target="table-field-type-WPRI">1 WPRI field</a>
     </nav>
   </aside>
     <main>
@@ -147,7 +158,7 @@
 
       <section id="table-1" class="section">
         <table>
-          <caption class="sticky-caption">Chapter my-chapter_name (64 normative rules including 6 parameters)</caption>
+          <caption class="sticky-caption">Chapter my-chapter_name (64 normative rules including 6 parameters, 1 WARL field, 1 WLRL field, 1 WPRI field)</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-description">
@@ -197,17 +208,29 @@
               <td><a href="test.html#norm:inline-with-hash">norm:inline-with-hash</a></td>
             </tr>
             <tr>
-              <td rowspan=1 id="csr_field_warl">csr_field_warl</td>
+              <td rowspan=2 id="csr_field_warl">csr_field_warl</td>
+              <td>WARL</td>
+              <td>Rule's "field_type" property</td>
+            </tr>
+            <tr>
               <td>This field is write-any-read-legal.</td>
               <td><a href="test.html#norm:csr_field_warl">norm:csr_field_warl</a></td>
             </tr>
             <tr>
-              <td rowspan=1 id="csr_field_wlrl">csr_field_wlrl</td>
+              <td rowspan=2 id="csr_field_wlrl">csr_field_wlrl</td>
+              <td>WLRL</td>
+              <td>Rule's "field_type" property</td>
+            </tr>
+            <tr>
               <td>This field is write-legal-read-legal.</td>
               <td><a href="test.html#norm:csr_field_wlrl">norm:csr_field_wlrl</a></td>
             </tr>
             <tr>
-              <td rowspan=1 id="csr_field_wpri">csr_field_wpri</td>
+              <td rowspan=2 id="csr_field_wpri">csr_field_wpri</td>
+              <td>WPRI</td>
+              <td>Rule's "field_type" property</td>
+            </tr>
+            <tr>
               <td>This field is write-preserve-read-ignore.</td>
               <td><a href="test.html#norm:csr_field_wpri">norm:csr_field_wpri</a></td>
             </tr>
@@ -609,6 +632,48 @@
             </tr>
             <tr>
               <td><a href="#rule_with_newlines">rule_with_newlines</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="table-field-type-WARL" class="section">
+        <table>
+          <caption class="sticky-caption">1 WARL field</caption>
+          <thead>
+            <tr><th>WARL Name</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><a href="#csr_field_warl">csr_field_warl</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="table-field-type-WLRL" class="section">
+        <table>
+          <caption class="sticky-caption">1 WLRL field</caption>
+          <thead>
+            <tr><th>WLRL Name</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><a href="#csr_field_wlrl">csr_field_wlrl</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="table-field-type-WPRI" class="section">
+        <table>
+          <caption class="sticky-caption">1 WPRI field</caption>
+          <thead>
+            <tr><th>WPRI Name</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><a href="#csr_field_wpri">csr_field_wpri</a></td>
             </tr>
           </tbody>
         </table>
