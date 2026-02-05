@@ -17,7 +17,7 @@ NORM_PREFIX = "norm:"
 MAX_TABLE_ROWS = 12         # Max rows of a table displayed in a cell.
 
 # Enums
-EXTENSION_TYPES = ["extension", "extension_dependency", "instruction", "csr", "csr_field", "parameter"]
+KINDS = ["extension", "extension_dependency", "instruction", "csr", "csr_field", "parameter"]
 FIELD_TYPES = ["WARL", "WLRL", "WPRI"]
 
 
@@ -258,9 +258,9 @@ end # class NormativeRuleDef
 
 # Create fatal if kind not recognized. The name is nil if this is called in the normative rule definition.
 def check_kind(kind, nr_name, name)
-  unless EXTENSION_TYPES.include?(kind)
+  unless KINDS.include?(kind)
     tag_str = name.nil? ? "" : "tag #{name} in "
-    allowed_str = EXTENSION_TYPES.join(",")
+    allowed_str = KINDS.join(",")
     fatal("Don't recognize kind '#{kind}' for #{tag_str}normative rule #{nr_name}\n#{PN}: Allowed kinds are: #{allowed_str}")
   end
 end
