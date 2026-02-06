@@ -897,11 +897,11 @@ def output_html(filename, defs, tags, tag_fname2url)
       table_num=table_num+1
     end
 
-    html_parameter_table(f, "table-parameters-a-z", " (A-Z)", parameters)
+    html_parameter_table(f, "table-parameters-a-z", " (A-Z)", parameters, tags, tag_fname2url)
 
     FIELD_TYPES.each do |ft|
       nr_defs = defs_by_field_type[ft]
-      html_field_type_table(f, "table-field-type-#{ft}", ft, nr_defs) if nr_defs.length > 0
+      html_field_type_table(f, "table-field-type-#{ft}", ft, nr_defs, tags, tag_fname2url) if nr_defs.length > 0
     end
 
     f.puts(%Q{    </main>})
@@ -1133,40 +1133,44 @@ def html_norm_rule_table(f, table_name, chapter_name, nr_defs, tags, tag_fname2u
     includes_str << ", #{num_field_types[ft]} #{ft} field#{num_field_types[ft] == 1 ? "" : "s"}" if num_field_types[ft] > 0
   end
 
-  html_norm_rule_table_header(f, table_name, "Chapter #{chapter_name} (#{num_rules_str} including #{includes_str})")
+  html_table_header(f, table_name, "Chapter #{chapter_name} (#{num_rules_str} including #{includes_str})")
   nr_defs.each do |nr|
     html_norm_rule_table_row(f, nr, tags, tag_fname2url)
   end
   html_table_footer(f)
 end
 
-def html_parameter_table(f, table_name, caption_suffix, nr_defs)
+def html_parameter_table(f, table_name, caption_suffix, nr_defs, tags, tag_fname2url)
   fatal("Need File for f but passed a #{f.class}") unless f.is_a?(File)
   fatal("Need String for table_name but passed a #{table_name.class}") unless table_name.is_a?(String)
   fatal("Need String for caption_suffix but passed a #{caption_suffix.class}") unless caption_suffix.is_a?(String)
   fatal("Need Array for nr_defs but passed a #{nr_defs.class}") unless nr_defs.is_a?(Array)
+  fatal("Need NormativeTags for tags but passed a #{tags.class}") unless tags.is_a?(NormativeTags)
+  fatal("Need Hash for tag_fname2url but passed a #{tag_fname2url.class}") unless tag_fname2url.is_a?(Hash)
 
-  html_parameter_table_header(f, table_name, "All #{nr_defs.length} Parameters#{caption_suffix}")
-  nr_defs.each do |d|
-    html_parameter_table_row(f, d)
+  html_table_header(f, table_name, "All #{nr_defs.length} Parameters#{caption_suffix}")
+  nr_defs.each do |nr|
+    html_parameter_table_row(f, nr, tags, tag_fname2url)
   end
   html_table_footer(f)
 end
 
-def html_field_type_table(f, table_name, ft, nr_defs)
+def html_field_type_table(f, table_name, ft, nr_defs, tags, tag_fname2url)
   fatal("Need File for f but passed a #{f.class}") unless f.is_a?(File)
   fatal("Need String for table_name but passed a #{table_name.class}") unless table_name.is_a?(String)
   fatal("Need String for ft but passed a #{ft.class}") unless ft.is_a?(String)
   fatal("Need Array for nr_defs but passed a #{nr_defs.class}") unless nr_defs.is_a?(Array)
+  fatal("Need NormativeTags for tags but passed a #{tags.class}") unless tags.is_a?(NormativeTags)
+  fatal("Need Hash for tag_fname2url but passed a #{tag_fname2url.class}") unless tag_fname2url.is_a?(Hash)
 
-  html_field_type_table_header(f, table_name, ft, "#{nr_defs.length} #{ft} field#{nr_defs.length == 1 ? "" : "s"}")
-  nr_defs.each do |d|
-    html_field_type_table_row(f, d)
+  html_table_header(f, table_name, "#{nr_defs.length} #{ft} field#{nr_defs.length == 1 ? "" : "s"}")
+  nr_defs.each do |nr|
+    html_field_type_table_row(f, nr, tags, tag_fname2url)
   end
   html_table_footer(f)
 end
 
-def html_norm_rule_table_header(f, table_name, table_caption)
+def html_table_header(f, table_name, table_caption)
   fatal("Need File for f but passed a #{f.class}") unless f.is_a?(File)
   fatal("Need String for table_name but passed a #{table_name.class}") unless table_name.is_a?(String)
   fatal("Need String for table_caption but passed a #{table_caption.class}") unless table_caption.is_a?(String)
@@ -1186,40 +1190,39 @@ def html_norm_rule_table_header(f, table_name, table_caption)
   f.puts(%Q{          <tbody>})
 end
 
-def html_parameter_table_header(f, table_name, table_caption)
-  fatal("Need File for f but passed a #{f.class}") unless f.is_a?(File)
-  fatal("Need String for table_name but passed a #{table_name.class}") unless table_name.is_a?(String)
-  fatal("Need String for table_caption but passed a #{table_caption.class}") unless table_caption.is_a?(String)
-
-  f.puts("")
-  f.puts(%Q{      <section id="#{table_name}" class="section">})
-  f.puts(%Q{        <table>})
-  f.puts(%Q{          <caption class="sticky-caption">#{table_caption}</caption>})
-  f.puts(%Q{          <thead>})
-  f.puts(%Q{            <tr><th>Parameter Name</th></tr>})
-  f.puts(%Q{          </thead>})
-  f.puts(%Q{          <tbody>})
-end
-
-def html_field_type_table_header(f, table_name, ft, table_caption)
-  fatal("Need File for f but passed a #{f.class}") unless f.is_a?(File)
-  fatal("Need String for table_name but passed a #{table_name.class}") unless table_name.is_a?(String)
-  fatal("Need String for ft but passed a #{ft.class}") unless ft.is_a?(String)
-  fatal("Need String for table_caption but passed a #{table_caption.class}") unless table_caption.is_a?(String)
-
-  f.puts("")
-  f.puts(%Q{      <section id="#{table_name}" class="section">})
-  f.puts(%Q{        <table>})
-  f.puts(%Q{          <caption class="sticky-caption">#{table_caption}</caption>})
-  f.puts(%Q{          <thead>})
-  f.puts(%Q{            <tr><th>#{ft} Name</th></tr>})
-  f.puts(%Q{          </thead>})
-  f.puts(%Q{          <tbody>})
-end
-
 def html_norm_rule_table_row(f, nr, tags, tag_fname2url)
   fatal("Need File for f but passed a #{f.class}") unless f.is_a?(File)
   fatal("Need NormativeRuleDef for nr but passed a #{nr.class}") unless nr.is_a?(NormativeRuleDef)
+  fatal("Need NormativeTags for tags but passed a #{tags.class}") unless tags.is_a?(NormativeTags)
+  fatal("Need Hash for tag_fname2url but passed a #{tag_fname2url.class}") unless tag_fname2url.is_a?(Hash)
+
+  html_table_row(f, nr, true, false, false,tags, tag_fname2url)
+end
+
+def html_parameter_table_row(f, nr, tags, tag_fname2url)
+  fatal("Need File for f but passed a #{f.class}") unless f.is_a?(File)
+  fatal("Need NormativeRuleDef for nr but passed a #{nr.class}") unless nr.is_a?(NormativeRuleDef)
+  fatal("Need NormativeTags for tags but passed a #{tags.class}") unless tags.is_a?(NormativeTags)
+  fatal("Need Hash for tag_fname2url but passed a #{tag_fname2url.class}") unless tag_fname2url.is_a?(Hash)
+
+  html_table_row(f, nr, false, true, false, tags, tag_fname2url)
+end
+
+def html_field_type_table_row(f, nr, tags, tag_fname2url)
+  fatal("Need File for f but passed a #{f.class}") unless f.is_a?(File)
+  fatal("Need NormativeRuleDef for nr but passed a #{nr.class}") unless nr.is_a?(NormativeRuleDef)
+  fatal("Need NormativeTags for tags but passed a #{tags.class}") unless tags.is_a?(NormativeTags)
+  fatal("Need Hash for tag_fname2url but passed a #{tag_fname2url.class}") unless tag_fname2url.is_a?(Hash)
+
+  html_table_row(f, nr, false, false, true, tags, tag_fname2url)
+end
+
+def html_table_row(f, nr, name_is_anchor, omit_kind, omit_field_type, tags, tag_fname2url)
+  fatal("Need File for f but passed a #{f.class}") unless f.is_a?(File)
+  fatal("Need NormativeRuleDef for nr but passed a #{nr.class}") unless nr.is_a?(NormativeRuleDef)
+  fatal("Need Boolean for name_is_anchor but passed a #{name_is_anchor.class}") unless name_is_anchor == true || name_is_anchor == false
+  fatal("Need Boolean for omit_kind but passed a #{omit_kind.class}") unless omit_kind == true || omit_kind == false
+  fatal("Need Boolean for omit_field_type but passed a #{omit_field_type.class}") unless omit_field_type == true || omit_field_type == false
   fatal("Need NormativeTags for tags but passed a #{tags.class}") unless tags.is_a?(NormativeTags)
   fatal("Need Hash for tag_fname2url but passed a #{tag_fname2url.class}") unless tag_fname2url.is_a?(Hash)
 
@@ -1228,9 +1231,9 @@ def html_norm_rule_table_row(f, nr, tags, tag_fname2url)
     (nr.note.nil? ? 0 : 1) +
     (nr.clarification_link.nil? ? 0 : 1) +
     (nr.description.nil? ? 0 : 1) +
-    (nr.kind.nil? ? 0 : 1) +
+    (omit_kind || nr.kind.nil? ? 0 : 1) +
     (nr.instances.empty? ? 0 : 1) +
-    (nr.field_type.nil? ? 0 : 1) +
+    (omit_field_type || nr.field_type.nil? ? 0 : 1) +
     nr.tag_refs.length
 
   # Tracks if this is the first row for the normative rule.
@@ -1240,7 +1243,11 @@ def html_norm_rule_table_row(f, nr, tags, tag_fname2url)
 
   # Output the normative rule name cell with rowspan.
   f.puts(%Q{            <tr>})
-  f.puts(%Q{              <td rowspan=#{name_row_span} id="#{nr.name}">#{nr.name}</td>})
+  if name_is_anchor
+    f.puts(%Q{              <td rowspan=#{name_row_span} id="#{nr.name}">#{nr.name}</td>})
+  else
+    f.puts(%Q{              <td rowspan=#{name_row_span}><a href="##{nr.name}">#{nr.name}</a></td>})
+  end
 
   unless nr.summary.nil?
     text = convert_def_text_to_html(nr.summary)
@@ -1272,7 +1279,7 @@ def html_norm_rule_table_row(f, nr, tags, tag_fname2url)
     first_row = false
   end
 
-  unless nr.kind.nil?
+  unless omit_kind || nr.kind.nil?
     f.puts(%Q{            <tr>}) unless first_row
     f.puts(%Q{              <td>#{nr.kind}</td>})
     f.puts(%Q{              <td>Rule's "kind" property</td>})
@@ -1295,7 +1302,7 @@ def html_norm_rule_table_row(f, nr, tags, tag_fname2url)
     first_row = false
   end
 
-  unless nr.field_type.nil?
+  unless omit_field_type || nr.field_type.nil?
     f.puts(%Q{              <td>#{nr.field_type}</td>})
 
     f.puts(%Q{              <td>Rule's "field_type" property</td>})
@@ -1349,25 +1356,6 @@ def html_norm_rule_table_row(f, nr, tags, tag_fname2url)
     first_row = false
   end
 end
-
-def html_parameter_table_row(f, d)
-  fatal("Need File for f but passed a #{f.class}") unless f.is_a?(File)
-  fatal("Need NormativeRuleDef for d but passed a #{d.class}") unless d.is_a?(NormativeRuleDef)
-
-  f.puts(%Q{            <tr>})
-  f.puts(%Q{              <td><a href="##{d.name}">#{d.name}</a></td>})
-  f.puts(%Q{            </tr>})
-end
-
-def html_field_type_table_row(f, d)
-  fatal("Need File for f but passed a #{f.class}") unless f.is_a?(File)
-  fatal("Need NormativeRuleDef for d but passed a #{d.class}") unless d.is_a?(NormativeRuleDef)
-
-  f.puts(%Q{            <tr>})
-  f.puts(%Q{              <td><a href="##{d.name}">#{d.name}</a></td>})
-  f.puts(%Q{            </tr>})
-end
-
 def html_table_footer(f)
   fatal("Need File for f but passed a #{f.class}") unless f.is_a?(File)
 
