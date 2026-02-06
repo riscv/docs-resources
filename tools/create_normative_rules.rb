@@ -16,11 +16,14 @@ NORM_PREFIX = "norm:"
 
 MAX_TABLE_ROWS = 12         # Max rows of a table displayed in a cell.
 
+# Names/prefixes for tables in HTML output.
+CHAPTER_TABLE_NAME_PREFIX = "table-"
+PARAMETERS_TABLE_NAME = "table-parameters-a-z"
+FIELD_TYPE_TABLE_NAME_PREFIX = "table-field-type-"
+
 # Enums
 KINDS = ["extension", "extension_dependency", "instruction", "csr", "csr_field", "parameter"]
 FIELD_TYPES = ["WARL", "WLRL", "WPRI"]
-
-
 
 ###################################
 # Classes for Normative Rule Tags #
@@ -880,8 +883,20 @@ def output_html(filename, defs, tags, tag_fname2url)
   chapter_names.sort!
   parameters.sort_by! { |p| p.name }
 
+  # Create list of all table names.
+  table_names = []
+  table_num=1
+  chapter_names.each do |chapter_name|
+    table_names.append("#{CHAPTER_TABLE_NAME_PREFIX}#{table_num}")
+    table_num = table_num+1
+  end
+  table_names.append(PARAMETERS_TABLE_NAME) if count_parameters(defs.norm_rule_defs) > 0
+  FIELD_TYPES.each do |ft|
+    table_names.append("#{FIELD_TYPE_TABLE_NAME_PREFIX}#{ft}") if count_field_types(defs.norm_rule_defs, ft) > 0
+  end
+
   File.open(filename, "w") do |f|
-    html_head(f, chapter_names)
+    html_head(f, table_names)
     f.puts(%Q{<body>})
     f.puts(%Q{  <div class="app">})
 
@@ -893,15 +908,15 @@ def output_html(filename, defs, tags, tag_fname2url)
     table_num=1
     chapter_names.each do |chapter_name|
       nr_defs = defs_by_chapter_name[chapter_name]
-      html_norm_rule_table(f, "table-#{table_num}", chapter_name, nr_defs, tags, tag_fname2url)
+      html_norm_rule_table(f, "#{CHAPTER_TABLE_NAME_PREFIX}#{table_num}", chapter_name, nr_defs, tags, tag_fname2url)
       table_num=table_num+1
     end
 
-    html_parameter_table(f, "table-parameters-a-z", " (A-Z)", parameters, tags, tag_fname2url)
+    html_parameter_table(f, PARAMETERS_TABLE_NAME, " (A-Z)", parameters, tags, tag_fname2url)
 
     FIELD_TYPES.each do |ft|
       nr_defs = defs_by_field_type[ft]
-      html_field_type_table(f, "table-field-type-#{ft}", ft, nr_defs, tags, tag_fname2url) if nr_defs.length > 0
+      html_field_type_table(f, "#{FIELD_TYPE_TABLE_NAME_PREFIX}#{ft}", ft, nr_defs, tags, tag_fname2url) if nr_defs.length > 0
     end
 
     f.puts(%Q{    </main>})
@@ -914,9 +929,9 @@ def output_html(filename, defs, tags, tag_fname2url)
   end
 end
 
-def html_head(f, chapter_names)
+def html_head(f, table_names)
   fatal("Need File for f but passed a #{f.class}") unless f.is_a?(File)
-  fatal("Need Array for chapter_names but passed a #{chapter_names.class}") unless chapter_names.is_a?(Array)
+  fatal("Need Array for table_names but passed a #{table_names.class}") unless table_names.is_a?(Array)
 
   f.puts(<<~HTML
     <!doctype html>
@@ -1043,8 +1058,8 @@ def html_head(f, chapter_names)
 HTML
   )
 
-  for i in 1..chapter_names.length
-    f.puts("    #table-#{i} > table { table-layout: fixed; width: 100% }")
+  table_names.each do |table_name|
+    f.puts("    ##{table_name} > table { table-layout: fixed; width: 100% }")
   end
 
   f.puts(<<~HTML
