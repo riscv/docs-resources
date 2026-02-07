@@ -890,9 +890,9 @@ def output_html(filename, defs, tags, tag_fname2url)
     table_names.append("#{CHAPTER_TABLE_NAME_PREFIX}#{table_num}")
     table_num = table_num+1
   end
-  table_names.append(PARAMETERS_TABLE_NAME) if count_parameters(defs.norm_rule_defs) > 0
+  table_names.append(PARAMETERS_TABLE_NAME) if parameters.length > 0
   FIELD_TYPES.each do |ft|
-    table_names.append("#{FIELD_TYPE_TABLE_NAME_PREFIX}#{ft}") if count_field_types(defs.norm_rule_defs, ft) > 0
+    table_names.append("#{FIELD_TYPE_TABLE_NAME_PREFIX}#{ft}") if defs_by_field_type[ft].length > 0
   end
 
   File.open(filename, "w") do |f|
@@ -912,11 +912,15 @@ def output_html(filename, defs, tags, tag_fname2url)
       table_num=table_num+1
     end
 
-    html_parameter_table(f, PARAMETERS_TABLE_NAME, " (A-Z)", parameters, tags, tag_fname2url)
+    if parameters.length > 0
+      html_parameter_table(f, PARAMETERS_TABLE_NAME, " (A-Z)", parameters, tags, tag_fname2url)
+    end
 
     FIELD_TYPES.each do |ft|
       nr_defs = defs_by_field_type[ft]
-      html_field_type_table(f, "#{FIELD_TYPE_TABLE_NAME_PREFIX}#{ft}", ft, nr_defs, tags, tag_fname2url) if nr_defs.length > 0
+      if nr_defs.length > 0
+        html_field_type_table(f, "#{FIELD_TYPE_TABLE_NAME_PREFIX}#{ft}", ft, nr_defs, tags, tag_fname2url)
+      end
     end
 
     f.puts(%Q{    </main>})
@@ -1090,7 +1094,7 @@ def html_sidebar(f, defs, chapter_names)
   table_num=1
 
   chapter_names.each do |chapter_name|
-    f.puts(%Q{      <a href="#table-#{table_num}" data-target="table-#{table_num}">#{chapter_name}</a>})
+    f.puts(%Q{      <a href="##{CHAPTER_TABLE_NAME_PREFIX}#{table_num}" data-target="#{CHAPTER_TABLE_NAME_PREFIX}#{table_num}">#{chapter_name}</a>})
     table_num = table_num+1
   end
 
@@ -1099,7 +1103,7 @@ def html_sidebar(f, defs, chapter_names)
     f.puts(%Q{    </nav>})
     f.puts(%Q{    <h2>Parameters</h2>})
     f.puts(%Q{    <nav class="nav" id="nav-parameters-a-z">})
-    f.puts(%Q{      <a href="#table-parameters-a-z" data-target="table-parameters-a-z">#{parameter_count} Parameter#{parameter_count == 1 ? "" : "s"} (A-Z)</a>})
+    f.puts(%Q{      <a href="##{PARAMETERS_TABLE_NAME}" data-target="#{PARAMETERS_TABLE_NAME}">#{parameter_count} Parameter#{parameter_count == 1 ? "" : "s"} (A-Z)</a>})
     f.puts(%Q{    </nav>})
   end
 
@@ -1115,7 +1119,7 @@ def html_sidebar(f, defs, chapter_names)
       count = count_field_types(defs.norm_rule_defs, ft)
       unless count == 0
         f.puts(%Q{    <nav class="nav" id="nav-field-type-#{ft}">})
-        f.puts(%Q{      <a href="#table-field-type-#{ft}" data-target="table-field-type-#{ft}">#{count} #{ft} field#{count == 1 ? "" : "s"}</a>})
+        f.puts(%Q{      <a href="##{FIELD_TYPE_TABLE_NAME_PREFIX}#{ft}" data-target="#{FIELD_TYPE_TABLE_NAME_PREFIX}#{ft}">#{count} #{ft} field#{count == 1 ? "" : "s"}</a>})
         f.puts(%Q{    </nav>})
       end
     end
