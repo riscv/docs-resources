@@ -1,0 +1,54 @@
+// This file contains test AsciiDoc to test the custom AsciiDoctor "tags" backend and the "create_normative_rules" Ruby
+// script that consumes the tags to create a list of normative rules.
+
+== Chapter 2
+
+=== Chapter 2.1 - Tagging Admonitions
+
+// PASSES
+NOTE: [#norm:admonition:single-paragraph-note]#Single paragraph note
+that spans lines.#
+
+// PASSES - Tag contains entire list
+[[norm:admonition:no-anchors-in-notes:entire-note]]
+[NOTE]
+====
+Paragraph A
+
+Paragraph B
+
+Paragraph C
+====
+
+// PASSES - Tag contains entire list
+[[norm:admonition:anchors-in-notes:entire-note]]
+[NOTE]
+====
+// PASSES - Tag contains paragraph
+[[norm:admonition:anchors-in-notes:note1]]
+Paragraph 0
+
+Paragraph 1
+
+// PASSES - Tag contains paragraph
+[[norm:admonition:anchors-in-notes:note3]]
+Paragraph 2
+====
+
+[NOTE]
+====
+// PASSES - Tag contains paragraph
+[[norm:admonition:only-anchors-in-notes:note1]]
+Paragraph X
+
+Paragraph Y
+
+// PASSES - Tag contains paragraph
+[[norm:admonition:only-anchors-in-notes:note3]]
+Paragraph Z
+====
+
+=== Chapter 2.2 - Parameters
+
+[[norm:parameter-with-tag]]
+You can use red or yellow roses.

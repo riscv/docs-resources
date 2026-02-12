@@ -1,0 +1,29 @@
+---
+# yaml-language-server: $schema=../../schemas/defs-schema.json
+
+$schema: "../../schemas/defs-schema.json#"
+
+# Used to create normative rules for test-ch2.adoc file.
+chapter_name: Chapter 2
+
+normative_rule_definitions:
+  # Admonitions
+  - name: admon1
+    tag: "norm:admonition:single-paragraph-note"
+  - name: admon2
+    tag: "norm:admonition:no-anchors-in-notes:entire-note"
+  - name: admon3
+    tag: "norm:admonition:anchors-in-notes:entire-note"
+  - name: admon4
+    tags: ["norm:admonition:only-anchors-in-notes:note1", "norm:admonition:only-anchors-in-notes:note3"]
+  - name: admon5
+    description: One line description
+    tags: ["norm:admonition:anchors-in-notes:note1", "norm:admonition:anchors-in-notes:note3"]
+
+  # Parameter-related
+  - name: parameter-with-tag
+    kind: parameter
+    tag: "norm:parameter-with-tag"
+  - name: parameter-without-tag
+    kind: parameter
+    description: "This parameter does not have an associated tag."

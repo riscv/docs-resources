@@ -1,0 +1,48 @@
+{
+  "tags": {
+    "norm:admonition:single-paragraph-note": "Single paragraph note\nthat spans lines.",
+    "norm:admonition:no-anchors-in-notes:entire-note": "Paragraph A\n\nParagraph B\n\nParagraph C",
+    "norm:admonition:anchors-in-notes:note1": "Paragraph 0",
+    "norm:admonition:anchors-in-notes:note3": "Paragraph 2",
+    "norm:admonition:anchors-in-notes:entire-note": "Paragraph 0\n\nParagraph 1\n\nParagraph 2",
+    "norm:admonition:only-anchors-in-notes:note1": "Paragraph X",
+    "norm:admonition:only-anchors-in-notes:note3": "Paragraph Z",
+    "norm:parameter-with-tag": "You can use red or yellow roses."
+  },
+  "sections": {
+    "title": "",
+    "id": "",
+    "children": [
+      {
+        "title": "Chapter 2",
+        "id": "_chapter_2",
+        "children": [
+          {
+            "title": "Chapter 2.1 - Tagging Admonitions",
+            "id": "_chapter_2_1_tagging_admonitions",
+            "children": [],
+            "tags": [
+              "norm:admonition:single-paragraph-note",
+              "norm:admonition:no-anchors-in-notes:entire-note",
+              "norm:admonition:anchors-in-notes:note1",
+              "norm:admonition:anchors-in-notes:note3",
+              "norm:admonition:anchors-in-notes:entire-note",
+              "norm:admonition:only-anchors-in-notes:note1",
+              "norm:admonition:only-anchors-in-notes:note3"
+            ]
+          },
+          {
+            "title": "Chapter 2.2 - Parameters",
+            "id": "_chapter_2_2_parameters",
+            "children": [],
+            "tags": [
+              "norm:parameter-with-tag"
+            ]
+          }
+        ],
+        "tags": []
+      }
+    ],
+    "tags": []
+  }
+}

@@ -2,8 +2,8 @@
   "normative_rules": [
     {
       "name": "inline",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "kind": "extension",
       "instances": [
         "Zicsr",
@@ -15,15 +15,15 @@
           "name": "norm:inline",
           "context": false,
           "text": "inside inline",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "no_tag",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "summary": "Normative rule *without* tag/tags and *nested **bold** cases*.",
       "note": "This normative rule has no references to the standard. This should only be used in extraordinary circumstances.\nIt does include a link to <<table1>> (another normative rule).\nHas basic adoc formatting such as *bold*, ita__lics__, `monospace`, 2^superscript^, ~subscript~, [.underline]#underline#,\nand &le; (Unicode text for less-than-equals-to) and &#8800; (Unicode decimal value for not-equal-to).\n",
       "description": "Let's try a nested *_bold italics_* case or all 3 *_`bold italic monospace`_* too.",
@@ -31,98 +31,97 @@
     },
     {
       "name": "inline-with-hash",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
-      "kind": "parameter",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:inline-with-hash",
           "context": false,
           "text": "includes a hash # symbol.",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "csr_field_warl",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "field-type": "WARL",
       "tags": [
         {
           "name": "norm:csr_field_warl",
           "context": false,
           "text": "This field is write-any-read-legal.",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "csr_field_wlrl",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "field-type": "WLRL",
       "tags": [
         {
           "name": "norm:csr_field_wlrl",
           "context": false,
           "text": "This field is write-legal-read-legal.",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "csr_field_wpri",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "field-type": "WPRI",
       "tags": [
         {
           "name": "norm:csr_field_wpri",
           "context": false,
           "text": "This field is write-preserve-read-ignore.",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "extension-dependency",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "kind": "extension_dependency",
       "tags": [
         {
           "name": "norm:extension-dependency",
           "context": false,
           "text": "The F extensions depends on the Zicsr extension.",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "clarification-without-text",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "clarification-link": "https://www.github.com/riscv/jfkd/issues/67",
       "tags": [
         {
           "name": "norm:clarification-without-text",
           "context": false,
           "text": "isn't clear enough.",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "clarification-with-text",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "clarification-text": "This is the optional clarifying text.",
       "clarification-link": "https://github.com/riscv/jfkd/issues/67",
       "tags": [
@@ -130,15 +129,15 @@
           "name": "norm:clarification-with-text",
           "context": false,
           "text": "also isn't clear enough.",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "clarification-with-table",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "clarification-text": "Header1 | Header2\n===\nR1C1   | R1C2¶\nR2C1   | R2C2\n===\n",
       "clarification-link": "https://github.com/riscv/something/issues/67",
       "tags": [
@@ -146,832 +145,847 @@
           "name": "norm:clarification-with-text",
           "context": false,
           "text": "also isn't clear enough.",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "cat-colors",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
-      "kind": "parameter",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:cat-colors",
           "context": false,
           "text": "Cats come in many colors.",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "cat-claws-one-line-1",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:cat-claws",
           "context": false,
           "text": "This kind of animal has claws.",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         },
         {
           "name": "norm:cat-colors",
           "context": true,
           "text": "Cats come in many colors.",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "cat-claws-multi-lines-1",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:cat-colors",
           "context": true,
           "text": "Cats come in many colors.",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         },
         {
           "name": "norm:cat-claws",
           "context": false,
           "text": "This kind of animal has claws.",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "cat-claws-multi-lines-2",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:cat-claws",
           "context": false,
           "text": "This kind of animal has claws.",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         },
         {
           "name": "norm:cat-colors",
           "context": true,
           "text": "Cats come in many colors.",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "cat-claws-multi-lines-3",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:cat-colors",
           "context": true,
           "text": "Cats come in many colors.",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         },
         {
           "name": "norm:cat-claws",
           "context": false,
           "text": "This kind of animal has claws.",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "paragraph-with-a-really-wide-rule-name",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
-      "kind": "parameter",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "description": "Here's a [.underline]#description#.\nIt's got 2 lines.\n",
       "tags": [
         {
           "name": "norm:paragraph:no-inline-anchors",
           "context": false,
           "text": "Paragraph without inline anchors",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "inline-anchors-in-paragraph-entire",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:paragraph:inline-anchors:entire",
           "context": false,
           "text": "Paragraph with inline anchor and something.",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "inline-anchors-in-paragraph-inline-anchor",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:paragraph:inline-anchors:inline-anchor",
           "context": false,
           "text": "inline anchor",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "formulae",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
-      "kind": "parameter",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:formulae",
           "context": false,
           "text": "This paragraph looks like a formulae to Excel because it has this &lt; sign in it. Make sure this gets written as a string, not a formulae in the XLSX or else it will create an error in Excel.",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "rule_with_newlines",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
-      "kind": "parameter",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:paragraph:tag_with_newlines",
           "context": false,
           "text": "Here&#8217;s the first line. Here&#8217;s the second line.",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "double_tags",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:def",
           "context": false,
           "text": "This paragraph has two tags but we only ever get a tag for norm:def.",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "bold",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:bold",
           "context": false,
           "text": "ABC is a network - Bold is removed by tags backend so I don't see it",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "italics",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:italics",
           "context": false,
           "text": "Let's have fun today - Italics is removed by tags backend so I don't see it",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "superscript",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:superscript",
           "context": false,
           "text": "both 2^32^ and ^32^ work",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "subscript",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:subscript",
           "context": false,
           "text": "both ~log~ and log~2~ work",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "inline-underline",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:inline-underline",
           "context": false,
           "text": "ABC [.underline]#inside tag# GHI",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "paragraph-underline",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:paragraph-underline",
           "context": false,
           "text": "Paragraph underlined outside.",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "standalone_ampersand",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:standalone_ampersand",
           "context": false,
           "text": "ABC &amp; DEF",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "unicode_name",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:unicode_name",
           "context": false,
           "text": "DEF &amp;ge; GHI",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "unicode_decimal_value",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:unicode_decimal_value",
           "context": false,
           "text": "GHI &amp;#8805; JKL",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "unicode_hexadecimal_value",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:unicode_hexadecimal_value",
           "context": false,
           "text": "JKL &amp;#x2265; MNO",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "unicode_char",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:unicode_char",
           "context": false,
           "text": "MNO ≥ PQR",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "macro_call",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:macro_call",
           "context": false,
           "text": "200 {ge} 100",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "hyperlink1",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:hyperlink1",
           "context": false,
           "text": "ABC &lt;&lt;norm:superscript&gt;&gt; DEF",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "hyperlink2",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:hyperlink2",
           "context": false,
           "text": "DEF &lt;&lt;norm:superscript,custom text&gt;&gt; GHI",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "hyperlink3",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:hyperlink3",
           "context": false,
           "text": "ABC &lt;&lt;non-norm-anchor&gt;&gt; DEF",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "hyperlink4",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:hyperlink4",
           "context": false,
           "text": "DEF &lt;&lt;non-norm-anchor,custom text&gt;&gt; GHI",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "hyperlink5",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:hyperlink5",
           "context": false,
           "text": "GHI &lt;&lt;norm:superscript&gt;&gt; and &lt;&lt;norm:subscript&gt;&gt; JKL",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "hyperlink6",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:hyperlink6",
           "context": false,
           "text": "JKL &lt;&lt;norm:superscript ,hello&gt;&gt; and &lt;&lt;norm:subscript, goodbye&gt;&gt; MNO",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "table1",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:table:anchors-in-cells:entire-table",
           "context": false,
           "text": "===\nWITH anchor¶WITHOUT anchor\n===",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "table2",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:table:no-anchors-in-cells:entire-table",
           "context": false,
           "text": "Header 1|Header 2\n===\nCell in column 1, row 1|Cell in column 2, row 1¶Cell in column 1, row 2|Cell in column 2, row 2\n===",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "table3",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:table:anchors-in-cells:entire-table-tagged:cell",
           "context": false,
           "text": "WITH anchor",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "table4",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:table:anchors-in-cells:entire-table-not-tagged:cell",
           "context": false,
           "text": "ABC DEF",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "table5",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:table:many-rows",
           "context": false,
           "text": "Name|Color\n===\nRoses|Red¶Violets|Blue¶Name1|Color1¶Name2|Color2¶Name3|Color3¶Name4|Color4¶Name5|Color5¶Name6|Color6¶Name7|Color7¶Name8|Color8¶Name9|Color9¶Name10|Color10¶Name11|Color11¶Name12|Color12¶Name13|Color13¶Name14|Color14\n===",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "table6",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:table:single-char-cells",
           "context": false,
           "text": "X1|X2\n===\nA|B¶C|D\n===",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "table7",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:table:column-first-order",
           "context": false,
           "text": "ColA|ColB\n===\n0\n1|Off\nOn\n===",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "unordered1",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:unordered-list:no-anchors-in-items:entire-list",
           "context": false,
           "text": "Item A\nItem B\nItem C",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "unordered2",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:unordered-list:anchors-in-items:entire-list",
           "context": false,
           "text": "Item 1\nItem 2\nItem 3",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "unordered3",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:unordered-list:anchors-in-items:item1",
           "context": false,
           "text": "Item 1",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "unordered4",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:unordered-list:anchors-in-items:item2",
           "context": false,
           "text": "Item 2",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "unordered5",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:unordered-list:multiple-levels",
           "context": false,
           "text": "Zca and not F\nZca, Zcf and F (but not D) is specified (RV32 only)\nZca, Zcf and Zcd if D is specified (RV32 only)\n\nthis configuration excludes Zcmp, Zcmt\nZca, Zcd if D is specified (RV64 only)\n\nthis configuration excludes Zcmp, Zcmt",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "ordered1",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:ordered-list:no-anchors-in-items:entire-list",
           "context": false,
           "text": "Item A\nItem B\nItem C",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "ordered2",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:ordered-list:anchors-in-items:entire-list",
           "context": false,
           "text": "Item 1\nItem 2\nItem 3",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "ordered3",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:ordered-list:anchors-in-items:item1",
           "context": false,
           "text": "Item 1",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "ordered4",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:ordered-list:anchors-in-items:item2",
           "context": false,
           "text": "Item 2",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "desc1",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:description-list:no-anchors-in-items:entire-list",
           "context": false,
           "text": "Description-A\nItem A\nDescription-B\nItem B\nDescription-C\nItem C",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "desc2",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:description-list:anchors-in-items:entire-list",
           "context": false,
           "text": "Description-1",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "desc3",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:description-list:anchors-in-items:item1",
           "context": false,
           "text": "Item 1",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         },
         {
           "name": "norm:description-list:anchors-in-items:item3",
           "context": false,
           "text": "Item 3",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "desc4",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "Chapter 1",
       "tags": [
         {
           "name": "norm:description-list:anchors-in-items:item1",
           "context": false,
           "text": "Item 1",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         },
         {
           "name": "norm:description-list:anchors-in-items:item3",
           "context": false,
           "text": "Item 3",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
         }
       ]
     },
     {
       "name": "admon1",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch2.yaml",
+      "chapter_name": "Chapter 2",
       "tags": [
         {
           "name": "norm:admonition:single-paragraph-note",
           "context": false,
           "text": "Single paragraph note\nthat spans lines.",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch2-norm-tags.json",
+          "stds_doc_url": "test-ch2.html"
         }
       ]
     },
     {
       "name": "admon2",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch2.yaml",
+      "chapter_name": "Chapter 2",
       "tags": [
         {
           "name": "norm:admonition:no-anchors-in-notes:entire-note",
           "context": false,
           "text": "Paragraph A\n\nParagraph B\n\nParagraph C",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch2-norm-tags.json",
+          "stds_doc_url": "test-ch2.html"
         }
       ]
     },
     {
       "name": "admon3",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch2.yaml",
+      "chapter_name": "Chapter 2",
       "tags": [
         {
           "name": "norm:admonition:anchors-in-notes:entire-note",
           "context": false,
-          "text": "Paragraph 1\n\nParagraph 2\n\nParagraph 3",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "text": "Paragraph 0\n\nParagraph 1\n\nParagraph 2",
+          "tag_filename": "/build/test-ch2-norm-tags.json",
+          "stds_doc_url": "test-ch2.html"
         }
       ]
     },
     {
       "name": "admon4",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
+      "def_filename": "tests/norm-rule/test-ch2.yaml",
+      "chapter_name": "Chapter 2",
       "tags": [
         {
           "name": "norm:admonition:only-anchors-in-notes:note1",
           "context": false,
           "text": "Paragraph X",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch2-norm-tags.json",
+          "stds_doc_url": "test-ch2.html"
         },
         {
           "name": "norm:admonition:only-anchors-in-notes:note3",
           "context": false,
           "text": "Paragraph Z",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "tag_filename": "/build/test-ch2-norm-tags.json",
+          "stds_doc_url": "test-ch2.html"
         }
       ]
     },
     {
       "name": "admon5",
-      "def_filename": "tests/norm-rule/test.yaml",
-      "chapter_name": "my-chapter_name",
-      "kind": "parameter",
-      "instances": [
-        "my_parameter"
-      ],
+      "def_filename": "tests/norm-rule/test-ch2.yaml",
+      "chapter_name": "Chapter 2",
       "description": "One line description",
       "tags": [
         {
           "name": "norm:admonition:anchors-in-notes:note1",
           "context": false,
-          "text": "Paragraph 1",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "text": "Paragraph 0",
+          "tag_filename": "/build/test-ch2-norm-tags.json",
+          "stds_doc_url": "test-ch2.html"
         },
         {
           "name": "norm:admonition:anchors-in-notes:note3",
           "context": false,
-          "text": "Paragraph 3",
-          "tag_filename": "/build/test-norm-tags.json",
-          "stds_doc_url": "test.html"
+          "text": "Paragraph 2",
+          "tag_filename": "/build/test-ch2-norm-tags.json",
+          "stds_doc_url": "test-ch2.html"
         }
       ]
+    },
+    {
+      "name": "parameter-with-tag",
+      "def_filename": "tests/norm-rule/test-ch2.yaml",
+      "chapter_name": "Chapter 2",
+      "kind": "parameter",
+      "tags": [
+        {
+          "name": "norm:parameter-with-tag",
+          "context": false,
+          "text": "You can use red or yellow roses.",
+          "tag_filename": "/build/test-ch2-norm-tags.json",
+          "stds_doc_url": "test-ch2.html"
+        }
+      ]
+    },
+    {
+      "name": "parameter-without-tag",
+      "def_filename": "tests/norm-rule/test-ch2.yaml",
+      "chapter_name": "Chapter 2",
+      "kind": "parameter",
+      "description": "This parameter does not have an associated tag.",
+      "tags": []
     }
   ]
 }
