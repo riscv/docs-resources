@@ -20,10 +20,24 @@ normative_rule_definitions:
     description: One line description
     tags: ["norm:admonition:anchors-in-notes:note1", "norm:admonition:anchors-in-notes:note3"]
 
-  # Parameter-related
-  - name: parameter-with-tag
-    kind: parameter
-    tag: "norm:parameter-with-tag"
-  - name: parameter-without-tag
-    kind: parameter
-    description: "This parameter does not have an associated tag."
+  # Implementation-defined behaviors (rule that allow choices)
+  - name: ROSE_COLORS
+    impl-def-behavior: true
+    tag: "norm:ROSE_COLORS"
+  - name: XLEN
+    impl-def-behavior: true
+    tag: "norm:xlen"
+  - name: ASIDLEN
+    impl-def-behavior: true
+    tag: "norm:asidlen"
+
+  # CSR field types
+  - name: csr_field_warl
+    tag: "norm:csr_field_warl"
+    field-type: WARL
+  - name: csr_field_wlrl
+    tag: "norm:csr_field_wlrl"
+    field-type: WLRL
+  - name: csr_field_wpri
+    tag: "norm:csr_field_wpri"
+    field-type: WPRI

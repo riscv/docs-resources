@@ -2,9 +2,6 @@
   "tags": {
     "norm:inline": "inside inline",
     "norm:inline-with-hash": "includes a hash # symbol.",
-    "norm:csr_field_warl": "This field is write-any-read-legal.",
-    "norm:csr_field_wlrl": "This field is write-legal-read-legal.",
-    "norm:csr_field_wpri": "This field is write-preserve-read-ignore.",
     "norm:extension-dependency": "The F extensions depends on the Zicsr extension.",
     "norm:clarification-without-text": "isn't clear enough.",
     "norm:clarification-with-text": "also isn't clear enough.",
@@ -70,9 +67,6 @@
             "tags": [
               "norm:inline",
               "norm:inline-with-hash",
-              "norm:csr_field_warl",
-              "norm:csr_field_wlrl",
-              "norm:csr_field_wpri",
               "norm:extension-dependency",
               "norm:clarification-without-text",
               "norm:clarification-with-text",

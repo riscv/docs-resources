@@ -48,7 +48,21 @@ Paragraph Y
 Paragraph Z
 ====
 
-=== Chapter 2.2 - Parameters
+=== Chapter 2.2 - Implementation-Defined Rules
 
-[[norm:parameter-with-tag]]
+[[norm:ROSE_COLORS]]
 You can use red or yellow roses.
+
+[[norm:XLEN]]
+We use the term XLEN to refer to the width of an integer register in bits (either 32 or 64).
+
+[[norm:ASIDLEN]]
+The number of ASID bits is UNSPECIFIED and may be zero. The number of implemented ASID bits, termed ASIDLEN, may be determined by writing one to every bit position in the ASID field, then reading back the value in satp to see which bit positions in the ASID field hold a one.
+
+=== Chapter 2.3 - CSR Field Types
+
+The ABC field of the DEF CSR is WARL. [#norm:csr_field_warl]#This field is write-any-read-legal.#
+
+The GHI field of the JKL CSR is WLRL. [#norm:csr_field_wlrl]#This field is write-legal-read-legal.#
+
+The MNO field of the PQR CSR is WPRI. [#norm:csr_field_wpri]#This field is write-preserve-read-ignore.#

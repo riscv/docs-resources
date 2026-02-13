@@ -26,12 +26,6 @@ Before bad inline [#norm:bad-inline-3]#inside bad inline:
 // PASSES
 Use inline anchor that [#norm:inline-with-hash]+includes a hash # symbol.+
 
-The ABC field of the DEF CSR is WARL. [#norm:csr_field_warl]#This field is write-any-read-legal.#
-
-The GHI field of the JKL CSR is WLRL. [#norm:csr_field_wlrl]#This field is write-legal-read-legal.#
-
-The MNO field of the PQR CSR is WPRI. [#norm:csr_field_wpri]#This field is write-preserve-read-ignore.#
-
 [[norm:extension-dependency]]
 The F extensions depends on the Zicsr extension.
 

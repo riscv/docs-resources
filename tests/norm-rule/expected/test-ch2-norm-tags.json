@@ -7,7 +7,10 @@
     "norm:admonition:anchors-in-notes:entire-note": "Paragraph 0\n\nParagraph 1\n\nParagraph 2",
     "norm:admonition:only-anchors-in-notes:note1": "Paragraph X",
     "norm:admonition:only-anchors-in-notes:note3": "Paragraph Z",
-    "norm:parameter-with-tag": "You can use red or yellow roses."
+    "norm:parameter-with-tag": "You can use red or yellow roses.",
+    "norm:csr_field_warl": "This field is write-any-read-legal.",
+    "norm:csr_field_wlrl": "This field is write-legal-read-legal.",
+    "norm:csr_field_wpri": "This field is write-preserve-read-ignore."
   },
   "sections": {
     "title": "",
@@ -37,6 +40,16 @@
             "children": [],
             "tags": [
               "norm:parameter-with-tag"
+            ]
+          },
+          {
+            "title": "Chapter 2.3 - CSR Field Types",
+            "id": "_chapter_2_3_csr_field_types",
+            "children": [],
+            "tags": [
+              "norm:csr_field_warl",
+              "norm:csr_field_wlrl",
+              "norm:csr_field_wpri"
             ]
           }
         ],

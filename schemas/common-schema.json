@@ -19,13 +19,16 @@
     "description": "Comprehensive description of the normative rule (sentence, paragraph, or longer)"
   },
   "kindRuleDesc": {
-    "description": "The kind of standards object associated with this normative rule\nChoices are extension, extension_dependency, instruction, csr, csr_field, or parameter."
+    "description": "The kind of standards object associated with this normative rule\nChoices are extension, extension_dependency, instruction, csr, or csr_field."
   },
   "instanceRuleDesc": {
     "description": "The name of a standards object of the specified kind associated with this normative rule"
   },
   "instancesRuleDesc": {
     "description": "The names of standards objects of the specified kind associated with this normative rule"
+  },
+  "implDefBehaviorDesc": {
+    "description": "A normative rule that allows an implementation choices in how to meet the rule"
   },
   "fieldTypeDesc": {
     "description": "Identifies normative rules associated with WARL, WLRL, and WPRI CSR fields."
@@ -37,12 +40,18 @@
   "ruleNamePattern" : {
     "pattern": "^[a-zA-z][a-zA-z0-9_-]+$"
   },
+  "implDefNamePattern" : {
+    "pattern": "^[A-Z][A-Z0-9_]+$"
+  },
   "tagNamePattern" : {
     "pattern": "^[a-zA-z][:a-zA-z0-9_-]+$"
   },
   "stdsObjectKind":  {
     "type": "string",
-    "enum": ["extension", "extension_dependency", "instruction", "csr", "csr_field", "parameter"]
+    "enum": ["extension", "extension_dependency", "instruction", "csr", "csr_field"]
+  },
+  "implDefBehavior": {
+    "type": "boolean"
   },
   "fieldType":  {
     "type": "string",
@@ -57,6 +66,17 @@
     "items": {
       "type": "string",
       "$ref": "#/ruleNamePattern"
+    }
+  },
+  "implDefName": {
+    "type": "string",
+    "$ref": "#/implDefNamePattern"
+  },
+  "implDefNameArray": {
+    "type": "array",
+    "items": {
+      "type": "string",
+      "$ref": "#/implDefNamePattern"
     }
   },
   "tagName": {

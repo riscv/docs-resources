@@ -44,51 +44,6 @@
       ]
     },
     {
-      "name": "csr_field_warl",
-      "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
-      "field-type": "WARL",
-      "tags": [
-        {
-          "name": "norm:csr_field_warl",
-          "context": false,
-          "text": "This field is write-any-read-legal.",
-          "tag_filename": "/build/test-ch1-norm-tags.json",
-          "stds_doc_url": "test-ch1.html"
-        }
-      ]
-    },
-    {
-      "name": "csr_field_wlrl",
-      "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
-      "field-type": "WLRL",
-      "tags": [
-        {
-          "name": "norm:csr_field_wlrl",
-          "context": false,
-          "text": "This field is write-legal-read-legal.",
-          "tag_filename": "/build/test-ch1-norm-tags.json",
-          "stds_doc_url": "test-ch1.html"
-        }
-      ]
-    },
-    {
-      "name": "csr_field_wpri",
-      "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
-      "field-type": "WPRI",
-      "tags": [
-        {
-          "name": "norm:csr_field_wpri",
-          "context": false,
-          "text": "This field is write-preserve-read-ignore.",
-          "tag_filename": "/build/test-ch1-norm-tags.json",
-          "stds_doc_url": "test-ch1.html"
-        }
-      ]
-    },
-    {
       "name": "extension-dependency",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
       "chapter_name": "Chapter 1",
@@ -986,6 +941,51 @@
       "kind": "parameter",
       "description": "This parameter does not have an associated tag.",
       "tags": []
+    },
+    {
+      "name": "csr_field_warl",
+      "def_filename": "tests/norm-rule/test-ch2.yaml",
+      "chapter_name": "Chapter 2",
+      "field-type": "WARL",
+      "tags": [
+        {
+          "name": "norm:csr_field_warl",
+          "context": false,
+          "text": "This field is write-any-read-legal.",
+          "tag_filename": "/build/test-ch2-norm-tags.json",
+          "stds_doc_url": "test-ch2.html"
+        }
+      ]
+    },
+    {
+      "name": "csr_field_wlrl",
+      "def_filename": "tests/norm-rule/test-ch2.yaml",
+      "chapter_name": "Chapter 2",
+      "field-type": "WLRL",
+      "tags": [
+        {
+          "name": "norm:csr_field_wlrl",
+          "context": false,
+          "text": "This field is write-legal-read-legal.",
+          "tag_filename": "/build/test-ch2-norm-tags.json",
+          "stds_doc_url": "test-ch2.html"
+        }
+      ]
+    },
+    {
+      "name": "csr_field_wpri",
+      "def_filename": "tests/norm-rule/test-ch2.yaml",
+      "chapter_name": "Chapter 2",
+      "field-type": "WPRI",
+      "tags": [
+        {
+          "name": "norm:csr_field_wpri",
+          "context": false,
+          "text": "This field is write-preserve-read-ignore.",
+          "tag_filename": "/build/test-ch2-norm-tags.json",
+          "stds_doc_url": "test-ch2.html"
+        }
+      ]
     }
   ]
 }
