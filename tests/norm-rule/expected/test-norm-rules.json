@@ -3,8 +3,9 @@
     {
       "name": "inline",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
       "kind": "extension",
+      "impl-def-behavior": false,
       "instances": [
         "Zicsr",
         "ABC"
@@ -23,7 +24,8 @@
     {
       "name": "no_tag",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "summary": "Normative rule *without* tag/tags and *nested **bold** cases*.",
       "note": "This normative rule has no references to the standard. This should only be used in extraordinary circumstances.\nIt does include a link to <<table1>> (another normative rule).\nHas basic adoc formatting such as *bold*, ita__lics__, `monospace`, 2^superscript^, ~subscript~, [.underline]#underline#,\nand &le; (Unicode text for less-than-equals-to) and &#8800; (Unicode decimal value for not-equal-to).\n",
       "description": "Let's try a nested *_bold italics_* case or all 3 *_`bold italic monospace`_* too.",
@@ -32,7 +34,8 @@
     {
       "name": "inline-with-hash",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:inline-with-hash",
@@ -46,8 +49,9 @@
     {
       "name": "extension-dependency",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
       "kind": "extension_dependency",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:extension-dependency",
@@ -61,7 +65,8 @@
     {
       "name": "clarification-without-text",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "clarification-link": "https://www.github.com/riscv/jfkd/issues/67",
       "tags": [
         {
@@ -76,7 +81,8 @@
     {
       "name": "clarification-with-text",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "clarification-text": "This is the optional clarifying text.",
       "clarification-link": "https://github.com/riscv/jfkd/issues/67",
       "tags": [
@@ -92,7 +98,8 @@
     {
       "name": "clarification-with-table",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "clarification-text": "Header1 | Header2\n===\nR1C1   | R1C2¶\nR2C1   | R2C2\n===\n",
       "clarification-link": "https://github.com/riscv/something/issues/67",
       "tags": [
@@ -108,7 +115,8 @@
     {
       "name": "cat-colors",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:cat-colors",
@@ -122,7 +130,8 @@
     {
       "name": "cat-claws-one-line-1",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:cat-claws",
@@ -143,7 +152,8 @@
     {
       "name": "cat-claws-multi-lines-1",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:cat-colors",
@@ -164,7 +174,8 @@
     {
       "name": "cat-claws-multi-lines-2",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:cat-claws",
@@ -185,7 +196,8 @@
     {
       "name": "cat-claws-multi-lines-3",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:cat-colors",
@@ -206,7 +218,8 @@
     {
       "name": "paragraph-with-a-really-wide-rule-name",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "description": "Here's a [.underline]#description#.\nIt's got 2 lines.\n",
       "tags": [
         {
@@ -221,7 +234,8 @@
     {
       "name": "inline-anchors-in-paragraph-entire",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:paragraph:inline-anchors:entire",
@@ -235,7 +249,8 @@
     {
       "name": "inline-anchors-in-paragraph-inline-anchor",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:paragraph:inline-anchors:inline-anchor",
@@ -249,7 +264,8 @@
     {
       "name": "formulae",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:formulae",
@@ -263,7 +279,8 @@
     {
       "name": "rule_with_newlines",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:paragraph:tag_with_newlines",
@@ -277,7 +294,8 @@
     {
       "name": "double_tags",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:def",
@@ -291,7 +309,8 @@
     {
       "name": "bold",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:bold",
@@ -305,7 +324,8 @@
     {
       "name": "italics",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:italics",
@@ -319,7 +339,8 @@
     {
       "name": "superscript",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:superscript",
@@ -333,7 +354,8 @@
     {
       "name": "subscript",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:subscript",
@@ -347,7 +369,8 @@
     {
       "name": "inline-underline",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:inline-underline",
@@ -361,7 +384,8 @@
     {
       "name": "paragraph-underline",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:paragraph-underline",
@@ -375,7 +399,8 @@
     {
       "name": "standalone_ampersand",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:standalone_ampersand",
@@ -389,7 +414,8 @@
     {
       "name": "unicode_name",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:unicode_name",
@@ -403,7 +429,8 @@
     {
       "name": "unicode_decimal_value",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:unicode_decimal_value",
@@ -417,7 +444,8 @@
     {
       "name": "unicode_hexadecimal_value",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:unicode_hexadecimal_value",
@@ -431,7 +459,8 @@
     {
       "name": "unicode_char",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:unicode_char",
@@ -445,7 +474,8 @@
     {
       "name": "macro_call",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:macro_call",
@@ -459,7 +489,8 @@
     {
       "name": "hyperlink1",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:hyperlink1",
@@ -473,7 +504,8 @@
     {
       "name": "hyperlink2",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:hyperlink2",
@@ -487,7 +519,8 @@
     {
       "name": "hyperlink3",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:hyperlink3",
@@ -501,7 +534,8 @@
     {
       "name": "hyperlink4",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:hyperlink4",
@@ -515,7 +549,8 @@
     {
       "name": "hyperlink5",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:hyperlink5",
@@ -529,7 +564,8 @@
     {
       "name": "hyperlink6",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:hyperlink6",
@@ -543,7 +579,8 @@
     {
       "name": "table1",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:table:anchors-in-cells:entire-table",
@@ -557,7 +594,8 @@
     {
       "name": "table2",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:table:no-anchors-in-cells:entire-table",
@@ -571,7 +609,8 @@
     {
       "name": "table3",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:table:anchors-in-cells:entire-table-tagged:cell",
@@ -585,7 +624,8 @@
     {
       "name": "table4",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:table:anchors-in-cells:entire-table-not-tagged:cell",
@@ -599,7 +639,8 @@
     {
       "name": "table5",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:table:many-rows",
@@ -613,7 +654,8 @@
     {
       "name": "table6",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:table:single-char-cells",
@@ -627,7 +669,8 @@
     {
       "name": "table7",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:table:column-first-order",
@@ -641,7 +684,8 @@
     {
       "name": "unordered1",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:unordered-list:no-anchors-in-items:entire-list",
@@ -655,7 +699,8 @@
     {
       "name": "unordered2",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:unordered-list:anchors-in-items:entire-list",
@@ -669,7 +714,8 @@
     {
       "name": "unordered3",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:unordered-list:anchors-in-items:item1",
@@ -683,7 +729,8 @@
     {
       "name": "unordered4",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:unordered-list:anchors-in-items:item2",
@@ -697,7 +744,8 @@
     {
       "name": "unordered5",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:unordered-list:multiple-levels",
@@ -711,7 +759,8 @@
     {
       "name": "ordered1",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:ordered-list:no-anchors-in-items:entire-list",
@@ -725,7 +774,8 @@
     {
       "name": "ordered2",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:ordered-list:anchors-in-items:entire-list",
@@ -739,7 +789,8 @@
     {
       "name": "ordered3",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:ordered-list:anchors-in-items:item1",
@@ -753,7 +804,8 @@
     {
       "name": "ordered4",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:ordered-list:anchors-in-items:item2",
@@ -767,7 +819,8 @@
     {
       "name": "desc1",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:description-list:no-anchors-in-items:entire-list",
@@ -781,7 +834,8 @@
     {
       "name": "desc2",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:description-list:anchors-in-items:entire-list",
@@ -795,7 +849,8 @@
     {
       "name": "desc3",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:description-list:anchors-in-items:item1",
@@ -816,7 +871,8 @@
     {
       "name": "desc4",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
-      "chapter_name": "Chapter 1",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:description-list:anchors-in-items:item1",
@@ -837,7 +893,8 @@
     {
       "name": "admon1",
       "def_filename": "tests/norm-rule/test-ch2.yaml",
-      "chapter_name": "Chapter 2",
+      "chapter_name": "Two",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:admonition:single-paragraph-note",
@@ -851,7 +908,8 @@
     {
       "name": "admon2",
       "def_filename": "tests/norm-rule/test-ch2.yaml",
-      "chapter_name": "Chapter 2",
+      "chapter_name": "Two",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:admonition:no-anchors-in-notes:entire-note",
@@ -865,7 +923,8 @@
     {
       "name": "admon3",
       "def_filename": "tests/norm-rule/test-ch2.yaml",
-      "chapter_name": "Chapter 2",
+      "chapter_name": "Two",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:admonition:anchors-in-notes:entire-note",
@@ -879,7 +938,8 @@
     {
       "name": "admon4",
       "def_filename": "tests/norm-rule/test-ch2.yaml",
-      "chapter_name": "Chapter 2",
+      "chapter_name": "Two",
+      "impl-def-behavior": false,
       "tags": [
         {
           "name": "norm:admonition:only-anchors-in-notes:note1",
@@ -900,7 +960,8 @@
     {
       "name": "admon5",
       "def_filename": "tests/norm-rule/test-ch2.yaml",
-      "chapter_name": "Chapter 2",
+      "chapter_name": "Two",
+      "impl-def-behavior": false,
       "description": "One line description",
       "tags": [
         {
@@ -920,13 +981,13 @@
       ]
     },
     {
-      "name": "parameter-with-tag",
+      "name": "ROSE_COLORS",
       "def_filename": "tests/norm-rule/test-ch2.yaml",
-      "chapter_name": "Chapter 2",
-      "kind": "parameter",
+      "chapter_name": "Two",
+      "impl-def-behavior": true,
       "tags": [
         {
-          "name": "norm:parameter-with-tag",
+          "name": "norm:ROSE_COLORS",
           "context": false,
           "text": "You can use red or yellow roses.",
           "tag_filename": "/build/test-ch2-norm-tags.json",
@@ -935,21 +996,44 @@
       ]
     },
     {
-      "name": "parameter-without-tag",
+      "name": "XLEN",
       "def_filename": "tests/norm-rule/test-ch2.yaml",
-      "chapter_name": "Chapter 2",
-      "kind": "parameter",
-      "description": "This parameter does not have an associated tag.",
-      "tags": []
+      "chapter_name": "Two",
+      "impl-def-behavior": true,
+      "tags": [
+        {
+          "name": "norm:XLEN",
+          "context": false,
+          "text": "We use the term XLEN to refer to the width of an integer register in bits (either 32 or 64).",
+          "tag_filename": "/build/test-ch2-norm-tags.json",
+          "stds_doc_url": "test-ch2.html"
+        }
+      ]
     },
     {
-      "name": "csr_field_warl",
+      "name": "ASIDLEN",
       "def_filename": "tests/norm-rule/test-ch2.yaml",
-      "chapter_name": "Chapter 2",
+      "chapter_name": "Two",
+      "impl-def-behavior": true,
+      "tags": [
+        {
+          "name": "norm:ASIDLEN",
+          "context": false,
+          "text": "The number of ASID bits is UNSPECIFIED and may be zero. The number of implemented ASID bits, termed ASIDLEN, may be determined by writing one to every bit position in the ASID field, then reading back the value in satp to see which bit positions in the ASID field hold a one.",
+          "tag_filename": "/build/test-ch2-norm-tags.json",
+          "stds_doc_url": "test-ch2.html"
+        }
+      ]
+    },
+    {
+      "name": "csr_field_warl1",
+      "def_filename": "tests/norm-rule/test-ch2.yaml",
+      "chapter_name": "Two",
+      "impl-def-behavior": false,
       "field-type": "WARL",
       "tags": [
         {
-          "name": "norm:csr_field_warl",
+          "name": "norm:csr_field_warl1",
           "context": false,
           "text": "This field is write-any-read-legal.",
           "tag_filename": "/build/test-ch2-norm-tags.json",
@@ -960,7 +1044,8 @@
     {
       "name": "csr_field_wlrl",
       "def_filename": "tests/norm-rule/test-ch2.yaml",
-      "chapter_name": "Chapter 2",
+      "chapter_name": "Two",
+      "impl-def-behavior": false,
       "field-type": "WLRL",
       "tags": [
         {
@@ -973,15 +1058,16 @@
       ]
     },
     {
-      "name": "csr_field_wpri",
+      "name": "csr_field_warl2",
       "def_filename": "tests/norm-rule/test-ch2.yaml",
-      "chapter_name": "Chapter 2",
-      "field-type": "WPRI",
+      "chapter_name": "Two",
+      "impl-def-behavior": false,
+      "field-type": "WARL",
       "tags": [
         {
-          "name": "norm:csr_field_wpri",
+          "name": "norm:csr_field_warl2",
           "context": false,
-          "text": "This field is write-preserve-read-ignore.",
+          "text": "This field is also write-any-read-legal.",
           "tag_filename": "/build/test-ch2-norm-tags.json",
           "stds_doc_url": "test-ch2.html"
         }

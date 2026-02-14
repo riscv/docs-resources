@@ -4,7 +4,7 @@
 $schema: "../../schemas/defs-schema.json#"
 
 # Used to create normative rules for test-ch1.adoc file.
-chapter_name: Chapter 1
+chapter_name: One
 
 normative_rule_definitions:
   # Basic

@@ -4,7 +4,7 @@
 $schema: "../../schemas/defs-schema.json#"
 
 # Used to create normative rules for test-ch2.adoc file.
-chapter_name: Chapter 2
+chapter_name: Two
 
 normative_rule_definitions:
   # Admonitions
@@ -26,18 +26,18 @@ normative_rule_definitions:
     tag: "norm:ROSE_COLORS"
   - name: XLEN
     impl-def-behavior: true
-    tag: "norm:xlen"
+    tag: "norm:XLEN"
   - name: ASIDLEN
     impl-def-behavior: true
-    tag: "norm:asidlen"
+    tag: "norm:ASIDLEN"
 
   # CSR field types
-  - name: csr_field_warl
-    tag: "norm:csr_field_warl"
+  - name: csr_field_warl1
+    tag: "norm:csr_field_warl1"
     field-type: WARL
   - name: csr_field_wlrl
     tag: "norm:csr_field_wlrl"
     field-type: WLRL
-  - name: csr_field_wpri
-    tag: "norm:csr_field_wpri"
-    field-type: WPRI
+  - name: csr_field_warl2
+    tag: "norm:csr_field_warl2"
+    field-type: WARL

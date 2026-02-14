@@ -7,10 +7,12 @@
     "norm:admonition:anchors-in-notes:entire-note": "Paragraph 0\n\nParagraph 1\n\nParagraph 2",
     "norm:admonition:only-anchors-in-notes:note1": "Paragraph X",
     "norm:admonition:only-anchors-in-notes:note3": "Paragraph Z",
-    "norm:parameter-with-tag": "You can use red or yellow roses.",
-    "norm:csr_field_warl": "This field is write-any-read-legal.",
+    "norm:ROSE_COLORS": "You can use red or yellow roses.",
+    "norm:XLEN": "We use the term XLEN to refer to the width of an integer register in bits (either 32 or 64).",
+    "norm:ASIDLEN": "The number of ASID bits is UNSPECIFIED and may be zero. The number of implemented ASID bits, termed ASIDLEN, may be determined by writing one to every bit position in the ASID field, then reading back the value in satp to see which bit positions in the ASID field hold a one.",
+    "norm:csr_field_warl1": "This field is write-any-read-legal.",
     "norm:csr_field_wlrl": "This field is write-legal-read-legal.",
-    "norm:csr_field_wpri": "This field is write-preserve-read-ignore."
+    "norm:csr_field_warl2": "This field is also write-any-read-legal."
   },
   "sections": {
     "title": "",
@@ -35,11 +37,13 @@
             ]
           },
           {
-            "title": "Chapter 2.2 - Parameters",
-            "id": "_chapter_2_2_parameters",
+            "title": "Chapter 2.2 - Implementation-Defined Rules",
+            "id": "_chapter_2_2_implementation_defined_rules",
             "children": [],
             "tags": [
-              "norm:parameter-with-tag"
+              "norm:ROSE_COLORS",
+              "norm:XLEN",
+              "norm:ASIDLEN"
             ]
           },
           {
@@ -47,9 +51,9 @@
             "id": "_chapter_2_3_csr_field_types",
             "children": [],
             "tags": [
-              "norm:csr_field_warl",
+              "norm:csr_field_warl1",
               "norm:csr_field_wlrl",
-              "norm:csr_field_wpri"
+              "norm:csr_field_warl2"
             ]
           }
         ],

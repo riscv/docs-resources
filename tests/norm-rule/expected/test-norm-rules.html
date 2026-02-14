@@ -119,12 +119,12 @@
     .col-location { width: 20%; }
 
     /* Chapter tables use all available width and divvied up using the percentages above */
-    #table-1 > table { table-layout: fixed; width: 100% }
-    #table-2 > table { table-layout: fixed; width: 100% }
-    #table-parameters-a-z > table { table-layout: fixed; width: 100% }
+    #table-norm-rules-ch-1 > table { table-layout: fixed; width: 100% }
+    #table-norm-rules-ch-2 > table { table-layout: fixed; width: 100% }
+    #table-impldefs-a-z > table { table-layout: fixed; width: 100% }
+    #table-impldefs-ch-2 > table { table-layout: fixed; width: 100% }
     #table-field-type-WARL > table { table-layout: fixed; width: 100% }
     #table-field-type-WLRL > table { table-layout: fixed; width: 100% }
-    #table-field-type-WPRI > table { table-layout: fixed; width: 100% }
 
     /* Responsive */
     @media (max-width:820px){
@@ -138,33 +138,31 @@
   <div class="app">
 
   <aside class="sidebar">
-    <h2>Chapters</h2>
+    <h2>All Normative Rules</h2>
     <nav class="nav" id="nav-chapters">
-      <a href="#table-1" data-target="table-1">Chapter 1</a>
-      <a href="#table-2" data-target="table-2">Chapter 2</a>
+      <a href="#table-norm-rules-ch-1" data-target="table-norm-rules-ch-1">One</a>
+      <a href="#table-norm-rules-ch-2" data-target="table-norm-rules-ch-2">Two</a>
     </nav>
-    <h2>Parameters</h2>
-    <nav class="nav" id="nav-parameters-a-z">
-      <a href="#table-parameters-a-z" data-target="table-parameters-a-z">2 Parameters (A-Z)</a>
+    <h2>Implementation-Defined Behaviors</h2>
+    <nav class="nav" id="nav-impldefs-a-z">
+      <a href="#table-impldefs-a-z" data-target="table-impldefs-a-z">A-Z</a>
+      <a href="#table-impldefs-ch-2" data-target="table-impldefs-ch-2">Two</a>
     </nav>
-    <h2>Field Types</h2>
+    <h2>WARL & WLRL</h2>
     <nav class="nav" id="nav-field-type-WARL">
-      <a href="#table-field-type-WARL" data-target="table-field-type-WARL">1 WARL field</a>
+      <a href="#table-field-type-WARL" data-target="table-field-type-WARL">WARL fields A-Z</a>
     </nav>
     <nav class="nav" id="nav-field-type-WLRL">
-      <a href="#table-field-type-WLRL" data-target="table-field-type-WLRL">1 WLRL field</a>
-    </nav>
-    <nav class="nav" id="nav-field-type-WPRI">
-      <a href="#table-field-type-WPRI" data-target="table-field-type-WPRI">1 WPRI field</a>
+      <a href="#table-field-type-WLRL" data-target="table-field-type-WLRL">WLRL field A-Z</a>
     </nav>
   </aside>
     <main>
       <style>.grand-total-heading { font-size: 24px; font-weight: bold; }</style>
-      <h1 class="grand-total-heading">Grand total of 66 normative rules including 2 parameters</h1>
+      <h1 class="grand-total-heading">Grand total of 67 normative rules including 3 implementation-defined behaviors</h1>
 
-      <section id="table-1" class="section">
+      <section id="table-norm-rules-ch-1" class="section">
         <table>
-          <caption class="sticky-caption">Chapter Chapter 1 (56 normative rules including 0 parameters)</caption>
+          <caption class="sticky-caption">Chapter One (56 normative rules including 0 implementation-defined behaviors)</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-description">
@@ -522,9 +520,9 @@
         </table>
       </section>
 
-      <section id="table-2" class="section">
+      <section id="table-norm-rules-ch-2" class="section">
         <table>
-          <caption class="sticky-caption">Chapter Chapter 2 (10 normative rules including 2 parameters, 1 WARL field, 1 WLRL field, 1 WPRI field)</caption>
+          <caption class="sticky-caption">Chapter Two (11 normative rules including 3 implementation-defined behaviors, 2 WARL fields, 1 WLRL field)</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-description">
@@ -572,31 +570,28 @@
               <td><a href="test-ch2.html#norm:admonition:anchors-in-notes:note3">norm:admonition:anchors-in-notes:note3</a></td>
             </tr>
             <tr>
-              <td rowspan=2 id="parameter-with-tag">parameter-with-tag</td>
-              <td>parameter</td>
-              <td>Rule's "kind" property</td>
-            </tr>
-            <tr>
+              <td rowspan=1 id="ROSE_COLORS">ROSE_COLORS</td>
               <td>You can use red or yellow roses.</td>
-              <td><a href="test-ch2.html#norm:parameter-with-tag">norm:parameter-with-tag</a></td>
+              <td><a href="test-ch2.html#norm:ROSE_COLORS">norm:ROSE_COLORS</a></td>
             </tr>
             <tr>
-              <td rowspan=2 id="parameter-without-tag">parameter-without-tag</td>
-              <td>This parameter does not have an associated tag.</td>
-              <td>Rule's "description" property</td>
+              <td rowspan=1 id="XLEN">XLEN</td>
+              <td>We use the term XLEN to refer to the width of an integer register in bits (either 32 or 64).</td>
+              <td><a href="test-ch2.html#norm:XLEN">norm:XLEN</a></td>
             </tr>
             <tr>
-              <td>parameter</td>
-              <td>Rule's "kind" property</td>
+              <td rowspan=1 id="ASIDLEN">ASIDLEN</td>
+              <td>The number of ASID bits is UNSPECIFIED and may be zero. The number of implemented ASID bits, termed ASIDLEN, may be determined by writing one to every bit position in the ASID field, then reading back the value in satp to see which bit positions in the ASID field hold a one.</td>
+              <td><a href="test-ch2.html#norm:ASIDLEN">norm:ASIDLEN</a></td>
             </tr>
             <tr>
-              <td rowspan=2 id="csr_field_warl">csr_field_warl</td>
+              <td rowspan=2 id="csr_field_warl1">csr_field_warl1</td>
               <td>WARL</td>
               <td>Rule's "field_type" property</td>
             </tr>
             <tr>
               <td>This field is write-any-read-legal.</td>
-              <td><a href="test-ch2.html#norm:csr_field_warl">norm:csr_field_warl</a></td>
+              <td><a href="test-ch2.html#norm:csr_field_warl1">norm:csr_field_warl1</a></td>
             </tr>
             <tr>
               <td rowspan=2 id="csr_field_wlrl">csr_field_wlrl</td>
@@ -608,21 +603,21 @@
               <td><a href="test-ch2.html#norm:csr_field_wlrl">norm:csr_field_wlrl</a></td>
             </tr>
             <tr>
-              <td rowspan=2 id="csr_field_wpri">csr_field_wpri</td>
-              <td>WPRI</td>
+              <td rowspan=2 id="csr_field_warl2">csr_field_warl2</td>
+              <td>WARL</td>
               <td>Rule's "field_type" property</td>
             </tr>
             <tr>
-              <td>This field is write-preserve-read-ignore.</td>
-              <td><a href="test-ch2.html#norm:csr_field_wpri">norm:csr_field_wpri</a></td>
+              <td>This field is also write-any-read-legal.</td>
+              <td><a href="test-ch2.html#norm:csr_field_warl2">norm:csr_field_warl2</a></td>
             </tr>
           </tbody>
         </table>
       </section>
 
-      <section id="table-parameters-a-z" class="section">
+      <section id="table-impldefs-a-z" class="section">
         <table>
-          <caption class="sticky-caption">All 2 Parameters (A-Z)</caption>
+          <caption class="sticky-caption">All 3 Implementation-Defined Behaviors (A-Z)</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-description">
@@ -633,14 +628,50 @@
           </thead>
           <tbody>
             <tr>
-              <td rowspan=1><a href="#parameter-with-tag">parameter-with-tag</a></td>
-              <td>You can use red or yellow roses.</td>
-              <td><a href="test-ch2.html#norm:parameter-with-tag">norm:parameter-with-tag</a></td>
+              <td rowspan=1><a href="#ASIDLEN">ASIDLEN</a></td>
+              <td>The number of ASID bits is UNSPECIFIED and may be zero. The number of implemented ASID bits, termed ASIDLEN, may be determined by writing one to every bit position in the ASID field, then reading back the value in satp to see which bit positions in the ASID field hold a one.</td>
+              <td><a href="test-ch2.html#norm:ASIDLEN">norm:ASIDLEN</a></td>
             </tr>
             <tr>
-              <td rowspan=1><a href="#parameter-without-tag">parameter-without-tag</a></td>
-              <td>This parameter does not have an associated tag.</td>
-              <td>Rule's "description" property</td>
+              <td rowspan=1><a href="#ROSE_COLORS">ROSE_COLORS</a></td>
+              <td>You can use red or yellow roses.</td>
+              <td><a href="test-ch2.html#norm:ROSE_COLORS">norm:ROSE_COLORS</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1><a href="#XLEN">XLEN</a></td>
+              <td>We use the term XLEN to refer to the width of an integer register in bits (either 32 or 64).</td>
+              <td><a href="test-ch2.html#norm:XLEN">norm:XLEN</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="table-impldefs-ch-2" class="section">
+        <table>
+          <caption class="sticky-caption">All 3 Implementation-Defined Behaviors for Chapter Two</caption>
+          <colgroup>
+            <col class="col-name">
+            <col class="col-description">
+            <col class="col-location">
+          </colgroup>
+          <thead>
+            <tr><th>Rule Name</th><th>Rule Description</th><th>Origin of Description</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td rowspan=1><a href="#ROSE_COLORS">ROSE_COLORS</a></td>
+              <td>You can use red or yellow roses.</td>
+              <td><a href="test-ch2.html#norm:ROSE_COLORS">norm:ROSE_COLORS</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1><a href="#XLEN">XLEN</a></td>
+              <td>We use the term XLEN to refer to the width of an integer register in bits (either 32 or 64).</td>
+              <td><a href="test-ch2.html#norm:XLEN">norm:XLEN</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1><a href="#ASIDLEN">ASIDLEN</a></td>
+              <td>The number of ASID bits is UNSPECIFIED and may be zero. The number of implemented ASID bits, termed ASIDLEN, may be determined by writing one to every bit position in the ASID field, then reading back the value in satp to see which bit positions in the ASID field hold a one.</td>
+              <td><a href="test-ch2.html#norm:ASIDLEN">norm:ASIDLEN</a></td>
             </tr>
           </tbody>
         </table>
@@ -648,7 +679,7 @@
 
       <section id="table-field-type-WARL" class="section">
         <table>
-          <caption class="sticky-caption">1 WARL field</caption>
+          <caption class="sticky-caption">2 WARL fields</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-description">
@@ -659,9 +690,14 @@
           </thead>
           <tbody>
             <tr>
-              <td rowspan=1><a href="#csr_field_warl">csr_field_warl</a></td>
+              <td rowspan=1><a href="#csr_field_warl1">csr_field_warl1</a></td>
               <td>This field is write-any-read-legal.</td>
-              <td><a href="test-ch2.html#norm:csr_field_warl">norm:csr_field_warl</a></td>
+              <td><a href="test-ch2.html#norm:csr_field_warl1">norm:csr_field_warl1</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1><a href="#csr_field_warl2">csr_field_warl2</a></td>
+              <td>This field is also write-any-read-legal.</td>
+              <td><a href="test-ch2.html#norm:csr_field_warl2">norm:csr_field_warl2</a></td>
             </tr>
           </tbody>
         </table>
@@ -683,27 +719,6 @@
               <td rowspan=1><a href="#csr_field_wlrl">csr_field_wlrl</a></td>
               <td>This field is write-legal-read-legal.</td>
               <td><a href="test-ch2.html#norm:csr_field_wlrl">norm:csr_field_wlrl</a></td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
-
-      <section id="table-field-type-WPRI" class="section">
-        <table>
-          <caption class="sticky-caption">1 WPRI field</caption>
-          <colgroup>
-            <col class="col-name">
-            <col class="col-description">
-            <col class="col-location">
-          </colgroup>
-          <thead>
-            <tr><th>Rule Name</th><th>Rule Description</th><th>Origin of Description</th></tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td rowspan=1><a href="#csr_field_wpri">csr_field_wpri</a></td>
-              <td>This field is write-preserve-read-ignore.</td>
-              <td><a href="test-ch2.html#norm:csr_field_wpri">norm:csr_field_wpri</a></td>
             </tr>
           </tbody>
         </table>

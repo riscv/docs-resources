@@ -2,7 +2,7 @@
 
 ## What is a Normative Rule?
 
-Normative rules specify the behaviors an implementation must meet in order to be compliant with the standard. Each normative rule can be thought of as a complete architecturally-visible behavior. In some cases, a normative rule allows multiple acceptable implementation behaviors. These are called "parameters" and can be thought of as a special case of a normative rule.
+Normative rules specify the behaviors an implementation must meet in order to be compliant with the standard. Each normative rule can be thought of as a complete architecturally-visible behavior. In some cases, a normative rule allows multiple acceptable implementation behaviors. These are called "implementation-defined behaviors" and can be thought of as a special case of a normative rule.
 
 ### Examples of Normative Rules:
 | ISA Manual Text |
@@ -12,7 +12,7 @@ Normative rules specify the behaviors an implementation must meet in order to be
 | "ADDI adds the sign-extended 12-bit immediate to register _rs1_." |
 | "M-mode code can access all CSRs at lower privilege levels." |
 
-### Examples of Parameter Normative Rules:
+### Examples of Implementation-Defined Behaviors:
 
 | ISA Manual Text | Type | Allowed Values |
 | --------------- | ---- | -------------- |
