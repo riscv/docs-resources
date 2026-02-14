@@ -20,7 +20,7 @@ normative_rule_definitions:
     description: One line description
     tags: ["norm:admonition:anchors-in-notes:note1", "norm:admonition:anchors-in-notes:note3"]
 
-  # Implementation-defined behaviors (rule that allow choices)
+  # Implementation-defined behaviors (rules that allow choices)
   - name: ROSE_COLORS
     impl-def-behavior: true
     tag: "norm:ROSE_COLORS"

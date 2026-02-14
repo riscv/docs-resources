@@ -1269,7 +1269,10 @@ def html_norm_rule_table_row(f, nr, tags, tag_fname2url)
   fatal("Need NormativeTags for tags but passed a #{tags.class}") unless tags.is_a?(NormativeTags)
   fatal("Need Hash for tag_fname2url but passed a #{tag_fname2url.class}") unless tag_fname2url.is_a?(Hash)
 
-  html_table_row(f, nr, true, false, false,tags, tag_fname2url)
+  name_is_anchor = true   # Rule name is an anchor link in chapter tables
+  omit = {}   # Don't omit anything
+
+  html_table_row(f, nr, name_is_anchor, omit, tags, tag_fname2url)
 end
 
 def html_impldef_table_row(f, nr, tags, tag_fname2url)
@@ -1278,7 +1281,10 @@ def html_impldef_table_row(f, nr, tags, tag_fname2url)
   fatal("Need NormativeTags for tags but passed a #{tags.class}") unless tags.is_a?(NormativeTags)
   fatal("Need Hash for tag_fname2url but passed a #{tag_fname2url.class}") unless tag_fname2url.is_a?(Hash)
 
-  html_table_row(f, nr, false, true, false, tags, tag_fname2url)
+  name_is_anchor = false
+  omit = { "impldef" => true } # Redundant
+
+  html_table_row(f, nr, name_is_anchor, omit, tags, tag_fname2url)
 end
 
 def html_field_type_table_row(f, nr, tags, tag_fname2url)
@@ -1287,25 +1293,31 @@ def html_field_type_table_row(f, nr, tags, tag_fname2url)
   fatal("Need NormativeTags for tags but passed a #{tags.class}") unless tags.is_a?(NormativeTags)
   fatal("Need Hash for tag_fname2url but passed a #{tag_fname2url.class}") unless tag_fname2url.is_a?(Hash)
 
-  html_table_row(f, nr, false, false, true, tags, tag_fname2url)
+  name_is_anchor = false
+  omit = { "field_type" => true } # Redundant
+
+  html_table_row(f, nr, name_is_anchor, omit, tags, tag_fname2url)
 end
 
-def html_table_row(f, nr, name_is_anchor, omit_kind, omit_field_type, tags, tag_fname2url)
+def html_table_row(f, nr, name_is_anchor, omit, tags, tag_fname2url)
   fatal("Need File for f but passed a #{f.class}") unless f.is_a?(File)
   fatal("Need NormativeRuleDef for nr but passed a #{nr.class}") unless nr.is_a?(NormativeRuleDef)
   fatal("Need Boolean for name_is_anchor but passed a #{name_is_anchor.class}") unless name_is_anchor == true || name_is_anchor == false
-  fatal("Need Boolean for omit_kind but passed a #{omit_kind.class}") unless omit_kind == true || omit_kind == false
-  fatal("Need Boolean for omit_field_type but passed a #{omit_field_type.class}") unless omit_field_type == true || omit_field_type == false
+  fatal("Need Hash for omit but passed a #{omit.class}") unless omit.is_a?(Hash)
   fatal("Need NormativeTags for tags but passed a #{tags.class}") unless tags.is_a?(NormativeTags)
   fatal("Need Hash for tag_fname2url but passed a #{tag_fname2url.class}") unless tag_fname2url.is_a?(Hash)
+
+  omit_impldef = omit["impldef"]
+  omit_field_type = omit["field_type"]
 
   name_row_span =
     (nr.summary.nil? ? 0 : 1) +
     (nr.note.nil? ? 0 : 1) +
     (nr.clarification_link.nil? ? 0 : 1) +
     (nr.description.nil? ? 0 : 1) +
-    (omit_kind || nr.kind.nil? ? 0 : 1) +
+    (nr.kind.nil? ? 0 : 1) +
     (nr.instances.empty? ? 0 : 1) +
+    (omit_impldef || !nr.impldef ? 0 : 1) +
     (omit_field_type || nr.field_type.nil? ? 0 : 1) +
     nr.tag_refs.length
 
@@ -1352,7 +1364,7 @@ def html_table_row(f, nr, name_is_anchor, omit_kind, omit_field_type, tags, tag_
     first_row = false
   end
 
-  unless omit_kind || nr.kind.nil?
+  unless nr.kind.nil?
     f.puts(%Q{            <tr>}) unless first_row
     f.puts(%Q{              <td>#{nr.kind}</td>})
     f.puts(%Q{              <td>Rule's "kind" property</td>})
@@ -1371,6 +1383,14 @@ def html_table_row(f, nr, name_is_anchor, omit_kind, omit_field_type, tags, tag_
     f.puts(%Q{            <tr>}) unless first_row
     f.puts(%Q{              <td>#{instances_str}</td>})
     f.puts(%Q{              <td>Rule's "#{rule_name}" property</td>})
+    f.puts(%Q{            </tr>})
+    first_row = false
+  end
+
+  unless omit_impldef || !nr.impldef
+    f.puts(%Q{            <tr>}) unless first_row
+    f.puts(%Q{              <td>Implementation-defined behavior</td>})
+    f.puts(%Q{              <td>Rule's property</td>})
     f.puts(%Q{            </tr>})
     first_row = false
   end
