@@ -1,7 +1,7 @@
 // This file contains test AsciiDoc to test the custom AsciiDoctor "tags" backend and the "create_normative_rules" Ruby
 // script that consumes the tags to create a list of normative rules.
 
-== Chapter 1 - Basic Tagging
+== Chapter 1
 
 === Chapter 1.1 - Inline Tagging
 
@@ -25,12 +25,6 @@ Before bad inline [#norm:bad-inline-3]#inside bad inline:
 
 // PASSES
 Use inline anchor that [#norm:inline-with-hash]+includes a hash # symbol.+
-
-The ABC field of the DEF CSR is WARL. [#norm:csr_field_warl]#This field is write-any-read-legal.#
-
-The GHI field of the JKL CSR is WLRL. [#norm:csr_field_wlrl]#This field is write-legal-read-legal.#
-
-The MNO field of the PQR CSR is WPRI. [#norm:csr_field_wpri]#This field is write-preserve-read-ignore.#
 
 [[norm:extension-dependency]]
 The F extensions depends on the Zicsr extension.
@@ -123,7 +117,7 @@ Before hyperlink [#norm:hyperlink6]#JKL <<norm:superscript ,hello>> and <<norm:s
 [[non-norm-anchor]]
 Here's some text that isn't normative but the normatively tagged text has an existing link into it.
 
-=== Chapter 2 - Table Tagging
+=== Chapter 1.4 - Table Tagging
 
 // PASSES
 [[norm:table:no-anchors-in-cells:entire-table]]
@@ -201,7 +195,7 @@ a| Cell is adoc
 On
 |===
 
-== Chapter 3 - Tagging Unordered Lists
+=== Chapter 1.5 - Tagging Unordered Lists
 
 // PASSES - Tag includes all list items
 [[norm:unordered-list:no-anchors-in-items:entire-list]]
@@ -229,7 +223,7 @@ Some text here.
 * Zca, Zcd if D is specified (RV64 only)
 ** this configuration excludes Zcmp, Zcmt
 
-== Chapter 4 - Tagging Ordered Lists
+=== Chapter 1.6 - Tagging Ordered Lists
 
 // PASSES - Tag includes all list items
 [[norm:ordered-list:no-anchors-in-items:entire-list]]
@@ -244,7 +238,7 @@ Some text here.
 . [#norm:ordered-list:anchors-in-items:item2]#Item 2#
 . Item 3
 
-== Chapter 5 - Tagging Description Lists
+=== Chapter 1.7 - Tagging Description Lists
 
 // PASSES - Tag includes all descriptions and items
 [[norm:description-list:no-anchors-in-items:entire-list]]
@@ -270,48 +264,3 @@ Description-3::
 // PASSES - Tag includes list item
 [[norm:description-list:anchors-in-items:item3]]
 Item 3
-
-== Chapter 6 - Tagging Admonitions
-
-// PASSES
-NOTE: [#norm:admonition:single-paragraph-note]#Single paragraph note
-that spans lines.#
-
-// PASSES - Tag contains entire list
-[[norm:admonition:no-anchors-in-notes:entire-note]]
-[NOTE]
-====
-Paragraph A
-
-Paragraph B
-
-Paragraph C
-====
-
-// PASSES - Tag contains entire list
-[[norm:admonition:anchors-in-notes:entire-note]]
-[NOTE]
-====
-// PASSES - Tag contains paragraph
-[[norm:admonition:anchors-in-notes:note1]]
-Paragraph 1
-
-Paragraph 2
-
-// PASSES - Tag contains paragraph
-[[norm:admonition:anchors-in-notes:note3]]
-Paragraph 3
-====
-
-[NOTE]
-====
-// PASSES - Tag contains paragraph
-[[norm:admonition:only-anchors-in-notes:note1]]
-Paragraph X
-
-Paragraph Y
-
-// PASSES - Tag contains paragraph
-[[norm:admonition:only-anchors-in-notes:note3]]
-Paragraph Z
-====

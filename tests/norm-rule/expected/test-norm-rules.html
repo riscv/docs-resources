@@ -119,11 +119,12 @@
     .col-location { width: 20%; }
 
     /* Chapter tables use all available width and divvied up using the percentages above */
-    #table-1 > table { table-layout: fixed; width: 100% }
-    #table-parameters-a-z > table { table-layout: fixed; width: 100% }
+    #table-norm-rules-ch-1 > table { table-layout: fixed; width: 100% }
+    #table-norm-rules-ch-2 > table { table-layout: fixed; width: 100% }
+    #table-impldefs-a-z > table { table-layout: fixed; width: 100% }
+    #table-impldefs-ch-2 > table { table-layout: fixed; width: 100% }
     #table-field-type-WARL > table { table-layout: fixed; width: 100% }
     #table-field-type-WLRL > table { table-layout: fixed; width: 100% }
-    #table-field-type-WPRI > table { table-layout: fixed; width: 100% }
 
     /* Responsive */
     @media (max-width:820px){
@@ -137,32 +138,31 @@
   <div class="app">
 
   <aside class="sidebar">
-    <h2>Chapters</h2>
+    <h2>All Normative Rules</h2>
     <nav class="nav" id="nav-chapters">
-      <a href="#table-1" data-target="table-1">my-chapter_name</a>
+      <a href="#table-norm-rules-ch-1" data-target="table-norm-rules-ch-1">One</a>
+      <a href="#table-norm-rules-ch-2" data-target="table-norm-rules-ch-2">Two</a>
     </nav>
-    <h2>Parameters</h2>
-    <nav class="nav" id="nav-parameters-a-z">
-      <a href="#table-parameters-a-z" data-target="table-parameters-a-z">6 Parameters (A-Z)</a>
+    <h2>Implementation-Defined Behaviors</h2>
+    <nav class="nav" id="nav-impldefs-a-z">
+      <a href="#table-impldefs-a-z" data-target="table-impldefs-a-z">A-Z</a>
+      <a href="#table-impldefs-ch-2" data-target="table-impldefs-ch-2">Two</a>
     </nav>
-    <h2>Field Types</h2>
+    <h2>WARL & WLRL</h2>
     <nav class="nav" id="nav-field-type-WARL">
-      <a href="#table-field-type-WARL" data-target="table-field-type-WARL">1 WARL field</a>
+      <a href="#table-field-type-WARL" data-target="table-field-type-WARL">WARL fields A-Z</a>
     </nav>
     <nav class="nav" id="nav-field-type-WLRL">
-      <a href="#table-field-type-WLRL" data-target="table-field-type-WLRL">1 WLRL field</a>
-    </nav>
-    <nav class="nav" id="nav-field-type-WPRI">
-      <a href="#table-field-type-WPRI" data-target="table-field-type-WPRI">1 WPRI field</a>
+      <a href="#table-field-type-WLRL" data-target="table-field-type-WLRL">WLRL field A-Z</a>
     </nav>
   </aside>
     <main>
       <style>.grand-total-heading { font-size: 24px; font-weight: bold; }</style>
-      <h1 class="grand-total-heading">Grand total of 64 normative rules including 6 parameters</h1>
+      <h1 class="grand-total-heading">Grand total of 67 normative rules including 3 implementation-defined behaviors</h1>
 
-      <section id="table-1" class="section">
+      <section id="table-norm-rules-ch-1" class="section">
         <table>
-          <caption class="sticky-caption">Chapter my-chapter_name (64 normative rules including 6 parameters, 1 WARL field, 1 WLRL field, 1 WPRI field)</caption>
+          <caption class="sticky-caption">Chapter One (56 normative rules including 0 implementation-defined behaviors)</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-description">
@@ -187,7 +187,7 @@
             </tr>
             <tr>
               <td>inside inline</td>
-              <td><a href="test.html#norm:inline">norm:inline</a></td>
+              <td><a href="test-ch1.html#norm:inline">norm:inline</a></td>
             </tr>
             <tr>
               <td rowspan=3 id="no_tag">no_tag</td>
@@ -203,40 +203,9 @@
               <td>Rule's "description" property</td>
             </tr>
             <tr>
-              <td rowspan=2 id="inline-with-hash">inline-with-hash</td>
-              <td>parameter</td>
-              <td>Rule's "kind" property</td>
-            </tr>
-            <tr>
+              <td rowspan=1 id="inline-with-hash">inline-with-hash</td>
               <td>includes a hash # symbol.</td>
-              <td><a href="test.html#norm:inline-with-hash">norm:inline-with-hash</a></td>
-            </tr>
-            <tr>
-              <td rowspan=2 id="csr_field_warl">csr_field_warl</td>
-              <td>WARL</td>
-              <td>Rule's "field_type" property</td>
-            </tr>
-            <tr>
-              <td>This field is write-any-read-legal.</td>
-              <td><a href="test.html#norm:csr_field_warl">norm:csr_field_warl</a></td>
-            </tr>
-            <tr>
-              <td rowspan=2 id="csr_field_wlrl">csr_field_wlrl</td>
-              <td>WLRL</td>
-              <td>Rule's "field_type" property</td>
-            </tr>
-            <tr>
-              <td>This field is write-legal-read-legal.</td>
-              <td><a href="test.html#norm:csr_field_wlrl">norm:csr_field_wlrl</a></td>
-            </tr>
-            <tr>
-              <td rowspan=2 id="csr_field_wpri">csr_field_wpri</td>
-              <td>WPRI</td>
-              <td>Rule's "field_type" property</td>
-            </tr>
-            <tr>
-              <td>This field is write-preserve-read-ignore.</td>
-              <td><a href="test.html#norm:csr_field_wpri">norm:csr_field_wpri</a></td>
+              <td><a href="test-ch1.html#norm:inline-with-hash">norm:inline-with-hash</a></td>
             </tr>
             <tr>
               <td rowspan=2 id="extension-dependency">extension-dependency</td>
@@ -245,12 +214,12 @@
             </tr>
             <tr>
               <td>The F extensions depends on the Zicsr extension.</td>
-              <td><a href="test.html#norm:extension-dependency">norm:extension-dependency</a></td>
+              <td><a href="test-ch1.html#norm:extension-dependency">norm:extension-dependency</a></td>
             </tr>
             <tr>
               <td rowspan=2 id="clarification-without-text">clarification-without-text</td>
               <td>isn't clear enough.</td>
-              <td><a href="test.html#norm:clarification-without-text">norm:clarification-without-text</a></td>
+              <td><a href="test-ch1.html#norm:clarification-without-text">norm:clarification-without-text</a></td>
             </tr>
             <tr>
               <td>[CLARIFICATION] (No clarification text available)</td>
@@ -259,7 +228,7 @@
             <tr>
               <td rowspan=2 id="clarification-with-text">clarification-with-text</td>
               <td>also isn't clear enough.</td>
-              <td><a href="test.html#norm:clarification-with-text">norm:clarification-with-text</a></td>
+              <td><a href="test-ch1.html#norm:clarification-with-text">norm:clarification-with-text</a></td>
             </tr>
             <tr>
               <td>[CLARIFICATION] This is the optional clarifying text.</td>
@@ -268,353 +237,292 @@
             <tr>
               <td rowspan=2 id="clarification-with-table">clarification-with-table</td>
               <td>also isn't clear enough.</td>
-              <td><a href="test.html#norm:clarification-with-text">norm:clarification-with-text</a></td>
+              <td><a href="test-ch1.html#norm:clarification-with-text">norm:clarification-with-text</a></td>
             </tr>
             <tr>
               <td>[CLARIFICATION] <table><thead><tr><th>Header1</th><th>Header2</th></tr></thead><tbody><tr><td>R1C1</td><td>R1C2</td></tr><tr><td>R2C1</td><td>R2C2</td></tr></tbody></table><br></td>
               <td><a href="https://github.com/riscv/something/issues/67">GitHub Issue</a></td>
             </tr>
             <tr>
-              <td rowspan=2 id="cat-colors">cat-colors</td>
-              <td>parameter</td>
-              <td>Rule's "kind" property</td>
-            </tr>
-            <tr>
+              <td rowspan=1 id="cat-colors">cat-colors</td>
               <td>Cats come in many colors.</td>
-              <td><a href="test.html#norm:cat-colors">norm:cat-colors</a></td>
+              <td><a href="test-ch1.html#norm:cat-colors">norm:cat-colors</a></td>
             </tr>
             <tr>
               <td rowspan=2 id="cat-claws-one-line-1">cat-claws-one-line-1</td>
               <td>This kind of animal has claws.</td>
-              <td><a href="test.html#norm:cat-claws">norm:cat-claws</a></td>
+              <td><a href="test-ch1.html#norm:cat-claws">norm:cat-claws</a></td>
             </tr>
             <tr>
               <td>[CONTEXT] Cats come in many colors.</td>
-              <td><a href="test.html#norm:cat-colors">norm:cat-colors</a></td>
+              <td><a href="test-ch1.html#norm:cat-colors">norm:cat-colors</a></td>
             </tr>
             <tr>
               <td rowspan=2 id="cat-claws-multi-lines-1">cat-claws-multi-lines-1</td>
               <td>[CONTEXT] Cats come in many colors.</td>
-              <td><a href="test.html#norm:cat-colors">norm:cat-colors</a></td>
+              <td><a href="test-ch1.html#norm:cat-colors">norm:cat-colors</a></td>
             </tr>
             <tr>
               <td>This kind of animal has claws.</td>
-              <td><a href="test.html#norm:cat-claws">norm:cat-claws</a></td>
+              <td><a href="test-ch1.html#norm:cat-claws">norm:cat-claws</a></td>
             </tr>
             <tr>
               <td rowspan=2 id="cat-claws-multi-lines-2">cat-claws-multi-lines-2</td>
               <td>This kind of animal has claws.</td>
-              <td><a href="test.html#norm:cat-claws">norm:cat-claws</a></td>
+              <td><a href="test-ch1.html#norm:cat-claws">norm:cat-claws</a></td>
             </tr>
             <tr>
               <td>[CONTEXT] Cats come in many colors.</td>
-              <td><a href="test.html#norm:cat-colors">norm:cat-colors</a></td>
+              <td><a href="test-ch1.html#norm:cat-colors">norm:cat-colors</a></td>
             </tr>
             <tr>
               <td rowspan=2 id="cat-claws-multi-lines-3">cat-claws-multi-lines-3</td>
               <td>[CONTEXT] Cats come in many colors.</td>
-              <td><a href="test.html#norm:cat-colors">norm:cat-colors</a></td>
+              <td><a href="test-ch1.html#norm:cat-colors">norm:cat-colors</a></td>
             </tr>
             <tr>
               <td>This kind of animal has claws.</td>
-              <td><a href="test.html#norm:cat-claws">norm:cat-claws</a></td>
+              <td><a href="test-ch1.html#norm:cat-claws">norm:cat-claws</a></td>
             </tr>
             <tr>
-              <td rowspan=3 id="paragraph-with-a-really-wide-rule-name">paragraph-with-a-really-wide-rule-name</td>
+              <td rowspan=2 id="paragraph-with-a-really-wide-rule-name">paragraph-with-a-really-wide-rule-name</td>
               <td>Here's a <span class="underline">description</span>.<br>It's got 2 lines.<br></td>
               <td>Rule's "description" property</td>
             </tr>
             <tr>
-              <td>parameter</td>
-              <td>Rule's "kind" property</td>
-            </tr>
-            <tr>
               <td>Paragraph without inline anchors</td>
-              <td><a href="test.html#norm:paragraph:no-inline-anchors">norm:paragraph:no-inline-anchors</a></td>
+              <td><a href="test-ch1.html#norm:paragraph:no-inline-anchors">norm:paragraph:no-inline-anchors</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="inline-anchors-in-paragraph-entire">inline-anchors-in-paragraph-entire</td>
               <td>Paragraph with inline anchor and something.</td>
-              <td><a href="test.html#norm:paragraph:inline-anchors:entire">norm:paragraph:inline-anchors:entire</a></td>
+              <td><a href="test-ch1.html#norm:paragraph:inline-anchors:entire">norm:paragraph:inline-anchors:entire</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="inline-anchors-in-paragraph-inline-anchor">inline-anchors-in-paragraph-inline-anchor</td>
               <td>inline anchor</td>
-              <td><a href="test.html#norm:paragraph:inline-anchors:inline-anchor">norm:paragraph:inline-anchors:inline-anchor</a></td>
+              <td><a href="test-ch1.html#norm:paragraph:inline-anchors:inline-anchor">norm:paragraph:inline-anchors:inline-anchor</a></td>
             </tr>
             <tr>
-              <td rowspan=2 id="formulae">formulae</td>
-              <td>parameter</td>
-              <td>Rule's "kind" property</td>
-            </tr>
-            <tr>
+              <td rowspan=1 id="formulae">formulae</td>
               <td>This paragraph looks like a formulae to Excel because it has this &#60; sign in it. Make sure this gets written as a string, not a formulae in the XLSX or else it will create an error in Excel.</td>
-              <td><a href="test.html#norm:formulae">norm:formulae</a></td>
+              <td><a href="test-ch1.html#norm:formulae">norm:formulae</a></td>
             </tr>
             <tr>
-              <td rowspan=2 id="rule_with_newlines">rule_with_newlines</td>
-              <td>parameter</td>
-              <td>Rule's "kind" property</td>
-            </tr>
-            <tr>
+              <td rowspan=1 id="rule_with_newlines">rule_with_newlines</td>
               <td>Here&#8217;s the first line. Here&#8217;s the second line.</td>
-              <td><a href="test.html#norm:paragraph:tag_with_newlines">norm:paragraph:tag_with_newlines</a></td>
+              <td><a href="test-ch1.html#norm:paragraph:tag_with_newlines">norm:paragraph:tag_with_newlines</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="double_tags">double_tags</td>
               <td>This paragraph has two tags but we only ever get a tag for norm:def.</td>
-              <td><a href="test.html#norm:def">norm:def</a></td>
+              <td><a href="test-ch1.html#norm:def">norm:def</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="bold">bold</td>
               <td>ABC is a network - Bold is removed by tags backend so I don't see it</td>
-              <td><a href="test.html#norm:bold">norm:bold</a></td>
+              <td><a href="test-ch1.html#norm:bold">norm:bold</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="italics">italics</td>
               <td>Let's have fun today - Italics is removed by tags backend so I don't see it</td>
-              <td><a href="test.html#norm:italics">norm:italics</a></td>
+              <td><a href="test-ch1.html#norm:italics">norm:italics</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="superscript">superscript</td>
               <td>both 2<sup>32</sup> and <sup>32</sup> work</td>
-              <td><a href="test.html#norm:superscript">norm:superscript</a></td>
+              <td><a href="test-ch1.html#norm:superscript">norm:superscript</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="subscript">subscript</td>
               <td>both <sub>log</sub> and log<sub>2</sub> work</td>
-              <td><a href="test.html#norm:subscript">norm:subscript</a></td>
+              <td><a href="test-ch1.html#norm:subscript">norm:subscript</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="inline-underline">inline-underline</td>
               <td>ABC <span class="underline">inside tag</span> GHI</td>
-              <td><a href="test.html#norm:inline-underline">norm:inline-underline</a></td>
+              <td><a href="test-ch1.html#norm:inline-underline">norm:inline-underline</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="paragraph-underline">paragraph-underline</td>
               <td>Paragraph underlined outside.</td>
-              <td><a href="test.html#norm:paragraph-underline">norm:paragraph-underline</a></td>
+              <td><a href="test-ch1.html#norm:paragraph-underline">norm:paragraph-underline</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="standalone_ampersand">standalone_ampersand</td>
               <td>ABC &#38; DEF</td>
-              <td><a href="test.html#norm:standalone_ampersand">norm:standalone_ampersand</a></td>
+              <td><a href="test-ch1.html#norm:standalone_ampersand">norm:standalone_ampersand</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="unicode_name">unicode_name</td>
               <td>DEF &#8805; GHI</td>
-              <td><a href="test.html#norm:unicode_name">norm:unicode_name</a></td>
+              <td><a href="test-ch1.html#norm:unicode_name">norm:unicode_name</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="unicode_decimal_value">unicode_decimal_value</td>
               <td>GHI &#8805; JKL</td>
-              <td><a href="test.html#norm:unicode_decimal_value">norm:unicode_decimal_value</a></td>
+              <td><a href="test-ch1.html#norm:unicode_decimal_value">norm:unicode_decimal_value</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="unicode_hexadecimal_value">unicode_hexadecimal_value</td>
               <td>JKL &#x2265; MNO</td>
-              <td><a href="test.html#norm:unicode_hexadecimal_value">norm:unicode_hexadecimal_value</a></td>
+              <td><a href="test-ch1.html#norm:unicode_hexadecimal_value">norm:unicode_hexadecimal_value</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="unicode_char">unicode_char</td>
               <td>MNO ≥ PQR</td>
-              <td><a href="test.html#norm:unicode_char">norm:unicode_char</a></td>
+              <td><a href="test-ch1.html#norm:unicode_char">norm:unicode_char</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="macro_call">macro_call</td>
               <td>200 {ge} 100</td>
-              <td><a href="test.html#norm:macro_call">norm:macro_call</a></td>
+              <td><a href="test-ch1.html#norm:macro_call">norm:macro_call</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="hyperlink1">hyperlink1</td>
-              <td>ABC <a href="test.html#norm:superscript">norm:superscript</a> DEF</td>
-              <td><a href="test.html#norm:hyperlink1">norm:hyperlink1</a></td>
+              <td>ABC <a href="test-ch1.html#norm:superscript">norm:superscript</a> DEF</td>
+              <td><a href="test-ch1.html#norm:hyperlink1">norm:hyperlink1</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="hyperlink2">hyperlink2</td>
-              <td>DEF <a href="test.html#norm:superscript">custom text</a> GHI</td>
-              <td><a href="test.html#norm:hyperlink2">norm:hyperlink2</a></td>
+              <td>DEF <a href="test-ch1.html#norm:superscript">custom text</a> GHI</td>
+              <td><a href="test-ch1.html#norm:hyperlink2">norm:hyperlink2</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="hyperlink3">hyperlink3</td>
-              <td>ABC <a href="test.html#non-norm-anchor">non-norm-anchor</a> DEF</td>
-              <td><a href="test.html#norm:hyperlink3">norm:hyperlink3</a></td>
+              <td>ABC <a href="test-ch1.html#non-norm-anchor">non-norm-anchor</a> DEF</td>
+              <td><a href="test-ch1.html#norm:hyperlink3">norm:hyperlink3</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="hyperlink4">hyperlink4</td>
-              <td>DEF <a href="test.html#non-norm-anchor">custom text</a> GHI</td>
-              <td><a href="test.html#norm:hyperlink4">norm:hyperlink4</a></td>
+              <td>DEF <a href="test-ch1.html#non-norm-anchor">custom text</a> GHI</td>
+              <td><a href="test-ch1.html#norm:hyperlink4">norm:hyperlink4</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="hyperlink5">hyperlink5</td>
-              <td>GHI <a href="test.html#norm:superscript">norm:superscript</a> and <a href="test.html#norm:subscript">norm:subscript</a> JKL</td>
-              <td><a href="test.html#norm:hyperlink5">norm:hyperlink5</a></td>
+              <td>GHI <a href="test-ch1.html#norm:superscript">norm:superscript</a> and <a href="test-ch1.html#norm:subscript">norm:subscript</a> JKL</td>
+              <td><a href="test-ch1.html#norm:hyperlink5">norm:hyperlink5</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="hyperlink6">hyperlink6</td>
-              <td>JKL <a href="test.html#norm:superscript">hello</a> and <a href="test.html#norm:subscript">goodbye</a> MNO</td>
-              <td><a href="test.html#norm:hyperlink6">norm:hyperlink6</a></td>
+              <td>JKL <a href="test-ch1.html#norm:superscript">hello</a> and <a href="test-ch1.html#norm:subscript">goodbye</a> MNO</td>
+              <td><a href="test-ch1.html#norm:hyperlink6">norm:hyperlink6</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="table1">table1</td>
               <td><table><tbody><tr><td>WITH anchor</td></tr><tr><td>WITHOUT anchor</td></tr></tbody></table></td>
-              <td><a href="test.html#norm:table:anchors-in-cells:entire-table">norm:table:anchors-in-cells:entire-table</a></td>
+              <td><a href="test-ch1.html#norm:table:anchors-in-cells:entire-table">norm:table:anchors-in-cells:entire-table</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="table2">table2</td>
               <td><table><thead><tr><th>Header 1</th><th>Header 2</th></tr></thead><tbody><tr><td>Cell in column 1, row 1</td><td>Cell in column 2, row 1</td></tr><tr><td>Cell in column 1, row 2</td><td>Cell in column 2, row 2</td></tr></tbody></table></td>
-              <td><a href="test.html#norm:table:no-anchors-in-cells:entire-table">norm:table:no-anchors-in-cells:entire-table</a></td>
+              <td><a href="test-ch1.html#norm:table:no-anchors-in-cells:entire-table">norm:table:no-anchors-in-cells:entire-table</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="table3">table3</td>
               <td>WITH anchor</td>
-              <td><a href="test.html#norm:table:anchors-in-cells:entire-table-tagged:cell">norm:table:anchors-in-cells:entire-table-tagged:cell</a></td>
+              <td><a href="test-ch1.html#norm:table:anchors-in-cells:entire-table-tagged:cell">norm:table:anchors-in-cells:entire-table-tagged:cell</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="table4">table4</td>
               <td>ABC DEF</td>
-              <td><a href="test.html#norm:table:anchors-in-cells:entire-table-not-tagged:cell">norm:table:anchors-in-cells:entire-table-not-tagged:cell</a></td>
+              <td><a href="test-ch1.html#norm:table:anchors-in-cells:entire-table-not-tagged:cell">norm:table:anchors-in-cells:entire-table-not-tagged:cell</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="table5">table5</td>
               <td><table><thead><tr><th>Name</th><th>Color</th></tr></thead><tbody><tr><td>Roses</td><td>Red</td></tr><tr><td>Violets</td><td>Blue</td></tr><tr><td>Name1</td><td>Color1</td></tr><tr><td>Name2</td><td>Color2</td></tr><tr><td>Name3</td><td>Color3</td></tr><tr><td>Name4</td><td>Color4</td></tr><tr><td>Name5</td><td>Color5</td></tr><tr><td>Name6</td><td>Color6</td></tr><tr><td>Name7</td><td>Color7</td></tr><tr><td>Name8</td><td>Color8</td></tr><tr><td>Name9</td><td>Color9</td></tr><tr><td>Name10</td><td>Color10</td></tr><tr><td>...</td><td>...</td></tr></tbody></table></td>
-              <td><a href="test.html#norm:table:many-rows">norm:table:many-rows</a></td>
+              <td><a href="test-ch1.html#norm:table:many-rows">norm:table:many-rows</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="table6">table6</td>
               <td><table><thead><tr><th>X1</th><th>X2</th></tr></thead><tbody><tr><td>A</td><td>B</td></tr><tr><td>C</td><td>D</td></tr></tbody></table></td>
-              <td><a href="test.html#norm:table:single-char-cells">norm:table:single-char-cells</a></td>
+              <td><a href="test-ch1.html#norm:table:single-char-cells">norm:table:single-char-cells</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="table7">table7</td>
               <td><table><thead><tr><th>ColA</th><th>ColB</th></tr></thead><tbody><tr><td>0<br>1</td><td>Off<br>On</td></tr></tbody></table></td>
-              <td><a href="test.html#norm:table:column-first-order">norm:table:column-first-order</a></td>
+              <td><a href="test-ch1.html#norm:table:column-first-order">norm:table:column-first-order</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="unordered1">unordered1</td>
               <td>Item A<br>Item B<br>Item C</td>
-              <td><a href="test.html#norm:unordered-list:no-anchors-in-items:entire-list">norm:unordered-list:no-anchors-in-items:entire-list</a></td>
+              <td><a href="test-ch1.html#norm:unordered-list:no-anchors-in-items:entire-list">norm:unordered-list:no-anchors-in-items:entire-list</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="unordered2">unordered2</td>
               <td>Item 1<br>Item 2<br>Item 3</td>
-              <td><a href="test.html#norm:unordered-list:anchors-in-items:entire-list">norm:unordered-list:anchors-in-items:entire-list</a></td>
+              <td><a href="test-ch1.html#norm:unordered-list:anchors-in-items:entire-list">norm:unordered-list:anchors-in-items:entire-list</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="unordered3">unordered3</td>
               <td>Item 1</td>
-              <td><a href="test.html#norm:unordered-list:anchors-in-items:item1">norm:unordered-list:anchors-in-items:item1</a></td>
+              <td><a href="test-ch1.html#norm:unordered-list:anchors-in-items:item1">norm:unordered-list:anchors-in-items:item1</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="unordered4">unordered4</td>
               <td>Item 2</td>
-              <td><a href="test.html#norm:unordered-list:anchors-in-items:item2">norm:unordered-list:anchors-in-items:item2</a></td>
+              <td><a href="test-ch1.html#norm:unordered-list:anchors-in-items:item2">norm:unordered-list:anchors-in-items:item2</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="unordered5">unordered5</td>
               <td>Zca and not F<br>Zca, Zcf and F (but not D) is specified (RV32 only)<br>Zca, Zcf and Zcd if D is specified (RV32 only)<br><br>this configuration excludes Zcmp, Zcmt<br>Zca, Zcd if D is specified (RV64 only)<br><br>this configuration excludes Zcmp, Zcmt</td>
-              <td><a href="test.html#norm:unordered-list:multiple-levels">norm:unordered-list:multiple-levels</a></td>
+              <td><a href="test-ch1.html#norm:unordered-list:multiple-levels">norm:unordered-list:multiple-levels</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="ordered1">ordered1</td>
               <td>Item A<br>Item B<br>Item C</td>
-              <td><a href="test.html#norm:ordered-list:no-anchors-in-items:entire-list">norm:ordered-list:no-anchors-in-items:entire-list</a></td>
+              <td><a href="test-ch1.html#norm:ordered-list:no-anchors-in-items:entire-list">norm:ordered-list:no-anchors-in-items:entire-list</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="ordered2">ordered2</td>
               <td>Item 1<br>Item 2<br>Item 3</td>
-              <td><a href="test.html#norm:ordered-list:anchors-in-items:entire-list">norm:ordered-list:anchors-in-items:entire-list</a></td>
+              <td><a href="test-ch1.html#norm:ordered-list:anchors-in-items:entire-list">norm:ordered-list:anchors-in-items:entire-list</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="ordered3">ordered3</td>
               <td>Item 1</td>
-              <td><a href="test.html#norm:ordered-list:anchors-in-items:item1">norm:ordered-list:anchors-in-items:item1</a></td>
+              <td><a href="test-ch1.html#norm:ordered-list:anchors-in-items:item1">norm:ordered-list:anchors-in-items:item1</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="ordered4">ordered4</td>
               <td>Item 2</td>
-              <td><a href="test.html#norm:ordered-list:anchors-in-items:item2">norm:ordered-list:anchors-in-items:item2</a></td>
+              <td><a href="test-ch1.html#norm:ordered-list:anchors-in-items:item2">norm:ordered-list:anchors-in-items:item2</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="desc1">desc1</td>
               <td>Description-A<br>Item A<br>Description-B<br>Item B<br>Description-C<br>Item C</td>
-              <td><a href="test.html#norm:description-list:no-anchors-in-items:entire-list">norm:description-list:no-anchors-in-items:entire-list</a></td>
+              <td><a href="test-ch1.html#norm:description-list:no-anchors-in-items:entire-list">norm:description-list:no-anchors-in-items:entire-list</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="desc2">desc2</td>
               <td>Description-1</td>
-              <td><a href="test.html#norm:description-list:anchors-in-items:entire-list">norm:description-list:anchors-in-items:entire-list</a></td>
+              <td><a href="test-ch1.html#norm:description-list:anchors-in-items:entire-list">norm:description-list:anchors-in-items:entire-list</a></td>
             </tr>
             <tr>
               <td rowspan=2 id="desc3">desc3</td>
               <td>Item 1</td>
-              <td><a href="test.html#norm:description-list:anchors-in-items:item1">norm:description-list:anchors-in-items:item1</a></td>
+              <td><a href="test-ch1.html#norm:description-list:anchors-in-items:item1">norm:description-list:anchors-in-items:item1</a></td>
             </tr>
             <tr>
               <td>Item 3</td>
-              <td><a href="test.html#norm:description-list:anchors-in-items:item3">norm:description-list:anchors-in-items:item3</a></td>
+              <td><a href="test-ch1.html#norm:description-list:anchors-in-items:item3">norm:description-list:anchors-in-items:item3</a></td>
             </tr>
             <tr>
               <td rowspan=2 id="desc4">desc4</td>
               <td>Item 1</td>
-              <td><a href="test.html#norm:description-list:anchors-in-items:item1">norm:description-list:anchors-in-items:item1</a></td>
+              <td><a href="test-ch1.html#norm:description-list:anchors-in-items:item1">norm:description-list:anchors-in-items:item1</a></td>
             </tr>
             <tr>
               <td>Item 3</td>
-              <td><a href="test.html#norm:description-list:anchors-in-items:item3">norm:description-list:anchors-in-items:item3</a></td>
-            </tr>
-            <tr>
-              <td rowspan=1 id="admon1">admon1</td>
-              <td>Single paragraph note<br>that spans lines.</td>
-              <td><a href="test.html#norm:admonition:single-paragraph-note">norm:admonition:single-paragraph-note</a></td>
-            </tr>
-            <tr>
-              <td rowspan=1 id="admon2">admon2</td>
-              <td>Paragraph A<br><br>Paragraph B<br><br>Paragraph C</td>
-              <td><a href="test.html#norm:admonition:no-anchors-in-notes:entire-note">norm:admonition:no-anchors-in-notes:entire-note</a></td>
-            </tr>
-            <tr>
-              <td rowspan=1 id="admon3">admon3</td>
-              <td>Paragraph 1<br><br>Paragraph 2<br><br>Paragraph 3</td>
-              <td><a href="test.html#norm:admonition:anchors-in-notes:entire-note">norm:admonition:anchors-in-notes:entire-note</a></td>
-            </tr>
-            <tr>
-              <td rowspan=2 id="admon4">admon4</td>
-              <td>Paragraph X</td>
-              <td><a href="test.html#norm:admonition:only-anchors-in-notes:note1">norm:admonition:only-anchors-in-notes:note1</a></td>
-            </tr>
-            <tr>
-              <td>Paragraph Z</td>
-              <td><a href="test.html#norm:admonition:only-anchors-in-notes:note3">norm:admonition:only-anchors-in-notes:note3</a></td>
-            </tr>
-            <tr>
-              <td rowspan=5 id="admon5">admon5</td>
-              <td>One line description</td>
-              <td>Rule's "description" property</td>
-            </tr>
-            <tr>
-              <td>parameter</td>
-              <td>Rule's "kind" property</td>
-            </tr>
-            <tr>
-              <td>my_parameter</td>
-              <td>Rule's "instance" property</td>
-            </tr>
-            <tr>
-              <td>Paragraph 1</td>
-              <td><a href="test.html#norm:admonition:anchors-in-notes:note1">norm:admonition:anchors-in-notes:note1</a></td>
-            </tr>
-            <tr>
-              <td>Paragraph 3</td>
-              <td><a href="test.html#norm:admonition:anchors-in-notes:note3">norm:admonition:anchors-in-notes:note3</a></td>
+              <td><a href="test-ch1.html#norm:description-list:anchors-in-items:item3">norm:description-list:anchors-in-items:item3</a></td>
             </tr>
           </tbody>
         </table>
       </section>
 
-      <section id="table-parameters-a-z" class="section">
+      <section id="table-norm-rules-ch-2" class="section">
         <table>
-          <caption class="sticky-caption">All 6 Parameters (A-Z)</caption>
+          <caption class="sticky-caption">Chapter Two (11 normative rules including 3 implementation-defined behaviors, 2 WARL fields, 1 WLRL field)</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-description">
@@ -625,50 +533,157 @@
           </thead>
           <tbody>
             <tr>
-              <td rowspan=4><a href="#admon5">admon5</a></td>
+              <td rowspan=1 id="admon1">admon1</td>
+              <td>Single paragraph note<br>that spans lines.</td>
+              <td><a href="test-ch2.html#norm:admonition:single-paragraph-note">norm:admonition:single-paragraph-note</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1 id="admon2">admon2</td>
+              <td>Paragraph A<br><br>Paragraph B<br><br>Paragraph C</td>
+              <td><a href="test-ch2.html#norm:admonition:no-anchors-in-notes:entire-note">norm:admonition:no-anchors-in-notes:entire-note</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1 id="admon3">admon3</td>
+              <td>Paragraph 0<br><br>Paragraph 1<br><br>Paragraph 2</td>
+              <td><a href="test-ch2.html#norm:admonition:anchors-in-notes:entire-note">norm:admonition:anchors-in-notes:entire-note</a></td>
+            </tr>
+            <tr>
+              <td rowspan=2 id="admon4">admon4</td>
+              <td>Paragraph X</td>
+              <td><a href="test-ch2.html#norm:admonition:only-anchors-in-notes:note1">norm:admonition:only-anchors-in-notes:note1</a></td>
+            </tr>
+            <tr>
+              <td>Paragraph Z</td>
+              <td><a href="test-ch2.html#norm:admonition:only-anchors-in-notes:note3">norm:admonition:only-anchors-in-notes:note3</a></td>
+            </tr>
+            <tr>
+              <td rowspan=3 id="admon5">admon5</td>
               <td>One line description</td>
               <td>Rule's "description" property</td>
             </tr>
             <tr>
-              <td>my_parameter</td>
-              <td>Rule's "instance" property</td>
+              <td>Paragraph 0</td>
+              <td><a href="test-ch2.html#norm:admonition:anchors-in-notes:note1">norm:admonition:anchors-in-notes:note1</a></td>
             </tr>
             <tr>
-              <td>Paragraph 1</td>
-              <td><a href="test.html#norm:admonition:anchors-in-notes:note1">norm:admonition:anchors-in-notes:note1</a></td>
+              <td>Paragraph 2</td>
+              <td><a href="test-ch2.html#norm:admonition:anchors-in-notes:note3">norm:admonition:anchors-in-notes:note3</a></td>
             </tr>
             <tr>
-              <td>Paragraph 3</td>
-              <td><a href="test.html#norm:admonition:anchors-in-notes:note3">norm:admonition:anchors-in-notes:note3</a></td>
+              <td rowspan=2 id="ROSE_COLORS">ROSE_COLORS</td>
+              <td>Implementation-defined behavior</td>
+              <td>Rule's property</td>
             </tr>
             <tr>
-              <td rowspan=1><a href="#cat-colors">cat-colors</a></td>
-              <td>Cats come in many colors.</td>
-              <td><a href="test.html#norm:cat-colors">norm:cat-colors</a></td>
+              <td>You can use red or yellow roses.</td>
+              <td><a href="test-ch2.html#norm:ROSE_COLORS">norm:ROSE_COLORS</a></td>
             </tr>
             <tr>
-              <td rowspan=1><a href="#formulae">formulae</a></td>
-              <td>This paragraph looks like a formulae to Excel because it has this &#60; sign in it. Make sure this gets written as a string, not a formulae in the XLSX or else it will create an error in Excel.</td>
-              <td><a href="test.html#norm:formulae">norm:formulae</a></td>
+              <td rowspan=2 id="XLEN">XLEN</td>
+              <td>Implementation-defined behavior</td>
+              <td>Rule's property</td>
             </tr>
             <tr>
-              <td rowspan=1><a href="#inline-with-hash">inline-with-hash</a></td>
-              <td>includes a hash # symbol.</td>
-              <td><a href="test.html#norm:inline-with-hash">norm:inline-with-hash</a></td>
+              <td>We use the term XLEN to refer to the width of an integer register in bits (either 32 or 64).</td>
+              <td><a href="test-ch2.html#norm:XLEN">norm:XLEN</a></td>
             </tr>
             <tr>
-              <td rowspan=2><a href="#paragraph-with-a-really-wide-rule-name">paragraph-with-a-really-wide-rule-name</a></td>
-              <td>Here's a <span class="underline">description</span>.<br>It's got 2 lines.<br></td>
-              <td>Rule's "description" property</td>
+              <td rowspan=2 id="ASIDLEN">ASIDLEN</td>
+              <td>Implementation-defined behavior</td>
+              <td>Rule's property</td>
             </tr>
             <tr>
-              <td>Paragraph without inline anchors</td>
-              <td><a href="test.html#norm:paragraph:no-inline-anchors">norm:paragraph:no-inline-anchors</a></td>
+              <td>The number of ASID bits is UNSPECIFIED and may be zero. The number of implemented ASID bits, termed ASIDLEN, may be determined by writing one to every bit position in the ASID field, then reading back the value in satp to see which bit positions in the ASID field hold a one.</td>
+              <td><a href="test-ch2.html#norm:ASIDLEN">norm:ASIDLEN</a></td>
             </tr>
             <tr>
-              <td rowspan=1><a href="#rule_with_newlines">rule_with_newlines</a></td>
-              <td>Here&#8217;s the first line. Here&#8217;s the second line.</td>
-              <td><a href="test.html#norm:paragraph:tag_with_newlines">norm:paragraph:tag_with_newlines</a></td>
+              <td rowspan=2 id="csr_field_warl1">csr_field_warl1</td>
+              <td>WARL</td>
+              <td>Rule's "field_type" property</td>
+            </tr>
+            <tr>
+              <td>This field is write-any-read-legal.</td>
+              <td><a href="test-ch2.html#norm:csr_field_warl1">norm:csr_field_warl1</a></td>
+            </tr>
+            <tr>
+              <td rowspan=2 id="csr_field_wlrl">csr_field_wlrl</td>
+              <td>WLRL</td>
+              <td>Rule's "field_type" property</td>
+            </tr>
+            <tr>
+              <td>This field is write-legal-read-legal.</td>
+              <td><a href="test-ch2.html#norm:csr_field_wlrl">norm:csr_field_wlrl</a></td>
+            </tr>
+            <tr>
+              <td rowspan=2 id="csr_field_warl2">csr_field_warl2</td>
+              <td>WARL</td>
+              <td>Rule's "field_type" property</td>
+            </tr>
+            <tr>
+              <td>This field is also write-any-read-legal.</td>
+              <td><a href="test-ch2.html#norm:csr_field_warl2">norm:csr_field_warl2</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="table-impldefs-a-z" class="section">
+        <table>
+          <caption class="sticky-caption">All 3 Implementation-Defined Behaviors (A-Z)</caption>
+          <colgroup>
+            <col class="col-name">
+            <col class="col-description">
+            <col class="col-location">
+          </colgroup>
+          <thead>
+            <tr><th>Rule Name</th><th>Rule Description</th><th>Origin of Description</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td rowspan=1><a href="#ASIDLEN">ASIDLEN</a></td>
+              <td>The number of ASID bits is UNSPECIFIED and may be zero. The number of implemented ASID bits, termed ASIDLEN, may be determined by writing one to every bit position in the ASID field, then reading back the value in satp to see which bit positions in the ASID field hold a one.</td>
+              <td><a href="test-ch2.html#norm:ASIDLEN">norm:ASIDLEN</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1><a href="#ROSE_COLORS">ROSE_COLORS</a></td>
+              <td>You can use red or yellow roses.</td>
+              <td><a href="test-ch2.html#norm:ROSE_COLORS">norm:ROSE_COLORS</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1><a href="#XLEN">XLEN</a></td>
+              <td>We use the term XLEN to refer to the width of an integer register in bits (either 32 or 64).</td>
+              <td><a href="test-ch2.html#norm:XLEN">norm:XLEN</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="table-impldefs-ch-2" class="section">
+        <table>
+          <caption class="sticky-caption">All 3 Implementation-Defined Behaviors for Chapter Two</caption>
+          <colgroup>
+            <col class="col-name">
+            <col class="col-description">
+            <col class="col-location">
+          </colgroup>
+          <thead>
+            <tr><th>Rule Name</th><th>Rule Description</th><th>Origin of Description</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td rowspan=1><a href="#ROSE_COLORS">ROSE_COLORS</a></td>
+              <td>You can use red or yellow roses.</td>
+              <td><a href="test-ch2.html#norm:ROSE_COLORS">norm:ROSE_COLORS</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1><a href="#XLEN">XLEN</a></td>
+              <td>We use the term XLEN to refer to the width of an integer register in bits (either 32 or 64).</td>
+              <td><a href="test-ch2.html#norm:XLEN">norm:XLEN</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1><a href="#ASIDLEN">ASIDLEN</a></td>
+              <td>The number of ASID bits is UNSPECIFIED and may be zero. The number of implemented ASID bits, termed ASIDLEN, may be determined by writing one to every bit position in the ASID field, then reading back the value in satp to see which bit positions in the ASID field hold a one.</td>
+              <td><a href="test-ch2.html#norm:ASIDLEN">norm:ASIDLEN</a></td>
             </tr>
           </tbody>
         </table>
@@ -676,7 +691,7 @@
 
       <section id="table-field-type-WARL" class="section">
         <table>
-          <caption class="sticky-caption">1 WARL field</caption>
+          <caption class="sticky-caption">2 WARL fields</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-description">
@@ -687,9 +702,14 @@
           </thead>
           <tbody>
             <tr>
-              <td rowspan=1><a href="#csr_field_warl">csr_field_warl</a></td>
+              <td rowspan=1><a href="#csr_field_warl1">csr_field_warl1</a></td>
               <td>This field is write-any-read-legal.</td>
-              <td><a href="test.html#norm:csr_field_warl">norm:csr_field_warl</a></td>
+              <td><a href="test-ch2.html#norm:csr_field_warl1">norm:csr_field_warl1</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1><a href="#csr_field_warl2">csr_field_warl2</a></td>
+              <td>This field is also write-any-read-legal.</td>
+              <td><a href="test-ch2.html#norm:csr_field_warl2">norm:csr_field_warl2</a></td>
             </tr>
           </tbody>
         </table>
@@ -710,28 +730,7 @@
             <tr>
               <td rowspan=1><a href="#csr_field_wlrl">csr_field_wlrl</a></td>
               <td>This field is write-legal-read-legal.</td>
-              <td><a href="test.html#norm:csr_field_wlrl">norm:csr_field_wlrl</a></td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
-
-      <section id="table-field-type-WPRI" class="section">
-        <table>
-          <caption class="sticky-caption">1 WPRI field</caption>
-          <colgroup>
-            <col class="col-name">
-            <col class="col-description">
-            <col class="col-location">
-          </colgroup>
-          <thead>
-            <tr><th>Rule Name</th><th>Rule Description</th><th>Origin of Description</th></tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td rowspan=1><a href="#csr_field_wpri">csr_field_wpri</a></td>
-              <td>This field is write-preserve-read-ignore.</td>
-              <td><a href="test.html#norm:csr_field_wpri">norm:csr_field_wpri</a></td>
+              <td><a href="test-ch2.html#norm:csr_field_wlrl">norm:csr_field_wlrl</a></td>
             </tr>
           </tbody>
         </table>

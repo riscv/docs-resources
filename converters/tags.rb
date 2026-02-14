@@ -82,8 +82,8 @@ class TagsConverter
       # this node is tagged appropriately.
       unless node.id.nil?
         if node.id.start_with?(@prefix)
-          raise "Duplicate tag name '#{node.id}'" unless @tag_map[node.id].nil?
-          raise "Tag '#{node.id}' content should be a String but it is #{content.class}" unless content.is_a?(String)
+          node.document.logger.error "Duplicate tag name '#{node.id}'" unless @tag_map[node.id].nil?
+          node.document.logger.error "Tag '#{node.id}' content should be a String but it is #{content.class}" unless content.is_a?(String)
 
           @tag_map[node.id] = content.strip()
           @section_stack.last["tags"] << node.id

@@ -62,6 +62,12 @@
               { "$ref": "common-schema.json#/instancesRuleDesc" }
             ]
           },
+          "impl-def-behavior": {
+            "allOf": [
+              { "$ref": "common-schema.json#/implDefBehavior" },
+              { "$ref": "common-schema.json#/implDefBehaviorDesc" }
+            ]
+          },
           "field-type": {
             "allOf": [
               { "$ref": "common-schema.json#/fieldType" },
@@ -97,6 +103,22 @@
         ],
         "dependencies": {
           "clarification-text": ["clarification-link"]
+        },
+        "if": {
+          "properties": {
+            "impl-def-behavior": { "const": true }
+          },
+          "required": ["impl-def-behavior"]
+        },
+        "then": {
+          "properties": {
+            "name": { "$ref": "common-schema.json#/implDefName" }
+          }
+        },
+        "else": {
+          "properties": {
+            "name": { "$ref": "common-schema.json#/ruleName" }
+          }
         },
         "additionalProperties": false
       }
