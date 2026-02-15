@@ -227,10 +227,11 @@ class NormativeRuleDef
       check_kind(@kind, @name, nil)
     end
 
-    if data["impl-def-behavior"].nil?
+    @impldef = data["impl-def-behavior"]
+    if @impldef.nil?
       @impldef = false
     else
-      @impldef = data["impl-def-behavior"]
+      fatal("Provided #{@impldef.class} class for impl-def-behavior in normative rule #{name} but need a Boolean") unless [true, false].include?(@impldef)
     end
 
     @field_type = data["field-type"]
@@ -272,7 +273,7 @@ class NormativeRuleDef
     # Validate name (function of impldef).
     pattern = @impldef ? IMPLDEF_NAME_PATTERN : NORM_RULE_NAME_PATTERN
     unless @name.match?(Regexp.new(pattern))
-      fatal("Normative rule '#{name}' doesn't match regex pattern '#{pattern}")
+      fatal("Normative rule '#{name}' doesn't match regex pattern '#{pattern}'")
     end
   end
 end # class NormativeRuleDef
@@ -505,7 +506,7 @@ def create_normative_rules_hash(defs, tags, tag_fname2url)
 
     # Now add optional arguments.
     hash["kind"] = d.kind unless d.kind.nil?
-    hash["impl-def-behavior"] = d.impldef unless d.impldef.nil?
+    hash["impl-def-behavior"] = d.impldef
     hash["instances"] = d.instances unless d.instances.empty?
     hash["field-type"] = d.field_type unless d.field_type.nil?
     hash["summary"] = d.summary unless d.summary.nil?
@@ -953,7 +954,6 @@ def output_html(filename, defs, tags, tag_fname2url)
       chapter_names.each do |chapter_name|
         nr_defs = impldefs_by_chapter_name[chapter_name]
         unless nr_defs.nil?
-          # XXX - Might need to change chapter name
           html_impldef_table(f, "#{IMPLDEFS_CH_TABLE_NAME_PREFIX}#{table_num}", " for Chapter #{chapter_name}", nr_defs, tags, tag_fname2url)
         end
         table_num=table_num+1
