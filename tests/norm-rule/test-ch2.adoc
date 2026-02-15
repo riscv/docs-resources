@@ -1,0 +1,68 @@
+// This file contains test AsciiDoc to test the custom AsciiDoctor "tags" backend and the "create_normative_rules" Ruby
+// script that consumes the tags to create a list of normative rules.
+
+== Chapter 2
+
+=== Chapter 2.1 - Tagging Admonitions
+
+// PASSES
+NOTE: [#norm:admonition:single-paragraph-note]#Single paragraph note
+that spans lines.#
+
+// PASSES - Tag contains entire list
+[[norm:admonition:no-anchors-in-notes:entire-note]]
+[NOTE]
+====
+Paragraph A
+
+Paragraph B
+
+Paragraph C
+====
+
+// PASSES - Tag contains entire list
+[[norm:admonition:anchors-in-notes:entire-note]]
+[NOTE]
+====
+// PASSES - Tag contains paragraph
+[[norm:admonition:anchors-in-notes:note1]]
+Paragraph 0
+
+Paragraph 1
+
+// PASSES - Tag contains paragraph
+[[norm:admonition:anchors-in-notes:note3]]
+Paragraph 2
+====
+
+[NOTE]
+====
+// PASSES - Tag contains paragraph
+[[norm:admonition:only-anchors-in-notes:note1]]
+Paragraph X
+
+Paragraph Y
+
+// PASSES - Tag contains paragraph
+[[norm:admonition:only-anchors-in-notes:note3]]
+Paragraph Z
+====
+
+=== Chapter 2.2 - Implementation-Defined Rules
+
+[[norm:ROSE_COLORS]]
+You can use red or yellow roses.
+
+[[norm:XLEN]]
+We use the term XLEN to refer to the width of an integer register in bits (either 32 or 64).
+
+[[norm:ASIDLEN]]
+The number of ASID bits is UNSPECIFIED and may be zero. The number of implemented ASID bits, termed ASIDLEN, may be determined by writing one to every bit position in the ASID field, then reading back the value in satp to see which bit positions in the ASID field hold a one.
+
+=== Chapter 2.3 - CSR Field Types
+
+The ABC field of the DEF CSR is WARL. [#norm:csr_field_warl1]#This field is write-any-read-legal.#
+
+The GHI field of the JKL CSR is WLRL. [#norm:csr_field_wlrl]#This field is write-legal-read-legal.#
+
+The JKL field of the MNO CSR is WARL. [#norm:csr_field_warl2]#This field is also write-any-read-legal.#

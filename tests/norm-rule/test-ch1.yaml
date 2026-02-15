@@ -3,8 +3,8 @@
 
 $schema: "../../schemas/defs-schema.json#"
 
-# Used to create normative rules for test.adoc file.
-chapter_name: my-chapter_name
+# Used to create normative rules for test-ch1.adoc file.
+chapter_name: One
 
 normative_rule_definitions:
   # Basic
@@ -23,16 +23,6 @@ normative_rule_definitions:
       and &le; (Unicode text for less-than-equals-to) and &#8800; (Unicode decimal value for not-equal-to).
   - name: inline-with-hash
     tag: "norm:inline-with-hash"
-    kind: parameter
-  - name: csr_field_warl
-    tag: "norm:csr_field_warl"
-    field-type: WARL
-  - name: csr_field_wlrl
-    tag: "norm:csr_field_wlrl"
-    field-type: WLRL
-  - name: csr_field_wpri
-    tag: "norm:csr_field_wpri"
-    field-type: WPRI
   - name: extension-dependency
     tag: "norm:extension-dependency"
     kind: extension_dependency
@@ -54,7 +44,6 @@ normative_rule_definitions:
       ===
   - name: cat-colors
     tag: "norm:cat-colors"
-    kind: parameter
   - name: cat-claws-one-line-1
     tags: [name: "norm:cat-claws", {name: "norm:cat-colors", context: true}]
   - name: cat-claws-multi-lines-1
@@ -78,17 +67,14 @@ normative_rule_definitions:
       Here's a [.underline]#description#.
       It's got 2 lines.
     tag: "norm:paragraph:no-inline-anchors"
-    kind: parameter
   - name: inline-anchors-in-paragraph-entire
     tag: "norm:paragraph:inline-anchors:entire"
   - name: inline-anchors-in-paragraph-inline-anchor
     tag: "norm:paragraph:inline-anchors:inline-anchor"
   - name: formulae
     tag: "norm:formulae"
-    kind: parameter
   - name: rule_with_newlines
     tag: "norm:paragraph:tag_with_newlines"
-    kind: parameter
   - name: double_tags
     tag: "norm:def"
 
@@ -175,18 +161,3 @@ normative_rule_definitions:
     tag: "norm:description-list:anchors-in-items:entire-list"
   - names: [desc3, desc4]
     tags: ["norm:description-list:anchors-in-items:item1", "norm:description-list:anchors-in-items:item3"]
-
-  # Admonitions
-  - name: admon1
-    tag: "norm:admonition:single-paragraph-note"
-  - name: admon2
-    tag: "norm:admonition:no-anchors-in-notes:entire-note"
-  - name: admon3
-    tag: "norm:admonition:anchors-in-notes:entire-note"
-  - name: admon4
-    tags: ["norm:admonition:only-anchors-in-notes:note1", "norm:admonition:only-anchors-in-notes:note3"]
-  - name: admon5
-    description: One line description
-    kind: parameter
-    instance: my_parameter
-    tags: ["norm:admonition:anchors-in-notes:note1", "norm:admonition:anchors-in-notes:note3"]

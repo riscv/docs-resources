@@ -2,9 +2,6 @@
   "tags": {
     "norm:inline": "inside inline",
     "norm:inline-with-hash": "includes a hash # symbol.",
-    "norm:csr_field_warl": "This field is write-any-read-legal.",
-    "norm:csr_field_wlrl": "This field is write-legal-read-legal.",
-    "norm:csr_field_wpri": "This field is write-preserve-read-ignore.",
     "norm:extension-dependency": "The F extensions depends on the Zicsr extension.",
     "norm:clarification-without-text": "isn't clear enough.",
     "norm:clarification-with-text": "also isn't clear enough.",
@@ -53,22 +50,15 @@
     "norm:description-list:no-anchors-in-items:entire-list": "Description-A\nItem A\nDescription-B\nItem B\nDescription-C\nItem C",
     "norm:description-list:anchors-in-items:entire-list": "Description-1",
     "norm:description-list:anchors-in-items:item1": "Item 1",
-    "norm:description-list:anchors-in-items:item3": "Item 3",
-    "norm:admonition:single-paragraph-note": "Single paragraph note\nthat spans lines.",
-    "norm:admonition:no-anchors-in-notes:entire-note": "Paragraph A\n\nParagraph B\n\nParagraph C",
-    "norm:admonition:anchors-in-notes:note1": "Paragraph 1",
-    "norm:admonition:anchors-in-notes:note3": "Paragraph 3",
-    "norm:admonition:anchors-in-notes:entire-note": "Paragraph 1\n\nParagraph 2\n\nParagraph 3",
-    "norm:admonition:only-anchors-in-notes:note1": "Paragraph X",
-    "norm:admonition:only-anchors-in-notes:note3": "Paragraph Z"
+    "norm:description-list:anchors-in-items:item3": "Item 3"
   },
   "sections": {
     "title": "",
     "id": "",
     "children": [
       {
-        "title": "Chapter 1 - Basic Tagging",
-        "id": "_chapter_1_basic_tagging",
+        "title": "Chapter 1",
+        "id": "_chapter_1",
         "children": [
           {
             "title": "Chapter 1.1 - Inline Tagging",
@@ -77,9 +67,6 @@
             "tags": [
               "norm:inline",
               "norm:inline-with-hash",
-              "norm:csr_field_warl",
-              "norm:csr_field_wlrl",
-              "norm:csr_field_wpri",
               "norm:extension-dependency",
               "norm:clarification-without-text",
               "norm:clarification-with-text",
@@ -126,8 +113,8 @@
             ]
           },
           {
-            "title": "Chapter 2 - Table Tagging",
-            "id": "_chapter_2_table_tagging",
+            "title": "Chapter 1.4 - Table Tagging",
+            "id": "_chapter_1_4_table_tagging",
             "children": [],
             "tags": [
               "norm:table:no-anchors-in-cells:entire-table",
@@ -138,57 +125,43 @@
               "norm:table:single-char-cells",
               "norm:table:column-first-order"
             ]
+          },
+          {
+            "title": "Chapter 1.5 - Tagging Unordered Lists",
+            "id": "_chapter_1_5_tagging_unordered_lists",
+            "children": [],
+            "tags": [
+              "norm:unordered-list:no-anchors-in-items:entire-list",
+              "norm:unordered-list:anchors-in-items:item1",
+              "norm:unordered-list:anchors-in-items:item2",
+              "norm:unordered-list:anchors-in-items:entire-list",
+              "norm:unordered-list:multiple-levels"
+            ]
+          },
+          {
+            "title": "Chapter 1.6 - Tagging Ordered Lists",
+            "id": "_chapter_1_6_tagging_ordered_lists",
+            "children": [],
+            "tags": [
+              "norm:ordered-list:no-anchors-in-items:entire-list",
+              "norm:ordered-list:anchors-in-items:item1",
+              "norm:ordered-list:anchors-in-items:item2",
+              "norm:ordered-list:anchors-in-items:entire-list"
+            ]
+          },
+          {
+            "title": "Chapter 1.7 - Tagging Description Lists",
+            "id": "_chapter_1_7_tagging_description_lists",
+            "children": [],
+            "tags": [
+              "norm:description-list:no-anchors-in-items:entire-list",
+              "norm:description-list:anchors-in-items:entire-list",
+              "norm:description-list:anchors-in-items:item1",
+              "norm:description-list:anchors-in-items:item3"
+            ]
           }
         ],
         "tags": []
-      },
-      {
-        "title": "Chapter 3 - Tagging Unordered Lists",
-        "id": "_chapter_3_tagging_unordered_lists",
-        "children": [],
-        "tags": [
-          "norm:unordered-list:no-anchors-in-items:entire-list",
-          "norm:unordered-list:anchors-in-items:item1",
-          "norm:unordered-list:anchors-in-items:item2",
-          "norm:unordered-list:anchors-in-items:entire-list",
-          "norm:unordered-list:multiple-levels"
-        ]
-      },
-      {
-        "title": "Chapter 4 - Tagging Ordered Lists",
-        "id": "_chapter_4_tagging_ordered_lists",
-        "children": [],
-        "tags": [
-          "norm:ordered-list:no-anchors-in-items:entire-list",
-          "norm:ordered-list:anchors-in-items:item1",
-          "norm:ordered-list:anchors-in-items:item2",
-          "norm:ordered-list:anchors-in-items:entire-list"
-        ]
-      },
-      {
-        "title": "Chapter 5 - Tagging Description Lists",
-        "id": "_chapter_5_tagging_description_lists",
-        "children": [],
-        "tags": [
-          "norm:description-list:no-anchors-in-items:entire-list",
-          "norm:description-list:anchors-in-items:entire-list",
-          "norm:description-list:anchors-in-items:item1",
-          "norm:description-list:anchors-in-items:item3"
-        ]
-      },
-      {
-        "title": "Chapter 6 - Tagging Admonitions",
-        "id": "_chapter_6_tagging_admonitions",
-        "children": [],
-        "tags": [
-          "norm:admonition:single-paragraph-note",
-          "norm:admonition:no-anchors-in-notes:entire-note",
-          "norm:admonition:anchors-in-notes:note1",
-          "norm:admonition:anchors-in-notes:note3",
-          "norm:admonition:anchors-in-notes:entire-note",
-          "norm:admonition:only-anchors-in-notes:note1",
-          "norm:admonition:only-anchors-in-notes:note3"
-        ]
       }
     ],
     "tags": []
