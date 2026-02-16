@@ -29,11 +29,10 @@ font:
       bold: mplus-1mn-bold.ttf
       italic: mplus-1mn-light.ttf
       bold_italic: mplus-1mn-medium.ttf
-    M+ 1p Fallback:
-      normal: mplus-1p-regular-fallback.ttf
-      bold: mplus-1p-regular-fallback.ttf
-      italic: mplus-1p-regular-fallback.ttf
-      bold_italic: mplus-1p-regular-fallback.ttf
+    # M+ 1p supports Latin, Latin-1 Supplement, Latin Extended, Greek, Cyrillic, Vietnamese, Japanese & an assortment of symbols
+    # It also provides arrows for ->, <-, => and <= replacements in case these glyphs are missing from font
+    # TODO: use asciidoctor-pdf version once asciidoctor-pdf PR #2634 is in the RISC-V docker container.
+    M+ 1p Fallback: mplus1p-regular-fallback.ttf
     Droid Fallback:
       normal: droid-sans-fallback.ttf
       italic: droid-sans-fallback.ttf
@@ -44,8 +43,6 @@ font:
       italic: JetBrainsMono-Italic.ttf
       bold: JetBrainsMono-Bold.ttf
       bold_italic: JetBrainsMono-BoldItalic.ttf
-    # M+ 1p supports Latin, Latin-1 Supplement, Latin Extended, Greek, Cyrillic, Vietnamese, Japanese & an assortment of symbols
-    # It also provides arrows for ->, <-, => and <= replacements in case these glyphs are missing from font
   fallbacks:
     - M+ 1p Fallback
     - Droid Fallback
