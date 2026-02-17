@@ -934,7 +934,7 @@ def output_html(filename, defs, tags, tag_fname2url)
     table_names.append("#{NORM_RULES_CH_TABLE_NAME_PREFIX}#{table_num}")
     table_num = table_num+1
   end
-  table_names.append(IMPLDEFS_NO_CAT_TABLE_NAME_PREFIX) if any_impldefs
+  table_names.append(IMPLDEFS_NO_CAT_TABLE_NAME_PREFIX) if impldefs_no_cat.length > 0
   IMPLDEF_CATEGORIES.each do |cat|
     table_names.append("#{IMPLDEFS_CAT_TABLE_NAME_PREFIX}#{cat}") if impldefs_by_cat[cat].length > 0
   end
@@ -965,13 +965,13 @@ def output_html(filename, defs, tags, tag_fname2url)
 
     if any_impldefs
       if impldefs_no_cat.length > 0
-        html_impldef_table(f, IMPLDEFS_NO_CAT_TABLE_NAME_PREFIX, ": No Category (A-Z)", impldefs_no_cat, tags, tag_fname2url)
+        html_impldef_table(f, IMPLDEFS_NO_CAT_TABLE_NAME_PREFIX, "No Category (A-Z)", impldefs_no_cat, tags, tag_fname2url)
       end
 
       IMPLDEF_CATEGORIES.each do |cat|
         nr_defs = impldefs_by_cat[cat]
         if nr_defs.length > 0
-          html_impldef_cat_table(f, "#{IMPLDEFS_CAT_TABLE_NAME_PREFIX}#{cat}", ": #{cat} Category (A-Z)", nr_defs, tags, tag_fname2url)
+          html_impldef_cat_table(f, "#{IMPLDEFS_CAT_TABLE_NAME_PREFIX}#{cat}", "#{cat} Category (A-Z)", nr_defs, tags, tag_fname2url)
         end
       end
 
@@ -979,7 +979,7 @@ def output_html(filename, defs, tags, tag_fname2url)
       chapter_names.each do |chapter_name|
         nr_defs = impldefs_by_chapter_name[chapter_name]
         unless nr_defs.nil?
-          html_impldef_table(f, "#{IMPLDEFS_CH_TABLE_NAME_PREFIX}#{table_num}", " for Chapter #{chapter_name}", nr_defs, tags, tag_fname2url)
+          html_impldef_table(f, "#{IMPLDEFS_CH_TABLE_NAME_PREFIX}#{table_num}", "Chapter #{chapter_name}", nr_defs, tags, tag_fname2url)
         end
         table_num=table_num+1
       end
@@ -1167,7 +1167,10 @@ def html_sidebar(f, chapter_names, nrs, any_impldefs, impldefs_no_cat, impldefs_
     f.puts(%Q{    </nav>})
     f.puts(%Q{    <h2>Implementation-Defined Behaviors</h2>})
     f.puts(%Q{    <nav class="nav" id="nav-impldefs-no-cat">})
-    f.puts(%Q{      <a href="##{IMPLDEFS_NO_CAT_TABLE_NAME_PREFIX}" data-target="#{IMPLDEFS_NO_CAT_TABLE_NAME_PREFIX}">No category</a>})
+
+    if impldefs_no_cat.length > 0
+      f.puts(%Q{      <a href="##{IMPLDEFS_NO_CAT_TABLE_NAME_PREFIX}" data-target="#{IMPLDEFS_NO_CAT_TABLE_NAME_PREFIX}">No category</a>})
+    end
 
     IMPLDEF_CATEGORIES.each do |cat|
       count = impldefs_by_cat[cat].length unless impldefs_by_cat[cat].nil?
@@ -1207,30 +1210,30 @@ def html_norm_rule_table(f, table_name, chapter_name, nr_defs, tags, tag_fname2u
   html_table_footer(f)
 end
 
-def html_impldef_table(f, table_name, caption_suffix, nr_defs, tags, tag_fname2url)
+def html_impldef_table(f, table_name, caption_prefix, nr_defs, tags, tag_fname2url)
   fatal("Need File for f but passed a #{f.class}") unless f.is_a?(File)
   fatal("Need String for table_name but passed a #{table_name.class}") unless table_name.is_a?(String)
-  fatal("Need String for caption_suffix but passed a #{caption_suffix.class}") unless caption_suffix.is_a?(String)
+  fatal("Need String for caption_prefix but passed a #{caption_prefix.class}") unless caption_prefix.is_a?(String)
   fatal("Need Array for nr_defs but passed a #{nr_defs.class}") unless nr_defs.is_a?(Array)
   fatal("Need NormativeTags for tags but passed a #{tags.class}") unless tags.is_a?(NormativeTags)
   fatal("Need Hash for tag_fname2url but passed a #{tag_fname2url.class}") unless tag_fname2url.is_a?(Hash)
 
-  html_table_header(f, table_name, "All #{nr_defs.length} Implementation-Defined Behaviors#{caption_suffix}")
+  html_table_header(f, table_name, "#{caption_prefix}: All #{nr_defs.length} Implementation-Defined Behaviors")
   nr_defs.each do |nr|
     html_impldef_table_row(f, nr, tags, tag_fname2url)
   end
   html_table_footer(f)
 end
 
-def html_impldef_cat_table(f, table_name, caption_suffix, nr_defs, tags, tag_fname2url)
+def html_impldef_cat_table(f, table_name, caption_prefix, nr_defs, tags, tag_fname2url)
   fatal("Need File for f but passed a #{f.class}") unless f.is_a?(File)
   fatal("Need String for table_name but passed a #{table_name.class}") unless table_name.is_a?(String)
-  fatal("Need String for caption_suffix but passed a #{caption_suffix.class}") unless caption_suffix.is_a?(String)
+  fatal("Need String for caption_prefix but passed a #{caption_prefix.class}") unless caption_prefix.is_a?(String)
   fatal("Need Array for nr_defs but passed a #{nr_defs.class}") unless nr_defs.is_a?(Array)
   fatal("Need NormativeTags for tags but passed a #{tags.class}") unless tags.is_a?(NormativeTags)
   fatal("Need Hash for tag_fname2url but passed a #{tag_fname2url.class}") unless tag_fname2url.is_a?(Hash)
 
-  html_table_header(f, table_name, "All #{nr_defs.length} Implementation-Defined Behaviors#{caption_suffix}")
+  html_table_header(f, table_name, "#{caption_prefix}: All #{nr_defs.length} Implementation-Defined Behaviors")
   nr_defs.each do |nr|
     html_impldef_cat_table_row(f, nr, tags, tag_fname2url)
   end
@@ -1535,11 +1538,11 @@ def get_impldefs_counts_str(nr_defs)
   fatal("Need Array for nr_defs but passed a #{nr_defs.class}") unless nr_defs.is_a?(Array)
 
   num_rules = nr_defs.length
-  counts_str = "#{num_rules} normative rule#{num_rules == 1 ? "" : "s"}"
+  counts_str = "#{num_rules} Normative Rule#{num_rules == 1 ? "" : "s"}"
 
   num_impldefs = count_impldefs(nr_defs)
   if num_impldefs > 0
-    counts_str << " including #{num_impldefs} implementation-defined behavior#{num_impldefs == 1 ? "" : "s"}"
+    counts_str << " - #{num_impldefs} Implementation-Defined Behavior#{num_impldefs == 1 ? "" : "s"}"
 
     any_impldef_cats = false
     num_impldef_cats = {}
