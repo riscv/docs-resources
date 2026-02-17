@@ -1038,12 +1038,12 @@ def html_head(f, table_names)
         .sidebar::-webkit-scrollbar-track{
           background:transparent;
         }
-        .sidebar h2{margin:0 0 12px;font-size:18px}
+        .sidebar h2{margin:0 0 2px;font-size:18px}
         .nav{display:flex;flex-direction:column;gap:2px}
         .nav a{
           display:block;
           font-size: 14px;
-          padding:6px 10px;
+          padding:2px 10px;
           border-radius:6px;
           text-decoration:none;
           color:var(--accent);
