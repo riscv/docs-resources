@@ -32,12 +32,15 @@ normative_rule_definitions:
     tag: "norm:ASIDLEN"
 
   # CSR field types
-  - name: csr_field_warl1
+  - name: CSR_FIELD_WARL1
     tag: "norm:csr_field_warl1"
-    field-type: WARL
-  - name: csr_field_wlrl
+    impl-def-behavior: true
+    impl-def-category: WARL
+  - name: CSR_FIELD_WLRL
     tag: "norm:csr_field_wlrl"
-    field-type: WLRL
-  - name: csr_field_warl2
+    impl-def-behavior: true
+    impl-def-category: WLRL
+  - name: CSR_FIELD_WARL2
     tag: "norm:csr_field_warl2"
-    field-type: WARL
+    impl-def-behavior: true
+    impl-def-category: WARL

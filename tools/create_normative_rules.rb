@@ -18,13 +18,13 @@ MAX_TABLE_ROWS = 12         # Max rows of a table displayed in a cell.
 
 # Names/prefixes for tables in HTML output.
 NORM_RULES_CH_TABLE_NAME_PREFIX = "table-norm-rules-ch-"
-IMPLDEFS_A_Z_TABLE_NAME = "table-impldefs-a-z"
+IMPLDEFS_NO_CAT_TABLE_NAME_PREFIX = "table-impldefs-no-cat"
+IMPLDEFS_CAT_TABLE_NAME_PREFIX = "table-impldefs-impl-cat-"
 IMPLDEFS_CH_TABLE_NAME_PREFIX = "table-impldefs-ch-"
-FIELD_TYPE_TABLE_NAME_PREFIX = "table-field-type-"
 
 # Enums
 KINDS = ["extension", "extension_dependency", "instruction", "csr", "csr_field"]
-FIELD_TYPES = ["WARL", "WLRL"]
+IMPLDEF_CATEGORIES = ["WARL", "WLRL"]
 
 # Norm rule name checking
 NORM_RULE_NAME_PATTERN = "^[a-zA-Z][a-zA-Z0-9_-]+$"
@@ -182,8 +182,8 @@ class NormativeRuleDef
   attr_reader :description            # String (optional - sentence, paragraph, or more)
   attr_reader :kind                   # String (optional, can be nil)
   attr_reader :impldef                # Boolean (optional, true or false, never nil)
+  attr_reader :impldef_cat            # String (optional, can be nil)
   attr_reader :instances              # Array<String> (optional - can be empty)
-  attr_reader :field_type             # String (optional, can be nil)
   attr_reader :tag_refs               # Array<TagRef> (optional - can be empty)
 
   def initialize(name, def_filename, chapter_name, data)
@@ -234,10 +234,12 @@ class NormativeRuleDef
       fatal("Provided #{@impldef.class} class for impl-def-behavior in normative rule #{name} but need a Boolean") unless [true, false].include?(@impldef)
     end
 
-    @field_type = data["field-type"]
-    unless @field_type.nil?
-      fatal("Provided #{@field_type.class} class for field_type in normative rule #{name} but need a String") unless @field_type.is_a?(String)
-      check_field_type(@field_type, @name, nil)
+    @impldef_cat = data["impl-def-category"]
+    unless @impldef_cat.nil?
+      fatal("Provided #{@impldef_cat.class} class for impldef_cat in normative rule #{name} but need a String") unless @impldef_cat.is_a?(String)
+      check_impldef_cat(@impldef_cat, @name, nil)
+
+      fatal("Normative rule #{name} has impl-def-category property but impl-def-behavior isn't true") unless @impldef
     end
 
     @instances = []
@@ -287,12 +289,12 @@ def check_kind(kind, nr_name, name)
   end
 end
 
-# Create fatal if field_type not recognized. The name is nil if this is called in the normative rule definition.
-def check_field_type(field_type, nr_name, name)
-  unless FIELD_TYPES.include?(field_type)
+# Create fatal if impldef_cat not recognized. The name is nil if this is called in the normative rule definition.
+def check_impldef_cat(impldef_cat, nr_name, name)
+  unless IMPLDEF_CATEGORIES.include?(impldef_cat)
     tag_str = name.nil? ? "" : "tag #{name} in "
-    allowed_str = FIELD_TYPES.join(",")
-    fatal("Don't recognize field-type '#{field_type}' for #{tag_str}normative rule #{nr_name}\n#{PN}: Allowed field-types are: #{allowed_str}")
+    allowed_str = IMPLDEF_CATEGORIES.join(",")
+    fatal("Don't recognize impl-def-category '#{impldef_cat}' for #{tag_str}normative rule #{nr_name}\n#{PN}: Allowed impl-def-categories are: #{allowed_str}")
   end
 end
 
@@ -508,7 +510,7 @@ def create_normative_rules_hash(defs, tags, tag_fname2url)
     hash["kind"] = d.kind unless d.kind.nil?
     hash["impl-def-behavior"] = d.impldef
     hash["instances"] = d.instances unless d.instances.empty?
-    hash["field-type"] = d.field_type unless d.field_type.nil?
+    hash["impl-def-category"] = d.impldef_cat unless d.impldef_cat.nil?
     hash["summary"] = d.summary unless d.summary.nil?
     hash["note"] = d.note unless d.note.nil?
     hash["clarification-text"] = d.clarification_text unless d.clarification_text.nil?
@@ -879,13 +881,17 @@ def output_html(filename, defs, tags, tag_fname2url)
   norm_rules_by_chapter_name = {}
   impldefs_by_chapter_name = {}
 
-  # Create array of all impldef normative rules that will be sorted. Each array entry is a NormativeRuleDef.
-  all_impldefs_a_z = []
+  # Are there any impldef normative rules?
+  any_impldefs = false
 
-  # Organize rules by field type. Each hash key is field type. Each hash entry is an Array<NormativeRuleDef>.
-  defs_by_field_type = {}
-  FIELD_TYPES.each do |ft|
-    defs_by_field_type[ft] = []
+  # Create array of all impldef normative rules that don't have a category. Each array entry is a NormativeRuleDef.
+  impldefs_no_cat = []
+
+  # Organize rules by implementation-defined category.
+  # Each hash key is implementation-defined category. Each hash entry is an Array<NormativeRuleDef>.
+  impldefs_by_cat = {}
+  IMPLDEF_CATEGORIES.each do |cat|
+    impldefs_by_cat[cat] = []
   end
 
   # Go through all normative rule definitions and put into appropriate data structures.
@@ -898,7 +904,13 @@ def output_html(filename, defs, tags, tag_fname2url)
     norm_rules_by_chapter_name[d.chapter_name].append(d)
 
     if d.impldef
-      all_impldefs_a_z.append(d)
+      any_impldefs = true
+
+      if d.impldef_cat.nil?
+        impldefs_no_cat.append(d)
+      else
+        impldefs_by_cat[d.impldef_cat].append(d)
+      end
 
       if impldefs_by_chapter_name[d.chapter_name].nil?
         impldefs_by_chapter_name[d.chapter_name] = []
@@ -906,12 +918,14 @@ def output_html(filename, defs, tags, tag_fname2url)
       impldefs_by_chapter_name[d.chapter_name].append(d)
     end
 
-    defs_by_field_type[d.field_type].append(d) unless d.field_type.nil?
   end
 
   # Sort alphabetically for consistent output.
   chapter_names.sort!
-  all_impldefs_a_z.sort_by! { |p| p.name }
+  impldefs_no_cat.sort_by! { |p| p.name }
+  IMPLDEF_CATEGORIES.each do |cat|
+    impldefs_by_cat[cat].sort_by! { |p| p.name }
+  end
 
   # Create list of all table names in order.
   table_names = []
@@ -920,14 +934,14 @@ def output_html(filename, defs, tags, tag_fname2url)
     table_names.append("#{NORM_RULES_CH_TABLE_NAME_PREFIX}#{table_num}")
     table_num = table_num+1
   end
-  table_names.append(IMPLDEFS_A_Z_TABLE_NAME) if all_impldefs_a_z.length > 0
+  table_names.append(IMPLDEFS_NO_CAT_TABLE_NAME_PREFIX) if any_impldefs
+  IMPLDEF_CATEGORIES.each do |cat|
+    table_names.append("#{IMPLDEFS_CAT_TABLE_NAME_PREFIX}#{cat}") if impldefs_by_cat[cat].length > 0
+  end
   table_num=1
   chapter_names.each do |chapter_name|
     table_names.append("#{IMPLDEFS_CH_TABLE_NAME_PREFIX}#{table_num}") unless impldefs_by_chapter_name[chapter_name].nil?
     table_num = table_num+1
-  end
-  FIELD_TYPES.each do |ft|
-    table_names.append("#{FIELD_TYPE_TABLE_NAME_PREFIX}#{ft}") if defs_by_field_type[ft].length > 0
   end
 
   File.open(filename, "w") do |f|
@@ -935,10 +949,12 @@ def output_html(filename, defs, tags, tag_fname2url)
     f.puts(%Q{<body>})
     f.puts(%Q{  <div class="app">})
 
-    html_sidebar(f, chapter_names, defs.norm_rule_defs, all_impldefs_a_z, impldefs_by_chapter_name, defs_by_field_type)
+    html_sidebar(f, chapter_names, defs.norm_rule_defs, any_impldefs, impldefs_no_cat, impldefs_by_cat, impldefs_by_chapter_name)
     f.puts(%Q{    <main>})
     f.puts(%Q{      <style>.grand-total-heading { font-size: 24px; font-weight: bold; }</style>})
-    f.puts(%Q{      <h1 class="grand-total-heading">Grand total of #{defs.norm_rule_defs.length} normative rules including #{all_impldefs_a_z.length} implementation-defined behaviors</h1>})
+
+    counts_str = get_impldefs_counts_str(defs.norm_rule_defs)
+    f.puts(%Q{      <h1 class="grand-total-heading">#{counts_str}</h1>})
 
     table_num=1
     chapter_names.each do |chapter_name|
@@ -947,8 +963,17 @@ def output_html(filename, defs, tags, tag_fname2url)
       table_num=table_num+1
     end
 
-    if all_impldefs_a_z.length > 0
-      html_impldef_table(f, IMPLDEFS_A_Z_TABLE_NAME, " (A-Z)", all_impldefs_a_z, tags, tag_fname2url)
+    if any_impldefs
+      if impldefs_no_cat.length > 0
+        html_impldef_table(f, IMPLDEFS_NO_CAT_TABLE_NAME_PREFIX, ": No Category (A-Z)", impldefs_no_cat, tags, tag_fname2url)
+      end
+
+      IMPLDEF_CATEGORIES.each do |cat|
+        nr_defs = impldefs_by_cat[cat]
+        if nr_defs.length > 0
+          html_impldef_cat_table(f, "#{IMPLDEFS_CAT_TABLE_NAME_PREFIX}#{cat}", ": #{cat} Category (A-Z)", nr_defs, tags, tag_fname2url)
+        end
+      end
 
       table_num=1
       chapter_names.each do |chapter_name|
@@ -957,13 +982,6 @@ def output_html(filename, defs, tags, tag_fname2url)
           html_impldef_table(f, "#{IMPLDEFS_CH_TABLE_NAME_PREFIX}#{table_num}", " for Chapter #{chapter_name}", nr_defs, tags, tag_fname2url)
         end
         table_num=table_num+1
-      end
-    end
-
-    FIELD_TYPES.each do |ft|
-      nr_defs = defs_by_field_type[ft]
-      if nr_defs.length > 0
-        html_field_type_table(f, "#{FIELD_TYPE_TABLE_NAME_PREFIX}#{ft}", ft, nr_defs, tags, tag_fname2url)
       end
     end
 
@@ -1124,13 +1142,14 @@ HTML
   )
 end
 
-def html_sidebar(f, chapter_names, nrs, all_impldefs_a_z, impldefs_by_chapter_name, defs_by_field_type)
+def html_sidebar(f, chapter_names, nrs, any_impldefs, impldefs_no_cat, impldefs_by_cat, impldefs_by_chapter_name)
   fatal("Need File for f but passed a #{f.class}") unless f.is_a?(File)
   fatal("Need Array for chapter_names but passed a #{chapter_names.class}") unless chapter_names.is_a?(Array)
   fatal("Need Array<NormativeRuleDef> for nrs but passed a #{nrs.class}") unless nrs.is_a?(Array)
-  fatal("Need Array<NormativeRuleDef> for all_impldefs_a_z but passed a #{all_impldefs_a_z.class}") unless all_impldefs_a_z.is_a?(Array)
+  fatal("Need Boolean for any_impldefs but passed a #{any_impldefs.class}") unless any_impldefs == true || any_impldefs == false
+  fatal("Need Array<NormativeRuleDef> for impldefs_no_cat but passed a #{impldefs_no_cat.class}") unless impldefs_no_cat.is_a?(Array)
+  fatal("Need Hash for impldefs_by_cat but passed a #{impldefs_by_cat.class}") unless impldefs_by_cat.is_a?(Hash)
   fatal("Need Hash for impldefs_by_chapter_name but passed a #{impldefs_by_chapter_name.class}") unless impldefs_by_chapter_name.is_a?(Hash)
-  fatal("Need Hash for defs_by_field_type but passed a #{defs_by_field_type.class}") unless defs_by_field_type.is_a?(Hash)
 
   # Use Ruby $Q{...} instead of double quotes to allow freely mixing embedded double quotes and Ruby's #{} operator.
   f.puts("")
@@ -1144,11 +1163,18 @@ def html_sidebar(f, chapter_names, nrs, all_impldefs_a_z, impldefs_by_chapter_na
     table_num = table_num+1
   end
 
-  if all_impldefs_a_z.length > 0
+  if any_impldefs
     f.puts(%Q{    </nav>})
     f.puts(%Q{    <h2>Implementation-Defined Behaviors</h2>})
-    f.puts(%Q{    <nav class="nav" id="nav-impldefs-a-z">})
-    f.puts(%Q{      <a href="##{IMPLDEFS_A_Z_TABLE_NAME}" data-target="#{IMPLDEFS_A_Z_TABLE_NAME}">A-Z</a>})
+    f.puts(%Q{    <nav class="nav" id="nav-impldefs-no-cat">})
+    f.puts(%Q{      <a href="##{IMPLDEFS_NO_CAT_TABLE_NAME_PREFIX}" data-target="#{IMPLDEFS_NO_CAT_TABLE_NAME_PREFIX}">No category</a>})
+
+    IMPLDEF_CATEGORIES.each do |cat|
+      count = impldefs_by_cat[cat].length unless impldefs_by_cat[cat].nil?
+      unless count == 0
+        f.puts(%Q{      <a href="##{IMPLDEFS_CAT_TABLE_NAME_PREFIX}#{cat}" data-target="#{IMPLDEFS_CAT_TABLE_NAME_PREFIX}#{cat}">#{cat} category</a>})
+      end
+    end
 
     table_num=1
     chapter_names.each do |chapter_name|
@@ -1159,24 +1185,6 @@ def html_sidebar(f, chapter_names, nrs, all_impldefs_a_z, impldefs_by_chapter_na
     end
 
     f.puts(%Q{    </nav>})
-  end
-
-  total_for_all_field_types = 0
-  FIELD_TYPES.each do |ft|
-    total_for_all_field_types += defs_by_field_type[ft].length unless defs_by_field_type[ft].nil?
-  end
-
-  if total_for_all_field_types > 0
-    f.puts(%Q{    <h2>WARL & WLRL</h2>})
-
-    FIELD_TYPES.each do |ft|
-      count = defs_by_field_type[ft].length unless defs_by_field_type[ft].nil?
-      unless count == 0
-        f.puts(%Q{    <nav class="nav" id="nav-field-type-#{ft}">})
-        f.puts(%Q{      <a href="##{FIELD_TYPE_TABLE_NAME_PREFIX}#{ft}" data-target="#{FIELD_TYPE_TABLE_NAME_PREFIX}#{ft}">#{ft} field#{count == 1 ? "" : "s"} A-Z</a>})
-        f.puts(%Q{    </nav>})
-      end
-    end
   end
 
   f.puts('  </aside>')
@@ -1190,23 +1198,9 @@ def html_norm_rule_table(f, table_name, chapter_name, nr_defs, tags, tag_fname2u
   fatal("Need NormativeTags for tags but passed a #{tags.class}") unless tags.is_a?(NormativeTags)
   fatal("Need Hash for tag_fname2url but passed a #{tag_fname2url.class}") unless tag_fname2url.is_a?(Hash)
 
-  num_rules = nr_defs.length
-  num_params = count_impldefs(nr_defs)
+  counts_str = get_impldefs_counts_str(nr_defs)
 
-  num_rules_str = "#{num_rules} normative rule#{num_rules == 1 ? "" : "s"}"
-
-  includes_str = "#{num_params} implementation-defined behavior#{num_params == 1 ? "" : "s"}"
-
-  num_field_types = {}
-  FIELD_TYPES.each do |ft|
-    num_field_types[ft] = count_field_types(nr_defs, ft)
-  end
-
-  FIELD_TYPES.each do |ft|
-    includes_str << ", #{num_field_types[ft]} #{ft} field#{num_field_types[ft] == 1 ? "" : "s"}" if num_field_types[ft] > 0
-  end
-
-  html_table_header(f, table_name, "Chapter #{chapter_name} (#{num_rules_str} including #{includes_str})")
+  html_table_header(f, table_name, "Chapter #{chapter_name}: #{counts_str}")
   nr_defs.each do |nr|
     html_norm_rule_table_row(f, nr, tags, tag_fname2url)
   end
@@ -1228,17 +1222,17 @@ def html_impldef_table(f, table_name, caption_suffix, nr_defs, tags, tag_fname2u
   html_table_footer(f)
 end
 
-def html_field_type_table(f, table_name, ft, nr_defs, tags, tag_fname2url)
+def html_impldef_cat_table(f, table_name, caption_suffix, nr_defs, tags, tag_fname2url)
   fatal("Need File for f but passed a #{f.class}") unless f.is_a?(File)
   fatal("Need String for table_name but passed a #{table_name.class}") unless table_name.is_a?(String)
-  fatal("Need String for ft but passed a #{ft.class}") unless ft.is_a?(String)
+  fatal("Need String for caption_suffix but passed a #{caption_suffix.class}") unless caption_suffix.is_a?(String)
   fatal("Need Array for nr_defs but passed a #{nr_defs.class}") unless nr_defs.is_a?(Array)
   fatal("Need NormativeTags for tags but passed a #{tags.class}") unless tags.is_a?(NormativeTags)
   fatal("Need Hash for tag_fname2url but passed a #{tag_fname2url.class}") unless tag_fname2url.is_a?(Hash)
 
-  html_table_header(f, table_name, "#{nr_defs.length} #{ft} field#{nr_defs.length == 1 ? "" : "s"}")
+  html_table_header(f, table_name, "All #{nr_defs.length} Implementation-Defined Behaviors#{caption_suffix}")
   nr_defs.each do |nr|
-    html_field_type_table_row(f, nr, tags, tag_fname2url)
+    html_impldef_cat_table_row(f, nr, tags, tag_fname2url)
   end
   html_table_footer(f)
 end
@@ -1287,14 +1281,17 @@ def html_impldef_table_row(f, nr, tags, tag_fname2url)
   html_table_row(f, nr, name_is_anchor, omit, tags, tag_fname2url)
 end
 
-def html_field_type_table_row(f, nr, tags, tag_fname2url)
+def html_impldef_cat_table_row(f, nr, tags, tag_fname2url)
   fatal("Need File for f but passed a #{f.class}") unless f.is_a?(File)
   fatal("Need NormativeRuleDef for nr but passed a #{nr.class}") unless nr.is_a?(NormativeRuleDef)
   fatal("Need NormativeTags for tags but passed a #{tags.class}") unless tags.is_a?(NormativeTags)
   fatal("Need Hash for tag_fname2url but passed a #{tag_fname2url.class}") unless tag_fname2url.is_a?(Hash)
 
   name_is_anchor = false
-  omit = { "field_type" => true } # Redundant
+  omit = {
+    "impl_def" => true,   # Redundant
+    "impldef_cat" => true # Redundant
+  }
 
   html_table_row(f, nr, name_is_anchor, omit, tags, tag_fname2url)
 end
@@ -1308,7 +1305,7 @@ def html_table_row(f, nr, name_is_anchor, omit, tags, tag_fname2url)
   fatal("Need Hash for tag_fname2url but passed a #{tag_fname2url.class}") unless tag_fname2url.is_a?(Hash)
 
   omit_impldef = omit["impldef"]
-  omit_field_type = omit["field_type"]
+  omit_impldef_cat = omit["impldef_cat"]
 
   name_row_span =
     (nr.summary.nil? ? 0 : 1) +
@@ -1318,7 +1315,7 @@ def html_table_row(f, nr, name_is_anchor, omit, tags, tag_fname2url)
     (nr.kind.nil? ? 0 : 1) +
     (nr.instances.empty? ? 0 : 1) +
     (omit_impldef || !nr.impldef ? 0 : 1) +
-    (omit_field_type || nr.field_type.nil? ? 0 : 1) +
+    (omit_impldef_cat || nr.impldef_cat.nil? ? 0 : 1) +
     nr.tag_refs.length
 
   # Tracks if this is the first row for the normative rule.
@@ -1395,10 +1392,10 @@ def html_table_row(f, nr, name_is_anchor, omit, tags, tag_fname2url)
     first_row = false
   end
 
-  unless omit_field_type || nr.field_type.nil?
-    f.puts(%Q{              <td>#{nr.field_type}</td>})
+  unless omit_impldef_cat || nr.impldef_cat.nil?
+    f.puts(%Q{              <td>#{nr.impldef_cat}</td>})
 
-    f.puts(%Q{              <td>Rule's "field_type" property</td>})
+    f.puts(%Q{              <td>Implementation-defined behavior category</td>})
     f.puts(%Q{            </tr>})
     first_row = false
   end
@@ -1534,6 +1531,39 @@ def truncate_after_newlines(text, max_newlines)
   truncated_text
 end
 
+def get_impldefs_counts_str(nr_defs)
+  fatal("Need Array for nr_defs but passed a #{nr_defs.class}") unless nr_defs.is_a?(Array)
+
+  num_rules = nr_defs.length
+  counts_str = "#{num_rules} normative rule#{num_rules == 1 ? "" : "s"}"
+
+  num_impldefs = count_impldefs(nr_defs)
+  if num_impldefs > 0
+    counts_str << " including #{num_impldefs} implementation-defined behavior#{num_impldefs == 1 ? "" : "s"}"
+
+    any_impldef_cats = false
+    num_impldef_cats = {}
+    IMPLDEF_CATEGORIES.each do |cat|
+      num_impldef_cats[cat] = count_impldef_cats(nr_defs, cat)
+      any_impldef_cats = true if num_impldef_cats[cat] > 0
+    end
+
+    if any_impldef_cats
+      counts_str << " ("
+
+      cats_str = []
+      IMPLDEF_CATEGORIES.each do |cat|
+        cats_str.append("#{num_impldef_cats[cat]} #{cat}") if num_impldef_cats[cat] > 0
+      end
+
+      counts_str << cats_str.join(", ")
+      counts_str << ")"
+    end
+  end
+
+  return counts_str
+end
+
 def count_impldefs(nrs)
   raise ArgumentError, "Need Array<NormativeRuleDef> for nrs but passed a #{nrs.class}" unless nrs.is_a?(Array)
 
@@ -1546,14 +1576,14 @@ def count_impldefs(nrs)
   return count
 end
 
-def count_field_types(nrs, field_type)
+def count_impldef_cats(nrs, impldef_cat)
   raise ArgumentError, "Need Array<NormativeRuleDef> for nrs but passed a #{nrs.class}" unless nrs.is_a?(Array)
-  raise ArgumentError, "Need String for field_type but passed a #{field_type.class}" unless field_type.is_a?(String)
+  raise ArgumentError, "Need String for impldef_cat but passed a #{impldef_cat.class}" unless impldef_cat.is_a?(String)
 
   count = 0
 
   nrs.each do |nr|
-    count += 1 if nr.field_type == field_type
+    count += 1 if nr.impldef_cat == impldef_cat
   end
 
   return count
@@ -1721,9 +1751,9 @@ validate_defs_and_tags(defs, tags, warn_if_tags_no_rules)
 
 info("Storing #{defs.norm_rule_defs.count} normative rules into file #{output_fname}")
 info("Includes #{count_impldefs(defs.norm_rule_defs)} implementation-defined behavior normative rules")
-FIELD_TYPES.each do |ft|
-  count = count_field_types(defs.norm_rule_defs, ft)
-  info("Includes #{count} #{ft} normative rule#{count == 1 ? "" : "s"  }")
+IMPLDEF_CATEGORIES.each do |cat|
+  count = count_impldef_cats(defs.norm_rule_defs, cat)
+  info("Includes #{count} #{cat} normative rule#{count == 1 ? "" : "s"  }")
 end
 
 case output_format

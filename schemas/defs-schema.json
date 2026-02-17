@@ -68,10 +68,10 @@
               { "$ref": "common-schema.json#/implDefBehaviorDesc" }
             ]
           },
-          "field-type": {
+          "impl-def-category": {
             "allOf": [
-              { "$ref": "common-schema.json#/fieldType" },
-              { "$ref": "common-schema.json#/fieldTypeDesc" }
+              { "$ref": "common-schema.json#/implDefCategoryType" },
+              { "$ref": "common-schema.json#/implDefCategoryTypeDesc" }
             ]
           },
           "tag": {
@@ -99,26 +99,39 @@
             "not": {
               "required": ["instance", "instances"]
             }
+          },
+          {
+            "if": {
+              "properties": {
+                "impl-def-behavior": { "const": true }
+              },
+              "required": ["impl-def-behavior"]
+            },
+            "then": {
+              "properties": {
+                "name": { "$ref": "common-schema.json#/implDefName" }
+              }
+            },
+            "else": {
+              "properties": {
+                "name": { "$ref": "common-schema.json#/ruleName" }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": ["impl-def-category"]
+            },
+            "then": {
+              "required": ["impl-def-behavior"],
+              "properties": {
+                "impl-def-behavior": { "const": true }
+              }
+            }
           }
         ],
         "dependencies": {
           "clarification-text": ["clarification-link"]
-        },
-        "if": {
-          "properties": {
-            "impl-def-behavior": { "const": true }
-          },
-          "required": ["impl-def-behavior"]
-        },
-        "then": {
-          "properties": {
-            "name": { "$ref": "common-schema.json#/implDefName" }
-          }
-        },
-        "else": {
-          "properties": {
-            "name": { "$ref": "common-schema.json#/ruleName" }
-          }
         },
         "additionalProperties": false
       }
