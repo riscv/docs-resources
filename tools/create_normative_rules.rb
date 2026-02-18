@@ -1542,7 +1542,7 @@ def get_impldefs_counts_str(nr_defs)
 
   num_impldefs = count_impldefs(nr_defs)
   if num_impldefs > 0
-    counts_str << " - #{num_impldefs} Implementation-Defined Behavior#{num_impldefs == 1 ? "" : "s"}"
+    counts_str << ": Includes #{num_impldefs} Implementation-Defined Behavior#{num_impldefs == 1 ? "" : "s"}"
 
     any_impldef_cats = false
     num_impldef_cats = {}
