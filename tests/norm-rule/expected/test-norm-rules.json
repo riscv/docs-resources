@@ -1026,11 +1026,11 @@
       ]
     },
     {
-      "name": "csr_field_warl1",
+      "name": "CSR_FIELD_WARL1",
       "def_filename": "tests/norm-rule/test-ch2.yaml",
       "chapter_name": "Two",
-      "impl-def-behavior": false,
-      "field-type": "WARL",
+      "impl-def-behavior": true,
+      "impl-def-category": "WARL",
       "tags": [
         {
           "name": "norm:csr_field_warl1",
@@ -1042,11 +1042,11 @@
       ]
     },
     {
-      "name": "csr_field_wlrl",
+      "name": "CSR_FIELD_WLRL",
       "def_filename": "tests/norm-rule/test-ch2.yaml",
       "chapter_name": "Two",
-      "impl-def-behavior": false,
-      "field-type": "WLRL",
+      "impl-def-behavior": true,
+      "impl-def-category": "WLRL",
       "tags": [
         {
           "name": "norm:csr_field_wlrl",
@@ -1058,11 +1058,11 @@
       ]
     },
     {
-      "name": "csr_field_warl2",
+      "name": "CSR_FIELD_WARL2",
       "def_filename": "tests/norm-rule/test-ch2.yaml",
       "chapter_name": "Two",
-      "impl-def-behavior": false,
-      "field-type": "WARL",
+      "impl-def-behavior": true,
+      "impl-def-category": "WARL",
       "tags": [
         {
           "name": "norm:csr_field_warl2",

@@ -30,8 +30,8 @@
   "implDefBehaviorDesc": {
     "description": "A normative rule that allows an implementation choices in how to meet the rule"
   },
-  "fieldTypeDesc": {
-    "description": "Identifies normative rules associated with WARL and WLRL CSRs or CSR fields"
+  "implDefCategoryTypeDesc": {
+    "description": "Category of implementation-defined behavior (if any)"
   },
   "stringArray": {
     "type": "array",
@@ -53,7 +53,7 @@
   "implDefBehavior": {
     "type": "boolean"
   },
-  "fieldType":  {
+  "implDefCategoryType":  {
     "type": "string",
     "enum": ["WARL", "WLRL"]
   },
