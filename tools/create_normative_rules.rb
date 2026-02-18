@@ -1292,7 +1292,7 @@ def html_impldef_cat_table_row(f, nr, tags, tag_fname2url)
 
   name_is_anchor = false
   omit = {
-    "impl_def" => true,   # Redundant
+    "impldef" => true,   # Redundant
     "impldef_cat" => true # Redundant
   }
 
@@ -1396,8 +1396,8 @@ def html_table_row(f, nr, name_is_anchor, omit, tags, tag_fname2url)
   end
 
   unless omit_impldef_cat || nr.impldef_cat.nil?
+    f.puts(%Q{            <tr>}) unless first_row
     f.puts(%Q{              <td>#{nr.impldef_cat}</td>})
-
     f.puts(%Q{              <td>Implementation-defined behavior category</td>})
     f.puts(%Q{            </tr>})
     first_row = false
@@ -1544,17 +1544,22 @@ def get_impldefs_counts_str(nr_defs)
   if num_impldefs > 0
     counts_str << ": Includes #{num_impldefs} Implementation-Defined Behavior#{num_impldefs == 1 ? "" : "s"}"
 
+    num_impldefs_no_cat = num_impldefs    # Start with total and subtract out categorized counts to get no category count
+
     any_impldef_cats = false
     num_impldef_cats = {}
     IMPLDEF_CATEGORIES.each do |cat|
       num_impldef_cats[cat] = count_impldef_cats(nr_defs, cat)
-      any_impldef_cats = true if num_impldef_cats[cat] > 0
+      if num_impldef_cats[cat] > 0
+        any_impldef_cats = true
+        num_impldefs_no_cat -= num_impldef_cats[cat]
+      end
     end
 
     if any_impldef_cats
       counts_str << " ("
 
-      cats_str = []
+      cats_str = ["#{num_impldefs_no_cat} No Category"]
       IMPLDEF_CATEGORIES.each do |cat|
         cats_str.append("#{num_impldef_cats[cat]} #{cat}") if num_impldef_cats[cat] > 0
       end
