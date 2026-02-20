@@ -26,10 +26,10 @@ NORM_RULE_EXPECTED_DIR := $(NORM_RULE_TESTS_DIR)/expected
 
 # Ruby scripts being tested.
 TAGS_BACKEND := tags.rb
-CREATE_NORM_RULE_TOOL := $(TOOLS_DIR)/create_normative_rules.rb
-CREATE_NORM_RULE_RUBY := ruby $(CREATE_NORM_RULE_TOOL)
-DETECT_TAG_CHANGES_TOOL := $(TOOLS_DIR)/detect_tag_changes.rb
-DETECT_TAG_CHANGES_RUBY := ruby $(DETECT_TAG_CHANGES_TOOL)
+CREATE_NORM_RULE_TOOL := $(TOOLS_DIR)/create_normative_rules.py
+CREATE_NORM_RULE_PYTHON := python3 $(CREATE_NORM_RULE_TOOL)
+DETECT_TAG_CHANGES_TOOL := $(TOOLS_DIR)/detect_tag_changes.py
+DETECT_TAG_CHANGES_PYTHON := python3 $(DETECT_TAG_CHANGES_TOOL)
 
 # Stuff for building test standards document in HTML to have links into it.
 DOCS = test-ch1 test-ch2
@@ -199,34 +199,34 @@ test-tag-changes: test-tag-changes-basic test-tag-changes-verbose test-tag-chang
 
 test-tag-changes-basic: $(TAG_CHANGES_TEST_REFERENCE_PATH) $(TAG_CHANGES_TEST_CURRENT_PATH)
 	@echo "TESTING TAG CHANGE DETECTION - BASIC OUTPUT (with modifications/deletions)"
-	$(DETECT_TAG_CHANGES_RUBY) $(TAG_CHANGES_TEST_REFERENCE_PATH) $(TAG_CHANGES_TEST_CURRENT_PATH) && echo "test-tag-changes-basic FAILED (expected exit 1 for modifications/deletions)" || echo "test-tag-changes-basic PASSED"
+	$(DETECT_TAG_CHANGES_PYTHON) $(TAG_CHANGES_TEST_REFERENCE_PATH) $(TAG_CHANGES_TEST_CURRENT_PATH) && echo "test-tag-changes-basic FAILED (expected exit 1 for modifications/deletions)" || echo "test-tag-changes-basic PASSED"
 
 test-tag-changes-verbose: $(TAG_CHANGES_TEST_REFERENCE_PATH) $(TAG_CHANGES_TEST_CURRENT_PATH)
 	@echo "TESTING TAG CHANGE DETECTION - WITH VERBOSE OUTPUT (with modifications/deletions)"
-	$(DETECT_TAG_CHANGES_RUBY) --verbose $(TAG_CHANGES_TEST_REFERENCE_PATH) $(TAG_CHANGES_TEST_CURRENT_PATH) && echo "test-tag-changes-verbose FAILED (expected exit 1 for modifications/deletions)" || echo "test-tag-changes-verbose PASSED"
+	$(DETECT_TAG_CHANGES_PYTHON) --verbose $(TAG_CHANGES_TEST_REFERENCE_PATH) $(TAG_CHANGES_TEST_CURRENT_PATH) && echo "test-tag-changes-verbose FAILED (expected exit 1 for modifications/deletions)" || echo "test-tag-changes-verbose PASSED"
 
 test-tag-changes-no-changes: $(TAG_CHANGES_TEST_REFERENCE_PATH)
 	@echo "TESTING TAG CHANGE DETECTION - NO CHANGES (expect exit 0)"
-	$(DETECT_TAG_CHANGES_RUBY) $(TAG_CHANGES_TEST_REFERENCE_PATH) $(TAG_CHANGES_TEST_REFERENCE_PATH) && echo "test-tag-changes-no-changes PASSED" || echo "test-tag-changes-no-changes FAILED (no changes should return exit 0)"
+	$(DETECT_TAG_CHANGES_PYTHON) $(TAG_CHANGES_TEST_REFERENCE_PATH) $(TAG_CHANGES_TEST_REFERENCE_PATH) && echo "test-tag-changes-no-changes PASSED" || echo "test-tag-changes-no-changes FAILED (no changes should return exit 0)"
 
 test-tag-changes-additions-only: $(TAG_CHANGES_TEST_REFERENCE_PATH)
 	@echo "TESTING TAG CHANGE DETECTION - ADDITIONS ONLY (expect exit 0)"
-	$(DETECT_TAG_CHANGES_RUBY) $(TAG_CHANGES_TEST_REFERENCE_PATH) $(TAG_CHANGES_TESTS_DIR)/additions-only.json && echo "test-tag-changes-additions-only PASSED" || echo "test-tag-changes-additions-only FAILED (additions only should return exit 0)"
+	$(DETECT_TAG_CHANGES_PYTHON) $(TAG_CHANGES_TEST_REFERENCE_PATH) $(TAG_CHANGES_TESTS_DIR)/additions-only.json && echo "test-tag-changes-additions-only PASSED" || echo "test-tag-changes-additions-only FAILED (additions only should return exit 0)"
 
 test-tag-changes-whitespace-only: $(TAG_CHANGES_TEST_REFERENCE_PATH)
 	@echo "TESTING TAG CHANGE DETECTION - WHITESPACE ONLY (expect exit 0)"
-	$(DETECT_TAG_CHANGES_RUBY) $(TAG_CHANGES_TEST_REFERENCE_PATH) $(TAG_CHANGES_TESTS_DIR)/whitespace-only.json && echo "test-tag-changes-whitespace-only PASSED" || echo "test-tag-changes-whitespace-only FAILED (whitespace-only changes should return exit 0)"
+	$(DETECT_TAG_CHANGES_PYTHON) $(TAG_CHANGES_TEST_REFERENCE_PATH) $(TAG_CHANGES_TESTS_DIR)/whitespace-only.json && echo "test-tag-changes-whitespace-only PASSED" || echo "test-tag-changes-whitespace-only FAILED (whitespace-only changes should return exit 0)"
 
 test-tag-changes-formatting-only: $(TAG_CHANGES_TEST_REFERENCE_PATH)
 	@echo "TESTING TAG CHANGE DETECTION - FORMATTING ONLY (expect exit 0)"
-	$(DETECT_TAG_CHANGES_RUBY) $(TAG_CHANGES_TEST_REFERENCE_PATH) $(TAG_CHANGES_TESTS_DIR)/formatting-only.json && echo "test-tag-changes-formatting-only PASSED" || echo "test-tag-changes-formatting-only FAILED (formatting-only changes should return exit 0)"
+	$(DETECT_TAG_CHANGES_PYTHON) $(TAG_CHANGES_TEST_REFERENCE_PATH) $(TAG_CHANGES_TESTS_DIR)/formatting-only.json && echo "test-tag-changes-formatting-only PASSED" || echo "test-tag-changes-formatting-only FAILED (formatting-only changes should return exit 0)"
 
 test-tag-changes-update: $(TAG_CHANGES_TEST_REFERENCE_PATH)
 	@echo "TESTING TAG CHANGE DETECTION - UPDATE FILE"
 	@cp -f $(TAG_CHANGES_TEST_REFERENCE_PATH) $(BUILD_DIR)/test-reference.json
-	@$(DETECT_TAG_CHANGES_RUBY) $(BUILD_DIR)/test-reference.json $(TAG_CHANGES_TESTS_DIR)/additions-only.json --update-reference
-	@ruby -rjson -e 'data = JSON.parse(File.read("$(BUILD_DIR)/test-reference.json")); exit(data["tags"].key?("norm:added-only-tag") ? 0 : 1)' || (echo "test-tag-changes-update FAILED (tag not added)"; exit 1)
-	@$(DETECT_TAG_CHANGES_RUBY) $(BUILD_DIR)/test-reference.json $(TAG_CHANGES_TESTS_DIR)/additions-only.json > /dev/null 2>&1 && echo "test-tag-changes-update PASSED" || (echo "test-tag-changes-update FAILED (differences detected after update)"; exit 1)
+	@$(DETECT_TAG_CHANGES_PYTHON) $(BUILD_DIR)/test-reference.json $(TAG_CHANGES_TESTS_DIR)/additions-only.json --update-reference
+	@python3 -c 'import json; data = json.load(open("$(BUILD_DIR)/test-reference.json")); exit(0 if "norm:added-only-tag" in data["tags"] else 1)' || (echo "test-tag-changes-update FAILED (tag not added)"; exit 1)
+	@$(DETECT_TAG_CHANGES_PYTHON) $(BUILD_DIR)/test-reference.json $(TAG_CHANGES_TESTS_DIR)/additions-only.json > /dev/null 2>&1 && echo "test-tag-changes-update PASSED" || (echo "test-tag-changes-update FAILED (differences detected after update)"; exit 1)
 
 # Update expected files from built files
 .PHONY: update-expected
@@ -275,7 +275,7 @@ $(BUILT_NORM_RULES_JSON): $(BUILT_TEST_NORM_TAGS_FNAMES) $(GOOD_NORM_RULE_DEF_FI
 	$(WORKDIR_SETUP)
 	cp -f $(BUILT_TEST_NORM_TAGS_FNAMES) $@.workdir
 	mkdir -p $@.workdir/build
-	$(DOCKER_CMD) $(DOCKER_QUOTE) $(CREATE_NORM_RULE_RUBY) -j $(NORM_TAG_FILE_ARGS) $(GOOD_NORM_RULE_DEF_ARGS) $(NORM_RULE_DOC2URL_ARGS) $@ $(DOCKER_QUOTE)
+	$(DOCKER_CMD) $(DOCKER_QUOTE) $(CREATE_NORM_RULE_TOOL) -j $(NORM_TAG_FILE_ARGS) $(GOOD_NORM_RULE_DEF_ARGS) $(NORM_RULE_DOC2URL_ARGS) $@ $(DOCKER_QUOTE)
 	$(WORKDIR_TEARDOWN)
 
 # Build normative rules with HTML output format
@@ -283,7 +283,7 @@ $(BUILT_NORM_RULES_HTML): $(BUILT_TEST_NORM_TAGS_FNAMES) $(GOOD_NORM_RULE_DEF_FI
 	$(WORKDIR_SETUP)
 	cp -f $(BUILT_TEST_NORM_TAGS_FNAMES) $@.workdir
 	mkdir -p $@.workdir/build
-	$(DOCKER_CMD) $(DOCKER_QUOTE) $(CREATE_NORM_RULE_RUBY) -h $(NORM_TAG_FILE_ARGS) $(GOOD_NORM_RULE_DEF_ARGS) $(NORM_RULE_DOC2URL_ARGS) $@ $(DOCKER_QUOTE)
+	$(DOCKER_CMD) $(DOCKER_QUOTE) $(CREATE_NORM_RULE_TOOL) --html $(NORM_TAG_FILE_ARGS) $(GOOD_NORM_RULE_DEF_ARGS) $(NORM_RULE_DOC2URL_ARGS) $@ $(DOCKER_QUOTE)
 	$(WORKDIR_TEARDOWN)
 
 # This is the HTML file that represents the standards doc. THe norm rule HTML links into this HTML.
@@ -306,7 +306,7 @@ $(BUILT_NORM_RULES_TAGS_NO_RULES): $(BUILT_TEST_CH1_NORM_TAGS_FNAME) $(BAD_NORM_
 	$(WORKDIR_SETUP)
 	cp -f $(BUILT_TEST_CH1_NORM_TAGS_FNAME) $@.workdir
 	mkdir -p $@.workdir/build
-	$(DOCKER_CMD) $(DOCKER_QUOTE) $(CREATE_NORM_RULE_RUBY) $(NORM_TAG_FILE_ARGS) $(BAD_NORM_RULE_DEF_ARGS) $(NORM_RULE_DOC2URL_ARGS) $(BUILD_DIR)/bogus || touch $(BUILT_NORM_RULES_TAGS_NO_RULES) $(DOCKER_QUOTE)
+	$(DOCKER_CMD) $(DOCKER_QUOTE) $(CREATE_NORM_RULE_TOOL) $(NORM_TAG_FILE_ARGS) $(BAD_NORM_RULE_DEF_ARGS) $(NORM_RULE_DOC2URL_ARGS) $(BUILD_DIR)/bogus || touch $(BUILT_NORM_RULES_TAGS_NO_RULES) $(DOCKER_QUOTE)
 	$(WORKDIR_TEARDOWN)
 
 # Update docker image to latest
