@@ -996,7 +996,22 @@
       ]
     },
     {
-      "name": "XLEN",
+      "name": "XLEN1",
+      "def_filename": "tests/norm-rule/test-ch2.yaml",
+      "chapter_name": "Two",
+      "impl-def-behavior": true,
+      "tags": [
+        {
+          "name": "norm:XLEN",
+          "context": false,
+          "text": "We use the term XLEN to refer to the width of an integer register in bits (either 32 or 64).",
+          "tag_filename": "/build/test-ch2-norm-tags.json",
+          "stds_doc_url": "test-ch2.html"
+        }
+      ]
+    },
+    {
+      "name": "XLEN2",
       "def_filename": "tests/norm-rule/test-ch2.yaml",
       "chapter_name": "Two",
       "impl-def-behavior": true,
