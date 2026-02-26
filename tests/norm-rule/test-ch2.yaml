@@ -24,7 +24,7 @@ normative_rule_definitions:
   - name: ROSE_COLORS
     impl-def-behavior: true
     tag: "norm:ROSE_COLORS"
-  - name: XLEN
+  - names: [XLEN1, XLEN2]
     impl-def-behavior: true
     tag: "norm:XLEN"
   - name: ASIDLEN

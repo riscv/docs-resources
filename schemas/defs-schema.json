@@ -120,6 +120,24 @@
           },
           {
             "if": {
+              "properties": {
+                "impl-def-behavior": { "const": true }
+              },
+              "required": ["impl-def-behavior"]
+            },
+            "then": {
+              "properties": {
+                "names": { "$ref": "common-schema.json#/implDefNameArray" }
+              }
+            },
+            "else": {
+              "properties": {
+                "names": { "$ref": "common-schema.json#/ruleNameArray" }
+              }
+            }
+          },
+          {
+            "if": {
               "required": ["impl-def-category"]
             },
             "then": {
