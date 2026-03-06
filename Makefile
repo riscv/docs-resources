@@ -11,7 +11,7 @@
 # This Makefile is designed to automate the process of running tests.
 # Running with a preinstalled docker container is strongly recommended.
 # Install by running:
-#   docker pull riscvintl/riscv-docs-base-container-image:latest
+#   docker pull ghcr.io/riscv/riscv-docs-base-container-image:latest
 
 # Directories all relative to the top-level.
 CONVERTERS_DIR := converters
@@ -97,7 +97,7 @@ NORM_RULE_DOC2URL_ARGS := $(foreach doc_name,$(DOCS),-tag2url /$(BUILD_DIR)/$(do
 # Docker stuff
 DOCKER_BIN ?= docker
 SKIP_DOCKER ?= $(shell if command -v ${DOCKER_BIN}  >/dev/null 2>&1 ; then echo false; else echo true; fi)
-DOCKER_IMG := riscvintl/riscv-docs-base-container-image:latest
+DOCKER_IMG := ghcr.io/riscv/riscv-docs-base-container-image:latest
 ifneq ($(SKIP_DOCKER),true)
     DOCKER_IS_PODMAN = \
         $(shell ! ${DOCKER_BIN}  -v | grep podman >/dev/null ; echo $$?)
