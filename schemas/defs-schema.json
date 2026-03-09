@@ -138,6 +138,27 @@
           },
           {
             "if": {
+              "properties": {
+                "kind": { "const": "base" }
+              },
+              "required": ["kind"]
+            },
+            "then": {
+              "properties": {
+                "instance": {
+                  "$ref": "common-schema.json#/bases"
+                },
+                "instances": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "common-schema.json#/bases"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
               "required": ["impl-def-category"]
             },
             "then": {

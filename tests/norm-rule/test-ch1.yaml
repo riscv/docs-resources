@@ -26,6 +26,12 @@ normative_rule_definitions:
   - name: extension-dependency
     tag: "norm:extension-dependency"
     kind: extension_dependency
+  - name: one_base
+    kind: base
+    instance: RV32I
+  - name: all_bases
+    kind: base
+    instances: [RV32I, RV32E, RV64I, RV64E]
   - name: clarification-without-text
     tag: "norm:clarification-without-text"
     clarification-link: https://www.github.com/riscv/jfkd/issues/67

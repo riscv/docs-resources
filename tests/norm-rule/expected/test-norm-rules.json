@@ -63,6 +63,31 @@
       ]
     },
     {
+      "name": "one_base",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "One",
+      "kind": "base",
+      "impl-def-behavior": false,
+      "instances": [
+        "RV32I"
+      ],
+      "tags": []
+    },
+    {
+      "name": "all_bases",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "One",
+      "kind": "base",
+      "impl-def-behavior": false,
+      "instances": [
+        "RV32I",
+        "RV32E",
+        "RV64I",
+        "RV64E"
+      ],
+      "tags": []
+    },
+    {
       "name": "clarification-without-text",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
       "chapter_name": "One",
