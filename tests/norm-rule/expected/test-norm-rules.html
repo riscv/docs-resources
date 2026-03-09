@@ -153,11 +153,11 @@
   </aside>
     <main>
       <style>.grand-total-heading { font-size: 24px; font-weight: bold; }</style>
-      <h1 class="grand-total-heading">68 Normative Rules: Includes 7 Implementation-Defined Behaviors (4 No Category, 2 WARL, 1 WLRL)</h1>
+      <h1 class="grand-total-heading">70 Normative Rules: Includes 7 Implementation-Defined Behaviors (4 No Category, 2 WARL, 1 WLRL)</h1>
 
       <section id="table-norm-rules-ch-1" class="section">
         <table>
-          <caption class="sticky-caption">Chapter One: 56 Normative Rules</caption>
+          <caption class="sticky-caption">Chapter One: 58 Normative Rules</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-description">
@@ -210,6 +210,24 @@
             <tr>
               <td>The F extensions depends on the Zicsr extension.</td>
               <td><a href="test-ch1.html#norm:extension-dependency">norm:extension-dependency</a></td>
+            </tr>
+            <tr>
+              <td rowspan=2 id="one_base">one_base</td>
+              <td>base</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>RV32I</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td rowspan=2 id="all_bases">all_bases</td>
+              <td>base</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>[RV32I, RV32E, RV64I, RV64E]</td>
+              <td>Rule's "instances" property</td>
             </tr>
             <tr>
               <td rowspan=2 id="clarification-without-text">clarification-without-text</td>

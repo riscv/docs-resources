@@ -28,7 +28,7 @@ IMPLDEFS_CAT_TABLE_NAME_PREFIX = "table-impldefs-impl-cat-"
 IMPLDEFS_CH_TABLE_NAME_PREFIX = "table-impldefs-ch-"
 
 # Enums
-KINDS = ["extension", "extension_dependency", "instruction", "csr", "csr_field"]
+KINDS = ["base", "extension", "extension_dependency", "instruction", "csr", "csr_field"]
 IMPLDEF_CATEGORIES = ["WARL", "WLRL"]
 
 # Norm rule name checking

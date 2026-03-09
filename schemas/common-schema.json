@@ -48,7 +48,11 @@
   },
   "stdsObjectKind":  {
     "type": "string",
-    "enum": ["extension", "extension_dependency", "instruction", "csr", "csr_field"]
+    "enum": ["base", "extension", "extension_dependency", "instruction", "csr", "csr_field"]
+  },
+  "bases": {
+    "type": "string",
+    "enum": ["RV32I", "RV32E", "RV64I", "RV64E"]
   },
   "implDefBehavior": {
     "type": "boolean"
