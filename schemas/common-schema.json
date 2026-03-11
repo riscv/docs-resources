@@ -52,7 +52,7 @@
   },
   "bases": {
     "type": "string",
-    "enum": ["RV32I", "RV32E", "RV64I", "RV64E"]
+    "enum": ["Any", "RV32I", "RV32E", "RV64I", "RV64E"]
   },
   "implDefBehavior": {
     "type": "boolean"
