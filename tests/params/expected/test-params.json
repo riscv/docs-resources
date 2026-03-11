@@ -3,6 +3,7 @@
     {
       "name": "BOOLEAN",
       "def_filename": "test-ch1.yaml",
+      "type": "boolean",
       "impl-defs": [
         {
           "name": "BOOLEAN",
@@ -33,8 +34,139 @@
       ]
     },
     {
+      "name": "BIT",
+      "def_filename": "test-ch1.yaml",
+      "type": "bit",
+      "impl-defs": [
+        {
+          "name": "BIT",
+          "def_filename": "tests/norm-rule/test-ch1.yaml",
+          "chapter_name": "One",
+          "kind": "extension",
+          "impl-def-behavior": true,
+          "instances": [
+            "Zch1-A"
+          ],
+          "tags": [
+            {
+              "name": "norm:bit",
+              "context": false,
+              "text": "This is a bit.",
+              "tag_filename": "/build/test-ch1-norm-tags.json",
+              "stds_doc_url": "test-ch1.html"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "BYTE",
+      "def_filename": "test-ch1.yaml",
+      "type": "byte",
+      "impl-defs": [
+        {
+          "name": "BYTE",
+          "def_filename": "tests/norm-rule/test-ch1.yaml",
+          "chapter_name": "One",
+          "kind": "extension",
+          "impl-def-behavior": true,
+          "instances": [
+            "Zch1-A"
+          ],
+          "tags": [
+            {
+              "name": "norm:byte",
+              "context": false,
+              "text": "This is a byte.",
+              "tag_filename": "/build/test-ch1-norm-tags.json",
+              "stds_doc_url": "test-ch1.html"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "HWORD",
+      "def_filename": "test-ch1.yaml",
+      "type": "hword",
+      "impl-defs": [
+        {
+          "name": "HWORD",
+          "def_filename": "tests/norm-rule/test-ch1.yaml",
+          "chapter_name": "One",
+          "kind": "extension",
+          "impl-def-behavior": true,
+          "instances": [
+            "Zch1-A"
+          ],
+          "tags": [
+            {
+              "name": "norm:hword",
+              "context": false,
+              "text": "This is a half-word (16 bits).",
+              "tag_filename": "/build/test-ch1-norm-tags.json",
+              "stds_doc_url": "test-ch1.html"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "WORD",
+      "def_filename": "test-ch1.yaml",
+      "type": "word",
+      "impl-defs": [
+        {
+          "name": "WORD",
+          "def_filename": "tests/norm-rule/test-ch1.yaml",
+          "chapter_name": "One",
+          "kind": "extension",
+          "impl-def-behavior": true,
+          "instances": [
+            "Zch1-A"
+          ],
+          "tags": [
+            {
+              "name": "norm:word",
+              "context": false,
+              "text": "This is a word (32 bits).",
+              "tag_filename": "/build/test-ch1-norm-tags.json",
+              "stds_doc_url": "test-ch1.html"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "DWORD",
+      "def_filename": "test-ch1.yaml",
+      "type": "dword",
+      "impl-defs": [
+        {
+          "name": "DWORD",
+          "def_filename": "tests/norm-rule/test-ch1.yaml",
+          "chapter_name": "One",
+          "kind": "extension",
+          "impl-def-behavior": true,
+          "instances": [
+            "Zch1-A"
+          ],
+          "tags": [
+            {
+              "name": "norm:dword",
+              "context": false,
+              "text": "This is a double-word (64 bits).",
+              "tag_filename": "/build/test-ch1-norm-tags.json",
+              "stds_doc_url": "test-ch1.html"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "UINT6",
       "def_filename": "test-ch1.yaml",
+      "type": "uint6",
       "impl-defs": [
         {
           "name": "UINT6",
@@ -60,6 +192,7 @@
     {
       "name": "UINT32",
       "def_filename": "test-ch1.yaml",
+      "type": "uint32",
       "impl-defs": [
         {
           "name": "UINT32",
@@ -85,6 +218,7 @@
     {
       "name": "INT64",
       "def_filename": "test-ch1.yaml",
+      "type": "int64",
       "impl-defs": [
         {
           "name": "INT64",
@@ -110,6 +244,10 @@
     {
       "name": "UINT_1TO100",
       "def_filename": "test-ch1.yaml",
+      "range": [
+        1,
+        100
+      ],
       "impl-defs": [
         {
           "name": "UINT_1TO100",
@@ -135,6 +273,11 @@
     {
       "name": "LIST_STR",
       "def_filename": "test-ch1.yaml",
+      "type": [
+        "ABC",
+        "DEF",
+        "GHI"
+      ],
       "impl-defs": [
         {
           "name": "LIST_STR",
@@ -149,7 +292,7 @@
             {
               "name": "norm:list-str",
               "context": false,
-              "text": "Name|Description\n===\nA|Letter \"A\"¶B|Letter \"B\"\n===",
+              "text": "Name|Description\n===\nABC|Letters \"ABC\"¶DEF|Letters \"DEF\"¶GHI|Letters \"GHI\"\n===",
               "tag_filename": "/build/test-ch1-norm-tags.json",
               "stds_doc_url": "test-ch1.html"
             }
@@ -160,6 +303,11 @@
     {
       "name": "LIST_INT",
       "def_filename": "test-ch1.yaml",
+      "type": [
+        1,
+        2,
+        4
+      ],
       "impl-defs": [
         {
           "name": "LIST_INT",
@@ -186,6 +334,11 @@
     {
       "name": "ROSE_COLORS",
       "def_filename": "test-ch2.yaml",
+      "type": [
+        "RED",
+        "PINK",
+        "WHITE"
+      ],
       "note": "This is a note about the ROSE_COLORS parameter.",
       "description": "This is a description about the ROSE_COLORS parameter. Here's some *bold text*.",
       "impl-defs": [
@@ -213,6 +366,10 @@
     {
       "name": "XLEN",
       "def_filename": "test-ch2.yaml",
+      "type": [
+        32,
+        64
+      ],
       "impl-defs": [
         {
           "name": "XLEN1",
@@ -257,6 +414,10 @@
     {
       "name": "ASIDLEN1",
       "def_filename": "test-ch2.yaml",
+      "range": [
+        0,
+        16
+      ],
       "impl-defs": [
         {
           "name": "ASIDLEN",
@@ -282,6 +443,10 @@
     {
       "name": "ASIDLEN2",
       "def_filename": "test-ch2.yaml",
+      "range": [
+        0,
+        16
+      ],
       "impl-defs": [
         {
           "name": "ASIDLEN",
@@ -307,6 +472,7 @@
     {
       "name": "NO_IMPL_DEF",
       "def_filename": "test-ch2.yaml",
+      "type": "bit",
       "note": "This is a note for a parameter without any implementation-defined behavior. Here's an 2^32^ exponent."
     }
   ]

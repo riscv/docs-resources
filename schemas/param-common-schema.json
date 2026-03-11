@@ -15,6 +15,34 @@
   "paramBehaviorDesc": {
     "description": "A parameter that maps to one or more implementation-defined behaviors in the standards documentation"
   },
+  "paramTypeDesc": {
+    "description": "Can be boolean, bit, byte, hword, word, dword, int2-int64, uint2-uint64, array of strings, or array of integers. Use \"range\" for min/max ranges"
+  },
+  "paramRangeDesc": {
+    "description": "Array of 2 integers specifying lower and upper bound (in that order)"
+  },
+  "paramType": {
+    "oneOf": [
+      {
+        "type": "string",
+        "pattern": "^(boolean|bit|byte|hword|word|dword|int([2-9]|[1-5][0-9]|6[0-4])|uint([2-9]|[1-5][0-9]|6[0-4]))$"
+      },
+      {
+        "type": "array",
+        "items": {
+          "type": ["string", "integer"]
+        }
+      }
+    ]
+  },
+  "paramRange": {
+    "type": "array",
+    "items": {
+      "type": "integer"
+    },
+    "minItems": 2,
+    "maxItems": 2
+  },
   "stringArray": {
     "type": "array",
     "items": { "type": "string" }

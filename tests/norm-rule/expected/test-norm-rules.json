@@ -942,6 +942,101 @@
       ]
     },
     {
+      "name": "BIT",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "One",
+      "kind": "extension",
+      "impl-def-behavior": true,
+      "instances": [
+        "Zch1-A"
+      ],
+      "tags": [
+        {
+          "name": "norm:bit",
+          "context": false,
+          "text": "This is a bit.",
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
+        }
+      ]
+    },
+    {
+      "name": "BYTE",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "One",
+      "kind": "extension",
+      "impl-def-behavior": true,
+      "instances": [
+        "Zch1-A"
+      ],
+      "tags": [
+        {
+          "name": "norm:byte",
+          "context": false,
+          "text": "This is a byte.",
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
+        }
+      ]
+    },
+    {
+      "name": "HWORD",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "One",
+      "kind": "extension",
+      "impl-def-behavior": true,
+      "instances": [
+        "Zch1-A"
+      ],
+      "tags": [
+        {
+          "name": "norm:hword",
+          "context": false,
+          "text": "This is a half-word (16 bits).",
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
+        }
+      ]
+    },
+    {
+      "name": "WORD",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "One",
+      "kind": "extension",
+      "impl-def-behavior": true,
+      "instances": [
+        "Zch1-A"
+      ],
+      "tags": [
+        {
+          "name": "norm:word",
+          "context": false,
+          "text": "This is a word (32 bits).",
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
+        }
+      ]
+    },
+    {
+      "name": "DWORD",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "One",
+      "kind": "extension",
+      "impl-def-behavior": true,
+      "instances": [
+        "Zch1-A"
+      ],
+      "tags": [
+        {
+          "name": "norm:dword",
+          "context": false,
+          "text": "This is a double-word (64 bits).",
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
+        }
+      ]
+    },
+    {
       "name": "UINT6",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
       "chapter_name": "One",
@@ -1030,7 +1125,7 @@
         {
           "name": "norm:list-str",
           "context": false,
-          "text": "Name|Description\n===\nA|Letter \"A\"¶B|Letter \"B\"\n===",
+          "text": "Name|Description\n===\nABC|Letters \"ABC\"¶DEF|Letters \"DEF\"¶GHI|Letters \"GHI\"\n===",
           "tag_filename": "/build/test-ch1-norm-tags.json",
           "stds_doc_url": "test-ch1.html"
         }

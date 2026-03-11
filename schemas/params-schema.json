@@ -29,6 +29,12 @@
             "type": "string",
             "$ref": "param-common-schema.json#/descriptionDesc"
           },
+          "type": {
+            "$ref": "param-common-schema.json#/paramType"
+          },
+          "range": {
+            "$ref": "param-common-schema.json#/paramRange"
+          },
           "impl-defs": {
             "allOf": [
               {
@@ -42,6 +48,14 @@
           }
         },
         "required": ["name", "def_filename", "chapter_name"],
+        "allOf": [
+          {
+            "oneOf": [
+              { "required": ["type"] },
+              { "required": ["range"] }
+            ]
+          }
+        ],
         "dependencies": {
           "tag_filename": ["stds_doc_url"]
         },

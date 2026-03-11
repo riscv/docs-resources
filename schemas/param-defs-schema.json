@@ -39,9 +39,21 @@
           "impl-defs": {
             "$ref": "param-common-schema.json#/implDefNameArray",
             "description": "List of implementation-defined behaviors"
+          },
+          "type": {
+            "$ref": "param-common-schema.json#/paramType"
+          },
+          "range": {
+            "$ref": "param-common-schema.json#/paramRange"
           }
         },
         "allOf": [
+          {
+            "oneOf": [
+              { "required": ["type"] },
+              { "required": ["range"] }
+            ]
+          },
           {
             "oneOf": [
               { "required": ["name"] },

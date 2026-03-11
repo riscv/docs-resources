@@ -155,11 +155,11 @@
   </aside>
     <main>
       <style>.grand-total-heading { font-size: 24px; font-weight: bold; }</style>
-      <h1 class="grand-total-heading">77 Normative Rules: Includes 14 Implementation-Defined Behaviors (11 No Category, 2 WARL, 1 WLRL)</h1>
+      <h1 class="grand-total-heading">82 Normative Rules: Includes 19 Implementation-Defined Behaviors (16 No Category, 2 WARL, 1 WLRL)</h1>
 
       <section id="table-norm-rules-ch-1" class="section">
         <table>
-          <caption class="sticky-caption">Chapter One: 65 Normative Rules: Includes 7 Implementation-Defined Behaviors</caption>
+          <caption class="sticky-caption">Chapter One: 70 Normative Rules: Includes 12 Implementation-Defined Behaviors</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-description">
@@ -553,6 +553,91 @@
               <td><a href="test-ch1.html#norm:boolean-context">norm:boolean-context</a></td>
             </tr>
             <tr>
+              <td rowspan=4 id="BIT">BIT</td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Zch1-A</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>Implementation-defined behavior</td>
+              <td>Rule's property</td>
+            </tr>
+            <tr>
+              <td>This is a bit.</td>
+              <td><a href="test-ch1.html#norm:bit">norm:bit</a></td>
+            </tr>
+            <tr>
+              <td rowspan=4 id="BYTE">BYTE</td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Zch1-A</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>Implementation-defined behavior</td>
+              <td>Rule's property</td>
+            </tr>
+            <tr>
+              <td>This is a byte.</td>
+              <td><a href="test-ch1.html#norm:byte">norm:byte</a></td>
+            </tr>
+            <tr>
+              <td rowspan=4 id="HWORD">HWORD</td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Zch1-A</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>Implementation-defined behavior</td>
+              <td>Rule's property</td>
+            </tr>
+            <tr>
+              <td>This is a half-word (16 bits).</td>
+              <td><a href="test-ch1.html#norm:hword">norm:hword</a></td>
+            </tr>
+            <tr>
+              <td rowspan=4 id="WORD">WORD</td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Zch1-A</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>Implementation-defined behavior</td>
+              <td>Rule's property</td>
+            </tr>
+            <tr>
+              <td>This is a word (32 bits).</td>
+              <td><a href="test-ch1.html#norm:word">norm:word</a></td>
+            </tr>
+            <tr>
+              <td rowspan=4 id="DWORD">DWORD</td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Zch1-A</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>Implementation-defined behavior</td>
+              <td>Rule's property</td>
+            </tr>
+            <tr>
+              <td>This is a double-word (64 bits).</td>
+              <td><a href="test-ch1.html#norm:dword">norm:dword</a></td>
+            </tr>
+            <tr>
               <td rowspan=4 id="UINT6">UINT6</td>
               <td>extension</td>
               <td>Rule's "kind" property</td>
@@ -634,7 +719,7 @@
               <td>Rule's property</td>
             </tr>
             <tr>
-              <td><table><thead><tr><th>Name</th><th>Description</th></tr></thead><tbody><tr><td>A</td><td>Letter "A"</td></tr><tr><td>B</td><td>Letter "B"</td></tr></tbody></table></td>
+              <td><table><thead><tr><th>Name</th><th>Description</th></tr></thead><tbody><tr><td>ABC</td><td>Letters "ABC"</td></tr><tr><td>DEF</td><td>Letters "DEF"</td></tr><tr><td>GHI</td><td>Letters "GHI"</td></tr></tbody></table></td>
               <td><a href="test-ch1.html#norm:list-str">norm:list-str</a></td>
             </tr>
             <tr>
@@ -820,7 +905,7 @@
 
       <section id="table-impldefs-no-cat" class="section">
         <table>
-          <caption class="sticky-caption">No Category (A-Z): All 11 Implementation-Defined Behaviors</caption>
+          <caption class="sticky-caption">No Category (A-Z): All 16 Implementation-Defined Behaviors</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-description">
@@ -844,6 +929,19 @@
               <td><a href="test-ch2.html#norm:ASIDLEN">norm:ASIDLEN</a></td>
             </tr>
             <tr>
+              <td rowspan=3><a href="#BIT">BIT</a></td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Zch1-A</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>This is a bit.</td>
+              <td><a href="test-ch1.html#norm:bit">norm:bit</a></td>
+            </tr>
+            <tr>
               <td rowspan=4><a href="#BOOLEAN">BOOLEAN</a></td>
               <td>extension</td>
               <td>Rule's "kind" property</td>
@@ -859,6 +957,45 @@
             <tr>
               <td>[CONTEXT] Here&#8217;s some context for the boolean.</td>
               <td><a href="test-ch1.html#norm:boolean-context">norm:boolean-context</a></td>
+            </tr>
+            <tr>
+              <td rowspan=3><a href="#BYTE">BYTE</a></td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Zch1-A</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>This is a byte.</td>
+              <td><a href="test-ch1.html#norm:byte">norm:byte</a></td>
+            </tr>
+            <tr>
+              <td rowspan=3><a href="#DWORD">DWORD</a></td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Zch1-A</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>This is a double-word (64 bits).</td>
+              <td><a href="test-ch1.html#norm:dword">norm:dword</a></td>
+            </tr>
+            <tr>
+              <td rowspan=3><a href="#HWORD">HWORD</a></td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Zch1-A</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>This is a half-word (16 bits).</td>
+              <td><a href="test-ch1.html#norm:hword">norm:hword</a></td>
             </tr>
             <tr>
               <td rowspan=3><a href="#INT64">INT64</a></td>
@@ -896,7 +1033,7 @@
               <td>Rule's "instance" property</td>
             </tr>
             <tr>
-              <td><table><thead><tr><th>Name</th><th>Description</th></tr></thead><tbody><tr><td>A</td><td>Letter "A"</td></tr><tr><td>B</td><td>Letter "B"</td></tr></tbody></table></td>
+              <td><table><thead><tr><th>Name</th><th>Description</th></tr></thead><tbody><tr><td>ABC</td><td>Letters "ABC"</td></tr><tr><td>DEF</td><td>Letters "DEF"</td></tr><tr><td>GHI</td><td>Letters "GHI"</td></tr></tbody></table></td>
               <td><a href="test-ch1.html#norm:list-str">norm:list-str</a></td>
             </tr>
             <tr>
@@ -950,6 +1087,19 @@
             <tr>
               <td>This is an unsigned integer in the range of 1 to 100.</td>
               <td><a href="test-ch1.html#norm:uint-1to100">norm:uint-1to100</a></td>
+            </tr>
+            <tr>
+              <td rowspan=3><a href="#WORD">WORD</a></td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Zch1-A</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>This is a word (32 bits).</td>
+              <td><a href="test-ch1.html#norm:word">norm:word</a></td>
             </tr>
             <tr>
               <td rowspan=3><a href="#XLEN1">XLEN1</a></td>
@@ -1030,7 +1180,7 @@
 
       <section id="table-impldefs-ch-1" class="section">
         <table>
-          <caption class="sticky-caption">Chapter One: All 7 Implementation-Defined Behaviors</caption>
+          <caption class="sticky-caption">Chapter One: All 12 Implementation-Defined Behaviors</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-description">
@@ -1056,6 +1206,71 @@
             <tr>
               <td>[CONTEXT] Here&#8217;s some context for the boolean.</td>
               <td><a href="test-ch1.html#norm:boolean-context">norm:boolean-context</a></td>
+            </tr>
+            <tr>
+              <td rowspan=3><a href="#BIT">BIT</a></td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Zch1-A</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>This is a bit.</td>
+              <td><a href="test-ch1.html#norm:bit">norm:bit</a></td>
+            </tr>
+            <tr>
+              <td rowspan=3><a href="#BYTE">BYTE</a></td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Zch1-A</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>This is a byte.</td>
+              <td><a href="test-ch1.html#norm:byte">norm:byte</a></td>
+            </tr>
+            <tr>
+              <td rowspan=3><a href="#HWORD">HWORD</a></td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Zch1-A</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>This is a half-word (16 bits).</td>
+              <td><a href="test-ch1.html#norm:hword">norm:hword</a></td>
+            </tr>
+            <tr>
+              <td rowspan=3><a href="#WORD">WORD</a></td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Zch1-A</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>This is a word (32 bits).</td>
+              <td><a href="test-ch1.html#norm:word">norm:word</a></td>
+            </tr>
+            <tr>
+              <td rowspan=3><a href="#DWORD">DWORD</a></td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Zch1-A</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>This is a double-word (64 bits).</td>
+              <td><a href="test-ch1.html#norm:dword">norm:dword</a></td>
             </tr>
             <tr>
               <td rowspan=3><a href="#UINT6">UINT6</a></td>
@@ -1119,7 +1334,7 @@
               <td>Rule's "instance" property</td>
             </tr>
             <tr>
-              <td><table><thead><tr><th>Name</th><th>Description</th></tr></thead><tbody><tr><td>A</td><td>Letter "A"</td></tr><tr><td>B</td><td>Letter "B"</td></tr></tbody></table></td>
+              <td><table><thead><tr><th>Name</th><th>Description</th></tr></thead><tbody><tr><td>ABC</td><td>Letters "ABC"</td></tr><tr><td>DEF</td><td>Letters "DEF"</td></tr><tr><td>GHI</td><td>Letters "GHI"</td></tr></tbody></table></td>
               <td><a href="test-ch1.html#norm:list-str">norm:list-str</a></td>
             </tr>
             <tr>

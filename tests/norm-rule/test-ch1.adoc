@@ -270,6 +270,21 @@ Item 3
 [[norm:boolean]]
 This is a boolean.
 
+[[norm:bit]]
+This is a bit.
+
+[[norm:byte]]
+This is a byte.
+
+[[norm:hword]]
+This is a half-word (16 bits).
+
+[[norm:word]]
+This is a word (32 bits).
+
+[[norm:dword]]
+This is a double-word (64 bits).
+
 [[norm:boolean-context]]
 Here's some context for the boolean.
 
@@ -291,8 +306,9 @@ This is an unsigned integer in the range of 1 to 100.
 |===
 | Name | Description
 
-|A | Letter "A"
-|B | Letter "B"
+|ABC | Letters "ABC"
+|DEF | Letters "DEF"
+|GHI | Letters "GHI"
 |===
 
 [[norm:list-int]]

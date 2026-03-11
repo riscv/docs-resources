@@ -10,9 +10,13 @@ parameter_definitions:
     impl-def: ROSE_COLORS
     note: This is a note about the ROSE_COLORS parameter.
     description: This is a description about the ROSE_COLORS parameter. Here's some *bold text*.
+    type: [RED, PINK, WHITE]
   - name: XLEN
     impl-defs: [XLEN1, XLEN2]
+    type: [32, 64]
   - names: [ASIDLEN1, ASIDLEN2]
     impl-def: ASIDLEN
+    range: [0, 16]
   - name: NO_IMPL_DEF
     note: This is a note for a parameter without any implementation-defined behavior. Here's an 2^32^ exponent.
+    type: bit

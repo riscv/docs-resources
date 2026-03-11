@@ -174,6 +174,31 @@ normative_rule_definitions:
     impl-def-behavior: true
     kind: extension
     instance: Zch1-A
+  - name: BIT
+    tag: "norm:bit"
+    impl-def-behavior: true
+    kind: extension
+    instance: Zch1-A
+  - name: BYTE
+    tag: "norm:byte"
+    impl-def-behavior: true
+    kind: extension
+    instance: Zch1-A
+  - name: HWORD
+    tag: "norm:hword"
+    impl-def-behavior: true
+    kind: extension
+    instance: Zch1-A
+  - name: WORD
+    tag: "norm:word"
+    impl-def-behavior: true
+    kind: extension
+    instance: Zch1-A
+  - name: DWORD
+    tag: "norm:dword"
+    impl-def-behavior: true
+    kind: extension
+    instance: Zch1-A
   - name: UINT6
     tag: "norm:uint6"
     impl-def-behavior: true

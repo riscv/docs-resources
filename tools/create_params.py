@@ -209,6 +209,34 @@ def add_parameter_entries(
     """Expand one parameter definition entry into one or more output parameter objects."""
     names: List[str] = []
 
+    has_type = "type" in entry
+    has_range = "range" in entry
+    if has_type == has_range:
+        fatal(f"Parameter entry in {def_filename} must define exactly one of type or range")
+
+    param_type: Any = entry.get("type")
+    param_range: Any = entry.get("range")
+    if has_type:
+        if isinstance(param_type, str):
+            pass
+        elif isinstance(param_type, list):
+            for value in param_type:
+                if not isinstance(value, (str, int)):
+                    fatal(
+                        f"Parameter entry in {def_filename} has invalid type array value "
+                        f"{value!r}; expected string or integer"
+                    )
+        else:
+            fatal(f"Parameter entry in {def_filename} has invalid type; expected string or array")
+
+    if has_range:
+        if not isinstance(param_range, list) or len(param_range) != 2:
+            fatal(f"Parameter entry in {def_filename} has invalid range; expected array of 2 integers")
+        if not isinstance(param_range[0], int) or not isinstance(param_range[1], int):
+            fatal(f"Parameter entry in {def_filename} has invalid range; values must be integers")
+        if param_range[0] >= param_range[1]:
+            fatal(f"Parameter entry in {def_filename} has invalid range; first value must be less than second")
+
     if "name" in entry:
         name: Any = entry.get("name")
         if not isinstance(name, str):
@@ -233,6 +261,11 @@ def add_parameter_entries(
             "def_filename": Path(def_filename).name,
             "_chapter_name": chapter_name,
         }
+
+        if has_type:
+            out_entry["type"] = param_type
+        if has_range:
+            out_entry["range"] = list(param_range)
 
         note = entry.get("note")
         if note is not None:
@@ -426,9 +459,10 @@ def html_head(f, table_names: List[str]):
     th,td{border:1px solid #d9e2ec;padding:8px 10px;vertical-align:top;word-wrap:break-word}
     thead th{background:#f1f5f9}
     .sticky-caption{position:sticky;top:0;background:#fff;padding:8px 0;z-index:1}
-    .col-name{width:20%}
-    .col-extensions{width:20%}
-    .col-descriptions{width:60%}
+    .col-name{width:18%}
+    .col-type{width:22%}
+    .col-extensions{width:18%}
+    .col-descriptions{width:42%}
     @media (max-width: 1000px){
       .app{grid-template-columns:1fr}
       .sidebar{position:relative;height:auto}
@@ -500,13 +534,30 @@ def html_table_header(f, table_name: str, table_caption: str):
     f.write(f'          <caption class="sticky-caption">{table_caption}</caption>\n')
     f.write('          <colgroup>\n')
     f.write('            <col class="col-name">\n')
+    f.write('            <col class="col-type">\n')
     f.write('            <col class="col-extensions">\n')
     f.write('            <col class="col-descriptions">\n')
     f.write('          </colgroup>\n')
     f.write('          <thead>\n')
-    f.write('            <tr><th>Parameter Name</th><th>Extension(s)</th><th>Description(s)</th></tr>\n')
+    f.write('            <tr><th>Parameter Name</th><th>Type</th><th>Extension(s)</th><th>Description(s)</th></tr>\n')
     f.write('          </thead>\n')
     f.write('          <tbody>\n')
+
+
+def format_param_type_for_html(param: Dict[str, Any]) -> str:
+    """Render parameter type/range value for HTML table display."""
+    param_type = param.get("type")
+    if isinstance(param_type, str):
+        return param_type
+    if isinstance(param_type, list):
+        values = ", ".join(str(value) for value in param_type)
+        return f"[{values}]"
+
+    param_range = param.get("range")
+    if isinstance(param_range, list) and len(param_range) == 2:
+        return f"range {param_range[0]} to {param_range[1]}"
+
+    return "(unspecified)"
 
 
 def html_param_table_row(f, param: Dict[str, Any], chapter_name: Optional[str]):
@@ -518,6 +569,7 @@ def html_param_table_row(f, param: Dict[str, Any], chapter_name: Optional[str]):
     def_filename = param.get("def_filename", "")
 
     impl_defs = filter_impldefs_for_chapter(impl_defs_all, chapter_name)
+    type_display = format_param_type_for_html(param)
 
     extension_names: List[str] = []
     for impl_def in impl_defs:
@@ -561,6 +613,7 @@ def html_param_table_row(f, param: Dict[str, Any], chapter_name: Optional[str]):
 
     f.write('            <tr>\n')
     f.write(f'              <td rowspan={row_span} id="{name}">{name}</td>\n')
+    f.write(f'              <td rowspan={row_span}>{type_display}</td>\n')
     f.write(f'              <td rowspan={row_span}>{extensions_str}</td>\n')
     f.write(f'              <td>{descriptions[0]}</td>\n')
     f.write('            </tr>\n')
