@@ -3,6 +3,7 @@
     {
       "name": "BOOLEAN",
       "def_filename": "test-ch1.yaml",
+      "chapter_name": "One",
       "type": "boolean",
       "json-schema": {
         "type": "boolean"
@@ -39,6 +40,7 @@
     {
       "name": "BIT",
       "def_filename": "test-ch1.yaml",
+      "chapter_name": "One",
       "type": "bit",
       "json-schema": {
         "type": "integer",
@@ -70,6 +72,7 @@
     {
       "name": "BYTE",
       "def_filename": "test-ch1.yaml",
+      "chapter_name": "One",
       "type": "byte",
       "json-schema": {
         "type": "integer",
@@ -101,6 +104,7 @@
     {
       "name": "HWORD",
       "def_filename": "test-ch1.yaml",
+      "chapter_name": "One",
       "type": "hword",
       "json-schema": {
         "type": "integer",
@@ -132,6 +136,7 @@
     {
       "name": "WORD",
       "def_filename": "test-ch1.yaml",
+      "chapter_name": "One",
       "type": "word",
       "json-schema": {
         "type": "integer",
@@ -163,6 +168,7 @@
     {
       "name": "DWORD",
       "def_filename": "test-ch1.yaml",
+      "chapter_name": "One",
       "type": "dword",
       "json-schema": {
         "type": "integer",
@@ -194,6 +200,7 @@
     {
       "name": "UINT6",
       "def_filename": "test-ch1.yaml",
+      "chapter_name": "One",
       "type": "uint6",
       "json-schema": {
         "type": "integer",
@@ -225,6 +232,7 @@
     {
       "name": "UINT32",
       "def_filename": "test-ch1.yaml",
+      "chapter_name": "One",
       "type": "uint32",
       "json-schema": {
         "type": "integer",
@@ -256,6 +264,7 @@
     {
       "name": "INT64",
       "def_filename": "test-ch1.yaml",
+      "chapter_name": "One",
       "type": "int64",
       "json-schema": {
         "type": "integer",
@@ -287,6 +296,7 @@
     {
       "name": "UINT_1TO100",
       "def_filename": "test-ch1.yaml",
+      "chapter_name": "One",
       "range": [
         1,
         100
@@ -321,6 +331,7 @@
     {
       "name": "LIST_STR",
       "def_filename": "test-ch1.yaml",
+      "chapter_name": "One",
       "type": [
         "ABC",
         "DEF",
@@ -359,6 +370,7 @@
     {
       "name": "LIST_INT",
       "def_filename": "test-ch1.yaml",
+      "chapter_name": "One",
       "type": [
         1,
         2,
@@ -398,6 +410,7 @@
     {
       "name": "ROSE_COLORS",
       "def_filename": "test-ch2.yaml",
+      "chapter_name": "Two",
       "type": [
         "RED",
         "PINK",
@@ -438,6 +451,7 @@
     {
       "name": "XLEN",
       "def_filename": "test-ch2.yaml",
+      "chapter_name": "Two",
       "type": [
         32,
         64
@@ -493,6 +507,7 @@
     {
       "name": "ASIDLEN1",
       "def_filename": "test-ch2.yaml",
+      "chapter_name": "Two",
       "range": [
         0,
         16
@@ -527,6 +542,7 @@
     {
       "name": "ASIDLEN2",
       "def_filename": "test-ch2.yaml",
+      "chapter_name": "Two",
       "range": [
         0,
         16
@@ -561,6 +577,7 @@
     {
       "name": "NO_IMPL_DEF",
       "def_filename": "test-ch2.yaml",
+      "chapter_name": "Two",
       "type": "bit",
       "json-schema": {
         "type": "integer",

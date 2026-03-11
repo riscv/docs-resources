@@ -10,17 +10,10 @@ from typing import Dict, List, Optional, Any, Tuple
 from def_text_to_html import (
     convert_def_text_to_html,
     tag2html_link,
-    LT_UNICODE_STR,
-    GT_UNICODE_STR,
-    MAX_TABLE_ROWS,
 )
 from tag_text_to_html import convert_tag_text_to_html
 
 PN = "create_normative_rules.py"
-
-# Global constants
-LT_UNICODE_DECIMAL = 60  # "<" Unicode decimal value
-GT_UNICODE_DECIMAL = 62  # ">" Unicode decimal value
 
 NORM_PREFIX = "norm:"
 

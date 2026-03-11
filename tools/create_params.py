@@ -306,7 +306,7 @@ def add_parameter_entries(
         out_entry: Dict[str, Any] = {
             "name": name,
             "def_filename": Path(def_filename).name,
-            "_chapter_name": chapter_name,
+            "chapter_name": chapter_name,
         }
 
         if has_type:
@@ -617,7 +617,6 @@ def html_param_table_row(f, param: Dict[str, Any], chapter_name: Optional[str]):
     note = param.get("note")
     description = param.get("description")
     impl_defs_all = param.get("impl-defs")
-    def_filename = param.get("def_filename", "")
 
     impl_defs = filter_impldefs_for_chapter(impl_defs_all, chapter_name)
     type_display = format_param_type_for_html(param)
@@ -650,9 +649,9 @@ def html_param_table_row(f, param: Dict[str, Any], chapter_name: Optional[str]):
             tag_name = tag.get("name")
             target_html_fname = tag.get("stds_doc_url")
             is_context = bool(tag.get("context", False))
-            html = convert_tag_text_to_html(tag_text, target_html_fname, is_context)
-            text_with_link = tag2html_link(tag_name, html, target_html_fname)
             if isinstance(tag_text, str):
+                html = convert_tag_text_to_html(tag_text, target_html_fname, is_context)
+                text_with_link = tag2html_link(tag_name, html, target_html_fname)
                 descriptions.append(text_with_link)
 
     if not descriptions:
@@ -684,7 +683,7 @@ def html_table_footer(f):
 
 def param_chapter_names(param: Dict[str, Any]) -> List[str]:
     """Return sorted unique chapter names referenced by a parameter's impl-defs."""
-    chapter_name = param.get("_chapter_name")
+    chapter_name = param.get("chapter_name")
     if isinstance(chapter_name, str):
         return [chapter_name]
 
