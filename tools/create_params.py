@@ -661,7 +661,10 @@ def html_param_table_row(f, param: Dict[str, Any], chapter_name: Optional[str]):
             is_context = bool(tag.get("context", False))
             if isinstance(tag_text, str):
                 html = convert_tag_text_to_html(tag_text, target_html_fname, is_context)
-                text_with_link = tag2html_link(tag_name, html, target_html_fname)
+                if re.search(r"<a\b", html):
+                    text_with_link = html
+                else:
+                    text_with_link = tag2html_link(tag_name, html, target_html_fname)
                 descriptions.append(text_with_link)
 
     if not descriptions:
