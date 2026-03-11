@@ -80,10 +80,7 @@
       "kind": "base",
       "impl-def-behavior": false,
       "instances": [
-        "RV32I",
-        "RV32E",
-        "RV64I",
-        "RV64E"
+        "Any"
       ],
       "tags": []
     },

@@ -31,7 +31,7 @@ normative_rule_definitions:
     instance: RV32I
   - name: all_bases
     kind: base
-    instances: [RV32I, RV32E, RV64I, RV64E]
+    instance: Any
   - name: clarification-without-text
     tag: "norm:clarification-without-text"
     clarification-link: https://www.github.com/riscv/jfkd/issues/67
