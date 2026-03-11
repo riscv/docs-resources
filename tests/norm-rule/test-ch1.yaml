@@ -29,9 +29,10 @@ normative_rule_definitions:
   - name: one_base
     kind: base
     instance: RV32I
-  - name: all_bases
+  - name: ALL_BASES
     kind: base
     instance: Any
+    tag: "norm:all-bases"
   - name: clarification-without-text
     tag: "norm:clarification-without-text"
     clarification-link: https://www.github.com/riscv/jfkd/issues/67

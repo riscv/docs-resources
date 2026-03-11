@@ -522,7 +522,7 @@ def html_head(f, table_names: List[str]):
     .sticky-caption{position:sticky;top:0;background:#fff;padding:8px 0;z-index:1}
     .col-name{width:18%}
     .col-type{width:22%}
-    .col-extensions{width:18%}
+    .col-bases-extensions{width:18%}
     .col-descriptions{width:42%}
     @media (max-width: 1000px){
       .app{grid-template-columns:1fr}
@@ -596,11 +596,11 @@ def html_table_header(f, table_name: str, table_caption: str):
     f.write('          <colgroup>\n')
     f.write('            <col class="col-name">\n')
     f.write('            <col class="col-type">\n')
-    f.write('            <col class="col-extensions">\n')
+    f.write('            <col class="col-bases-extensions">\n')
     f.write('            <col class="col-descriptions">\n')
     f.write('          </colgroup>\n')
     f.write('          <thead>\n')
-    f.write('            <tr><th>Parameter Name</th><th>Type</th><th>Extension(s)</th><th>Description(s)</th></tr>\n')
+    f.write('            <tr><th>Parameter Name</th><th>Type</th><th>Bases/Extensions</th><th>Description(s)</th></tr>\n')
     f.write('          </thead>\n')
     f.write('          <tbody>\n')
 
@@ -631,15 +631,15 @@ def html_param_table_row(f, param: Dict[str, Any], chapter_name: Optional[str]):
     impl_defs = filter_impldefs_for_chapter(impl_defs_all, chapter_name)
     type_display = format_param_type_for_html(param)
 
-    extension_names: List[str] = []
+    base_extension_names: List[str] = []
     for impl_def in impl_defs:
         if not isinstance(impl_def, dict):
             continue
         instances = impl_def.get("instances")
         if isinstance(instances, list):
             for instance in instances:
-                if isinstance(instance, str) and instance not in extension_names:
-                    extension_names.append(instance)
+                if isinstance(instance, str) and instance not in base_extension_names:
+                    base_extension_names.append(instance)
 
     descriptions: List[str] = []
     if isinstance(note, str):
@@ -674,14 +674,14 @@ def html_param_table_row(f, param: Dict[str, Any], chapter_name: Optional[str]):
     if not descriptions:
         descriptions.append("(No description available)")
 
-    extensions_str = ", ".join(extension_names) if extension_names else "(none)"
+    base_extension_str = ", ".join(base_extension_names) if base_extension_names else "(none)"
 
     row_span = len(descriptions)
 
     f.write('            <tr>\n')
     f.write(f'              <td rowspan={row_span} id="{name}">{name}</td>\n')
     f.write(f'              <td rowspan={row_span}>{type_display}</td>\n')
-    f.write(f'              <td rowspan={row_span}>{extensions_str}</td>\n')
+    f.write(f'              <td rowspan={row_span}>{base_extension_str}</td>\n')
     f.write(f'              <td>{descriptions[0]}</td>\n')
     f.write('            </tr>\n')
 

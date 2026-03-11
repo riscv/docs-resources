@@ -74,7 +74,7 @@
       "tags": []
     },
     {
-      "name": "all_bases",
+      "name": "ALL_BASES",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
       "chapter_name": "One",
       "kind": "base",
@@ -82,7 +82,15 @@
       "instances": [
         "Any"
       ],
-      "tags": []
+      "tags": [
+        {
+          "name": "norm:all-bases",
+          "context": false,
+          "text": "Everyone loves RISC-V!",
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
+        }
+      ]
     },
     {
       "name": "clarification-without-text",

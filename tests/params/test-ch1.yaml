@@ -42,3 +42,6 @@ parameter_definitions:
   - name: LIST_INT
     impl-def: LIST_INT
     type: [1, 2, 4]
+  - name: ALL_BASES
+    impl-def: ALL_BASES
+    type: int2

@@ -33,7 +33,7 @@
     .sticky-caption{position:sticky;top:0;background:#fff;padding:8px 0;z-index:1}
     .col-name{width:18%}
     .col-type{width:22%}
-    .col-extensions{width:18%}
+    .col-bases-extensions{width:18%}
     .col-descriptions{width:42%}
     @media (max-width: 1000px){
       .app{grid-template-columns:1fr}
@@ -47,25 +47,25 @@
     <aside class="sidebar">
       <h2>Parameters by Chapter</h2>
       <nav class="nav">
-        <a href="#table-params-ch-1" data-target="table-params-ch-1">One<span class="subtitle">12 entries</span></a>
+        <a href="#table-params-ch-1" data-target="table-params-ch-1">One<span class="subtitle">13 entries</span></a>
         <a href="#table-params-ch-2" data-target="table-params-ch-2">Two<span class="subtitle">5 entries</span></a>
       </nav>
     </aside>
     <main>
       <style>.grand-total-heading { font-size: 24px; font-weight: bold; }</style>
-      <h1 class="grand-total-heading">17 Parameters</h1>
+      <h1 class="grand-total-heading">18 Parameters</h1>
 
       <section id="table-params-ch-1" class="section">
         <table>
-          <caption class="sticky-caption">Chapter One: 12 Parameters</caption>
+          <caption class="sticky-caption">Chapter One: 13 Parameters</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-type">
-            <col class="col-extensions">
+            <col class="col-bases-extensions">
             <col class="col-descriptions">
           </colgroup>
           <thead>
-            <tr><th>Parameter Name</th><th>Type</th><th>Extension(s)</th><th>Description(s)</th></tr>
+            <tr><th>Parameter Name</th><th>Type</th><th>Bases/Extensions</th><th>Description(s)</th></tr>
           </thead>
           <tbody>
             <tr>
@@ -143,6 +143,12 @@
               <td rowspan=1>Zch1-A, Zch1-B</td>
               <td><a href="test-ch1.html#norm:list-int">This is a list with values 1, 2 and 4.</a></td>
             </tr>
+            <tr>
+              <td rowspan=1 id="ALL_BASES">ALL_BASES</td>
+              <td rowspan=1>int2</td>
+              <td rowspan=1>Any</td>
+              <td><a href="test-ch1.html#norm:all-bases">Everyone loves RISC-V!</a></td>
+            </tr>
           </tbody>
         </table>
       </section>
@@ -153,11 +159,11 @@
           <colgroup>
             <col class="col-name">
             <col class="col-type">
-            <col class="col-extensions">
+            <col class="col-bases-extensions">
             <col class="col-descriptions">
           </colgroup>
           <thead>
-            <tr><th>Parameter Name</th><th>Type</th><th>Extension(s)</th><th>Description(s)</th></tr>
+            <tr><th>Parameter Name</th><th>Type</th><th>Bases/Extensions</th><th>Description(s)</th></tr>
           </thead>
           <tbody>
             <tr>
