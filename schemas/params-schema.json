@@ -60,9 +60,6 @@
             ]
           }
         ],
-        "dependencies": {
-          "tag_filename": ["stds_doc_url"]
-        },
         "additionalProperties": false
       }
     }
