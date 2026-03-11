@@ -1,0 +1,75 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Schema for parameter definitions input files",
+  "type": "object",
+
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "chapter_name": {
+      "type": "string",
+      "description": "Name of chapter (keep it short) in standards document associated with parameter definitions"
+    },
+    "parameter_definitions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "param-common-schema.json#/paramName",
+            "description": "Single parameter name"
+          },
+          "names": {
+            "$ref": "param-common-schema.json#/paramNameArray",
+            "description": "Multiple parameter names"
+          },
+          "note": {
+            "type": "string",
+            "$ref": "param-common-schema.json#/noteDesc"
+          },
+          "description": {
+            "type": "string",
+            "$ref": "param-common-schema.json#/descriptionDesc"
+          },
+          "impl-def": {
+            "$ref": "param-common-schema.json#/implDefName",
+            "description": "Name of implementation-defined behavior"
+          },
+          "impl-defs": {
+            "$ref": "param-common-schema.json#/implDefNameArray",
+            "description": "List of implementation-defined behaviors"
+          },
+          "type": {
+            "$ref": "param-common-schema.json#/paramType"
+          },
+          "range": {
+            "$ref": "param-common-schema.json#/paramRange"
+          }
+        },
+        "allOf": [
+          {
+            "oneOf": [
+              { "required": ["type"] },
+              { "required": ["range"] }
+            ]
+          },
+          {
+            "oneOf": [
+              { "required": ["name"] },
+              { "required": ["names"] }
+            ]
+          },
+          {
+            "not": {
+              "required": ["impl-def", "impl-defs"]
+            }
+          }
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["$schema", "chapter_name", "parameter_definitions"],
+  "additionalProperties": false
+}

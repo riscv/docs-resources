@@ -167,3 +167,65 @@ normative_rule_definitions:
     tag: "norm:description-list:anchors-in-items:entire-list"
   - names: [desc3, desc4]
     tags: ["norm:description-list:anchors-in-items:item1", "norm:description-list:anchors-in-items:item3"]
+
+  # Implementation-defined behaviors (rules that allow choices)
+  - name: BOOLEAN
+    tags: [name: "norm:boolean", {name: "norm:boolean-context", context: true}]
+    impl-def-behavior: true
+    kind: extension
+    instance: Zch1-A
+  - name: BIT
+    tag: "norm:bit"
+    impl-def-behavior: true
+    kind: extension
+    instance: Zch1-A
+  - name: BYTE
+    tag: "norm:byte"
+    impl-def-behavior: true
+    kind: extension
+    instance: Zch1-A
+  - name: HWORD
+    tag: "norm:hword"
+    impl-def-behavior: true
+    kind: extension
+    instance: Zch1-A
+  - name: WORD
+    tag: "norm:word"
+    impl-def-behavior: true
+    kind: extension
+    instance: Zch1-A
+  - name: DWORD
+    tag: "norm:dword"
+    impl-def-behavior: true
+    kind: extension
+    instance: Zch1-A
+  - name: UINT6
+    tag: "norm:uint6"
+    impl-def-behavior: true
+    kind: extension
+    instance: Zch1-A
+  - name: UINT32
+    tag: "norm:uint32"
+    impl-def-behavior: true
+    instance: Zch1-A
+    kind: extension
+  - name: INT64
+    tag: "norm:int64"
+    impl-def-behavior: true
+    kind: extension
+    instance: Zch1-B
+  - name: UINT_1TO100
+    tag: "norm:uint-1to100"
+    impl-def-behavior: true
+    kind: extension
+    instance: Zch1-B
+  - name: LIST_STR
+    tag: "norm:list-str"
+    impl-def-behavior: true
+    kind: extension
+    instance: Zch1-B
+  - name: LIST_INT
+    tag: "norm:list-int"
+    impl-def-behavior: true
+    kind: extension
+    instances: [Zch1-A, Zch1-B]

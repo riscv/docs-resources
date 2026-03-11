@@ -7,19 +7,15 @@ import re
 import argparse
 from pathlib import Path
 from typing import Dict, List, Optional, Any, Tuple
+from def_text_to_html import (
+    convert_def_text_to_html,
+    tag2html_link,
+)
+from tag_text_to_html import convert_tag_text_to_html
 
 PN = "create_normative_rules.py"
 
-# Global constants
-LT_UNICODE_DECIMAL = 60  # "<" Unicode decimal value
-GT_UNICODE_DECIMAL = 62  # ">" Unicode decimal value
-
-LT_UNICODE_STR = f"&#{LT_UNICODE_DECIMAL};"  # "<" Unicode string
-GT_UNICODE_STR = f"&#{GT_UNICODE_DECIMAL};"  # ">" Unicode string
-
 NORM_PREFIX = "norm:"
-
-MAX_TABLE_ROWS = 12  # Max rows of a table displayed in a cell.
 
 # Names/prefixes for tables in HTML output.
 NORM_RULES_CH_TABLE_NAME_PREFIX = "table-norm-rules-ch-"
@@ -581,179 +577,6 @@ def validate_defs_and_tags(defs: NormativeRuleDefs, tags: NormativeTags, warn_if
 
     if (missing_tag_cnt > 0) or (bad_norm_rule_name_cnt > 0) or ((unref_cnt > 0) and not warn_if_tags_no_rules):
         fatal("Exiting due to errors")
-
-
-class Adoc2HTML:
-    """Convert AsciiDoc formatting to HTML."""
-
-    @staticmethod
-    def constrained_format_pattern(text: str, delimiter: str, recursive: bool,
-                                   transform_func) -> str:
-        """Apply constrained formatting pair transformation.
-
-        Single delimiter, bounded by whitespace/punctuation
-        Example: "That is *strong* stuff!" or "This is *strong*!"
-        """
-        escaped_delimiter = re.escape(delimiter)
-        # (?:^|\s) - start of line or space before
-        # \K would be used in perl - in Python we use a capture group
-        # Single opening mark, text that doesn't start/end with space, single closing mark
-        # Followed by punctuation, space, or end of line
-        pattern = rf'(^|\s){escaped_delimiter}(\S(?:(?!\s).*?(?<!\s))?){escaped_delimiter}(?=[,;".?!\s]|$)'
-
-        def replacer(match):
-            prefix = match.group(1)
-            content = match.group(2)
-            if recursive:
-                content = Adoc2HTML.convert_nested(content)
-            return prefix + transform_func(content)
-
-        return re.sub(pattern, replacer, text)
-
-    @staticmethod
-    def unconstrained_format_pattern(text: str, delimiter: str, recursive: bool,
-                                    transform_func) -> str:
-        """Apply unconstrained formatting pair transformation.
-
-        Double delimiter, can be used anywhere
-        Example: "Sara**h**" or "**man**ual"
-        """
-        escaped_delimiter = re.escape(delimiter)
-        pattern = rf'{escaped_delimiter}{{2}}(.+?){escaped_delimiter}{{2}}'
-
-        def replacer(match):
-            content = match.group(1)
-            if recursive:
-                content = Adoc2HTML.convert_nested(content)
-            return transform_func(content)
-
-        return re.sub(pattern, replacer, text)
-
-    @staticmethod
-    def continuous_format_pattern(text: str, delimiter: str, transform_func) -> str:
-        """Apply superscript/subscript formatting transformation.
-
-        Single delimiter, can be used anywhere, but text must be continuous (no spaces)
-        Example: "2^32^" or "X~i~"
-        """
-        escaped_delimiter = re.escape(delimiter)
-        pattern = rf'{escaped_delimiter}(\S+?){escaped_delimiter}'
-
-        def replacer(match):
-            content = match.group(1)
-            return transform_func(content)
-
-        return re.sub(pattern, replacer, text)
-
-    @staticmethod
-    def convert_nested(text: str) -> str:
-        """Convert formatting within already-captured content."""
-        result = text
-        # Process unconstrained first (double delimiters)
-        result = Adoc2HTML.unconstrained_format_pattern(result, "*", True, lambda c: f"<b>{c}</b>")
-        result = Adoc2HTML.unconstrained_format_pattern(result, "_", True, lambda c: f"<i>{c}</i>")
-        result = Adoc2HTML.unconstrained_format_pattern(result, "`", True, lambda c: f"<code>{c}</code>")
-        # Then process constrained (single delimiters)
-        result = Adoc2HTML.constrained_format_pattern(result, "*", True, lambda c: f"<b>{c}</b>")
-        result = Adoc2HTML.constrained_format_pattern(result, "_", True, lambda c: f"<i>{c}</i>")
-        result = Adoc2HTML.constrained_format_pattern(result, "`", True, lambda c: f"<code>{c}</code>")
-        return result
-
-    @staticmethod
-    def convert_unconstrained(text: str) -> str:
-        """Convert unconstrained bold, italics, and monospace notation."""
-        text = Adoc2HTML.unconstrained_format_pattern(text, "*", True, lambda c: f"<b>{c}</b>")
-        text = Adoc2HTML.unconstrained_format_pattern(text, "_", True, lambda c: f"<i>{c}</i>")
-        text = Adoc2HTML.unconstrained_format_pattern(text, "`", True, lambda c: f"<code>{c}</code>")
-        return text
-
-    @staticmethod
-    def convert_constrained(text: str) -> str:
-        """Convert constrained bold, italics, and monospace notation."""
-        text = Adoc2HTML.constrained_format_pattern(text, "*", True, lambda c: f"<b>{c}</b>")
-        text = Adoc2HTML.constrained_format_pattern(text, "_", True, lambda c: f"<i>{c}</i>")
-        text = Adoc2HTML.constrained_format_pattern(text, "`", True, lambda c: f"<code>{c}</code>")
-        return text
-
-    @staticmethod
-    def convert_superscript(text: str) -> str:
-        """Convert superscript notation: 2^32^ -> 2<sup>32</sup>"""
-        return Adoc2HTML.continuous_format_pattern(text, "^", lambda c: f"<sup>{c}</sup>")
-
-    @staticmethod
-    def convert_subscript(text: str) -> str:
-        """Convert subscript notation: X~i~ -> X<sub>i</sub>"""
-        return Adoc2HTML.continuous_format_pattern(text, "~", lambda c: f"<sub>{c}</sub>")
-
-    @staticmethod
-    def convert_underline(text: str) -> str:
-        """Convert underline notation: [.underline]#text# -> <span class="underline">text</span>"""
-        return re.sub(r'\[\.underline\]#([^#]+)#', r'<span class="underline">\1</span>', text)
-
-    @staticmethod
-    def convert_extra_amp(text: str) -> str:
-        """Convert escaped ampersands back to normal entity format."""
-        # Sometimes the tags backend converts "&foo;" to "&amp;foo;". Convert it to "&foo;".
-        text = re.sub(r'&amp;(\w+);', r'&\1;', text)
-
-        # Sometimes the tags backend converts "&#8800;" to "&amp;#8800;". Convert it to "&#8800;".
-        text = re.sub(r'&amp;#(\d+);', r'&#\1;', text)
-
-        # And now handle the hexadecimal variant.
-        text = re.sub(r'&amp;#x([0-9a-fA-F]+);', r'&#x\1;', text)
-
-        return text
-
-    @staticmethod
-    def convert_unicode_names(text: str) -> str:
-        """Convert unicode character entity names to numeric codes."""
-        entities = {
-            'ge': 8805,    # ≥ greater than or equal
-            'le': 8804,    # ≤ less than or equal
-            'ne': 8800,    # ≠ not equal
-            'equiv': 8801, # ≡ equivalent
-            'lt': LT_UNICODE_DECIMAL,      # < less than
-            'gt': GT_UNICODE_DECIMAL,      # > greater than
-            'amp': 38,     # & ampersand
-            'quot': 34,    # " quote
-            'apos': 39,    # ' apostrophe
-            'nbsp': 160,   # non-breaking space
-            'times': 215,  # × multiplication
-            'divide': 247, # ÷ division
-            'plusmn': 177, # ± plus-minus
-            'deg': 176,    # ° degree
-            'micro': 181,  # µ micro
-            'para': 182,   # ¶ paragraph
-            'middot': 183, # · middle dot
-            'raquo': 187,  # » right angle quote
-            'laquo': 171,  # « left angle quote
-            'frac12': 189, # ½ one half
-            'frac14': 188, # ¼ one quarter
-            'frac34': 190, # ¾ three quarters
-        }
-
-        def replacer(match):
-            entity_name = match.group(1)
-            if entity_name in entities:
-                return f"&#{entities[entity_name]};"
-            else:
-                # Leave unknown entities as-is
-                return f"&{entity_name};"
-
-        return re.sub(r'&(\w+);', replacer, text)
-
-    @staticmethod
-    def convert(text: str) -> str:
-        """Apply all format conversions (keeping numeric entities)."""
-        result = text
-        result = Adoc2HTML.convert_unconstrained(result)
-        result = Adoc2HTML.convert_constrained(result)
-        result = Adoc2HTML.convert_superscript(result)
-        result = Adoc2HTML.convert_subscript(result)
-        result = Adoc2HTML.convert_underline(result)
-        result = Adoc2HTML.convert_extra_amp(result)
-        result = Adoc2HTML.convert_unicode_names(result)
-        return result
 
 
 def output_json(filename: str, normative_rules_hash: Dict[str, List[Dict[str, Any]]]):
@@ -1352,16 +1175,7 @@ def html_table_row(f, nr: NormativeRuleDef, name_is_anchor: bool, omit: Dict[str
         if target_html_fname is None:
             fatal(f"No fname tag to HTML mapping (-tag2url cmd line arg) for tag fname {tag.tag_filename} for tag name {tag.name}")
 
-        tag_text = convert_newlines_to_html(convert_tags_tables_to_html(Adoc2HTML.convert(tag.text)))
-
-        # Convert adoc links to HTML links.
-        tag_text = convert_adoc_links_to_html(tag_text, target_html_fname)
-
-        if tag_text.strip() == "":
-            tag_text = "(No text available)"
-
-        if tag_ref.is_context():
-            tag_text = "[CONTEXT] " + tag_text
+        tag_text = convert_tag_text_to_html(tag.text, target_html_fname, tag_ref.is_context())
 
         tag_link = tag2html_link(tag_ref.name, tag_ref.name, target_html_fname)
 
@@ -1394,21 +1208,6 @@ def html_table_footer(f):
     f.write('          </tbody>\n')
     f.write('        </table>\n')
     f.write('      </section>\n')
-
-
-def tag2html_link(tag_ref: str, link_text: str, target_html_fname: Optional[str] = None) -> str:
-    """Create HTML link to tag. If no target_html_fname is provided, assumes anchor is in same HTML file as link."""
-    if not isinstance(tag_ref, str):
-        fatal(f"Expected String for tag_ref but was passed a {type(tag_ref).__name__}")
-    if not isinstance(link_text, str):
-        fatal(f"Expected String for link_text but was passed a {type(link_text).__name__}")
-    if target_html_fname is not None and not isinstance(target_html_fname, str):
-        fatal(f"Expected String for target_html_fname but was passed a {type(target_html_fname).__name__}")
-
-    if target_html_fname is None:
-        target_html_fname = ""
-
-    return f'<a href="{target_html_fname}#{tag_ref}">{link_text}</a>'
 
 
 def html_script(f):
@@ -1506,122 +1305,6 @@ def count_impldef_cats(nrs: List[NormativeRuleDef], impldef_cat: str) -> int:
             count += 1
 
     return count
-
-
-def convert_def_text_to_html(text: str) -> str:
-    """Convert all the various definition text formats to HTML."""
-    if not isinstance(text, str):
-        raise TypeError(f"Expected String for text but was passed a {type(text).__name__}")
-
-    text = Adoc2HTML.convert(text)
-    text = convert_tags_tables_to_html(text)
-    text = convert_newlines_to_html(text)
-    text= convert_adoc_links_to_html(text)
-
-    return text
-
-
-def convert_tags_tables_to_html(text: str) -> str:
-    """Convert the tagged text containing entire tables. Uses format created by "tags" Asciidoctor backend."""
-    if not isinstance(text, str):
-        raise TypeError(f"Expected String for text but was passed a {type(text).__name__}")
-
-    def replacer(match):
-        # Found a "tags" formatted table
-        heading = match.group(1).rstrip('\n')
-        rows_text = match.group(2)
-        rows = rows_text.split("¶")  # Split into list of rows
-
-        ret = "<table>"  # Start html table
-
-        # Add heading if present
-        heading_cells = extract_tags_table_cells(heading)
-        if heading_cells:
-            ret += "<thead>"
-            ret += "<tr>"
-            ret += "".join(f"<th>{cell}</th>" for cell in heading_cells)
-            ret += "</tr>"
-            ret += "</thead>"
-
-        # Add each row
-        ret += "<tbody>"
-        for index, row in enumerate(rows):
-            if index < MAX_TABLE_ROWS:
-                ret += "<tr>"
-                row_cells = extract_tags_table_cells(row)
-                ret += "".join(f"<td>{cell}</td>" for cell in row_cells)
-                ret += "</tr>"
-            elif index == MAX_TABLE_ROWS:
-                ret += "<tr>"
-                row_cells = extract_tags_table_cells(row)
-                ret += "".join("<td>...</td>" for _ in row_cells)
-                ret += "</tr>"
-
-        ret += "</tbody>"
-        ret += "</table>"  # End html table
-
-        return ret
-
-    pattern = r'(.*?)===\n(.+)\n==='
-    return re.sub(pattern, replacer, text, flags=re.DOTALL)
-
-
-def extract_tags_table_cells(row: str) -> List[str]:
-    """Return list of table columns from one row/header of a table.
-
-    Returns empty list if row is None or the empty string.
-    """
-    if not isinstance(row, str):
-        raise TypeError(f"Expected String for row but was passed a {type(row).__name__}")
-
-    if not row:
-        return []
-
-    # Split row fields with pipe symbol. The -1 passed to split ensures trailing null fields are not suppressed.
-    return [cell.strip() for cell in row.split('|')]
-
-
-def convert_newlines_to_html(text: str) -> str:
-    """Convert newlines to <br>."""
-    if not isinstance(text, str):
-        raise TypeError(f"Expected String for text but was passed a {type(text).__name__}")
-
-    return text.replace('\n', '<br>')
-
-
-def convert_adoc_links_to_html(text: str, target_html_fname: Optional[str] = None) -> str:
-    """Convert adoc links to HTML links.
-
-    Supported adoc link formats:
-        <<link>>
-        <<link,custom text>>
-
-    If target_html_fname is not provided, link will assume anchor is in the same HTML file as the link.
-    """
-    if not isinstance(text, str):
-        raise TypeError(f"Passed class {type(text).__name__} for text but require String")
-    if target_html_fname is not None and not isinstance(target_html_fname, str):
-        raise TypeError(f"Passed class {type(target_html_fname).__name__} for target_html_fname but require String")
-
-    def replacer(match):
-        link_content = match.group(2)
-
-        # Look to see if custom text has been provided.
-        split_texts = [t.strip() for t in link_content.split(",")]
-
-        if len(split_texts) == 0:
-            raise ValueError(f"Hyperlink '{link_content}' is empty")
-        elif len(split_texts) == 1:
-            return tag2html_link(split_texts[0], split_texts[0], target_html_fname)
-        elif len(split_texts) == 2:
-            return tag2html_link(split_texts[0], split_texts[1], target_html_fname)
-        else:
-            raise ValueError(f"Hyperlink '{link_content}' contains too many commas")
-
-    # Note that I'm using the non-greedy regular expression (? after +) otherwise the regular expression
-    # will return multiple <<link>> in the same text as one.
-    pattern = rf'(<<|{re.escape(LT_UNICODE_STR)}{re.escape(LT_UNICODE_STR)})(.+?)(>>|{re.escape(GT_UNICODE_STR)}{re.escape(GT_UNICODE_STR)})'
-    return re.sub(pattern, replacer, text)
 
 
 def main():

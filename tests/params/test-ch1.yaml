@@ -1,0 +1,44 @@
+---
+# yaml-language-server: $schema=../../schemas/param-defs-schema.json
+
+$schema: "../../schemas/param-defs-schema.json#"
+
+chapter_name: One
+
+parameter_definitions:
+  - name: BOOLEAN
+    impl-def: BOOLEAN
+    type: boolean
+  - name: BIT
+    impl-def: BIT
+    type: bit
+  - name: BYTE
+    impl-def: BYTE
+    type: byte
+  - name: HWORD
+    impl-def: HWORD
+    type: hword
+  - name: WORD
+    impl-def: WORD
+    type: word
+  - name: DWORD
+    impl-def: DWORD
+    type: dword
+  - name: UINT6
+    impl-def: UINT6
+    type: uint6
+  - name: UINT32
+    impl-def: UINT32
+    type: uint32
+  - name: INT64
+    impl-def: INT64
+    type: int64
+  - name: UINT_1TO100
+    impl-def: UINT_1TO100
+    range: [1, 100]
+  - name: LIST_STR
+    impl-def: LIST_STR
+    type: [ABC, DEF, GHI]
+  - name: LIST_INT
+    impl-def: LIST_INT
+    type: [1, 2, 4]

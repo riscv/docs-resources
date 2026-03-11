@@ -1,0 +1,69 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Schema for params.json",
+  "type": "object",
+
+  "properties": {
+    "parameters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+           "type": "string",
+           "description": "Parameter name"
+          },
+          "def_filename": {
+            "type": "string",
+            "description": "Parameter definition file that defines this parameter"
+          },
+          "chapter_name": {
+            "type": "string",
+            "description": "Parameters for specified chapter in standards document"
+          },
+          "note": {
+            "type": "string",
+            "$ref": "param-common-schema.json#/noteDesc"
+          },
+          "description": {
+            "type": "string",
+            "$ref": "param-common-schema.json#/descriptionDesc"
+          },
+          "type": {
+            "$ref": "param-common-schema.json#/paramType"
+          },
+          "range": {
+            "$ref": "param-common-schema.json#/paramRange"
+          },
+          "json-schema": {
+            "type": "object",
+            "description": "JSON Schema equivalent of the type or range property"
+          },
+          "impl-defs": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "norm-rules-schema.json#/definitions/normativeRuleEntry"
+                }
+              },
+              { "$ref": "param-common-schema.json#/implDefBehaviorDesc" }
+            ]
+          }
+        },
+        "required": ["name", "def_filename", "chapter_name", "json-schema"],
+        "allOf": [
+          {
+            "oneOf": [
+              { "required": ["type"] },
+              { "required": ["range"] }
+            ]
+          }
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["parameters"],
+  "additionalProperties": false
+}

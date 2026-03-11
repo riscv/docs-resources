@@ -50,7 +50,20 @@
     "norm:description-list:no-anchors-in-items:entire-list": "Description-A\nItem A\nDescription-B\nItem B\nDescription-C\nItem C",
     "norm:description-list:anchors-in-items:entire-list": "Description-1",
     "norm:description-list:anchors-in-items:item1": "Item 1",
-    "norm:description-list:anchors-in-items:item3": "Item 3"
+    "norm:description-list:anchors-in-items:item3": "Item 3",
+    "norm:boolean": "This is a boolean.",
+    "norm:bit": "This is a bit.",
+    "norm:byte": "This is a byte.",
+    "norm:hword": "This is a half-word (16 bits).",
+    "norm:word": "This is a word (32 bits).",
+    "norm:dword": "This is a double-word (64 bits).",
+    "norm:boolean-context": "Here&#8217;s some context for the boolean.",
+    "norm:uint6": "This is a 6-bit unsigned integer.",
+    "norm:uint32": "This is a 32-bit unsigned integer. Should be 0 to &amp;lt; 2^32^-1. Need to use inline anchor to see superscript.",
+    "norm:int64": "This is a 64-bit signed integer.",
+    "norm:uint-1to100": "This is an unsigned integer in the range of 1 to 100.",
+    "norm:list-str": "Name|Description\n===\nABC|Letters \"ABC\"¶DEF|Letters \"DEF\"¶GHI|Letters \"GHI\"\n===",
+    "norm:list-int": "This is a list with values 1, 2 and 4."
   },
   "sections": {
     "title": "",
@@ -162,6 +175,26 @@
           }
         ],
         "tags": []
+      },
+      {
+        "title": "Chapter 2 - Implementation-Defined Behaviors",
+        "id": "_chapter_2_implementation_defined_behaviors",
+        "children": [],
+        "tags": [
+          "norm:boolean",
+          "norm:bit",
+          "norm:byte",
+          "norm:hword",
+          "norm:word",
+          "norm:dword",
+          "norm:boolean-context",
+          "norm:uint6",
+          "norm:uint32",
+          "norm:int64",
+          "norm:uint-1to100",
+          "norm:list-str",
+          "norm:list-int"
+        ]
       }
     ],
     "tags": []

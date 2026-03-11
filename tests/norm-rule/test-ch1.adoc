@@ -264,3 +264,52 @@ Description-3::
 // PASSES - Tag includes list item
 [[norm:description-list:anchors-in-items:item3]]
 Item 3
+
+== Chapter 2 - Implementation-Defined Behaviors
+
+[[norm:boolean]]
+This is a boolean.
+
+[[norm:bit]]
+This is a bit.
+
+[[norm:byte]]
+This is a byte.
+
+[[norm:hword]]
+This is a half-word (16 bits).
+
+[[norm:word]]
+This is a word (32 bits).
+
+[[norm:dword]]
+This is a double-word (64 bits).
+
+[[norm:boolean-context]]
+Here's some context for the boolean.
+
+[[norm:uint6]]
+This is a 6-bit unsigned integer.
+
+[#norm:uint32]#This is a 32-bit unsigned integer. Should be 0 to &lt; 2^32^-1. Need to use inline anchor to see superscript.#
+
+[[norm:int32]]
+
+[[norm:int64]]
+This is a 64-bit signed integer.
+
+[[norm:uint-1to100]]
+This is an unsigned integer in the range of 1 to 100.
+
+[[norm:list-str]]
+[cols="1,1"]
+|===
+| Name | Description
+
+|ABC | Letters "ABC"
+|DEF | Letters "DEF"
+|GHI | Letters "GHI"
+|===
+
+[[norm:list-int]]
+This is a list with values 1, 2 and 4.
