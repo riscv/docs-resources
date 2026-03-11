@@ -235,11 +235,21 @@ def param_type_to_json_schema(
     m = re.match(r'^uint(\d+)$', param_type)
     if m:
         n = int(m.group(1))
+        if n < 2 or n > 64:
+            fatal(
+                f"Parameter {name} in {def_filename} has invalid unsigned width {n} "
+                f"for type {param_type!r} (expected 2–64 bits)"
+            )
         return {"type": "integer", "minimum": 0, "maximum": (1 << n) - 1}
 
     m = re.match(r'^int(\d+)$', param_type)
     if m:
         n = int(m.group(1))
+        if n < 2 or n > 64:
+            fatal(
+                f"Parameter {name} in {def_filename} has invalid signed width {n} "
+                f"for type {param_type!r} (expected 2–64 bits)"
+            )
         return {"type": "integer", "minimum": -(1 << (n - 1)), "maximum": (1 << (n - 1)) - 1}
 
     fatal(f"Parameter {name} in {def_filename} has unrecognized type {param_type!r}")
