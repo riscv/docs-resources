@@ -50,11 +50,11 @@ Paragraph Z
 
 === Chapter 2.2 - Implementation-Defined Rules
 
-[[norm:ROSE_COLORS]]
-You can use red or yellow roses.
+[#norm:ROSE_COLORS]#You can use red or yellow roses. The tags backend removes some adoc formating so I don't see *bold* text but I can see ^superscript^ as long as I use the inline anchor and not the paragraph anchor.#
 
 [[norm:XLEN]]
 We use the term XLEN to refer to the width of an integer register in bits (either 32 or 64).
+No ^superscript^ in paragraph anchors for some reason.
 
 [[norm:ASIDLEN]]
 The number of ASID bits is UNSPECIFIED and may be zero. The number of implemented ASID bits, termed ASIDLEN, may be determined by writing one to every bit position in the ASID field, then reading back the value in satp to see which bit positions in the ASID field hold a one.

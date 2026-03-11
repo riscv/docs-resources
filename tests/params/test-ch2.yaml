@@ -1,0 +1,18 @@
+---
+# yaml-language-server: $schema=../../schemas/param-defs-schema.json
+
+$schema: "../../schemas/param-defs-schema.json#"
+
+chapter_name: Two
+
+parameter_definitions:
+  - name: ROSE_COLORS
+    impl-def: ROSE_COLORS
+    note: This is a note about the ROSE_COLORS parameter.
+    description: This is a description about the ROSE_COLORS parameter. Here's some *bold text*.
+  - name: XLEN
+    impl-defs: [XLEN1, XLEN2]
+  - names: [ASIDLEN1, ASIDLEN2]
+    impl-def: ASIDLEN
+  - name: NO_IMPL_DEF
+    note: This is a note for a parameter without any implementation-defined behavior. Here's an 2^32^ exponent.

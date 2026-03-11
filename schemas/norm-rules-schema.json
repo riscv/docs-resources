@@ -1,157 +1,163 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Schema for norm-rules.json in build directory. Created by build-norm-rules Makefile target.",
+  "title": "Schema for norm-rules.json",
   "type": "object",
+
+  "definitions": {
+    "normativeRuleEntry": {
+      "type": "object",
+      "properties": {
+        "name": {
+         "type": "string",
+         "description": "Normative rule name"
+        },
+        "def_filename": {
+          "type": "string",
+          "description": "Normative rule definition file that defines this rule"
+        },
+        "chapter_name": {
+          "type": "string",
+          "description": "Normative rules for specified chapter in standards document"
+        },
+        "summary": {
+          "type": "string",
+          "$ref": "common-schema.json#/summaryDesc"
+        },
+        "note": {
+          "type": "string",
+          "$ref": "common-schema.json#/noteDesc"
+        },
+        "clarification-text": {
+          "type": "string",
+          "$ref": "common-schema.json#/clarificationTextDesc"
+        },
+        "clarification-link": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://(www.)?github.com/riscv/.+/issues/[0-9]+$",
+          "$ref": "common-schema.json#/clarificationLinkDesc"
+        },
+        "description": {
+          "type": "string",
+          "$ref": "common-schema.json#/descriptionDesc"
+        },
+        "kind": {
+          "allOf": [
+            { "$ref": "common-schema.json#/stdsObjectKind" },
+            { "$ref": "common-schema.json#/kindRuleDesc" }
+          ]
+        },
+        "instances": {
+          "allOf": [
+            { "$ref": "common-schema.json#/stringArray" },
+            { "$ref": "common-schema.json#/instancesRuleDesc" }
+          ]
+        },
+        "impl-def-behavior": {
+          "allOf": [
+            { "$ref": "common-schema.json#/implDefBehavior" },
+            { "$ref": "common-schema.json#/implDefBehaviorDesc" }
+          ]
+        },
+        "impl-def-category": {
+          "allOf": [
+            { "$ref": "common-schema.json#/implDefCategoryType" },
+            { "$ref": "common-schema.json#/implDefCategoryTypeDesc" }
+          ]
+        },
+        "tags": {
+          "type": "array",
+          "description": "List of normative rule tags",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "$ref": "common-schema.json#/tagName",
+                "description": "Name of the tag (an anchor in the standard's adoc files)"
+              },
+              "context": {
+                "type": "boolean",
+                "description": "Indicates tag provided for context to provide clarity for the non-context tag(s)"
+              },
+              "text": {
+                "type": "string",
+                "description": "The text from the standard associated with this tag"
+              },
+              "tag_filename": {
+                "type": "string",
+                "description": "Tag file that maps tag names to tag text"
+              },
+              "stds_doc_url": {
+                "type": "string",
+                "description": "URL to standards doc associated with tag_filename"
+              }
+            },
+            "required": ["name", "context"]
+          }
+        }
+      },
+      "required": ["name", "def_filename", "chapter_name"],
+      "dependencies": {
+        "tag_filename": ["stds_doc_url"]
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "impl-def-behavior": { "const": true }
+            },
+            "required": ["impl-def-behavior"]
+          },
+          "then": {
+            "properties": {
+              "name": { "$ref": "common-schema.json#/implDefName" }
+            }
+          },
+          "else": {
+            "properties": {
+              "name": { "$ref": "common-schema.json#/ruleName" }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": { "const": "base" }
+            },
+            "required": ["kind"]
+          },
+          "then": {
+            "properties": {
+              "instances": {
+                "type": "array",
+                "items": {
+                  "$ref": "common-schema.json#/bases"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": ["impl-def-category"]
+          },
+          "then": {
+            "required": ["impl-def-behavior"],
+            "properties": {
+              "impl-def-behavior": { "const": true }
+            }
+          }
+        }
+      ],
+      "additionalProperties": false
+    }
+  },
 
   "properties": {
     "normative_rules": {
       "type": "array",
       "items": {
-        "type": "object",
-        "properties": {
-          "name": {
-           "type": "string",
-           "description": "Normative rule name"
-          },
-          "def_filename": {
-            "type": "string",
-            "description": "Normative rule definition file that defines this rule"
-          },
-          "chapter_name": {
-            "type": "string",
-            "description": "Normative rules for specified chapter in standards document"
-          },
-          "summary": {
-            "type": "string",
-            "$ref": "common-schema.json#/summaryDesc"
-          },
-          "note": {
-            "type": "string",
-            "$ref": "common-schema.json#/noteDesc"
-          },
-          "clarification-text": {
-            "type": "string",
-            "$ref": "common-schema.json#/clarificationTextDesc"
-          },
-          "clarification-link": {
-            "type": "string",
-            "format": "uri",
-            "pattern": "^https://(www.)?github.com/riscv/.+/issues/[0-9]+$",
-            "$ref": "common-schema.json#/clarificationLinkDesc"
-          },
-          "description": {
-            "type": "string",
-            "$ref": "common-schema.json#/descriptionDesc"
-          },
-          "kind": {
-            "allOf": [
-              { "$ref": "common-schema.json#/stdsObjectKind" },
-              { "$ref": "common-schema.json#/kindRuleDesc" }
-            ]
-          },
-          "instances": {
-            "allOf": [
-              { "$ref": "common-schema.json#/stringArray" },
-              { "$ref": "common-schema.json#/instancesRuleDesc" }
-            ]
-          },
-          "impl-def-behavior": {
-            "allOf": [
-              { "$ref": "common-schema.json#/implDefBehavior" },
-              { "$ref": "common-schema.json#/implDefBehaviorDesc" }
-            ]
-          },
-          "impl-def-category": {
-            "allOf": [
-              { "$ref": "common-schema.json#/implDefCategoryType" },
-              { "$ref": "common-schema.json#/implDefCategoryTypeDesc" }
-            ]
-          },
-          "tags": {
-            "type": "array",
-            "description": "List of normative rule tags",
-            "items": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "$ref": "common-schema.json#/tagName",
-                  "description": "Name of the tag (an anchor in the standard's adoc files)"
-                },
-                "context": {
-                  "type": "boolean",
-                  "description": "Indicates tag provided for context to provide clarity for the non-context tag(s)"
-                },
-                "text": {
-                  "type": "string",
-                  "description": "The text from the standard associated with this tag"
-                },
-                "tag_filename": {
-                  "type": "string",
-                  "description": "Tag file that maps tag names to tag text"
-                },
-                "stds_doc_url": {
-                  "type": "string",
-                  "description": "URL to standards doc associated with tag_filename"
-                }
-              },
-              "required": ["name", "context"]
-            }
-          }
-        },
-        "required": ["name", "def_filename"],
-        "dependencies": {
-          "tag_filename": ["stds_doc_url"]
-        },
-        "allOf": [
-          {
-            "if": {
-              "properties": {
-                "impl-def-behavior": { "const": true }
-              },
-              "required": ["impl-def-behavior"]
-            },
-            "then": {
-              "properties": {
-                "name": { "$ref": "common-schema.json#/implDefName" }
-              }
-            },
-            "else": {
-              "properties": {
-                "name": { "$ref": "common-schema.json#/ruleName" }
-              }
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "kind": { "const": "base" }
-              },
-              "required": ["kind"]
-            },
-            "then": {
-              "properties": {
-                "instances": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "common-schema.json#/bases"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "if": {
-              "required": ["impl-def-category"]
-            },
-            "then": {
-              "required": ["impl-def-behavior"],
-              "properties": {
-                "impl-def-behavior": { "const": true }
-              }
-            }
-          }
-        ],
-        "additionalProperties": false
+        "$ref": "#/definitions/normativeRuleEntry"
       }
     }
   },

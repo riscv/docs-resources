@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Schema for params.json",
+  "type": "object",
+
+  "properties": {
+    "parameters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+           "type": "string",
+           "description": "Parameter name"
+          },
+          "def_filename": {
+            "type": "string",
+            "description": "Parameter definition file that defines this parameter"
+          },
+          "chapter_name": {
+            "type": "string",
+            "description": "Parameters for specified chapter in standards document"
+          },
+          "note": {
+            "type": "string",
+            "$ref": "param-common-schema.json#/noteDesc"
+          },
+          "description": {
+            "type": "string",
+            "$ref": "param-common-schema.json#/descriptionDesc"
+          },
+          "impl-defs": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "norm-rules-schema.json#/definitions/normativeRuleEntry"
+                }
+              },
+              { "$ref": "param-common-schema.json#/implDefBehaviorDesc" }
+            ]
+          }
+        },
+        "required": ["name", "def_filename", "chapter_name"],
+        "dependencies": {
+          "tag_filename": ["stds_doc_url"]
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["parameters"],
+  "additionalProperties": false
+}

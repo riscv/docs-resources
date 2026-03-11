@@ -19,17 +19,23 @@ TOOLS_DIR := tools
 BUILD_DIR := build
 TESTS_DIR := tests
 NORM_RULE_TESTS_DIR := $(TESTS_DIR)/norm-rule
+PARAMS_TESTS_DIR := $(TESTS_DIR)/params
 TAGS_TESTS_DIR := $(TESTS_DIR)/tags
 TAG_CHANGES_TESTS_DIR := $(TESTS_DIR)/tag-changes
+ADOC2HTML_TESTS_DIR := $(TESTS_DIR)/adoc2html
 NORM_RULE_DEF_DIR := $(NORM_RULE_TESTS_DIR)
 NORM_RULE_EXPECTED_DIR := $(NORM_RULE_TESTS_DIR)/expected
+PARAMS_DEF_DIR := $(PARAMS_TESTS_DIR)
+PARAMS_EXPECTED_DIR := $(PARAMS_TESTS_DIR)/expected
 
-# Ruby scripts being tested.
+# Scripts being tested.
 TAGS_BACKEND := tags.rb
 CREATE_NORM_RULE_TOOL := $(TOOLS_DIR)/create_normative_rules.py
 CREATE_NORM_RULE_PYTHON := python3 $(CREATE_NORM_RULE_TOOL)
 DETECT_TAG_CHANGES_TOOL := $(TOOLS_DIR)/detect_tag_changes.py
 DETECT_TAG_CHANGES_PYTHON := python3 $(DETECT_TAG_CHANGES_TOOL)
+CREATE_PARAMS_TOOL := $(TOOLS_DIR)/create_params.py
+CREATE_PARAMS_PYTHON := python3 $(CREATE_PARAMS_TOOL)
 
 # Stuff for building test standards document in HTML to have links into it.
 DOCS = test-ch1 test-ch2
@@ -48,6 +54,8 @@ TEST_CH2_NORM_TAGS_OUTPUT_FNAME := test-ch2$(DOC_NORM_TAG_SUFFIX)
 NORM_RULE_JSON_OUTPUT_FNAME := test-norm-rules.json
 NORM_RULE_HTML_OUTPUT_FNAME := test-norm-rules.html
 NORM_RULE_TAGS_NO_RULES_OUTPUT_FNAME := test-norm-rules_tags_no_rules.json
+PARAMS_JSON_OUTPUT_FNAME := test-params.json
+PARAMS_HTML_OUTPUT_FNAME := test-params.html
 
 # Tag extraction test files
 DUPLICATE_TEST_ADOC_INPUT_FNAME := duplicate.adoc
@@ -68,6 +76,8 @@ BUILT_DUPLICATE_NORM_TAGS_FNAME := $(BUILD_DIR)/$(DUPLICATE_NORM_TAGS_OUTPUT_FNA
 BUILT_NORM_RULES_JSON := $(BUILD_DIR)/$(NORM_RULE_JSON_OUTPUT_FNAME)
 BUILT_NORM_RULES_HTML := $(BUILD_DIR)/$(NORM_RULE_HTML_OUTPUT_FNAME)
 BUILT_NORM_RULES_TAGS_NO_RULES := $(BUILD_DIR)/$(NORM_RULE_TAGS_NO_RULES_OUTPUT_FNAME)
+BUILT_PARAMS_JSON := $(BUILD_DIR)/$(PARAMS_JSON_OUTPUT_FNAME)
+BUILT_PARAMS_HTML := $(BUILD_DIR)/$(PARAMS_HTML_OUTPUT_FNAME)
 
 # Combine separate fnames into lists.
 BUILT_TEST_HTML_FNAMES := $(BUILT_TEST_CH1_HTML_FNAME) $(BUILT_TEST_CH2_HTML_FNAME)
@@ -79,10 +89,14 @@ EXPECTED_CH1_NORM_TAGS := $(NORM_RULE_EXPECTED_DIR)/$(TEST_CH1_NORM_TAGS_OUTPUT_
 EXPECTED_CH2_NORM_TAGS := $(NORM_RULE_EXPECTED_DIR)/$(TEST_CH2_NORM_TAGS_OUTPUT_FNAME)
 EXPECTED_NORM_RULES_JSON := $(NORM_RULE_EXPECTED_DIR)/$(NORM_RULE_JSON_OUTPUT_FNAME)
 EXPECTED_NORM_RULES_HTML := $(NORM_RULE_EXPECTED_DIR)/$(NORM_RULE_HTML_OUTPUT_FNAME)
+EXPECTED_PARAMS_JSON := $(PARAMS_EXPECTED_DIR)/$(PARAMS_JSON_OUTPUT_FNAME)
+EXPECTED_PARAMS_HTML := $(PARAMS_EXPECTED_DIR)/$(PARAMS_HTML_OUTPUT_FNAME)
 
 # Normative rule definition input YAML files.
 GOOD_NORM_RULE_DEF_FILES := $(NORM_RULE_DEF_DIR)/test-ch1.yaml $(NORM_RULE_DEF_DIR)/test-ch2.yaml
 BAD_NORM_RULE_DEF_FILES := $(NORM_RULE_DEF_DIR)/missing_tag_refs.yaml
+PARAM_DEF_TEST_FILES := $(PARAMS_TESTS_DIR)/test-ch1.yaml $(PARAMS_TESTS_DIR)/test-ch2.yaml
+ADOC2HTML_TEST_SCRIPT := $(ADOC2HTML_TESTS_DIR)/test_adoc_to_html.py
 
 # Add -t to each normative tag input filename and add prefix of "/" to make into absolute pathname.
 NORM_TAG_FILE_ARGS := $(foreach relative_pname,$(BUILT_TEST_NORM_TAGS_FNAMES),-t /$(relative_pname))
@@ -90,6 +104,9 @@ NORM_TAG_FILE_ARGS := $(foreach relative_pname,$(BUILT_TEST_NORM_TAGS_FNAMES),-t
 # Add -d to each normative rule definition filename
 GOOD_NORM_RULE_DEF_ARGS := $(foreach relative_pname,$(GOOD_NORM_RULE_DEF_FILES),-d $(relative_pname))
 BAD_NORM_RULE_DEF_ARGS := $(foreach relative_pname,$(BAD_NORM_RULE_DEF_FILES),-d $(relative_pname))
+
+# Add --param-def to each parameter definition filename
+PARAM_DEF_TEST_ARGS := $(foreach relative_pname,$(PARAM_DEF_TEST_FILES),--param-def $(relative_pname))
 
 # Provide mapping from a stds doc norm tags JSON file to a URL that one can link to. Used to create links into stds doc.
 NORM_RULE_DOC2URL_ARGS := $(foreach doc_name,$(DOCS),-tag2url /$(BUILD_DIR)/$(doc_name)$(DOC_NORM_TAG_SUFFIX) $(doc_name).html)
@@ -156,19 +173,21 @@ all: test
 
 # Build tests and compare against expected
 .PHONY: test
-test: build-tests compare-tests test-tag-changes
+test: build-tests compare-tests test-tag-changes test-adoc2html
 
 # Build tests
-.PHONY: build-tests build-test-tags build-test-norm-rules-json build-test-norm-rules-html build-test-tags-without-rules
-build-tests: build-test-tags build-test-norm-rules-json build-test-norm-rules-html build-test-tags-without-rules
+.PHONY: build-tests build-test-tags build-test-norm-rules-json build-test-norm-rules-html build-test-tags-without-rules build-test-params-json build-test-params-html
+build-tests: build-test-tags build-test-norm-rules-json build-test-norm-rules-html build-test-tags-without-rules build-test-params-json build-test-params-html
 build-test-tags: $(BUILT_TEST_NORM_TAGS_FNAMES) $(BUILT_DUPLICATE_NORM_TAGS_FNAME)
 build-test-norm-rules-json: $(BUILT_NORM_RULES_JSON)
 build-test-norm-rules-html: $(BUILT_NORM_RULES_HTML)
 build-test-tags-without-rules: $(BUILT_NORM_RULES_TAGS_NO_RULES)
+build-test-params-json: $(BUILT_PARAMS_JSON)
+build-test-params-html: $(BUILT_PARAMS_HTML)
 
 # Compare tests against expected
 .PHONY: compare-tests
-compare-tests: compare-test-tags compare-test-norm-rules-json compare-test-norm-rules-html
+compare-tests: compare-test-tags compare-test-norm-rules-json compare-test-norm-rules-html compare-test-params-json compare-test-params-html
 
 .PHONY: compare-test-tags
 compare-test-tags: compare-test-ch1-tags compare-test-ch2-tags
@@ -192,6 +211,16 @@ compare-test-norm-rules-json: $(EXPECTED_NORM_RULES_JSON) $(BUILT_NORM_RULES_JSO
 compare-test-norm-rules-html: $(EXPECTED_NORM_RULES_HTML) $(BUILT_NORM_RULES_HTML)
 	@echo "CHECKING HTML BUILT NORM RULES AGAINST EXPECTED NORM RULES"
 	diff $(EXPECTED_NORM_RULES_HTML) $(BUILT_NORM_RULES_HTML) && echo "diff PASSED" || (echo "diff FAILED"; exit 1)
+
+.PHONY: compare-test-params-json
+compare-test-params-json: $(EXPECTED_PARAMS_JSON) $(BUILT_PARAMS_JSON)
+	@echo "CHECKING JSON BUILT PARAMS AGAINST EXPECTED PARAMS"
+	diff $(EXPECTED_PARAMS_JSON) $(BUILT_PARAMS_JSON) && echo "diff PASSED" || (echo "diff FAILED"; exit 1)
+
+.PHONY: compare-test-params-html
+compare-test-params-html: $(EXPECTED_PARAMS_HTML) $(BUILT_PARAMS_HTML)
+	@echo "CHECKING HTML BUILT PARAMS AGAINST EXPECTED PARAMS"
+	diff $(EXPECTED_PARAMS_HTML) $(BUILT_PARAMS_HTML) && echo "diff PASSED" || (echo "diff FAILED"; exit 1)
 
 # Test tag change detection
 .PHONY: test-tag-changes test-tag-changes-basic test-tag-changes-verbose test-tag-changes-no-changes test-tag-changes-additions-only test-tag-changes-whitespace-only test-tag-changes-formatting-only test-tag-changes-update
@@ -228,9 +257,15 @@ test-tag-changes-update: $(TAG_CHANGES_TEST_REFERENCE_PATH)
 	@python3 -c 'import json; data = json.load(open("$(BUILD_DIR)/test-reference.json")); exit(0 if "norm:added-only-tag" in data["tags"] else 1)' || (echo "test-tag-changes-update FAILED (tag not added)"; exit 1)
 	@$(DETECT_TAG_CHANGES_PYTHON) $(BUILD_DIR)/test-reference.json $(TAG_CHANGES_TESTS_DIR)/additions-only.json > /dev/null 2>&1 && echo "test-tag-changes-update PASSED" || (echo "test-tag-changes-update FAILED (differences detected after update)"; exit 1)
 
+# Test Adoc2HTML converter behavior in isolation.
+.PHONY: test-adoc2html
+test-adoc2html: $(ADOC2HTML_TEST_SCRIPT) $(TOOLS_DIR)/adoc_to_html.py
+	@echo "TESTING ADOC2HTML CONVERSION"
+	python3 $(ADOC2HTML_TEST_SCRIPT) && echo "test-adoc2html PASSED" || (echo "test-adoc2html FAILED"; exit 1)
+
 # Update expected files from built files
 .PHONY: update-expected
-update-expected: update-test-tags update-test-norm-rules-json update-test-norm-rules-html
+update-expected: update-test-tags update-test-norm-rules-json update-test-norm-rules-html update-test-params-json update-test-params-html
 
 .PHONY: update-test-tags
 update-test-tags: update-test-ch1-tags update-test-ch2-tags
@@ -250,6 +285,16 @@ update-test-norm-rules-json: $(BUILT_NORM_RULES_JSON)
 .PHONY: update-test-norm-rules-html
 update-test-norm-rules-html: $(BUILT_NORM_RULES_HTML)
 	cp -f $(BUILT_NORM_RULES_HTML) $(EXPECTED_NORM_RULES_HTML)
+
+.PHONY: update-test-params-json
+update-test-params-json: $(BUILT_PARAMS_JSON)
+	mkdir -p $(PARAMS_EXPECTED_DIR)
+	cp -f $(BUILT_PARAMS_JSON) $(EXPECTED_PARAMS_JSON)
+
+.PHONY: update-test-params-html
+update-test-params-html: $(BUILT_PARAMS_HTML)
+	mkdir -p $(PARAMS_EXPECTED_DIR)
+	cp -f $(BUILT_PARAMS_HTML) $(EXPECTED_PARAMS_HTML)
 
 # Build normative tags with ch1 adoc input
 $(BUILT_TEST_CH1_NORM_TAGS_FNAME): $(NORM_RULE_TESTS_DIR)/$(TEST_CH1_INPUT_ADOC_FNAME) $(CONVERTERS_DIR)/$(TAGS_BACKEND)
@@ -277,6 +322,16 @@ $(BUILT_NORM_RULES_JSON): $(BUILT_TEST_NORM_TAGS_FNAMES) $(GOOD_NORM_RULE_DEF_FI
 	mkdir -p $@.workdir/build
 	$(DOCKER_CMD) $(DOCKER_QUOTE) $(CREATE_NORM_RULE_TOOL) -j $(NORM_TAG_FILE_ARGS) $(GOOD_NORM_RULE_DEF_ARGS) $(NORM_RULE_DOC2URL_ARGS) $@ $(DOCKER_QUOTE)
 	$(WORKDIR_TEARDOWN)
+
+# Build params JSON output from generated normative rules JSON and parameter definitions.
+$(BUILT_PARAMS_JSON): $(BUILT_NORM_RULES_JSON) $(PARAM_DEF_TEST_FILES) $(CREATE_PARAMS_TOOL)
+	mkdir -p $(BUILD_DIR)
+	$(CREATE_PARAMS_PYTHON) --norm-rules $(BUILT_NORM_RULES_JSON) $(PARAM_DEF_TEST_ARGS) --output $(BUILT_PARAMS_JSON)
+
+# Build params HTML output from generated normative rules JSON and parameter definitions.
+$(BUILT_PARAMS_HTML): $(BUILT_NORM_RULES_JSON) $(PARAM_DEF_TEST_FILES) $(CREATE_PARAMS_TOOL)
+	mkdir -p $(BUILD_DIR)
+	$(CREATE_PARAMS_PYTHON) --html --norm-rules $(BUILT_NORM_RULES_JSON) $(PARAM_DEF_TEST_ARGS) --output $(BUILT_PARAMS_HTML)
 
 # Build normative rules with HTML output format
 $(BUILT_NORM_RULES_HTML): $(BUILT_TEST_NORM_TAGS_FNAMES) $(GOOD_NORM_RULE_DEF_FILES) $(BUILT_TEST_HTML_FNAMES)

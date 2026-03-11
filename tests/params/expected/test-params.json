@@ -1,0 +1,313 @@
+{
+  "parameters": [
+    {
+      "name": "BOOLEAN",
+      "def_filename": "test-ch1.yaml",
+      "impl-defs": [
+        {
+          "name": "BOOLEAN",
+          "def_filename": "tests/norm-rule/test-ch1.yaml",
+          "chapter_name": "One",
+          "kind": "extension",
+          "impl-def-behavior": true,
+          "instances": [
+            "Zch1-A"
+          ],
+          "tags": [
+            {
+              "name": "norm:boolean",
+              "context": false,
+              "text": "This is a boolean.",
+              "tag_filename": "/build/test-ch1-norm-tags.json",
+              "stds_doc_url": "test-ch1.html"
+            },
+            {
+              "name": "norm:boolean-context",
+              "context": true,
+              "text": "Here&#8217;s some context for the boolean.",
+              "tag_filename": "/build/test-ch1-norm-tags.json",
+              "stds_doc_url": "test-ch1.html"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "UINT6",
+      "def_filename": "test-ch1.yaml",
+      "impl-defs": [
+        {
+          "name": "UINT6",
+          "def_filename": "tests/norm-rule/test-ch1.yaml",
+          "chapter_name": "One",
+          "kind": "extension",
+          "impl-def-behavior": true,
+          "instances": [
+            "Zch1-A"
+          ],
+          "tags": [
+            {
+              "name": "norm:uint6",
+              "context": false,
+              "text": "This is a 6-bit unsigned integer.",
+              "tag_filename": "/build/test-ch1-norm-tags.json",
+              "stds_doc_url": "test-ch1.html"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "UINT32",
+      "def_filename": "test-ch1.yaml",
+      "impl-defs": [
+        {
+          "name": "UINT32",
+          "def_filename": "tests/norm-rule/test-ch1.yaml",
+          "chapter_name": "One",
+          "kind": "extension",
+          "impl-def-behavior": true,
+          "instances": [
+            "Zch1-A"
+          ],
+          "tags": [
+            {
+              "name": "norm:uint32",
+              "context": false,
+              "text": "This is a 32-bit unsigned integer. Should be 0 to &amp;lt; 2^32^-1. Need to use inline anchor to see superscript.",
+              "tag_filename": "/build/test-ch1-norm-tags.json",
+              "stds_doc_url": "test-ch1.html"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "INT64",
+      "def_filename": "test-ch1.yaml",
+      "impl-defs": [
+        {
+          "name": "INT64",
+          "def_filename": "tests/norm-rule/test-ch1.yaml",
+          "chapter_name": "One",
+          "kind": "extension",
+          "impl-def-behavior": true,
+          "instances": [
+            "Zch1-B"
+          ],
+          "tags": [
+            {
+              "name": "norm:int64",
+              "context": false,
+              "text": "This is a 64-bit signed integer.",
+              "tag_filename": "/build/test-ch1-norm-tags.json",
+              "stds_doc_url": "test-ch1.html"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "UINT_1TO100",
+      "def_filename": "test-ch1.yaml",
+      "impl-defs": [
+        {
+          "name": "UINT_1TO100",
+          "def_filename": "tests/norm-rule/test-ch1.yaml",
+          "chapter_name": "One",
+          "kind": "extension",
+          "impl-def-behavior": true,
+          "instances": [
+            "Zch1-B"
+          ],
+          "tags": [
+            {
+              "name": "norm:uint-1to100",
+              "context": false,
+              "text": "This is an unsigned integer in the range of 1 to 100.",
+              "tag_filename": "/build/test-ch1-norm-tags.json",
+              "stds_doc_url": "test-ch1.html"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "LIST_STR",
+      "def_filename": "test-ch1.yaml",
+      "impl-defs": [
+        {
+          "name": "LIST_STR",
+          "def_filename": "tests/norm-rule/test-ch1.yaml",
+          "chapter_name": "One",
+          "kind": "extension",
+          "impl-def-behavior": true,
+          "instances": [
+            "Zch1-B"
+          ],
+          "tags": [
+            {
+              "name": "norm:list-str",
+              "context": false,
+              "text": "Name|Description\n===\nA|Letter \"A\"¶B|Letter \"B\"\n===",
+              "tag_filename": "/build/test-ch1-norm-tags.json",
+              "stds_doc_url": "test-ch1.html"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "LIST_INT",
+      "def_filename": "test-ch1.yaml",
+      "impl-defs": [
+        {
+          "name": "LIST_INT",
+          "def_filename": "tests/norm-rule/test-ch1.yaml",
+          "chapter_name": "One",
+          "kind": "extension",
+          "impl-def-behavior": true,
+          "instances": [
+            "Zch1-A",
+            "Zch1-B"
+          ],
+          "tags": [
+            {
+              "name": "norm:list-int",
+              "context": false,
+              "text": "This is a list with values 1, 2 and 4.",
+              "tag_filename": "/build/test-ch1-norm-tags.json",
+              "stds_doc_url": "test-ch1.html"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ROSE_COLORS",
+      "def_filename": "test-ch2.yaml",
+      "note": "This is a note about the ROSE_COLORS parameter.",
+      "description": "This is a description about the ROSE_COLORS parameter. Here's some *bold text*.",
+      "impl-defs": [
+        {
+          "name": "ROSE_COLORS",
+          "def_filename": "tests/norm-rule/test-ch2.yaml",
+          "chapter_name": "Two",
+          "kind": "extension",
+          "impl-def-behavior": true,
+          "instances": [
+            "Ch2-A"
+          ],
+          "tags": [
+            {
+              "name": "norm:ROSE_COLORS",
+              "context": false,
+              "text": "You can use red or yellow roses. The tags backend removes some adoc formating so I don't see bold text but I can see ^superscript^ as long as I use the inline anchor and not the paragraph anchor.",
+              "tag_filename": "/build/test-ch2-norm-tags.json",
+              "stds_doc_url": "test-ch2.html"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "XLEN",
+      "def_filename": "test-ch2.yaml",
+      "impl-defs": [
+        {
+          "name": "XLEN1",
+          "def_filename": "tests/norm-rule/test-ch2.yaml",
+          "chapter_name": "Two",
+          "kind": "extension",
+          "impl-def-behavior": true,
+          "instances": [
+            "Ch2-A"
+          ],
+          "tags": [
+            {
+              "name": "norm:XLEN",
+              "context": false,
+              "text": "We use the term XLEN to refer to the width of an integer register in bits (either 32 or 64). No superscript in paragraph anchors for some reason.",
+              "tag_filename": "/build/test-ch2-norm-tags.json",
+              "stds_doc_url": "test-ch2.html"
+            }
+          ]
+        },
+        {
+          "name": "XLEN2",
+          "def_filename": "tests/norm-rule/test-ch2.yaml",
+          "chapter_name": "Two",
+          "kind": "extension",
+          "impl-def-behavior": true,
+          "instances": [
+            "Ch2-A"
+          ],
+          "tags": [
+            {
+              "name": "norm:XLEN",
+              "context": false,
+              "text": "We use the term XLEN to refer to the width of an integer register in bits (either 32 or 64). No superscript in paragraph anchors for some reason.",
+              "tag_filename": "/build/test-ch2-norm-tags.json",
+              "stds_doc_url": "test-ch2.html"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ASIDLEN1",
+      "def_filename": "test-ch2.yaml",
+      "impl-defs": [
+        {
+          "name": "ASIDLEN",
+          "def_filename": "tests/norm-rule/test-ch2.yaml",
+          "chapter_name": "Two",
+          "kind": "extension",
+          "impl-def-behavior": true,
+          "instances": [
+            "Ch2-A"
+          ],
+          "tags": [
+            {
+              "name": "norm:ASIDLEN",
+              "context": false,
+              "text": "The number of ASID bits is UNSPECIFIED and may be zero. The number of implemented ASID bits, termed ASIDLEN, may be determined by writing one to every bit position in the ASID field, then reading back the value in satp to see which bit positions in the ASID field hold a one.",
+              "tag_filename": "/build/test-ch2-norm-tags.json",
+              "stds_doc_url": "test-ch2.html"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ASIDLEN2",
+      "def_filename": "test-ch2.yaml",
+      "impl-defs": [
+        {
+          "name": "ASIDLEN",
+          "def_filename": "tests/norm-rule/test-ch2.yaml",
+          "chapter_name": "Two",
+          "kind": "extension",
+          "impl-def-behavior": true,
+          "instances": [
+            "Ch2-A"
+          ],
+          "tags": [
+            {
+              "name": "norm:ASIDLEN",
+              "context": false,
+              "text": "The number of ASID bits is UNSPECIFIED and may be zero. The number of implemented ASID bits, termed ASIDLEN, may be determined by writing one to every bit position in the ASID field, then reading back the value in satp to see which bit positions in the ASID field hold a one.",
+              "tag_filename": "/build/test-ch2-norm-tags.json",
+              "stds_doc_url": "test-ch2.html"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "NO_IMPL_DEF",
+      "def_filename": "test-ch2.yaml",
+      "note": "This is a note for a parameter without any implementation-defined behavior. Here's an 2^32^ exponent."
+    }
+  ]
+}

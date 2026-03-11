@@ -1,0 +1,22 @@
+---
+# yaml-language-server: $schema=../../schemas/param-defs-schema.json
+
+$schema: "../../schemas/param-defs-schema.json#"
+
+chapter_name: One
+
+parameter_definitions:
+  - name: BOOLEAN
+    impl-def: BOOLEAN
+  - name: UINT6
+    impl-def: UINT6
+  - name: UINT32
+    impl-def: UINT32
+  - name: INT64
+    impl-def: INT64
+  - name: UINT_1TO100
+    impl-def: UINT_1TO100
+  - name: LIST_STR
+    impl-def: LIST_STR
+  - name: LIST_INT
+    impl-def: LIST_INT

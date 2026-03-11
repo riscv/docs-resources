@@ -24,12 +24,18 @@ normative_rule_definitions:
   - name: ROSE_COLORS
     impl-def-behavior: true
     tag: "norm:ROSE_COLORS"
+    kind: extension
+    instance: Ch2-A
   - names: [XLEN1, XLEN2]
     impl-def-behavior: true
     tag: "norm:XLEN"
+    kind: extension
+    instance: Ch2-A
   - name: ASIDLEN
     impl-def-behavior: true
     tag: "norm:ASIDLEN"
+    kind: extension
+    instance: Ch2-A
 
   # CSR field types
   - name: CSR_FIELD_WARL1

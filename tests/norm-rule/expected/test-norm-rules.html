@@ -124,6 +124,7 @@
     #table-impldefs-no-cat > table { table-layout: fixed; width: 100% }
     #table-impldefs-impl-cat-WARL > table { table-layout: fixed; width: 100% }
     #table-impldefs-impl-cat-WLRL > table { table-layout: fixed; width: 100% }
+    #table-impldefs-ch-1 > table { table-layout: fixed; width: 100% }
     #table-impldefs-ch-2 > table { table-layout: fixed; width: 100% }
 
     /* Responsive */
@@ -148,16 +149,17 @@
       <a href="#table-impldefs-no-cat" data-target="table-impldefs-no-cat">No category</a>
       <a href="#table-impldefs-impl-cat-WARL" data-target="table-impldefs-impl-cat-WARL">WARL category</a>
       <a href="#table-impldefs-impl-cat-WLRL" data-target="table-impldefs-impl-cat-WLRL">WLRL category</a>
+      <a href="#table-impldefs-ch-1" data-target="table-impldefs-ch-1">One</a>
       <a href="#table-impldefs-ch-2" data-target="table-impldefs-ch-2">Two</a>
     </nav>
   </aside>
     <main>
       <style>.grand-total-heading { font-size: 24px; font-weight: bold; }</style>
-      <h1 class="grand-total-heading">70 Normative Rules: Includes 7 Implementation-Defined Behaviors (4 No Category, 2 WARL, 1 WLRL)</h1>
+      <h1 class="grand-total-heading">77 Normative Rules: Includes 14 Implementation-Defined Behaviors (11 No Category, 2 WARL, 1 WLRL)</h1>
 
       <section id="table-norm-rules-ch-1" class="section">
         <table>
-          <caption class="sticky-caption">Chapter One: 58 Normative Rules</caption>
+          <caption class="sticky-caption">Chapter One: 65 Normative Rules: Includes 7 Implementation-Defined Behaviors</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-description">
@@ -529,6 +531,129 @@
               <td>Item 3</td>
               <td><a href="test-ch1.html#norm:description-list:anchors-in-items:item3">norm:description-list:anchors-in-items:item3</a></td>
             </tr>
+            <tr>
+              <td rowspan=5 id="BOOLEAN">BOOLEAN</td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Zch1-A</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>Implementation-defined behavior</td>
+              <td>Rule's property</td>
+            </tr>
+            <tr>
+              <td>This is a boolean.</td>
+              <td><a href="test-ch1.html#norm:boolean">norm:boolean</a></td>
+            </tr>
+            <tr>
+              <td>[CONTEXT] Here&#8217;s some context for the boolean.</td>
+              <td><a href="test-ch1.html#norm:boolean-context">norm:boolean-context</a></td>
+            </tr>
+            <tr>
+              <td rowspan=4 id="UINT6">UINT6</td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Zch1-A</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>Implementation-defined behavior</td>
+              <td>Rule's property</td>
+            </tr>
+            <tr>
+              <td>This is a 6-bit unsigned integer.</td>
+              <td><a href="test-ch1.html#norm:uint6">norm:uint6</a></td>
+            </tr>
+            <tr>
+              <td rowspan=4 id="UINT32">UINT32</td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Zch1-A</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>Implementation-defined behavior</td>
+              <td>Rule's property</td>
+            </tr>
+            <tr>
+              <td>This is a 32-bit unsigned integer. Should be 0 to &#60; 2<sup>32</sup>-1. Need to use inline anchor to see superscript.</td>
+              <td><a href="test-ch1.html#norm:uint32">norm:uint32</a></td>
+            </tr>
+            <tr>
+              <td rowspan=4 id="INT64">INT64</td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Zch1-B</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>Implementation-defined behavior</td>
+              <td>Rule's property</td>
+            </tr>
+            <tr>
+              <td>This is a 64-bit signed integer.</td>
+              <td><a href="test-ch1.html#norm:int64">norm:int64</a></td>
+            </tr>
+            <tr>
+              <td rowspan=4 id="UINT_1TO100">UINT_1TO100</td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Zch1-B</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>Implementation-defined behavior</td>
+              <td>Rule's property</td>
+            </tr>
+            <tr>
+              <td>This is an unsigned integer in the range of 1 to 100.</td>
+              <td><a href="test-ch1.html#norm:uint-1to100">norm:uint-1to100</a></td>
+            </tr>
+            <tr>
+              <td rowspan=4 id="LIST_STR">LIST_STR</td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Zch1-B</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>Implementation-defined behavior</td>
+              <td>Rule's property</td>
+            </tr>
+            <tr>
+              <td><table><thead><tr><th>Name</th><th>Description</th></tr></thead><tbody><tr><td>A</td><td>Letter "A"</td></tr><tr><td>B</td><td>Letter "B"</td></tr></tbody></table></td>
+              <td><a href="test-ch1.html#norm:list-str">norm:list-str</a></td>
+            </tr>
+            <tr>
+              <td rowspan=4 id="LIST_INT">LIST_INT</td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>[Zch1-A, Zch1-B]</td>
+              <td>Rule's "instances" property</td>
+            </tr>
+            <tr>
+              <td>Implementation-defined behavior</td>
+              <td>Rule's property</td>
+            </tr>
+            <tr>
+              <td>This is a list with values 1, 2 and 4.</td>
+              <td><a href="test-ch1.html#norm:list-int">norm:list-int</a></td>
+            </tr>
           </tbody>
         </table>
       </section>
@@ -583,34 +708,66 @@
               <td><a href="test-ch2.html#norm:admonition:anchors-in-notes:note3">norm:admonition:anchors-in-notes:note3</a></td>
             </tr>
             <tr>
-              <td rowspan=2 id="ROSE_COLORS">ROSE_COLORS</td>
+              <td rowspan=4 id="ROSE_COLORS">ROSE_COLORS</td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Ch2-A</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
               <td>Implementation-defined behavior</td>
               <td>Rule's property</td>
             </tr>
             <tr>
-              <td>You can use red or yellow roses.</td>
+              <td>You can use red or yellow roses. The tags backend removes some adoc formating so I don't see bold text but I can see <sup>superscript</sup> as long as I use the inline anchor and not the paragraph anchor.</td>
               <td><a href="test-ch2.html#norm:ROSE_COLORS">norm:ROSE_COLORS</a></td>
             </tr>
             <tr>
-              <td rowspan=2 id="XLEN1">XLEN1</td>
+              <td rowspan=4 id="XLEN1">XLEN1</td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Ch2-A</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
               <td>Implementation-defined behavior</td>
               <td>Rule's property</td>
             </tr>
             <tr>
-              <td>We use the term XLEN to refer to the width of an integer register in bits (either 32 or 64).</td>
+              <td>We use the term XLEN to refer to the width of an integer register in bits (either 32 or 64). No superscript in paragraph anchors for some reason.</td>
               <td><a href="test-ch2.html#norm:XLEN">norm:XLEN</a></td>
             </tr>
             <tr>
-              <td rowspan=2 id="XLEN2">XLEN2</td>
+              <td rowspan=4 id="XLEN2">XLEN2</td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Ch2-A</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
               <td>Implementation-defined behavior</td>
               <td>Rule's property</td>
             </tr>
             <tr>
-              <td>We use the term XLEN to refer to the width of an integer register in bits (either 32 or 64).</td>
+              <td>We use the term XLEN to refer to the width of an integer register in bits (either 32 or 64). No superscript in paragraph anchors for some reason.</td>
               <td><a href="test-ch2.html#norm:XLEN">norm:XLEN</a></td>
             </tr>
             <tr>
-              <td rowspan=2 id="ASIDLEN">ASIDLEN</td>
+              <td rowspan=4 id="ASIDLEN">ASIDLEN</td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Ch2-A</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
               <td>Implementation-defined behavior</td>
               <td>Rule's property</td>
             </tr>
@@ -663,7 +820,7 @@
 
       <section id="table-impldefs-no-cat" class="section">
         <table>
-          <caption class="sticky-caption">No Category (A-Z): All 4 Implementation-Defined Behaviors</caption>
+          <caption class="sticky-caption">No Category (A-Z): All 11 Implementation-Defined Behaviors</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-description">
@@ -674,23 +831,150 @@
           </thead>
           <tbody>
             <tr>
-              <td rowspan=1><a href="#ASIDLEN">ASIDLEN</a></td>
+              <td rowspan=3><a href="#ASIDLEN">ASIDLEN</a></td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Ch2-A</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
               <td>The number of ASID bits is UNSPECIFIED and may be zero. The number of implemented ASID bits, termed ASIDLEN, may be determined by writing one to every bit position in the ASID field, then reading back the value in satp to see which bit positions in the ASID field hold a one.</td>
               <td><a href="test-ch2.html#norm:ASIDLEN">norm:ASIDLEN</a></td>
             </tr>
             <tr>
-              <td rowspan=1><a href="#ROSE_COLORS">ROSE_COLORS</a></td>
-              <td>You can use red or yellow roses.</td>
+              <td rowspan=4><a href="#BOOLEAN">BOOLEAN</a></td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Zch1-A</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>This is a boolean.</td>
+              <td><a href="test-ch1.html#norm:boolean">norm:boolean</a></td>
+            </tr>
+            <tr>
+              <td>[CONTEXT] Here&#8217;s some context for the boolean.</td>
+              <td><a href="test-ch1.html#norm:boolean-context">norm:boolean-context</a></td>
+            </tr>
+            <tr>
+              <td rowspan=3><a href="#INT64">INT64</a></td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Zch1-B</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>This is a 64-bit signed integer.</td>
+              <td><a href="test-ch1.html#norm:int64">norm:int64</a></td>
+            </tr>
+            <tr>
+              <td rowspan=3><a href="#LIST_INT">LIST_INT</a></td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>[Zch1-A, Zch1-B]</td>
+              <td>Rule's "instances" property</td>
+            </tr>
+            <tr>
+              <td>This is a list with values 1, 2 and 4.</td>
+              <td><a href="test-ch1.html#norm:list-int">norm:list-int</a></td>
+            </tr>
+            <tr>
+              <td rowspan=3><a href="#LIST_STR">LIST_STR</a></td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Zch1-B</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td><table><thead><tr><th>Name</th><th>Description</th></tr></thead><tbody><tr><td>A</td><td>Letter "A"</td></tr><tr><td>B</td><td>Letter "B"</td></tr></tbody></table></td>
+              <td><a href="test-ch1.html#norm:list-str">norm:list-str</a></td>
+            </tr>
+            <tr>
+              <td rowspan=3><a href="#ROSE_COLORS">ROSE_COLORS</a></td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Ch2-A</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>You can use red or yellow roses. The tags backend removes some adoc formating so I don't see bold text but I can see <sup>superscript</sup> as long as I use the inline anchor and not the paragraph anchor.</td>
               <td><a href="test-ch2.html#norm:ROSE_COLORS">norm:ROSE_COLORS</a></td>
             </tr>
             <tr>
-              <td rowspan=1><a href="#XLEN1">XLEN1</a></td>
-              <td>We use the term XLEN to refer to the width of an integer register in bits (either 32 or 64).</td>
+              <td rowspan=3><a href="#UINT32">UINT32</a></td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Zch1-A</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>This is a 32-bit unsigned integer. Should be 0 to &#60; 2<sup>32</sup>-1. Need to use inline anchor to see superscript.</td>
+              <td><a href="test-ch1.html#norm:uint32">norm:uint32</a></td>
+            </tr>
+            <tr>
+              <td rowspan=3><a href="#UINT6">UINT6</a></td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Zch1-A</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>This is a 6-bit unsigned integer.</td>
+              <td><a href="test-ch1.html#norm:uint6">norm:uint6</a></td>
+            </tr>
+            <tr>
+              <td rowspan=3><a href="#UINT_1TO100">UINT_1TO100</a></td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Zch1-B</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>This is an unsigned integer in the range of 1 to 100.</td>
+              <td><a href="test-ch1.html#norm:uint-1to100">norm:uint-1to100</a></td>
+            </tr>
+            <tr>
+              <td rowspan=3><a href="#XLEN1">XLEN1</a></td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Ch2-A</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>We use the term XLEN to refer to the width of an integer register in bits (either 32 or 64). No superscript in paragraph anchors for some reason.</td>
               <td><a href="test-ch2.html#norm:XLEN">norm:XLEN</a></td>
             </tr>
             <tr>
-              <td rowspan=1><a href="#XLEN2">XLEN2</a></td>
-              <td>We use the term XLEN to refer to the width of an integer register in bits (either 32 or 64).</td>
+              <td rowspan=3><a href="#XLEN2">XLEN2</a></td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Ch2-A</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>We use the term XLEN to refer to the width of an integer register in bits (either 32 or 64). No superscript in paragraph anchors for some reason.</td>
               <td><a href="test-ch2.html#norm:XLEN">norm:XLEN</a></td>
             </tr>
           </tbody>
@@ -744,6 +1028,117 @@
         </table>
       </section>
 
+      <section id="table-impldefs-ch-1" class="section">
+        <table>
+          <caption class="sticky-caption">Chapter One: All 7 Implementation-Defined Behaviors</caption>
+          <colgroup>
+            <col class="col-name">
+            <col class="col-description">
+            <col class="col-location">
+          </colgroup>
+          <thead>
+            <tr><th>Rule Name</th><th>Rule Description</th><th>Origin of Description</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td rowspan=4><a href="#BOOLEAN">BOOLEAN</a></td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Zch1-A</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>This is a boolean.</td>
+              <td><a href="test-ch1.html#norm:boolean">norm:boolean</a></td>
+            </tr>
+            <tr>
+              <td>[CONTEXT] Here&#8217;s some context for the boolean.</td>
+              <td><a href="test-ch1.html#norm:boolean-context">norm:boolean-context</a></td>
+            </tr>
+            <tr>
+              <td rowspan=3><a href="#UINT6">UINT6</a></td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Zch1-A</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>This is a 6-bit unsigned integer.</td>
+              <td><a href="test-ch1.html#norm:uint6">norm:uint6</a></td>
+            </tr>
+            <tr>
+              <td rowspan=3><a href="#UINT32">UINT32</a></td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Zch1-A</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>This is a 32-bit unsigned integer. Should be 0 to &#60; 2<sup>32</sup>-1. Need to use inline anchor to see superscript.</td>
+              <td><a href="test-ch1.html#norm:uint32">norm:uint32</a></td>
+            </tr>
+            <tr>
+              <td rowspan=3><a href="#INT64">INT64</a></td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Zch1-B</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>This is a 64-bit signed integer.</td>
+              <td><a href="test-ch1.html#norm:int64">norm:int64</a></td>
+            </tr>
+            <tr>
+              <td rowspan=3><a href="#UINT_1TO100">UINT_1TO100</a></td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Zch1-B</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>This is an unsigned integer in the range of 1 to 100.</td>
+              <td><a href="test-ch1.html#norm:uint-1to100">norm:uint-1to100</a></td>
+            </tr>
+            <tr>
+              <td rowspan=3><a href="#LIST_STR">LIST_STR</a></td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Zch1-B</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td><table><thead><tr><th>Name</th><th>Description</th></tr></thead><tbody><tr><td>A</td><td>Letter "A"</td></tr><tr><td>B</td><td>Letter "B"</td></tr></tbody></table></td>
+              <td><a href="test-ch1.html#norm:list-str">norm:list-str</a></td>
+            </tr>
+            <tr>
+              <td rowspan=3><a href="#LIST_INT">LIST_INT</a></td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>[Zch1-A, Zch1-B]</td>
+              <td>Rule's "instances" property</td>
+            </tr>
+            <tr>
+              <td>This is a list with values 1, 2 and 4.</td>
+              <td><a href="test-ch1.html#norm:list-int">norm:list-int</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
       <section id="table-impldefs-ch-2" class="section">
         <table>
           <caption class="sticky-caption">Chapter Two: All 7 Implementation-Defined Behaviors</caption>
@@ -757,22 +1152,54 @@
           </thead>
           <tbody>
             <tr>
-              <td rowspan=1><a href="#ROSE_COLORS">ROSE_COLORS</a></td>
-              <td>You can use red or yellow roses.</td>
+              <td rowspan=3><a href="#ROSE_COLORS">ROSE_COLORS</a></td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Ch2-A</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>You can use red or yellow roses. The tags backend removes some adoc formating so I don't see bold text but I can see <sup>superscript</sup> as long as I use the inline anchor and not the paragraph anchor.</td>
               <td><a href="test-ch2.html#norm:ROSE_COLORS">norm:ROSE_COLORS</a></td>
             </tr>
             <tr>
-              <td rowspan=1><a href="#XLEN1">XLEN1</a></td>
-              <td>We use the term XLEN to refer to the width of an integer register in bits (either 32 or 64).</td>
+              <td rowspan=3><a href="#XLEN1">XLEN1</a></td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Ch2-A</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>We use the term XLEN to refer to the width of an integer register in bits (either 32 or 64). No superscript in paragraph anchors for some reason.</td>
               <td><a href="test-ch2.html#norm:XLEN">norm:XLEN</a></td>
             </tr>
             <tr>
-              <td rowspan=1><a href="#XLEN2">XLEN2</a></td>
-              <td>We use the term XLEN to refer to the width of an integer register in bits (either 32 or 64).</td>
+              <td rowspan=3><a href="#XLEN2">XLEN2</a></td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Ch2-A</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>We use the term XLEN to refer to the width of an integer register in bits (either 32 or 64). No superscript in paragraph anchors for some reason.</td>
               <td><a href="test-ch2.html#norm:XLEN">norm:XLEN</a></td>
             </tr>
             <tr>
-              <td rowspan=1><a href="#ASIDLEN">ASIDLEN</a></td>
+              <td rowspan=3><a href="#ASIDLEN">ASIDLEN</a></td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>Ch2-A</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
               <td>The number of ASID bits is UNSPECIFIED and may be zero. The number of implemented ASID bits, termed ASIDLEN, may be determined by writing one to every bit position in the ASID field, then reading back the value in satp to see which bit positions in the ASID field hold a one.</td>
               <td><a href="test-ch2.html#norm:ASIDLEN">norm:ASIDLEN</a></td>
             </tr>

@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+
+  "title": "Common content used by multiple parameter schemas (reduces copy & paste)",
+
+  "noteDesc": {
+    "description": "A non-normative note about the normative rule"
+  },
+  "descriptionDesc": {
+    "description": "Comprehensive description of the normative rule (sentence, paragraph, or longer)"
+  },
+  "implDefBehaviorDesc": {
+    "description": "A normative rule that allows an implementation choices in how to meet the rule"
+  },
+  "paramBehaviorDesc": {
+    "description": "A parameter that maps to one or more implementation-defined behaviors in the standards documentation"
+  },
+  "stringArray": {
+    "type": "array",
+    "items": { "type": "string" }
+  },
+  "implDefNamePattern" : {
+    "pattern": "^[A-Z][A-Z0-9_]+$"
+  },
+  "paramNamePattern" : {
+    "$ref": "#/implDefNamePattern"
+  },
+  "implDefName": {
+    "type": "string",
+    "$ref": "#/implDefNamePattern"
+  },
+  "implDefNameArray": {
+    "type": "array",
+    "items": {
+      "type": "string",
+      "$ref": "#/implDefNamePattern"
+    }
+  },
+  "paramName": {
+    "type": "string",
+    "$ref": "#/paramNamePattern"
+  },
+  "paramNameArray": {
+    "type": "array",
+    "items": {
+      "type": "string",
+      "$ref": "#/paramNamePattern"
+    }
+  }
+}

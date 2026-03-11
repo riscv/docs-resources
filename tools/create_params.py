@@ -1,0 +1,688 @@
+#!/usr/bin/env python3
+"""Create params JSON from normative rules JSON and parameter definition YAML files."""
+
+import argparse
+import json
+import sys
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
+
+from def_text_to_html import (
+    convert_def_text_to_html,
+    tag2html_link,
+)
+from tag_text_to_html import convert_tag_text_to_html
+
+PN = "create_params.py"
+PARAMS_CH_TABLE_NAME_PREFIX = "table-params-ch-"
+PARAMS_NO_CH_TABLE_NAME = "table-params-no-ch"
+
+
+def error(msg: str):
+    """Print an error message."""
+    print(f"{PN}: ERROR: {msg}", file=sys.stderr)
+
+
+def info(msg: str):
+    """Print an info message."""
+    print(f"{PN}: {msg}")
+
+
+def fatal(msg: str):
+    """Print an error and exit."""
+    error(msg)
+    sys.exit(1)
+
+
+def parse_args() -> argparse.Namespace:
+    """Parse command-line arguments."""
+    parser = argparse.ArgumentParser(
+        description=(
+            "Create params output from one normative rules JSON file and one or more "
+            "parameter definition YAML files."
+        )
+    )
+    parser.add_argument(
+        "-j",
+        action="store_const",
+        const="json",
+        dest="output_format",
+        default="json",
+        help="Set output format to JSON (default)",
+    )
+    parser.add_argument(
+        "--html",
+        action="store_const",
+        const="html",
+        dest="output_format",
+        help="Set output format to HTML",
+    )
+    parser.add_argument(
+        "-n",
+        "--norm-rules",
+        required=True,
+        metavar="FILE",
+        help="Normative rules JSON filename (conforms to schemas/norm-rules-schema.json)",
+    )
+    parser.add_argument(
+        "-d",
+        "--param-def",
+        action="append",
+        required=True,
+        metavar="FILE",
+        help="Parameter definition YAML filename (conforms to schemas/param-defs-schema.json). "
+             "Specify one or more times.",
+    )
+    parser.add_argument(
+        "-o",
+        "--output",
+        required=True,
+        metavar="FILE",
+        help="Output filename (JSON conforms to schemas/params-schema.json)",
+    )
+    return parser.parse_args()
+
+
+def load_json_file(pathname: str) -> Dict[str, Any]:
+    """Load a JSON file as a dict."""
+    path = Path(pathname)
+    data: Any = None
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+    except FileNotFoundError as e:
+        fatal(str(e))
+    except json.JSONDecodeError as e:
+        fatal(f"JSON parse error in {pathname}: {e}")
+    except Exception as e:
+        fatal(f"Error reading JSON file {pathname}: {e}")
+
+    if not isinstance(data, dict):
+        fatal(f"Expected top-level JSON object in {pathname}")
+
+    return data
+
+
+def load_yaml_file(pathname: str) -> Dict[str, Any]:
+    """Load a YAML file as a dict."""
+    yaml_module: Any = None
+    try:
+        import yaml as yaml_module
+    except ImportError:
+        fatal("PyYAML is required but not installed. Run: pip install PyYAML")
+
+    path = Path(pathname)
+    data: Any = None
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            data = yaml_module.safe_load(f)
+    except FileNotFoundError as e:
+        fatal(str(e))
+    except yaml_module.YAMLError as e:
+        fatal(f"YAML parse error in {pathname}: {e}")
+    except Exception as e:
+        fatal(f"Error reading YAML file {pathname}: {e}")
+
+    if not isinstance(data, dict):
+        fatal(f"Expected top-level YAML object in {pathname}")
+
+    return data
+
+
+def normalize_impldef_refs(entry: Dict[str, Any], src_filename: str, param_name: str) -> List[str]:
+    """Return impl-def references from one parameter entry as a normalized array."""
+    has_impldef = "impl-def" in entry
+    has_impldefs = "impl-defs" in entry
+
+    if has_impldef and has_impldefs:
+        fatal(f"Parameter {param_name} in {src_filename} cannot define both impl-def and impl-defs")
+
+    refs: List[str] = []
+    if has_impldef:
+        impl_def: Any = entry.get("impl-def")
+        if not isinstance(impl_def, str):
+            fatal(f"Parameter {param_name} in {src_filename} has non-string impl-def")
+        refs = [impl_def]
+    elif has_impldefs:
+        impl_defs: Any = entry.get("impl-defs")
+        if not isinstance(impl_defs, list):
+            fatal(f"Parameter {param_name} in {src_filename} has non-list impl-defs")
+        for impl_def in impl_defs:
+            if not isinstance(impl_def, str):
+                fatal(f"Parameter {param_name} in {src_filename} has non-string value in impl-defs")
+        refs = list(impl_defs)
+
+    return refs
+
+
+def rules_by_name(norm_rules_data: Dict[str, Any], src_filename: str) -> Dict[str, Dict[str, Any]]:
+    """Create lookup map from normative rule name to its JSON object."""
+    rules_obj: Any = norm_rules_data.get("normative_rules")
+    if not isinstance(rules_obj, list):
+        fatal(f"Missing or invalid normative_rules array in {src_filename}")
+    rules: List[Any] = rules_obj
+
+    by_name: Dict[str, Dict[str, Any]] = {}
+    for rule in rules:
+        if not isinstance(rule, dict):
+            fatal(f"Found non-object entry in normative_rules array in {src_filename}")
+
+        name: Any = rule.get("name")
+        if not isinstance(name, str):
+            fatal(f"Found normative rule without string name in {src_filename}")
+
+        if name in by_name:
+            fatal(f"Duplicate normative rule name {name} in {src_filename}")
+
+        by_name[name] = rule
+
+    return by_name
+
+
+def resolve_impldef_entries(
+    impl_defs: List[str],
+    norm_rules_by_name: Dict[str, Dict[str, Any]],
+    src_filename: str,
+    param_name: str,
+) -> List[Dict[str, Any]]:
+    """Resolve impl-def names to normativeRuleEntry objects."""
+    resolved: List[Dict[str, Any]] = []
+    for impl_def in impl_defs:
+        norm_rule_opt = norm_rules_by_name.get(impl_def)
+        if norm_rule_opt is None:
+            fatal(
+                f"Parameter {param_name} in {src_filename} references impl-def {impl_def} "
+                "which is not present in normative rules"
+            )
+        assert norm_rule_opt is not None
+        resolved.append(dict(norm_rule_opt))
+    return resolved
+
+
+def add_parameter_entries(
+    parameters: List[Dict[str, Any]],
+    entry: Dict[str, Any],
+    def_filename: str,
+    chapter_name: str,
+    norm_rules_by_name: Dict[str, Dict[str, Any]],
+):
+    """Expand one parameter definition entry into one or more output parameter objects."""
+    names: List[str] = []
+
+    if "name" in entry:
+        name: Any = entry.get("name")
+        if not isinstance(name, str):
+            fatal(f"Found parameter entry with non-string name in {def_filename}")
+        names = [name]
+    elif "names" in entry:
+        names_value: Any = entry.get("names")
+        if not isinstance(names_value, list):
+            fatal(f"Found parameter entry with non-list names in {def_filename}")
+        for name in names_value:
+            if not isinstance(name, str):
+                fatal(f"Found non-string value in names array in {def_filename}")
+        names = list(names_value)
+    else:
+        fatal(f"Found parameter entry without name/names in {def_filename}")
+
+    for name in names:
+        impl_defs = normalize_impldef_refs(entry, def_filename, name)
+
+        out_entry: Dict[str, Any] = {
+            "name": name,
+            "def_filename": Path(def_filename).name,
+            "_chapter_name": chapter_name,
+        }
+
+        note = entry.get("note")
+        if note is not None:
+            if not isinstance(note, str):
+                fatal(f"Parameter {name} in {def_filename} has non-string note")
+            out_entry["note"] = note
+
+        description = entry.get("description")
+        if description is not None:
+            if not isinstance(description, str):
+                fatal(f"Parameter {name} in {def_filename} has non-string description")
+            out_entry["description"] = description
+
+        if impl_defs:
+            out_entry["impl-defs"] = resolve_impldef_entries(
+                impl_defs,
+                norm_rules_by_name,
+                def_filename,
+                name,
+            )
+
+        parameters.append(out_entry)
+
+
+def create_params_hash(norm_rules_json: str, param_def_yaml_files: List[str]) -> Dict[str, List[Dict[str, Any]]]:
+    """Build params object that conforms to schemas/params-schema.json."""
+    info(f"Loading normative rules JSON {norm_rules_json}")
+    norm_rules_data = load_json_file(norm_rules_json)
+    norm_rules_map = rules_by_name(norm_rules_data, norm_rules_json)
+
+    output: Dict[str, List[Dict[str, Any]]] = {"parameters": []}
+
+    for def_file in param_def_yaml_files:
+        info(f"Loading parameter definition file {def_file}")
+        yaml_data = load_yaml_file(def_file)
+
+        chapter_name_obj: Any = yaml_data.get("chapter_name")
+        if not isinstance(chapter_name_obj, str):
+            fatal(f"Missing or invalid chapter_name in {def_file}")
+        chapter_name = chapter_name_obj
+
+        parameter_definitions_obj: Any = yaml_data.get("parameter_definitions")
+        if not isinstance(parameter_definitions_obj, list):
+            fatal(f"Missing or invalid parameter_definitions array in {def_file}")
+        parameter_definitions: List[Any] = parameter_definitions_obj
+
+        for entry in parameter_definitions:
+            if not isinstance(entry, dict):
+                fatal(f"Found non-object entry in parameter_definitions in {def_file}")
+            add_parameter_entries(output["parameters"], entry, def_file, chapter_name, norm_rules_map)
+
+    return output
+
+
+def write_json_file(pathname: str, data: Dict[str, Any]):
+    """Write output dict to JSON file."""
+    try:
+        with open(pathname, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
+            f.write("\n")
+    except Exception as e:
+        fatal(f"Error writing output file {pathname}: {e}")
+
+
+def strip_internal_fields(obj: Any) -> Any:
+    """Recursively remove internal keys (prefixed with underscore)."""
+    if isinstance(obj, dict):
+        out: Dict[str, Any] = {}
+        for key, value in obj.items():
+            if isinstance(key, str) and key.startswith("_"):
+                continue
+            out[key] = strip_internal_fields(value)
+        return out
+    if isinstance(obj, list):
+        return [strip_internal_fields(x) for x in obj]
+    return obj
+
+
+def output_json(filename: str, params_hash: Dict[str, List[Dict[str, Any]]]):
+    """Store parameters in JSON output file."""
+    if not isinstance(filename, str):
+        fatal(f"Need String for filename but passed a {type(filename).__name__}")
+    if not isinstance(params_hash, dict):
+        fatal(f"Need Dict for params_hash but passed a {type(params_hash).__name__}")
+
+    clean_hash = strip_internal_fields(params_hash)
+    if not isinstance(clean_hash, dict):
+        fatal(f"Need Dict for clean_hash but got {type(clean_hash).__name__}")
+    write_json_file(filename, clean_hash)
+
+
+def output_html(filename: str, params_hash: Dict[str, List[Dict[str, Any]]]):
+    """Store parameters in HTML output file."""
+    if not isinstance(filename, str):
+        fatal(f"Need String for filename but passed a {type(filename).__name__}")
+    if not isinstance(params_hash, dict):
+        fatal(f"Need Dict for params_hash but passed a {type(params_hash).__name__}")
+
+    params_obj: Any = params_hash.get("parameters")
+    if not isinstance(params_obj, list):
+        fatal("Missing or invalid parameters array")
+    params: List[Dict[str, Any]] = params_obj
+
+    chapter_names, params_by_chapter, params_no_chapter = params_by_chapter_name(params)
+
+    table_names: List[str] = []
+    table_num = 1
+    for _ in chapter_names:
+        table_names.append(f"{PARAMS_CH_TABLE_NAME_PREFIX}{table_num}")
+        table_num += 1
+    if params_no_chapter:
+        table_names.append(PARAMS_NO_CH_TABLE_NAME)
+
+    try:
+        with open(filename, "w", encoding="utf-8") as f:
+            html_head(f, table_names)
+            f.write('<body>\n')
+            f.write('  <div class="app">\n')
+
+            html_sidebar(f, chapter_names, params_by_chapter, params_no_chapter)
+
+            f.write('    <main>\n')
+            f.write('      <style>.grand-total-heading { font-size: 24px; font-weight: bold; }</style>\n')
+            f.write(f'      <h1 class="grand-total-heading">{get_params_counts_str(params)}</h1>\n')
+
+            table_num = 1
+            for chapter_name in chapter_names:
+                chapter_params = params_by_chapter[chapter_name]
+                html_params_table(
+                    f,
+                    f"{PARAMS_CH_TABLE_NAME_PREFIX}{table_num}",
+                    f"Chapter {chapter_name}",
+                    chapter_params,
+                    chapter_name,
+                )
+                table_num += 1
+
+            if params_no_chapter:
+                html_params_table(
+                    f,
+                    PARAMS_NO_CH_TABLE_NAME,
+                    "No chapter_name",
+                    params_no_chapter,
+                    None,
+                )
+
+            f.write('    </main>\n')
+            f.write('  </div>\n')
+            html_script(f)
+            f.write('</body>\n')
+            f.write('</html>\n')
+    except Exception as e:
+        fatal(f"Error writing HTML to {filename}: {e}")
+
+
+def html_head(f, table_names: List[str]):
+    """Write HTML head section."""
+    if not isinstance(table_names, list):
+        fatal(f"Need List for table_names but passed a {type(table_names).__name__}")
+
+    css = '''<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Parameters</title>
+  <style>
+    .underline {
+      text-decoration: underline;
+    }
+    :root{
+      --sidebar-width: 220px;
+      --accent: #0366d6;
+      --muted: #6b7280;
+      --bg: #f8fafc;
+      --card: #ffffff;
+    }
+    html{scroll-behavior:smooth}
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:0;background:var(--bg);color:#111}
+    .app{display:grid;grid-template-columns:var(--sidebar-width) 1fr;min-height:100vh;}
+    .sidebar{position:sticky;top:0;height:100vh;padding:24px;background:linear-gradient(180deg,#ffffff, #f1f5f9);border-right:1px solid rgba(15,23,42,0.04);box-sizing:border-box;overflow-y:auto;}
+    .sidebar h2{margin:0 0 2px;font-size:18px}
+    .nav{display:flex;flex-direction:column;gap:2px}
+    .nav a{display:block;font-size:14px;padding:2px 10px;border-radius:6px;text-decoration:none;color:var(--accent);font-weight:600;}
+    .nav a .subtitle{display:block;font-weight:400;color:var(--muted);font-size:12px}
+    .nav a.active{background:rgba(3,102,214,0.12);color:var(--accent)}
+    main{padding:28px 36px}
+    .section{background:var(--card);border-radius:12px;padding:20px;margin-bottom:22px;box-shadow:0 1px 0 rgba(15,23,42,0.03)}
+    table{border-collapse:collapse;width:100%;table-layout:fixed}
+    caption{caption-side:top;text-align:left;font-weight:700;margin-bottom:8px}
+    th,td{border:1px solid #d9e2ec;padding:8px 10px;vertical-align:top;word-wrap:break-word}
+    thead th{background:#f1f5f9}
+    .sticky-caption{position:sticky;top:0;background:#fff;padding:8px 0;z-index:1}
+    .col-name{width:20%}
+    .col-extensions{width:20%}
+    .col-descriptions{width:60%}
+    @media (max-width: 1000px){
+      .app{grid-template-columns:1fr}
+      .sidebar{position:relative;height:auto}
+      main{padding:16px}
+    }
+  </style>
+</head>
+'''
+    f.write(css)
+
+
+def html_sidebar(
+    f,
+    chapter_names: List[str],
+    params_by_chapter: Dict[str, List[Dict[str, Any]]],
+    params_no_chapter: List[Dict[str, Any]],
+):
+    """Write sidebar section."""
+    if not isinstance(chapter_names, list):
+        fatal(f"Need List for chapter_names but passed a {type(chapter_names).__name__}")
+    if not isinstance(params_by_chapter, dict):
+        fatal(f"Need Dict for params_by_chapter but passed a {type(params_by_chapter).__name__}")
+    if not isinstance(params_no_chapter, list):
+        fatal(f"Need List for params_no_chapter but passed a {type(params_no_chapter).__name__}")
+
+    f.write('    <aside class="sidebar">\n')
+    f.write('      <h2>Parameters by Chapter</h2>\n')
+    f.write('      <nav class="nav">\n')
+
+    table_num = 1
+    for chapter_name in chapter_names:
+        count = len(params_by_chapter[chapter_name])
+        table_name = f"{PARAMS_CH_TABLE_NAME_PREFIX}{table_num}"
+        f.write(
+            f'        <a href="#{table_name}" data-target="{table_name}">'
+            f'{chapter_name}<span class="subtitle">{count} entries</span></a>\n'
+        )
+        table_num += 1
+
+    if params_no_chapter:
+        f.write(
+            f'        <a href="#{PARAMS_NO_CH_TABLE_NAME}" data-target="{PARAMS_NO_CH_TABLE_NAME}">'
+            f'No chapter_name<span class="subtitle">{len(params_no_chapter)} entries</span></a>\n'
+        )
+
+    f.write('      </nav>\n')
+    f.write('    </aside>\n')
+
+
+def html_params_table(
+    f,
+    table_name: str,
+    caption_prefix: str,
+    params: List[Dict[str, Any]],
+    chapter_name: Optional[str],
+):
+    """Write full parameters table."""
+    html_table_header(f, table_name, f"{caption_prefix}: {len(params)} Parameters")
+    for param in params:
+        html_param_table_row(f, param, chapter_name)
+    html_table_footer(f)
+
+
+def html_table_header(f, table_name: str, table_caption: str):
+    """Write HTML table header."""
+    f.write('\n')
+    f.write(f'      <section id="{table_name}" class="section">\n')
+    f.write('        <table>\n')
+    f.write(f'          <caption class="sticky-caption">{table_caption}</caption>\n')
+    f.write('          <colgroup>\n')
+    f.write('            <col class="col-name">\n')
+    f.write('            <col class="col-extensions">\n')
+    f.write('            <col class="col-descriptions">\n')
+    f.write('          </colgroup>\n')
+    f.write('          <thead>\n')
+    f.write('            <tr><th>Parameter Name</th><th>Extension(s)</th><th>Description(s)</th></tr>\n')
+    f.write('          </thead>\n')
+    f.write('          <tbody>\n')
+
+
+def html_param_table_row(f, param: Dict[str, Any], chapter_name: Optional[str]):
+    """Write one parameter row with expanded details."""
+    name = param.get("name", "")
+    note = param.get("note")
+    description = param.get("description")
+    impl_defs_all = param.get("impl-defs")
+    def_filename = param.get("def_filename", "")
+
+    impl_defs = filter_impldefs_for_chapter(impl_defs_all, chapter_name)
+
+    extension_names: List[str] = []
+    for impl_def in impl_defs:
+        if not isinstance(impl_def, dict):
+            continue
+        instances = impl_def.get("instances")
+        if isinstance(instances, list):
+            for instance in instances:
+                if isinstance(instance, str) and instance not in extension_names:
+                    extension_names.append(instance)
+
+    descriptions: List[str] = []
+    if isinstance(note, str):
+        descriptions.append("NOTE: " + convert_def_text_to_html(note))
+    if isinstance(description, str):
+        descriptions.append(convert_def_text_to_html(description))
+    for impl_def in impl_defs:
+        if not isinstance(impl_def, dict):
+            continue
+        tags = impl_def.get("tags")
+        if not isinstance(tags, list):
+            continue
+        for tag in tags:
+            if not isinstance(tag, dict):
+                continue
+            tag_text = tag.get("text")
+            tag_name = tag.get("name")
+            target_html_fname = tag.get("stds_doc_url")
+            is_context = bool(tag.get("context", False))
+            html = convert_tag_text_to_html(tag_text, target_html_fname, is_context)
+            text_with_link = tag2html_link(tag_name, html, target_html_fname)
+            if isinstance(tag_text, str):
+                descriptions.append(text_with_link)
+
+    if not descriptions:
+        descriptions.append("(No description available)")
+
+    extensions_str = ", ".join(extension_names) if extension_names else "(none)"
+
+    row_span = len(descriptions)
+
+    f.write('            <tr>\n')
+    f.write(f'              <td rowspan={row_span} id="{name}">{name}</td>\n')
+    f.write(f'              <td rowspan={row_span}>{extensions_str}</td>\n')
+    f.write(f'              <td>{descriptions[0]}</td>\n')
+    f.write('            </tr>\n')
+
+    for desc in descriptions[1:]:
+        f.write('            <tr>\n')
+        f.write(f'              <td>{desc}</td>\n')
+        f.write('            </tr>\n')
+
+
+def html_table_footer(f):
+    """Write HTML table footer."""
+    f.write('          </tbody>\n')
+    f.write('        </table>\n')
+    f.write('      </section>\n')
+
+
+def param_chapter_names(param: Dict[str, Any]) -> List[str]:
+    """Return sorted unique chapter names referenced by a parameter's impl-defs."""
+    chapter_name = param.get("_chapter_name")
+    if isinstance(chapter_name, str):
+        return [chapter_name]
+
+    impl_defs = param.get("impl-defs")
+    if not isinstance(impl_defs, list):
+        return []
+
+    names: List[str] = []
+    seen = set()
+    for impl_def in impl_defs:
+        if not isinstance(impl_def, dict):
+            continue
+        name = impl_def.get("chapter_name")
+        if isinstance(name, str) and name not in seen:
+            seen.add(name)
+            names.append(name)
+    names.sort()
+    return names
+
+
+def params_by_chapter_name(
+    params: List[Dict[str, Any]],
+) -> Tuple[List[str], Dict[str, List[Dict[str, Any]]], List[Dict[str, Any]]]:
+    """Group parameters by chapter_name values found in impl-defs entries."""
+    by_chapter: Dict[str, List[Dict[str, Any]]] = {}
+    without_chapter: List[Dict[str, Any]] = []
+
+    for param in params:
+        chapters = param_chapter_names(param)
+        if not chapters:
+            without_chapter.append(param)
+            continue
+        for chapter in chapters:
+            if chapter not in by_chapter:
+                by_chapter[chapter] = []
+            by_chapter[chapter].append(param)
+
+    chapter_names = sorted(by_chapter.keys())
+    return chapter_names, by_chapter, without_chapter
+
+
+def filter_impldefs_for_chapter(impl_defs: Any, chapter_name: Optional[str]) -> List[Any]:
+    """Filter impl-def objects for the specified chapter, preserving input order."""
+    if not isinstance(impl_defs, list):
+        return []
+    if chapter_name is None:
+        return list(impl_defs)
+
+    filtered: List[Any] = []
+    for impl_def in impl_defs:
+        if not isinstance(impl_def, dict):
+            continue
+        impl_chapter = impl_def.get("chapter_name")
+        if impl_chapter == chapter_name:
+            filtered.append(impl_def)
+    return filtered
+
+
+def html_script(f):
+    """Write HTML script section."""
+    script = '''  <script>
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav a');
+
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        const id = entry.target.id;
+        const link = document.querySelector('.nav a[data-target="'+id+'"]');
+        if(entry.isIntersecting){
+          navLinks.forEach(a=>a.classList.remove('active'));
+          if(link) link.classList.add('active');
+        }
+      });
+    }, {root:null,rootMargin:'-40% 0px -40% 0px',threshold:0});
+
+    sections.forEach(s=>io.observe(s));
+  </script>
+'''
+    f.write(script)
+
+
+def get_params_counts_str(params: List[Dict[str, Any]]) -> str:
+    """Build heading summary string for params output."""
+    total = len(params)
+    return (
+        f"{total} Parameter{'s' if total != 1 else ''}"
+    )
+
+
+def main() -> int:
+    """Program entry point."""
+    args = parse_args()
+    params = create_params_hash(args.norm_rules, args.param_def)
+    info(f"Writing output file {args.output}")
+    if args.output_format == "json":
+        output_json(args.output, params)
+    elif args.output_format == "html":
+        output_html(args.output, params)
+    else:
+        fatal(f"Unknown output format {args.output_format}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
