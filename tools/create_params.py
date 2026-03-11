@@ -724,7 +724,7 @@ def param_chapter_names(param: Dict[str, Any]) -> List[str]:
 def params_by_chapter_name(
     params: List[Dict[str, Any]],
 ) -> Tuple[List[str], Dict[str, List[Dict[str, Any]]], List[Dict[str, Any]]]:
-    """Group parameters by chapter_name values found in impl-defs entries."""
+    """Group parameters by chapter_name values."""
     by_chapter: Dict[str, List[Dict[str, Any]]] = {}
     without_chapter: List[Dict[str, Any]] = []
 
