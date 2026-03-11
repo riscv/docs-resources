@@ -4,6 +4,9 @@
       "name": "BOOLEAN",
       "def_filename": "test-ch1.yaml",
       "type": "boolean",
+      "json-schema": {
+        "type": "boolean"
+      },
       "impl-defs": [
         {
           "name": "BOOLEAN",
@@ -37,6 +40,11 @@
       "name": "BIT",
       "def_filename": "test-ch1.yaml",
       "type": "bit",
+      "json-schema": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 1
+      },
       "impl-defs": [
         {
           "name": "BIT",
@@ -63,6 +71,11 @@
       "name": "BYTE",
       "def_filename": "test-ch1.yaml",
       "type": "byte",
+      "json-schema": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 255
+      },
       "impl-defs": [
         {
           "name": "BYTE",
@@ -89,6 +102,11 @@
       "name": "HWORD",
       "def_filename": "test-ch1.yaml",
       "type": "hword",
+      "json-schema": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 65535
+      },
       "impl-defs": [
         {
           "name": "HWORD",
@@ -115,6 +133,11 @@
       "name": "WORD",
       "def_filename": "test-ch1.yaml",
       "type": "word",
+      "json-schema": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 4294967295
+      },
       "impl-defs": [
         {
           "name": "WORD",
@@ -141,6 +164,11 @@
       "name": "DWORD",
       "def_filename": "test-ch1.yaml",
       "type": "dword",
+      "json-schema": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 18446744073709551615
+      },
       "impl-defs": [
         {
           "name": "DWORD",
@@ -167,6 +195,11 @@
       "name": "UINT6",
       "def_filename": "test-ch1.yaml",
       "type": "uint6",
+      "json-schema": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 63
+      },
       "impl-defs": [
         {
           "name": "UINT6",
@@ -193,6 +226,11 @@
       "name": "UINT32",
       "def_filename": "test-ch1.yaml",
       "type": "uint32",
+      "json-schema": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 4294967295
+      },
       "impl-defs": [
         {
           "name": "UINT32",
@@ -219,6 +257,11 @@
       "name": "INT64",
       "def_filename": "test-ch1.yaml",
       "type": "int64",
+      "json-schema": {
+        "type": "integer",
+        "minimum": -9223372036854775808,
+        "maximum": 9223372036854775807
+      },
       "impl-defs": [
         {
           "name": "INT64",
@@ -248,6 +291,11 @@
         1,
         100
       ],
+      "json-schema": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 100
+      },
       "impl-defs": [
         {
           "name": "UINT_1TO100",
@@ -278,6 +326,14 @@
         "DEF",
         "GHI"
       ],
+      "json-schema": {
+        "type": "string",
+        "enum": [
+          "ABC",
+          "DEF",
+          "GHI"
+        ]
+      },
       "impl-defs": [
         {
           "name": "LIST_STR",
@@ -308,6 +364,14 @@
         2,
         4
       ],
+      "json-schema": {
+        "type": "integer",
+        "enum": [
+          1,
+          2,
+          4
+        ]
+      },
       "impl-defs": [
         {
           "name": "LIST_INT",
@@ -339,6 +403,14 @@
         "PINK",
         "WHITE"
       ],
+      "json-schema": {
+        "type": "string",
+        "enum": [
+          "RED",
+          "PINK",
+          "WHITE"
+        ]
+      },
       "note": "This is a note about the ROSE_COLORS parameter.",
       "description": "This is a description about the ROSE_COLORS parameter. Here's some *bold text*.",
       "impl-defs": [
@@ -370,6 +442,13 @@
         32,
         64
       ],
+      "json-schema": {
+        "type": "integer",
+        "enum": [
+          32,
+          64
+        ]
+      },
       "impl-defs": [
         {
           "name": "XLEN1",
@@ -418,6 +497,11 @@
         0,
         16
       ],
+      "json-schema": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 16
+      },
       "impl-defs": [
         {
           "name": "ASIDLEN",
@@ -447,6 +531,11 @@
         0,
         16
       ],
+      "json-schema": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 16
+      },
       "impl-defs": [
         {
           "name": "ASIDLEN",
@@ -473,6 +562,11 @@
       "name": "NO_IMPL_DEF",
       "def_filename": "test-ch2.yaml",
       "type": "bit",
+      "json-schema": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 1
+      },
       "note": "This is a note for a parameter without any implementation-defined behavior. Here's an 2^32^ exponent."
     }
   ]

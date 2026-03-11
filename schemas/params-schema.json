@@ -35,6 +35,10 @@
           "range": {
             "$ref": "param-common-schema.json#/paramRange"
           },
+          "json-schema": {
+            "type": "object",
+            "description": "JSON Schema equivalent of the type or range property"
+          },
           "impl-defs": {
             "allOf": [
               {
@@ -47,7 +51,7 @@
             ]
           }
         },
-        "required": ["name", "def_filename", "chapter_name"],
+        "required": ["name", "def_filename", "chapter_name", "json-schema"],
         "allOf": [
           {
             "oneOf": [

@@ -3,6 +3,7 @@
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
@@ -199,6 +200,52 @@ def resolve_impldef_entries(
     return resolved
 
 
+def param_type_to_json_schema(
+    param_type: Any,
+    param_range: Any,
+    def_filename: str,
+    name: str,
+) -> Dict[str, Any]:
+    """Convert a type or range property value to an equivalent JSON Schema object."""
+    if param_range is not None:
+        return {"type": "integer", "minimum": param_range[0], "maximum": param_range[1]}
+
+    if isinstance(param_type, list):
+        all_int = all(isinstance(v, int) for v in param_type)
+        all_str = all(isinstance(v, str) for v in param_type)
+        if all_int:
+            return {"type": "integer", "enum": list(param_type)}
+        if all_str:
+            return {"type": "string", "enum": list(param_type)}
+        return {"enum": list(param_type)}
+
+    if param_type == "boolean":
+        return {"type": "boolean"}
+    if param_type == "bit":
+        return {"type": "integer", "minimum": 0, "maximum": 1}
+    if param_type == "byte":
+        return {"type": "integer", "minimum": 0, "maximum": 255}
+    if param_type == "hword":
+        return {"type": "integer", "minimum": 0, "maximum": 65535}
+    if param_type == "word":
+        return {"type": "integer", "minimum": 0, "maximum": 4294967295}
+    if param_type == "dword":
+        return {"type": "integer", "minimum": 0, "maximum": 18446744073709551615}
+
+    m = re.match(r'^uint(\d+)$', param_type)
+    if m:
+        n = int(m.group(1))
+        return {"type": "integer", "minimum": 0, "maximum": (1 << n) - 1}
+
+    m = re.match(r'^int(\d+)$', param_type)
+    if m:
+        n = int(m.group(1))
+        return {"type": "integer", "minimum": -(1 << (n - 1)), "maximum": (1 << (n - 1)) - 1}
+
+    fatal(f"Parameter {name} in {def_filename} has unrecognized type {param_type!r}")
+    return {}  # unreachable
+
+
 def add_parameter_entries(
     parameters: List[Dict[str, Any]],
     entry: Dict[str, Any],
@@ -266,6 +313,10 @@ def add_parameter_entries(
             out_entry["type"] = param_type
         if has_range:
             out_entry["range"] = list(param_range)
+
+        out_entry["json-schema"] = param_type_to_json_schema(
+            param_type, param_range, def_filename, name
+        )
 
         note = entry.get("note")
         if note is not None:
