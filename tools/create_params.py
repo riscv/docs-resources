@@ -660,6 +660,10 @@ def html_param_table_row(f, param: Dict[str, Any], chapter_name: Optional[str]):
             target_html_fname = tag.get("stds_doc_url")
             is_context = bool(tag.get("context", False))
             if isinstance(tag_text, str):
+                if not isinstance(tag_name, str):
+                    fatal(
+                        f"Invalid or missing tag name in normative rules JSON: {tag!r}"
+                    )
                 html = convert_tag_text_to_html(tag_text, target_html_fname, is_context)
                 if re.search(r"<a\b", html):
                     text_with_link = html
