@@ -29,6 +29,9 @@ Use inline anchor that [#norm:inline-with-hash]+includes a hash # symbol.+
 [[norm:extension-dependency]]
 The F extensions depends on the Zicsr extension.
 
+[[norm:all-bases]]
+Everyone loves RISC-V!
+
 // PASSES
 This normative text [#norm:clarification-without-text]#isn't clear enough.#
 This normative text [#norm:clarification-with-text]#also isn't clear enough.#
