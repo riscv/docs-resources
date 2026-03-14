@@ -23,6 +23,8 @@ PARAMS_TESTS_DIR := $(TESTS_DIR)/params
 TAGS_TESTS_DIR := $(TESTS_DIR)/tags
 TAG_CHANGES_TESTS_DIR := $(TESTS_DIR)/tag-changes
 ADOC2HTML_TESTS_DIR := $(TESTS_DIR)/adoc2html
+SHARED_UTILS_TESTS_DIR := $(TESTS_DIR)/shared_utils
+TEXT_TO_HTML_TESTS_DIR := $(TESTS_DIR)/text_to_html
 NORM_RULE_DEF_DIR := $(NORM_RULE_TESTS_DIR)
 NORM_RULE_EXPECTED_DIR := $(NORM_RULE_TESTS_DIR)/expected
 PARAMS_DEF_DIR := $(PARAMS_TESTS_DIR)
@@ -36,11 +38,11 @@ DETECT_TAG_CHANGES_TOOL := $(TOOLS_DIR)/detect_tag_changes.py
 DETECT_TAG_CHANGES_PYTHON := python3 $(DETECT_TAG_CHANGES_TOOL)
 CREATE_PARAMS_TOOL := $(TOOLS_DIR)/create_params.py
 CREATE_PARAMS_PYTHON := python3 $(CREATE_PARAMS_TOOL)
-CREATE_PARAM_ADOC_FILES_TOOL := $(TOOLS_DIR)/create_param_adoc_files.py
+CREATE_PARAM_ADOC_FILES_TOOL := $(TOOLS_DIR)/create_param_appendix.py
 CREATE_PARAM_ADOC_FILES_PYTHON := python3 $(CREATE_PARAM_ADOC_FILES_TOOL)
-PARAM_ADOC_TEST_SCRIPT := $(PARAMS_TESTS_DIR)/test_param_adoc_files.py
+PARAM_ADOC_TEST_SCRIPT := $(PARAMS_TESTS_DIR)/test_param_appendix.py
 PARAM_ADOC_TEST_PYTHON := python3 $(PARAM_ADOC_TEST_SCRIPT)
-PARAMS_ADOC_TEMPLATE := $(PARAMS_TESTS_DIR)/test-params-template.adoc
+PARAMS_ADOC_TEMPLATE := $(PARAMS_TESTS_DIR)/test-param-appendix-template.adoc
 
 # Stuff for building test standards document in HTML to have links into it.
 DOCS = test-ch1 test-ch2
@@ -83,9 +85,9 @@ BUILT_NORM_RULES_HTML := $(BUILD_DIR)/$(NORM_RULE_HTML_OUTPUT_FNAME)
 BUILT_NORM_RULES_TAGS_NO_RULES := $(BUILD_DIR)/$(NORM_RULE_TAGS_NO_RULES_OUTPUT_FNAME)
 BUILT_PARAMS_JSON := $(BUILD_DIR)/$(PARAMS_JSON_OUTPUT_FNAME)
 BUILT_PARAMS_HTML := $(BUILD_DIR)/$(PARAMS_HTML_OUTPUT_FNAME)
-BUILT_PARAM_ADOC_DIR := $(BUILD_DIR)/test-param-generated-adoc
+BUILT_PARAM_ADOC_DIR := $(BUILD_DIR)/test-param-appendix-adoc-includes
 BUILT_PARAM_ADOC_STAMP := $(BUILD_DIR)/test-param-adoc.done
-BUILT_PARAMS_ADOC := $(BUILD_DIR)/test-params.adoc
+BUILT_PARAMS_ADOC := $(BUILD_DIR)/test-param-appendix.adoc
 
 # Combine separate fnames into lists.
 BUILT_TEST_HTML_FNAMES := $(BUILT_TEST_CH1_HTML_FNAME) $(BUILT_TEST_CH2_HTML_FNAME)
@@ -99,14 +101,18 @@ EXPECTED_NORM_RULES_JSON := $(NORM_RULE_EXPECTED_DIR)/$(NORM_RULE_JSON_OUTPUT_FN
 EXPECTED_NORM_RULES_HTML := $(NORM_RULE_EXPECTED_DIR)/$(NORM_RULE_HTML_OUTPUT_FNAME)
 EXPECTED_PARAMS_JSON := $(PARAMS_EXPECTED_DIR)/$(PARAMS_JSON_OUTPUT_FNAME)
 EXPECTED_PARAMS_HTML := $(PARAMS_EXPECTED_DIR)/$(PARAMS_HTML_OUTPUT_FNAME)
-EXPECTED_PARAMS_ADOC := $(PARAMS_EXPECTED_DIR)/test-params.adoc
-EXPECTED_PARAM_ADOC_DIR := $(PARAMS_EXPECTED_DIR)/test-param-generated-adoc
+EXPECTED_PARAMS_ADOC := $(PARAMS_EXPECTED_DIR)/test-param-appendix.adoc
+EXPECTED_PARAM_ADOC_DIR := $(PARAMS_EXPECTED_DIR)/test-param-appendix-adoc-includes
 
 # Normative rule definition input YAML files.
 GOOD_NORM_RULE_DEF_FILES := $(NORM_RULE_DEF_DIR)/test-ch1.yaml $(NORM_RULE_DEF_DIR)/test-ch2.yaml
 BAD_NORM_RULE_DEF_FILES := $(NORM_RULE_DEF_DIR)/missing_tag_refs.yaml
 PARAM_DEF_TEST_FILES := $(PARAMS_TESTS_DIR)/test-ch1.yaml $(PARAMS_TESTS_DIR)/test-ch2.yaml
 ADOC2HTML_TEST_SCRIPT := $(ADOC2HTML_TESTS_DIR)/test_adoc_to_html.py
+SHARED_UTILS_TEST_SCRIPT := $(SHARED_UTILS_TESTS_DIR)/test_shared_utils.py
+ADOC_TO_HTML_UNIT_TEST_SCRIPT := $(TEXT_TO_HTML_TESTS_DIR)/test_adoc_to_html_unit.py
+DEF_TEXT_TO_HTML_UNIT_TEST_SCRIPT := $(TEXT_TO_HTML_TESTS_DIR)/test_def_text_to_html_unit.py
+TAG_TEXT_TO_HTML_UNIT_TEST_SCRIPT := $(TEXT_TO_HTML_TESTS_DIR)/test_tag_text_to_html_unit.py
 
 # Add -t to each normative tag input filename and add prefix of "/" to make into absolute pathname.
 NORM_TAG_FILE_ARGS := $(foreach relative_pname,$(BUILT_TEST_NORM_TAGS_FNAMES),-t /$(relative_pname))
@@ -184,7 +190,7 @@ all: test
 
 # Build tests and compare against expected
 .PHONY: test
-test: build-tests compare-tests test-tag-changes test-adoc2html
+test: build-tests compare-tests test-tag-changes test-adoc2html test-shared-utils test-text-to-html
 
 # Build tests
 .PHONY: build-tests build-test-tags build-test-norm-rules-json build-test-norm-rules-html build-test-tags-without-rules build-test-params-json build-test-params-html build-test-param-adoc
@@ -284,6 +290,31 @@ test-tag-changes-update: $(TAG_CHANGES_TEST_REFERENCE_PATH)
 test-adoc2html: $(ADOC2HTML_TEST_SCRIPT) $(TOOLS_DIR)/adoc_to_html.py
 	@echo "TESTING ADOC2HTML CONVERSION"
 	python3 $(ADOC2HTML_TEST_SCRIPT) && echo "test-adoc2html PASSED" || (echo "test-adoc2html FAILED"; exit 1)
+
+# Test shared_utils helpers in isolation.
+.PHONY: test-shared-utils
+test-shared-utils: $(SHARED_UTILS_TEST_SCRIPT) $(TOOLS_DIR)/shared_utils.py
+	@echo "TESTING SHARED_UTILS HELPERS"
+	python3 $(SHARED_UTILS_TEST_SCRIPT) && echo "test-shared-utils PASSED" || (echo "test-shared-utils FAILED"; exit 1)
+
+# Test converter helpers in isolation.
+.PHONY: test-text-to-html
+test-text-to-html: test-adoc-to-html-unit test-def-text-to-html-unit test-tag-text-to-html-unit
+
+.PHONY: test-adoc-to-html-unit
+test-adoc-to-html-unit: $(ADOC_TO_HTML_UNIT_TEST_SCRIPT) $(TOOLS_DIR)/adoc_to_html.py
+	@echo "TESTING ADOC_TO_HTML UNIT HELPERS"
+	python3 $(ADOC_TO_HTML_UNIT_TEST_SCRIPT) && echo "test-adoc-to-html-unit PASSED" || (echo "test-adoc-to-html-unit FAILED"; exit 1)
+
+.PHONY: test-def-text-to-html-unit
+test-def-text-to-html-unit: $(DEF_TEXT_TO_HTML_UNIT_TEST_SCRIPT) $(TOOLS_DIR)/def_text_to_html.py $(TOOLS_DIR)/adoc_to_html.py
+	@echo "TESTING DEF_TEXT_TO_HTML UNIT HELPERS"
+	python3 $(DEF_TEXT_TO_HTML_UNIT_TEST_SCRIPT) && echo "test-def-text-to-html-unit PASSED" || (echo "test-def-text-to-html-unit FAILED"; exit 1)
+
+.PHONY: test-tag-text-to-html-unit
+test-tag-text-to-html-unit: $(TAG_TEXT_TO_HTML_UNIT_TEST_SCRIPT) $(TOOLS_DIR)/tag_text_to_html.py $(TOOLS_DIR)/def_text_to_html.py $(TOOLS_DIR)/adoc_to_html.py
+	@echo "TESTING TAG_TEXT_TO_HTML UNIT HELPERS"
+	python3 $(TAG_TEXT_TO_HTML_UNIT_TEST_SCRIPT) && echo "test-tag-text-to-html-unit PASSED" || (echo "test-tag-text-to-html-unit FAILED"; exit 1)
 
 # Update expected files from built files
 .PHONY: update-expected

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Test create_param_adoc_files.py output by building a combined AsciiDoc file.
+"""Test create_param_appendix.py output by building a combined AsciiDoc file.
 
 Copies a template AsciiDoc file to the output path, replacing the marker
 comment "// ALL GENERATED PARAMETER ADOC FILES" with include:: directives
@@ -12,7 +12,7 @@ import os
 import sys
 from pathlib import Path
 
-PN = "test_param_adoc_files.py"
+PN = "test_param_appendix.py"
 MARKER = "// ALL GENERATED PARAMETER ADOC FILES"
 
 

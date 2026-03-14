@@ -5,32 +5,23 @@ Input JSON must conform to schemas/params-schema.json.
 """
 
 import argparse
-import json
 import re
 import sys
 from pathlib import Path
 from typing import Any, Dict, List
 
-PN = "create_param_adoc_files.py"
-NORM_RULES_BASE_URL = (
-    "https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html"
+from shared_utils import (
+    NORM_RULES_BASE_URL,
+    check_impldef_cat,
+    check_kind,
+    format_param_feature,
+    load_json_object,
+    make_log_helpers,
 )
 
+PN = "create_param_appendix.py"
 
-def error(msg: str):
-    """Print an error message."""
-    print(f"{PN}: ERROR: {msg}", file=sys.stderr)
-
-
-def fatal(msg: str):
-    """Print an error and exit."""
-    error(msg)
-    sys.exit(1)
-
-
-def info(msg: str):
-    """Print an informational message."""
-    print(f"{PN}: {msg}")
+error, info, fatal = make_log_helpers(PN)
 
 
 def parse_args() -> argparse.Namespace:
@@ -60,18 +51,7 @@ def parse_args() -> argparse.Namespace:
 
 def load_params_json(pathname: str) -> Dict[str, Any]:
     """Load params JSON and validate top-level shape."""
-    try:
-        with open(pathname, "r", encoding="utf-8") as f:
-            data = json.load(f)
-    except FileNotFoundError as e:
-        fatal(str(e))
-    except json.JSONDecodeError as e:
-        fatal(f"JSON parse error in {pathname}: {e}")
-    except Exception as e:
-        fatal(f"Error reading JSON file {pathname}: {e}")
-
-    if not isinstance(data, dict):
-        fatal(f"Expected top-level JSON object in {pathname}")
+    data = load_json_object(pathname, fatal)
 
     params_obj: Any = data.get("parameters")
     if not isinstance(params_obj, list):
@@ -83,6 +63,39 @@ def load_params_json(pathname: str) -> Dict[str, Any]:
         name = param.get("name")
         if not isinstance(name, str) or not name:
             fatal(f"Expected parameters[{idx}].name to be a non-empty string")
+
+        impl_defs = param.get("impl-defs")
+        if impl_defs is None:
+            continue
+        if not isinstance(impl_defs, list):
+            fatal(f"Expected parameters[{idx}].impl-defs to be an array")
+
+        for impl_idx, impl_def in enumerate(impl_defs):
+            if not isinstance(impl_def, dict):
+                fatal(
+                    f"Expected parameters[{idx}].impl-defs[{impl_idx}] to be an object"
+                )
+
+            rule_name = impl_def.get("name")
+            nr_name = rule_name if isinstance(rule_name, str) else name
+
+            kind = impl_def.get("kind")
+            if kind is not None:
+                if not isinstance(kind, str):
+                    fatal(
+                        f"Expected parameters[{idx}].impl-defs[{impl_idx}].kind "
+                        f"to be a string"
+                    )
+                check_kind(kind, nr_name, None, fatal, PN)
+
+            impldef_cat = impl_def.get("impl-def-category")
+            if impldef_cat is not None:
+                if not isinstance(impldef_cat, str):
+                    fatal(
+                        f"Expected parameters[{idx}].impl-defs[{impl_idx}].impl-def-category "
+                        f"to be a string"
+                    )
+                check_impldef_cat(impldef_cat, nr_name, None, fatal, PN)
 
     return data
 
@@ -125,49 +138,6 @@ def infer_type_string(param: Dict[str, Any]) -> str:
             return f"Integer {lo} to {hi}"
 
     return "(unspecified)"
-
-
-def infer_isa_feature(param: Dict[str, Any]) -> str:
-    """Render ISA feature string."""
-    impl_defs = param.get("impl-defs")
-    if not isinstance(impl_defs, list):
-        chapter_name = param.get("chapter_name")
-        if isinstance(chapter_name, str) and chapter_name:
-            return f"CHAP:{chapter_name}"
-        return "(unspecified)"
-
-    kind_prefixes = {
-        "base": "BASE",
-        "extension": "EXT",
-        "csr": "CSR",
-        "csr_field": "FLD",
-        "extension_dependency": "EXT_DEP",
-        "instruction": "INST",
-    }
-
-    features: List[str] = []
-    seen = set()
-    for impl_def in impl_defs:
-        if not isinstance(impl_def, dict):
-            continue
-        kind = impl_def.get("kind")
-        prefix = kind_prefixes.get(kind) if isinstance(kind, str) else None
-        instances = impl_def.get("instances")
-        if not isinstance(instances, list):
-            continue
-        for instance in instances:
-            if not isinstance(instance, str):
-                continue
-            rendered = f"{prefix}:{instance}" if prefix else instance
-            if rendered not in seen:
-                seen.add(rendered)
-                features.append(rendered)
-
-    if not features:
-        chapter_name = param.get("chapter_name")
-        return chapter_name if isinstance(chapter_name, str) and chapter_name else "(unspecified)"
-
-    return ", ".join(features)
 
 
 def infer_normative_rules(param: Dict[str, Any]) -> List[str]:
@@ -225,7 +195,7 @@ def render_parameter_row_fragment(param: Dict[str, Any]) -> str:
     """Render one AsciiDoc row fragment (4 columns)."""
     name = param["name"]
     type_str = infer_type_string(param)
-    isa_feature = infer_isa_feature(param)
+    feature = format_param_feature(param)
     norm_rules = infer_normative_rules(param)
 
     lines: List[str] = []
@@ -243,7 +213,7 @@ def render_parameter_row_fragment(param: Dict[str, Any]) -> str:
         lines.append("* (none)")
 
     lines.append(f"| {type_str}")
-    lines.append(f"| {isa_feature}")
+    lines.append(f"| {feature}")
     lines.append(render_definition_cell(param))
 
     return "\n".join(lines) + "\n"
