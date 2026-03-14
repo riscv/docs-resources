@@ -6,5 +6,5 @@ Normative Rule(s):
 * https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#XLEN1[XLEN1]
 * https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#XLEN2[XLEN2]
 | Integer
-| Ch2-A
+| MockExtZ
 | See normative rule

@@ -5,5 +5,5 @@ Normative Rule(s):
 
 * https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#LIST_INT[LIST_INT]
 | Integer
-| Zch1-A, Zch1-B
+| MockExtX, MockExtY
 | See normative rule

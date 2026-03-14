@@ -25,17 +25,17 @@ normative_rule_definitions:
     impl-def-behavior: true
     tag: "norm:ROSE_COLORS"
     kind: extension
-    instance: Ch2-A
+    instance: MockExtZ
   - names: [XLEN1, XLEN2]
     impl-def-behavior: true
     tag: "norm:XLEN"
     kind: extension
-    instance: Ch2-A
+    instance: MockExtZ
   - name: ASIDLEN
     impl-def-behavior: true
     tag: "norm:ASIDLEN"
     kind: extension
-    instance: Ch2-A
+    instance: MockExtZ
 
   # CSR field types
   - name: CSR_FIELD_WARL1

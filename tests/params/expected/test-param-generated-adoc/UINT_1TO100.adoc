@@ -5,5 +5,5 @@ Normative Rule(s):
 
 * https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#UINT_1TO100[UINT_1TO100]
 | Integer 1 to 100
-| Zch1-B
+| MockExtY
 | See normative rule

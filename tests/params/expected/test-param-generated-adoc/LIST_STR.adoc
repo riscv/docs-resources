@@ -5,5 +5,5 @@ Normative Rule(s):
 
 * https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#LIST_STR[LIST_STR]
 | Enum (ABC, DEF, GHI)
-| Zch1-B
+| MockExtY
 | See normative rule
