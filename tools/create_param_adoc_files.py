@@ -128,16 +128,21 @@ def infer_type_string(param: Dict[str, Any]) -> str:
 
 
 def infer_isa_feature(param: Dict[str, Any]) -> str:
-    """Render ISA feature string for table column 3."""
+    """Render ISA feature string."""
     impl_defs = param.get("impl-defs")
     if not isinstance(impl_defs, list):
         chapter_name = param.get("chapter_name")
-        return chapter_name if isinstance(chapter_name, str) and chapter_name else "(unspecified)"
+        if isinstance(chapter_name, str) and chapter_name:
+            return f"CHAP:{chapter_name}"
+        return "(unspecified)"
 
-    instance_aliases = {
-        "A": "Atomic (Zalrsc extension)",
-        "RV32I": "RV32I/RV64I Base ISA",
-        "Zihpm": "Zicntr",
+    kind_prefixes = {
+        "base": "BASE",
+        "extension": "EXT",
+        "csr": "CSR",
+        "csr_field": "FLD",
+        "extension_dependency": "EXT_DEP",
+        "instruction": "INST",
     }
 
     features: List[str] = []
@@ -145,13 +150,15 @@ def infer_isa_feature(param: Dict[str, Any]) -> str:
     for impl_def in impl_defs:
         if not isinstance(impl_def, dict):
             continue
+        kind = impl_def.get("kind")
+        prefix = kind_prefixes.get(kind) if isinstance(kind, str) else None
         instances = impl_def.get("instances")
         if not isinstance(instances, list):
             continue
         for instance in instances:
             if not isinstance(instance, str):
                 continue
-            rendered = instance_aliases.get(instance, instance)
+            rendered = f"{prefix}:{instance}" if prefix else instance
             if rendered not in seen:
                 seen.add(rendered)
                 features.append(rendered)

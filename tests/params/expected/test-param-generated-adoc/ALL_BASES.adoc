@@ -5,5 +5,5 @@ Normative Rule(s):
 
 * https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#ALL_BASES[ALL_BASES]
 | Integer
-| Any
+| BASE:Any
 | See normative rule

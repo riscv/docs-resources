@@ -155,11 +155,11 @@
   </aside>
     <main>
       <style>.grand-total-heading { font-size: 24px; font-weight: bold; }</style>
-      <h1 class="grand-total-heading">82 Normative Rules: Includes 19 Implementation-Defined Behaviors (16 No Category, 2 WARL, 1 WLRL)</h1>
+      <h1 class="grand-total-heading">90 Normative Rules: Includes 27 Implementation-Defined Behaviors (24 No Category, 2 WARL, 1 WLRL)</h1>
 
       <section id="table-norm-rules-ch-1" class="section">
         <table>
-          <caption class="sticky-caption">Chapter One: 70 Normative Rules: Includes 12 Implementation-Defined Behaviors</caption>
+          <caption class="sticky-caption">Chapter One: 71 Normative Rules: Includes 13 Implementation-Defined Behaviors</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-description">
@@ -743,13 +743,30 @@
               <td>This is a list with values 1, 2 and 4.</td>
               <td><a href="test-ch1.html#norm:list-int">norm:list-int</a></td>
             </tr>
+            <tr>
+              <td rowspan=4 id="FOOBAR_CH1_EXT_X">FOOBAR_CH1_EXT_X</td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>MockExtX</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>Implementation-defined behavior</td>
+              <td>Rule's property</td>
+            </tr>
+            <tr>
+              <td>This is the Ch1 part of the foobar normative rule.</td>
+              <td><a href="test-ch1.html#norm:foobar-ch1">norm:foobar-ch1</a></td>
+            </tr>
           </tbody>
         </table>
       </section>
 
       <section id="table-norm-rules-ch-2" class="section">
         <table>
-          <caption class="sticky-caption">Chapter Two: 12 Normative Rules: Includes 7 Implementation-Defined Behaviors (4 No Category, 2 WARL, 1 WLRL)</caption>
+          <caption class="sticky-caption">Chapter Two: 19 Normative Rules: Includes 14 Implementation-Defined Behaviors (11 No Category, 2 WARL, 1 WLRL)</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-description">
@@ -865,6 +882,125 @@
               <td><a href="test-ch2.html#norm:ASIDLEN">norm:ASIDLEN</a></td>
             </tr>
             <tr>
+              <td rowspan=4 id="FOOBAR_CH2_EXT_Z">FOOBAR_CH2_EXT_Z</td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>MockExtZ</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>Implementation-defined behavior</td>
+              <td>Rule's property</td>
+            </tr>
+            <tr>
+              <td>This is the Ch2 part of the foobar normative rule.</td>
+              <td><a href="test-ch2.html#norm:foobar-ch2">norm:foobar-ch2</a></td>
+            </tr>
+            <tr>
+              <td rowspan=4 id="MOCK_INST_X">MOCK_INST_X</td>
+              <td>instruction</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>MockInstX</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>Implementation-defined behavior</td>
+              <td>Rule's property</td>
+            </tr>
+            <tr>
+              <td>Here&#8217;s a normative rule for mock instruction "X".</td>
+              <td><a href="test-ch2.html#norm:mock-inst-x">norm:mock-inst-x</a></td>
+            </tr>
+            <tr>
+              <td rowspan=4 id="BASE_RV32I">BASE_RV32I</td>
+              <td>base</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>RV32I</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>Implementation-defined behavior</td>
+              <td>Rule's property</td>
+            </tr>
+            <tr>
+              <td>Here&#8217;s a normative rule for the RV32I base ISA.</td>
+              <td><a href="test-ch2.html#norm:base-rv32i">norm:base-rv32i</a></td>
+            </tr>
+            <tr>
+              <td rowspan=4 id="BASE_RV32I_RV64I">BASE_RV32I_RV64I</td>
+              <td>base</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>[RV32I, RV64I]</td>
+              <td>Rule's "instances" property</td>
+            </tr>
+            <tr>
+              <td>Implementation-defined behavior</td>
+              <td>Rule's property</td>
+            </tr>
+            <tr>
+              <td>Here&#8217;s a normative rule for the RV32I or RV64I base ISA.</td>
+              <td><a href="test-ch2.html#norm:base-rv32i-rv64i">norm:base-rv32i-rv64i</a></td>
+            </tr>
+            <tr>
+              <td rowspan=4 id="MOCK_CSR_X">MOCK_CSR_X</td>
+              <td>csr</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>MockCsrX</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>Implementation-defined behavior</td>
+              <td>Rule's property</td>
+            </tr>
+            <tr>
+              <td>Here&#8217;s a normative rule for mock CSR "X".</td>
+              <td><a href="test-ch2.html#norm:mock-csr-x">norm:mock-csr-x</a></td>
+            </tr>
+            <tr>
+              <td rowspan=4 id="MOCK_CSR_FIELD_Y">MOCK_CSR_FIELD_Y</td>
+              <td>csr_field</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>MockCsrFieldY</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>Implementation-defined behavior</td>
+              <td>Rule's property</td>
+            </tr>
+            <tr>
+              <td>Here&#8217;s a normative rule for mock CSR field "Y".</td>
+              <td><a href="test-ch2.html#norm:mock-csr-field-y">norm:mock-csr-field-y</a></td>
+            </tr>
+            <tr>
+              <td rowspan=4 id="MOCK_EXT_DEP_A_ON_B">MOCK_EXT_DEP_A_ON_B</td>
+              <td>extension_dependency</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>MockExtDepAOnB</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>Implementation-defined behavior</td>
+              <td>Rule's property</td>
+            </tr>
+            <tr>
+              <td>Here&#8217;s a normative rule for mock extension dependency of extension A on extension B.</td>
+              <td><a href="test-ch2.html#norm:mock-ext-dep-A-on-B">norm:mock-ext-dep-A-on-B</a></td>
+            </tr>
+            <tr>
               <td rowspan=3 id="CSR_FIELD_WARL1">CSR_FIELD_WARL1</td>
               <td>Implementation-defined behavior</td>
               <td>Rule's property</td>
@@ -909,7 +1045,7 @@
 
       <section id="table-impldefs-no-cat" class="section">
         <table>
-          <caption class="sticky-caption">No Category (A-Z): All 16 Implementation-Defined Behaviors</caption>
+          <caption class="sticky-caption">No Category (A-Z): All 24 Implementation-Defined Behaviors</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-description">
@@ -931,6 +1067,32 @@
             <tr>
               <td>The number of ASID bits is UNSPECIFIED and may be zero. The number of implemented ASID bits, termed ASIDLEN, may be determined by writing one to every bit position in the ASID field, then reading back the value in satp to see which bit positions in the ASID field hold a one.</td>
               <td><a href="test-ch2.html#norm:ASIDLEN">norm:ASIDLEN</a></td>
+            </tr>
+            <tr>
+              <td rowspan=3><a href="#BASE_RV32I">BASE_RV32I</a></td>
+              <td>base</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>RV32I</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>Here&#8217;s a normative rule for the RV32I base ISA.</td>
+              <td><a href="test-ch2.html#norm:base-rv32i">norm:base-rv32i</a></td>
+            </tr>
+            <tr>
+              <td rowspan=3><a href="#BASE_RV32I_RV64I">BASE_RV32I_RV64I</a></td>
+              <td>base</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>[RV32I, RV64I]</td>
+              <td>Rule's "instances" property</td>
+            </tr>
+            <tr>
+              <td>Here&#8217;s a normative rule for the RV32I or RV64I base ISA.</td>
+              <td><a href="test-ch2.html#norm:base-rv32i-rv64i">norm:base-rv32i-rv64i</a></td>
             </tr>
             <tr>
               <td rowspan=3><a href="#BIT">BIT</a></td>
@@ -989,6 +1151,32 @@
               <td><a href="test-ch1.html#norm:dword">norm:dword</a></td>
             </tr>
             <tr>
+              <td rowspan=3><a href="#FOOBAR_CH1_EXT_X">FOOBAR_CH1_EXT_X</a></td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>MockExtX</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>This is the Ch1 part of the foobar normative rule.</td>
+              <td><a href="test-ch1.html#norm:foobar-ch1">norm:foobar-ch1</a></td>
+            </tr>
+            <tr>
+              <td rowspan=3><a href="#FOOBAR_CH2_EXT_Z">FOOBAR_CH2_EXT_Z</a></td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>MockExtZ</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>This is the Ch2 part of the foobar normative rule.</td>
+              <td><a href="test-ch2.html#norm:foobar-ch2">norm:foobar-ch2</a></td>
+            </tr>
+            <tr>
               <td rowspan=3><a href="#HWORD">HWORD</a></td>
               <td>extension</td>
               <td>Rule's "kind" property</td>
@@ -1039,6 +1227,58 @@
             <tr>
               <td><table><thead><tr><th>Name</th><th>Description</th></tr></thead><tbody><tr><td>ABC</td><td>Letters "ABC"</td></tr><tr><td>DEF</td><td>Letters "DEF"</td></tr><tr><td>GHI</td><td>Letters "GHI"</td></tr></tbody></table></td>
               <td><a href="test-ch1.html#norm:list-str">norm:list-str</a></td>
+            </tr>
+            <tr>
+              <td rowspan=3><a href="#MOCK_CSR_FIELD_Y">MOCK_CSR_FIELD_Y</a></td>
+              <td>csr_field</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>MockCsrFieldY</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>Here&#8217;s a normative rule for mock CSR field "Y".</td>
+              <td><a href="test-ch2.html#norm:mock-csr-field-y">norm:mock-csr-field-y</a></td>
+            </tr>
+            <tr>
+              <td rowspan=3><a href="#MOCK_CSR_X">MOCK_CSR_X</a></td>
+              <td>csr</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>MockCsrX</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>Here&#8217;s a normative rule for mock CSR "X".</td>
+              <td><a href="test-ch2.html#norm:mock-csr-x">norm:mock-csr-x</a></td>
+            </tr>
+            <tr>
+              <td rowspan=3><a href="#MOCK_EXT_DEP_A_ON_B">MOCK_EXT_DEP_A_ON_B</a></td>
+              <td>extension_dependency</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>MockExtDepAOnB</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>Here&#8217;s a normative rule for mock extension dependency of extension A on extension B.</td>
+              <td><a href="test-ch2.html#norm:mock-ext-dep-A-on-B">norm:mock-ext-dep-A-on-B</a></td>
+            </tr>
+            <tr>
+              <td rowspan=3><a href="#MOCK_INST_X">MOCK_INST_X</a></td>
+              <td>instruction</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>MockInstX</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>Here&#8217;s a normative rule for mock instruction "X".</td>
+              <td><a href="test-ch2.html#norm:mock-inst-x">norm:mock-inst-x</a></td>
             </tr>
             <tr>
               <td rowspan=3><a href="#ROSE_COLORS">ROSE_COLORS</a></td>
@@ -1184,7 +1424,7 @@
 
       <section id="table-impldefs-ch-1" class="section">
         <table>
-          <caption class="sticky-caption">Chapter One: All 12 Implementation-Defined Behaviors</caption>
+          <caption class="sticky-caption">Chapter One: All 13 Implementation-Defined Behaviors</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-description">
@@ -1354,13 +1594,26 @@
               <td>This is a list with values 1, 2 and 4.</td>
               <td><a href="test-ch1.html#norm:list-int">norm:list-int</a></td>
             </tr>
+            <tr>
+              <td rowspan=3><a href="#FOOBAR_CH1_EXT_X">FOOBAR_CH1_EXT_X</a></td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>MockExtX</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>This is the Ch1 part of the foobar normative rule.</td>
+              <td><a href="test-ch1.html#norm:foobar-ch1">norm:foobar-ch1</a></td>
+            </tr>
           </tbody>
         </table>
       </section>
 
       <section id="table-impldefs-ch-2" class="section">
         <table>
-          <caption class="sticky-caption">Chapter Two: All 7 Implementation-Defined Behaviors</caption>
+          <caption class="sticky-caption">Chapter Two: All 14 Implementation-Defined Behaviors</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-description">
@@ -1421,6 +1674,97 @@
             <tr>
               <td>The number of ASID bits is UNSPECIFIED and may be zero. The number of implemented ASID bits, termed ASIDLEN, may be determined by writing one to every bit position in the ASID field, then reading back the value in satp to see which bit positions in the ASID field hold a one.</td>
               <td><a href="test-ch2.html#norm:ASIDLEN">norm:ASIDLEN</a></td>
+            </tr>
+            <tr>
+              <td rowspan=3><a href="#FOOBAR_CH2_EXT_Z">FOOBAR_CH2_EXT_Z</a></td>
+              <td>extension</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>MockExtZ</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>This is the Ch2 part of the foobar normative rule.</td>
+              <td><a href="test-ch2.html#norm:foobar-ch2">norm:foobar-ch2</a></td>
+            </tr>
+            <tr>
+              <td rowspan=3><a href="#MOCK_INST_X">MOCK_INST_X</a></td>
+              <td>instruction</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>MockInstX</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>Here&#8217;s a normative rule for mock instruction "X".</td>
+              <td><a href="test-ch2.html#norm:mock-inst-x">norm:mock-inst-x</a></td>
+            </tr>
+            <tr>
+              <td rowspan=3><a href="#BASE_RV32I">BASE_RV32I</a></td>
+              <td>base</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>RV32I</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>Here&#8217;s a normative rule for the RV32I base ISA.</td>
+              <td><a href="test-ch2.html#norm:base-rv32i">norm:base-rv32i</a></td>
+            </tr>
+            <tr>
+              <td rowspan=3><a href="#BASE_RV32I_RV64I">BASE_RV32I_RV64I</a></td>
+              <td>base</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>[RV32I, RV64I]</td>
+              <td>Rule's "instances" property</td>
+            </tr>
+            <tr>
+              <td>Here&#8217;s a normative rule for the RV32I or RV64I base ISA.</td>
+              <td><a href="test-ch2.html#norm:base-rv32i-rv64i">norm:base-rv32i-rv64i</a></td>
+            </tr>
+            <tr>
+              <td rowspan=3><a href="#MOCK_CSR_X">MOCK_CSR_X</a></td>
+              <td>csr</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>MockCsrX</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>Here&#8217;s a normative rule for mock CSR "X".</td>
+              <td><a href="test-ch2.html#norm:mock-csr-x">norm:mock-csr-x</a></td>
+            </tr>
+            <tr>
+              <td rowspan=3><a href="#MOCK_CSR_FIELD_Y">MOCK_CSR_FIELD_Y</a></td>
+              <td>csr_field</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>MockCsrFieldY</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>Here&#8217;s a normative rule for mock CSR field "Y".</td>
+              <td><a href="test-ch2.html#norm:mock-csr-field-y">norm:mock-csr-field-y</a></td>
+            </tr>
+            <tr>
+              <td rowspan=3><a href="#MOCK_EXT_DEP_A_ON_B">MOCK_EXT_DEP_A_ON_B</a></td>
+              <td>extension_dependency</td>
+              <td>Rule's "kind" property</td>
+            </tr>
+            <tr>
+              <td>MockExtDepAOnB</td>
+              <td>Rule's "instance" property</td>
+            </tr>
+            <tr>
+              <td>Here&#8217;s a normative rule for mock extension dependency of extension A on extension B.</td>
+              <td><a href="test-ch2.html#norm:mock-ext-dep-A-on-B">norm:mock-ext-dep-A-on-B</a></td>
             </tr>
             <tr>
               <td rowspan=2><a href="#CSR_FIELD_WARL1">CSR_FIELD_WARL1</a></td>

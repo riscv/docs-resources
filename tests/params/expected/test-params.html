@@ -48,12 +48,12 @@
       <h2>Parameters by Chapter</h2>
       <nav class="nav">
         <a href="#table-params-ch-1" data-target="table-params-ch-1">One<span class="subtitle">13 entries</span></a>
-        <a href="#table-params-ch-2" data-target="table-params-ch-2">Two<span class="subtitle">5 entries</span></a>
+        <a href="#table-params-ch-2" data-target="table-params-ch-2">Two<span class="subtitle">12 entries</span></a>
       </nav>
     </aside>
     <main>
       <style>.grand-total-heading { font-size: 24px; font-weight: bold; }</style>
-      <h1 class="grand-total-heading">18 Parameters</h1>
+      <h1 class="grand-total-heading">25 Parameters</h1>
 
       <section id="table-params-ch-1" class="section">
         <table>
@@ -155,7 +155,7 @@
 
       <section id="table-params-ch-2" class="section">
         <table>
-          <caption class="sticky-caption">Chapter Two: 5 Parameters</caption>
+          <caption class="sticky-caption">Chapter Two: 12 Parameters</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-type">
@@ -188,6 +188,12 @@
               <td><a href="test-ch2.html#norm:XLEN">We use the term XLEN to refer to the width of an integer register in bits (either 32 or 64). No superscript in paragraph anchors for some reason.</a></td>
             </tr>
             <tr>
+              <td rowspan=1 id="FOOBAR">FOOBAR</td>
+              <td rowspan=1>boolean</td>
+              <td rowspan=1>MockExtZ</td>
+              <td><a href="test-ch2.html#norm:foobar-ch2">This is the Ch2 part of the foobar normative rule.</a></td>
+            </tr>
+            <tr>
               <td rowspan=1 id="ASIDLEN1">ASIDLEN1</td>
               <td rowspan=1>range 0 to 16</td>
               <td rowspan=1>MockExtZ</td>
@@ -204,6 +210,60 @@
               <td rowspan=1>bit</td>
               <td rowspan=1>(none)</td>
               <td>NOTE: This is a note for a parameter without any implementation-defined behavior. Here's an 2<sup>32</sup> exponent.</td>
+            </tr>
+            <tr>
+              <td rowspan=2 id="MOCK_INST_X">MOCK_INST_X</td>
+              <td rowspan=2>boolean</td>
+              <td rowspan=2>MockInstX</td>
+              <td>NOTE: This is a Mock "X" instruction parameter.</td>
+            </tr>
+            <tr>
+              <td><a href="test-ch2.html#norm:mock-inst-x">Here&#8217;s a normative rule for mock instruction "X".</a></td>
+            </tr>
+            <tr>
+              <td rowspan=2 id="BASE_RV32I">BASE_RV32I</td>
+              <td rowspan=2>boolean</td>
+              <td rowspan=2>RV32I</td>
+              <td>NOTE: This is a base RV32I parameter.</td>
+            </tr>
+            <tr>
+              <td><a href="test-ch2.html#norm:base-rv32i">Here&#8217;s a normative rule for the RV32I base ISA.</a></td>
+            </tr>
+            <tr>
+              <td rowspan=2 id="BASE_RV32I_RV64I">BASE_RV32I_RV64I</td>
+              <td rowspan=2>boolean</td>
+              <td rowspan=2>RV32I, RV64I</td>
+              <td>NOTE: This is a base RV32I or RV64I parameter.</td>
+            </tr>
+            <tr>
+              <td><a href="test-ch2.html#norm:base-rv32i-rv64i">Here&#8217;s a normative rule for the RV32I or RV64I base ISA.</a></td>
+            </tr>
+            <tr>
+              <td rowspan=2 id="MOCK_CSR_X">MOCK_CSR_X</td>
+              <td rowspan=2>boolean</td>
+              <td rowspan=2>MockCsrX</td>
+              <td>NOTE: This is a Mock "X" CSR parameter.</td>
+            </tr>
+            <tr>
+              <td><a href="test-ch2.html#norm:mock-csr-x">Here&#8217;s a normative rule for mock CSR "X".</a></td>
+            </tr>
+            <tr>
+              <td rowspan=2 id="MOCK_CSR_FIELD_Y">MOCK_CSR_FIELD_Y</td>
+              <td rowspan=2>boolean</td>
+              <td rowspan=2>MockCsrFieldY</td>
+              <td>NOTE: This is a Mock "Y" CSR field parameter.</td>
+            </tr>
+            <tr>
+              <td><a href="test-ch2.html#norm:mock-csr-field-y">Here&#8217;s a normative rule for mock CSR field "Y".</a></td>
+            </tr>
+            <tr>
+              <td rowspan=2 id="MOCK_EXT_DEP_A_ON_B">MOCK_EXT_DEP_A_ON_B</td>
+              <td rowspan=2>boolean</td>
+              <td rowspan=2>MockExtDepAOnB</td>
+              <td>NOTE: This is a Mock extension dependency parameter (A depends B).</td>
+            </tr>
+            <tr>
+              <td><a href="test-ch2.html#norm:mock-ext-dep-A-on-B">Here&#8217;s a normative rule for mock extension dependency of extension A on extension B.</a></td>
             </tr>
           </tbody>
         </table>

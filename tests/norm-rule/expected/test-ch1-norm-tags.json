@@ -64,7 +64,8 @@
     "norm:int64": "This is a 64-bit signed integer.",
     "norm:uint-1to100": "This is an unsigned integer in the range of 1 to 100.",
     "norm:list-str": "Name|Description\n===\nABC|Letters \"ABC\"¶DEF|Letters \"DEF\"¶GHI|Letters \"GHI\"\n===",
-    "norm:list-int": "This is a list with values 1, 2 and 4."
+    "norm:list-int": "This is a list with values 1, 2 and 4.",
+    "norm:foobar-ch1": "This is the Ch1 part of the foobar normative rule."
   },
   "sections": {
     "title": "",
@@ -195,7 +196,8 @@
           "norm:int64",
           "norm:uint-1to100",
           "norm:list-str",
-          "norm:list-int"
+          "norm:list-int",
+          "norm:foobar-ch1"
         ]
       }
     ],

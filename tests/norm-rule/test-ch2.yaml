@@ -36,6 +36,41 @@ normative_rule_definitions:
     tag: "norm:ASIDLEN"
     kind: extension
     instance: MockExtZ
+  - name: FOOBAR_CH2_EXT_Z
+    impl-def-behavior: true
+    tag: "norm:foobar-ch2"
+    kind: extension
+    instance: MockExtZ
+  - name: MOCK_INST_X
+    impl-def-behavior: true
+    tag: "norm:mock-inst-x"
+    kind: instruction
+    instance: MockInstX
+  - name: BASE_RV32I
+    impl-def-behavior: true
+    tag: "norm:base-rv32i"
+    kind: base
+    instance: RV32I
+  - name: BASE_RV32I_RV64I
+    impl-def-behavior: true
+    tag: "norm:base-rv32i-rv64i"
+    kind: base
+    instances: [RV32I, RV64I]
+  - name: MOCK_CSR_X
+    impl-def-behavior: true
+    tag: "norm:mock-csr-x"
+    kind: csr
+    instance: MockCsrX
+  - name: MOCK_CSR_FIELD_Y
+    impl-def-behavior: true
+    tag: "norm:mock-csr-field-y"
+    kind: csr_field
+    instance: MockCsrFieldY
+  - name: MOCK_EXT_DEP_A_ON_B
+    impl-def-behavior: true
+    tag: "norm:mock-ext-dep-A-on-B"
+    kind: extension_dependency
+    instance: MockExtDepAOnB
 
   # CSR field types
   - name: CSR_FIELD_WARL1
