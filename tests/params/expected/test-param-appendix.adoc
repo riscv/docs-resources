@@ -1,0 +1,36 @@
+// Just used to include all generated adoc parameter files into a table.
+
+.Parameter Definitions
+[cols="30%,10%,10%,50%"]
+|===
+| Parameter and Mapping to Normative Rules | Type | Feature(s) | Definition
+
+// ALL GENERATED PARAMETER ADOC FILES
+
+include::test-param-appendix-adoc-includes/ALL_BASES.adoc[]
+include::test-param-appendix-adoc-includes/ASIDLEN1.adoc[]
+include::test-param-appendix-adoc-includes/ASIDLEN2.adoc[]
+include::test-param-appendix-adoc-includes/BASE_RV32I.adoc[]
+include::test-param-appendix-adoc-includes/BASE_RV32I_RV64I.adoc[]
+include::test-param-appendix-adoc-includes/BIT.adoc[]
+include::test-param-appendix-adoc-includes/BOOLEAN.adoc[]
+include::test-param-appendix-adoc-includes/BYTE.adoc[]
+include::test-param-appendix-adoc-includes/DWORD.adoc[]
+include::test-param-appendix-adoc-includes/FOOBAR.adoc[]
+include::test-param-appendix-adoc-includes/HWORD.adoc[]
+include::test-param-appendix-adoc-includes/INT64.adoc[]
+include::test-param-appendix-adoc-includes/LIST_INT.adoc[]
+include::test-param-appendix-adoc-includes/LIST_STR.adoc[]
+include::test-param-appendix-adoc-includes/MOCK_CSR_FIELD_Y.adoc[]
+include::test-param-appendix-adoc-includes/MOCK_CSR_X.adoc[]
+include::test-param-appendix-adoc-includes/MOCK_EXT_DEP_A_ON_B.adoc[]
+include::test-param-appendix-adoc-includes/MOCK_INST_X.adoc[]
+include::test-param-appendix-adoc-includes/NO_IMPL_DEF.adoc[]
+include::test-param-appendix-adoc-includes/ROSE_COLORS.adoc[]
+include::test-param-appendix-adoc-includes/UINT32.adoc[]
+include::test-param-appendix-adoc-includes/UINT6.adoc[]
+include::test-param-appendix-adoc-includes/UINT_1TO100.adoc[]
+include::test-param-appendix-adoc-includes/WORD.adoc[]
+include::test-param-appendix-adoc-includes/XLEN.adoc[]
+
+|===

@@ -48,7 +48,7 @@ Paragraph Y
 Paragraph Z
 ====
 
-=== Chapter 2.2 - Implementation-Defined Rules
+=== Chapter 2.2 - Implementation-Defined Behaviors
 
 [#norm:ROSE_COLORS]#You can use red or yellow roses. The tags backend removes some adoc formating so I don't see *bold* text but I can see ^superscript^ as long as I use the inline anchor and not the paragraph anchor.#
 
@@ -58,6 +58,27 @@ No ^superscript^ in paragraph anchors for some reason.
 
 [[norm:ASIDLEN]]
 The number of ASID bits is UNSPECIFIED and may be zero. The number of implemented ASID bits, termed ASIDLEN, may be determined by writing one to every bit position in the ASID field, then reading back the value in satp to see which bit positions in the ASID field hold a one.
+
+[[norm:foobar-ch2]]
+This is the Ch2 part of the foobar normative rule.
+
+[[norm:mock-inst-x]]
+Here's a normative rule for mock instruction "X".
+
+[[norm:base-rv32i]]
+Here's a normative rule for the RV32I base ISA.
+
+[[norm:base-rv32i-rv64i]]
+Here's a normative rule for the RV32I or RV64I base ISA.
+
+[[norm:mock-csr-x]]
+Here's a normative rule for mock CSR "X".
+
+[[norm:mock-csr-field-y]]
+Here's a normative rule for mock CSR field "Y".
+
+[[norm:mock-ext-dep-A-on-B]]
+Here's a normative rule for mock extension dependency of extension A on extension B.
 
 === Chapter 2.3 - CSR Field Types
 

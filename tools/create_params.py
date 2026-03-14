@@ -12,27 +12,21 @@ from def_text_to_html import (
     convert_def_text_to_html,
     tag2html_link,
 )
+from shared_utils import (
+    check_impldef_cat,
+    check_kind,
+    format_param_feature,
+    load_json_object,
+    load_yaml_object,
+    make_log_helpers,
+)
 from tag_text_to_html import convert_tag_text_to_html
 
 PN = "create_params.py"
 PARAMS_CH_TABLE_NAME_PREFIX = "table-params-ch-"
 PARAMS_NO_CH_TABLE_NAME = "table-params-no-ch"
 
-
-def error(msg: str):
-    """Print an error message."""
-    print(f"{PN}: ERROR: {msg}", file=sys.stderr)
-
-
-def info(msg: str):
-    """Print an info message."""
-    print(f"{PN}: {msg}")
-
-
-def fatal(msg: str):
-    """Print an error and exit."""
-    error(msg)
-    sys.exit(1)
+error, info, fatal = make_log_helpers(PN)
 
 
 def parse_args() -> argparse.Namespace:
@@ -86,48 +80,12 @@ def parse_args() -> argparse.Namespace:
 
 def load_json_file(pathname: str) -> Dict[str, Any]:
     """Load a JSON file as a dict."""
-    path = Path(pathname)
-    data: Any = None
-    try:
-        with open(path, "r", encoding="utf-8") as f:
-            data = json.load(f)
-    except FileNotFoundError as e:
-        fatal(str(e))
-    except json.JSONDecodeError as e:
-        fatal(f"JSON parse error in {pathname}: {e}")
-    except Exception as e:
-        fatal(f"Error reading JSON file {pathname}: {e}")
-
-    if not isinstance(data, dict):
-        fatal(f"Expected top-level JSON object in {pathname}")
-
-    return data
+    return load_json_object(pathname, fatal)
 
 
 def load_yaml_file(pathname: str) -> Dict[str, Any]:
     """Load a YAML file as a dict."""
-    yaml_module: Any = None
-    try:
-        import yaml as yaml_module
-    except ImportError:
-        fatal("PyYAML is required but not installed. Run: pip install PyYAML")
-
-    path = Path(pathname)
-    data: Any = None
-    try:
-        with open(path, "r", encoding="utf-8") as f:
-            data = yaml_module.safe_load(f)
-    except FileNotFoundError as e:
-        fatal(str(e))
-    except yaml_module.YAMLError as e:
-        fatal(f"YAML parse error in {pathname}: {e}")
-    except Exception as e:
-        fatal(f"Error reading YAML file {pathname}: {e}")
-
-    if not isinstance(data, dict):
-        fatal(f"Expected top-level YAML object in {pathname}")
-
-    return data
+    return load_yaml_object(pathname, fatal)
 
 
 def normalize_impldef_refs(entry: Dict[str, Any], src_filename: str, param_name: str) -> List[str]:
@@ -196,7 +154,27 @@ def resolve_impldef_entries(
                 "which is not present in normative rules"
             )
         assert norm_rule_opt is not None
-        resolved.append(dict(norm_rule_opt))
+        resolved_entry = dict(norm_rule_opt)
+
+        kind = resolved_entry.get("kind")
+        if kind is not None:
+            if not isinstance(kind, str):
+                fatal(
+                    f"Parameter {param_name} in {src_filename} references impl-def {impl_def} "
+                    f"with non-string kind ({type(kind).__name__})"
+                )
+            check_kind(kind, impl_def, None, fatal, PN)
+
+        impldef_cat = resolved_entry.get("impl-def-category")
+        if impldef_cat is not None:
+            if not isinstance(impldef_cat, str):
+                fatal(
+                    f"Parameter {param_name} in {src_filename} references impl-def {impl_def} "
+                    f"with non-string impl-def-category ({type(impldef_cat).__name__})"
+                )
+            check_impldef_cat(impldef_cat, impl_def, None, fatal, PN)
+
+        resolved.append(resolved_entry)
     return resolved
 
 
@@ -522,7 +500,7 @@ def html_head(f, table_names: List[str]):
     .sticky-caption{position:sticky;top:0;background:#fff;padding:8px 0;z-index:1}
     .col-name{width:18%}
     .col-type{width:22%}
-    .col-bases-extensions{width:18%}
+    .col-feature{width:18%}
     .col-descriptions{width:42%}
     @media (max-width: 1000px){
       .app{grid-template-columns:1fr}
@@ -596,11 +574,11 @@ def html_table_header(f, table_name: str, table_caption: str):
     f.write('          <colgroup>\n')
     f.write('            <col class="col-name">\n')
     f.write('            <col class="col-type">\n')
-    f.write('            <col class="col-bases-extensions">\n')
+    f.write('            <col class="col-feature">\n')
     f.write('            <col class="col-descriptions">\n')
     f.write('          </colgroup>\n')
     f.write('          <thead>\n')
-    f.write('            <tr><th>Parameter Name</th><th>Type</th><th>Bases/Extensions</th><th>Description(s)</th></tr>\n')
+    f.write('            <tr><th>Parameter Name</th><th>Type</th><th>Feature(s)</th><th>Information (mostly Normative Rules)</th></tr>\n')
     f.write('          </thead>\n')
     f.write('          <tbody>\n')
 
@@ -631,21 +609,18 @@ def html_param_table_row(f, param: Dict[str, Any], chapter_name: Optional[str]):
     impl_defs = filter_impldefs_for_chapter(impl_defs_all, chapter_name)
     type_display = format_param_type_for_html(param)
 
-    base_extension_names: List[str] = []
-    for impl_def in impl_defs:
-        if not isinstance(impl_def, dict):
-            continue
-        instances = impl_def.get("instances")
-        if isinstance(instances, list):
-            for instance in instances:
-                if isinstance(instance, str) and instance not in base_extension_names:
-                    base_extension_names.append(instance)
+    feature_param = dict(param)
+    if isinstance(impl_defs_all, list):
+        feature_param["impl-defs"] = impl_defs
+    if chapter_name is not None:
+        feature_param["chapter_name"] = chapter_name
+    feature_str = format_param_feature(feature_param)
 
     descriptions: List[str] = []
     if isinstance(note, str):
         descriptions.append("NOTE: " + convert_def_text_to_html(note))
     if isinstance(description, str):
-        descriptions.append(convert_def_text_to_html(description))
+        descriptions.append("DESC: " + convert_def_text_to_html(description))
     for impl_def in impl_defs:
         if not isinstance(impl_def, dict):
             continue
@@ -664,6 +639,7 @@ def html_param_table_row(f, param: Dict[str, Any], chapter_name: Optional[str]):
                     fatal(
                         f"Invalid or missing tag name in normative rules JSON: {tag!r}"
                     )
+                assert isinstance(tag_name, str)
                 html = convert_tag_text_to_html(tag_text, target_html_fname, is_context)
                 if re.search(r"<a\b", html):
                     text_with_link = html
@@ -674,14 +650,12 @@ def html_param_table_row(f, param: Dict[str, Any], chapter_name: Optional[str]):
     if not descriptions:
         descriptions.append("(No description available)")
 
-    base_extension_str = ", ".join(base_extension_names) if base_extension_names else "(none)"
-
     row_span = len(descriptions)
 
     f.write('            <tr>\n')
     f.write(f'              <td rowspan={row_span} id="{name}">{name}</td>\n')
     f.write(f'              <td rowspan={row_span}>{type_display}</td>\n')
-    f.write(f'              <td rowspan={row_span}>{base_extension_str}</td>\n')
+    f.write(f'              <td rowspan={row_span}>{feature_str}</td>\n')
     f.write(f'              <td>{descriptions[0]}</td>\n')
     f.write('            </tr>\n')
 

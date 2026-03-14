@@ -16,7 +16,7 @@
           "kind": "extension",
           "impl-def-behavior": true,
           "instances": [
-            "Zch1-A"
+            "MockExtX"
           ],
           "tags": [
             {
@@ -55,7 +55,7 @@
           "kind": "extension",
           "impl-def-behavior": true,
           "instances": [
-            "Zch1-A"
+            "MockExtX"
           ],
           "tags": [
             {
@@ -87,7 +87,7 @@
           "kind": "extension",
           "impl-def-behavior": true,
           "instances": [
-            "Zch1-A"
+            "MockExtX"
           ],
           "tags": [
             {
@@ -119,7 +119,7 @@
           "kind": "extension",
           "impl-def-behavior": true,
           "instances": [
-            "Zch1-A"
+            "MockExtX"
           ],
           "tags": [
             {
@@ -151,7 +151,7 @@
           "kind": "extension",
           "impl-def-behavior": true,
           "instances": [
-            "Zch1-A"
+            "MockExtX"
           ],
           "tags": [
             {
@@ -183,7 +183,7 @@
           "kind": "extension",
           "impl-def-behavior": true,
           "instances": [
-            "Zch1-A"
+            "MockExtX"
           ],
           "tags": [
             {
@@ -215,7 +215,7 @@
           "kind": "extension",
           "impl-def-behavior": true,
           "instances": [
-            "Zch1-A"
+            "MockExtX"
           ],
           "tags": [
             {
@@ -247,7 +247,7 @@
           "kind": "extension",
           "impl-def-behavior": true,
           "instances": [
-            "Zch1-A"
+            "MockExtX"
           ],
           "tags": [
             {
@@ -279,7 +279,7 @@
           "kind": "extension",
           "impl-def-behavior": true,
           "instances": [
-            "Zch1-B"
+            "MockExtY"
           ],
           "tags": [
             {
@@ -314,7 +314,7 @@
           "kind": "extension",
           "impl-def-behavior": true,
           "instances": [
-            "Zch1-B"
+            "MockExtY"
           ],
           "tags": [
             {
@@ -353,7 +353,7 @@
           "kind": "extension",
           "impl-def-behavior": true,
           "instances": [
-            "Zch1-B"
+            "MockExtY"
           ],
           "tags": [
             {
@@ -392,8 +392,8 @@
           "kind": "extension",
           "impl-def-behavior": true,
           "instances": [
-            "Zch1-A",
-            "Zch1-B"
+            "MockExtX",
+            "MockExtY"
           ],
           "tags": [
             {
@@ -466,7 +466,7 @@
           "kind": "extension",
           "impl-def-behavior": true,
           "instances": [
-            "Ch2-A"
+            "MockExtZ"
           ],
           "tags": [
             {
@@ -503,7 +503,7 @@
           "kind": "extension",
           "impl-def-behavior": true,
           "instances": [
-            "Ch2-A"
+            "MockExtZ"
           ],
           "tags": [
             {
@@ -522,13 +522,62 @@
           "kind": "extension",
           "impl-def-behavior": true,
           "instances": [
-            "Ch2-A"
+            "MockExtZ"
           ],
           "tags": [
             {
               "name": "norm:XLEN",
               "context": false,
               "text": "We use the term XLEN to refer to the width of an integer register in bits (either 32 or 64). No superscript in paragraph anchors for some reason.",
+              "tag_filename": "/build/test-ch2-norm-tags.json",
+              "stds_doc_url": "test-ch2.html"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "FOOBAR",
+      "def_filename": "test-ch2.yaml",
+      "chapter_name": "Two",
+      "type": "boolean",
+      "json-schema": {
+        "type": "boolean"
+      },
+      "impl-defs": [
+        {
+          "name": "FOOBAR_CH1_EXT_X",
+          "def_filename": "tests/norm-rule/test-ch1.yaml",
+          "chapter_name": "One",
+          "kind": "extension",
+          "impl-def-behavior": true,
+          "instances": [
+            "MockExtX"
+          ],
+          "tags": [
+            {
+              "name": "norm:foobar-ch1",
+              "context": false,
+              "text": "This is the Ch1 part of the foobar normative rule.",
+              "tag_filename": "/build/test-ch1-norm-tags.json",
+              "stds_doc_url": "test-ch1.html"
+            }
+          ]
+        },
+        {
+          "name": "FOOBAR_CH2_EXT_Z",
+          "def_filename": "tests/norm-rule/test-ch2.yaml",
+          "chapter_name": "Two",
+          "kind": "extension",
+          "impl-def-behavior": true,
+          "instances": [
+            "MockExtZ"
+          ],
+          "tags": [
+            {
+              "name": "norm:foobar-ch2",
+              "context": false,
+              "text": "This is the Ch2 part of the foobar normative rule.",
               "tag_filename": "/build/test-ch2-norm-tags.json",
               "stds_doc_url": "test-ch2.html"
             }
@@ -557,7 +606,7 @@
           "kind": "extension",
           "impl-def-behavior": true,
           "instances": [
-            "Ch2-A"
+            "MockExtZ"
           ],
           "tags": [
             {
@@ -592,7 +641,7 @@
           "kind": "extension",
           "impl-def-behavior": true,
           "instances": [
-            "Ch2-A"
+            "MockExtZ"
           ],
           "tags": [
             {
@@ -617,6 +666,193 @@
         "maximum": 1
       },
       "note": "This is a note for a parameter without any implementation-defined behavior. Here's an 2^32^ exponent."
+    },
+    {
+      "name": "MOCK_INST_X",
+      "def_filename": "test-ch2.yaml",
+      "chapter_name": "Two",
+      "type": "boolean",
+      "json-schema": {
+        "type": "boolean"
+      },
+      "note": "This is a Mock \"X\" instruction parameter.",
+      "impl-defs": [
+        {
+          "name": "MOCK_INST_X",
+          "def_filename": "tests/norm-rule/test-ch2.yaml",
+          "chapter_name": "Two",
+          "kind": "instruction",
+          "impl-def-behavior": true,
+          "instances": [
+            "MockInstX"
+          ],
+          "tags": [
+            {
+              "name": "norm:mock-inst-x",
+              "context": false,
+              "text": "Here&#8217;s a normative rule for mock instruction \"X\".",
+              "tag_filename": "/build/test-ch2-norm-tags.json",
+              "stds_doc_url": "test-ch2.html"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "BASE_RV32I",
+      "def_filename": "test-ch2.yaml",
+      "chapter_name": "Two",
+      "type": "boolean",
+      "json-schema": {
+        "type": "boolean"
+      },
+      "note": "This is a base RV32I parameter.",
+      "impl-defs": [
+        {
+          "name": "BASE_RV32I",
+          "def_filename": "tests/norm-rule/test-ch2.yaml",
+          "chapter_name": "Two",
+          "kind": "base",
+          "impl-def-behavior": true,
+          "instances": [
+            "RV32I"
+          ],
+          "tags": [
+            {
+              "name": "norm:base-rv32i",
+              "context": false,
+              "text": "Here&#8217;s a normative rule for the RV32I base ISA.",
+              "tag_filename": "/build/test-ch2-norm-tags.json",
+              "stds_doc_url": "test-ch2.html"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "BASE_RV32I_RV64I",
+      "def_filename": "test-ch2.yaml",
+      "chapter_name": "Two",
+      "type": "boolean",
+      "json-schema": {
+        "type": "boolean"
+      },
+      "note": "This is a base RV32I or RV64I parameter.",
+      "impl-defs": [
+        {
+          "name": "BASE_RV32I_RV64I",
+          "def_filename": "tests/norm-rule/test-ch2.yaml",
+          "chapter_name": "Two",
+          "kind": "base",
+          "impl-def-behavior": true,
+          "instances": [
+            "RV32I",
+            "RV64I"
+          ],
+          "tags": [
+            {
+              "name": "norm:base-rv32i-rv64i",
+              "context": false,
+              "text": "Here&#8217;s a normative rule for the RV32I or RV64I base ISA.",
+              "tag_filename": "/build/test-ch2-norm-tags.json",
+              "stds_doc_url": "test-ch2.html"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "MOCK_CSR_X",
+      "def_filename": "test-ch2.yaml",
+      "chapter_name": "Two",
+      "type": "boolean",
+      "json-schema": {
+        "type": "boolean"
+      },
+      "note": "This is a Mock \"X\" CSR parameter.",
+      "impl-defs": [
+        {
+          "name": "MOCK_CSR_X",
+          "def_filename": "tests/norm-rule/test-ch2.yaml",
+          "chapter_name": "Two",
+          "kind": "csr",
+          "impl-def-behavior": true,
+          "instances": [
+            "MockCsrX"
+          ],
+          "tags": [
+            {
+              "name": "norm:mock-csr-x",
+              "context": false,
+              "text": "Here&#8217;s a normative rule for mock CSR \"X\".",
+              "tag_filename": "/build/test-ch2-norm-tags.json",
+              "stds_doc_url": "test-ch2.html"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "MOCK_CSR_FIELD_Y",
+      "def_filename": "test-ch2.yaml",
+      "chapter_name": "Two",
+      "type": "boolean",
+      "json-schema": {
+        "type": "boolean"
+      },
+      "note": "This is a Mock \"Y\" CSR field parameter.",
+      "impl-defs": [
+        {
+          "name": "MOCK_CSR_FIELD_Y",
+          "def_filename": "tests/norm-rule/test-ch2.yaml",
+          "chapter_name": "Two",
+          "kind": "csr_field",
+          "impl-def-behavior": true,
+          "instances": [
+            "MockCsrFieldY"
+          ],
+          "tags": [
+            {
+              "name": "norm:mock-csr-field-y",
+              "context": false,
+              "text": "Here&#8217;s a normative rule for mock CSR field \"Y\".",
+              "tag_filename": "/build/test-ch2-norm-tags.json",
+              "stds_doc_url": "test-ch2.html"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "MOCK_EXT_DEP_A_ON_B",
+      "def_filename": "test-ch2.yaml",
+      "chapter_name": "Two",
+      "type": "boolean",
+      "json-schema": {
+        "type": "boolean"
+      },
+      "note": "This is a Mock extension dependency parameter (A depends B).",
+      "impl-defs": [
+        {
+          "name": "MOCK_EXT_DEP_A_ON_B",
+          "def_filename": "tests/norm-rule/test-ch2.yaml",
+          "chapter_name": "Two",
+          "kind": "extension_dependency",
+          "impl-def-behavior": true,
+          "instances": [
+            "MockExtDepAOnB"
+          ],
+          "tags": [
+            {
+              "name": "norm:mock-ext-dep-A-on-B",
+              "context": false,
+              "text": "Here&#8217;s a normative rule for mock extension dependency of extension A on extension B.",
+              "tag_filename": "/build/test-ch2-norm-tags.json",
+              "stds_doc_url": "test-ch2.html"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

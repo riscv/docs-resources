@@ -316,3 +316,6 @@ This is an unsigned integer in the range of 1 to 100.
 
 [[norm:list-int]]
 This is a list with values 1, 2 and 4.
+
+[[norm:foobar-ch1]]
+This is the Ch1 part of the foobar normative rule.

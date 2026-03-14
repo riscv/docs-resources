@@ -33,7 +33,7 @@
     .sticky-caption{position:sticky;top:0;background:#fff;padding:8px 0;z-index:1}
     .col-name{width:18%}
     .col-type{width:22%}
-    .col-bases-extensions{width:18%}
+    .col-feature{width:18%}
     .col-descriptions{width:42%}
     @media (max-width: 1000px){
       .app{grid-template-columns:1fr}
@@ -48,12 +48,12 @@
       <h2>Parameters by Chapter</h2>
       <nav class="nav">
         <a href="#table-params-ch-1" data-target="table-params-ch-1">One<span class="subtitle">13 entries</span></a>
-        <a href="#table-params-ch-2" data-target="table-params-ch-2">Two<span class="subtitle">5 entries</span></a>
+        <a href="#table-params-ch-2" data-target="table-params-ch-2">Two<span class="subtitle">12 entries</span></a>
       </nav>
     </aside>
     <main>
       <style>.grand-total-heading { font-size: 24px; font-weight: bold; }</style>
-      <h1 class="grand-total-heading">18 Parameters</h1>
+      <h1 class="grand-total-heading">25 Parameters</h1>
 
       <section id="table-params-ch-1" class="section">
         <table>
@@ -61,17 +61,17 @@
           <colgroup>
             <col class="col-name">
             <col class="col-type">
-            <col class="col-bases-extensions">
+            <col class="col-feature">
             <col class="col-descriptions">
           </colgroup>
           <thead>
-            <tr><th>Parameter Name</th><th>Type</th><th>Bases/Extensions</th><th>Description(s)</th></tr>
+            <tr><th>Parameter Name</th><th>Type</th><th>Feature(s)</th><th>Information (mostly Normative Rules)</th></tr>
           </thead>
           <tbody>
             <tr>
               <td rowspan=2 id="BOOLEAN">BOOLEAN</td>
               <td rowspan=2>boolean</td>
-              <td rowspan=2>Zch1-A</td>
+              <td rowspan=2>EXT:MockExtX</td>
               <td><a href="test-ch1.html#norm:boolean">This is a boolean.</a></td>
             </tr>
             <tr>
@@ -80,73 +80,73 @@
             <tr>
               <td rowspan=1 id="BIT">BIT</td>
               <td rowspan=1>bit</td>
-              <td rowspan=1>Zch1-A</td>
+              <td rowspan=1>EXT:MockExtX</td>
               <td><a href="test-ch1.html#norm:bit">This is a bit.</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="BYTE">BYTE</td>
               <td rowspan=1>byte</td>
-              <td rowspan=1>Zch1-A</td>
+              <td rowspan=1>EXT:MockExtX</td>
               <td><a href="test-ch1.html#norm:byte">This is a byte.</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="HWORD">HWORD</td>
               <td rowspan=1>hword</td>
-              <td rowspan=1>Zch1-A</td>
+              <td rowspan=1>EXT:MockExtX</td>
               <td><a href="test-ch1.html#norm:hword">This is a half-word (16 bits).</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="WORD">WORD</td>
               <td rowspan=1>word</td>
-              <td rowspan=1>Zch1-A</td>
+              <td rowspan=1>EXT:MockExtX</td>
               <td><a href="test-ch1.html#norm:word">This is a word (32 bits).</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="DWORD">DWORD</td>
               <td rowspan=1>dword</td>
-              <td rowspan=1>Zch1-A</td>
+              <td rowspan=1>EXT:MockExtX</td>
               <td><a href="test-ch1.html#norm:dword">This is a double-word (64 bits).</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="UINT6">UINT6</td>
               <td rowspan=1>uint6</td>
-              <td rowspan=1>Zch1-A</td>
+              <td rowspan=1>EXT:MockExtX</td>
               <td><a href="test-ch1.html#norm:uint6">This is a 6-bit unsigned integer.</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="UINT32">UINT32</td>
               <td rowspan=1>uint32</td>
-              <td rowspan=1>Zch1-A</td>
+              <td rowspan=1>EXT:MockExtX</td>
               <td><a href="test-ch1.html#norm:uint32">This is a 32-bit unsigned integer. Should be 0 to &#60; 2<sup>32</sup>-1. Need to use inline anchor to see superscript.</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="INT64">INT64</td>
               <td rowspan=1>int64</td>
-              <td rowspan=1>Zch1-B</td>
+              <td rowspan=1>EXT:MockExtY</td>
               <td><a href="test-ch1.html#norm:int64">This is a 64-bit signed integer.</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="UINT_1TO100">UINT_1TO100</td>
               <td rowspan=1>range 1 to 100</td>
-              <td rowspan=1>Zch1-B</td>
+              <td rowspan=1>EXT:MockExtY</td>
               <td><a href="test-ch1.html#norm:uint-1to100">This is an unsigned integer in the range of 1 to 100.</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="LIST_STR">LIST_STR</td>
               <td rowspan=1>[ABC, DEF, GHI]</td>
-              <td rowspan=1>Zch1-B</td>
+              <td rowspan=1>EXT:MockExtY</td>
               <td><a href="test-ch1.html#norm:list-str"><table><thead><tr><th>Name</th><th>Description</th></tr></thead><tbody><tr><td>ABC</td><td>Letters "ABC"</td></tr><tr><td>DEF</td><td>Letters "DEF"</td></tr><tr><td>GHI</td><td>Letters "GHI"</td></tr></tbody></table></a></td>
             </tr>
             <tr>
               <td rowspan=1 id="LIST_INT">LIST_INT</td>
               <td rowspan=1>[1, 2, 4]</td>
-              <td rowspan=1>Zch1-A, Zch1-B</td>
+              <td rowspan=1>EXT:MockExtX, EXT:MockExtY</td>
               <td><a href="test-ch1.html#norm:list-int">This is a list with values 1, 2 and 4.</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="ALL_BASES">ALL_BASES</td>
               <td rowspan=1>int2</td>
-              <td rowspan=1>Any</td>
+              <td rowspan=1>BASE:Any</td>
               <td><a href="test-ch1.html#norm:all-bases">Everyone loves RISC-V!</a></td>
             </tr>
           </tbody>
@@ -155,25 +155,25 @@
 
       <section id="table-params-ch-2" class="section">
         <table>
-          <caption class="sticky-caption">Chapter Two: 5 Parameters</caption>
+          <caption class="sticky-caption">Chapter Two: 12 Parameters</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-type">
-            <col class="col-bases-extensions">
+            <col class="col-feature">
             <col class="col-descriptions">
           </colgroup>
           <thead>
-            <tr><th>Parameter Name</th><th>Type</th><th>Bases/Extensions</th><th>Description(s)</th></tr>
+            <tr><th>Parameter Name</th><th>Type</th><th>Feature(s)</th><th>Information (mostly Normative Rules)</th></tr>
           </thead>
           <tbody>
             <tr>
               <td rowspan=3 id="ROSE_COLORS">ROSE_COLORS</td>
               <td rowspan=3>[RED, PINK, WHITE]</td>
-              <td rowspan=3>Ch2-A</td>
+              <td rowspan=3>EXT:MockExtZ</td>
               <td>NOTE: This is a note about the ROSE_COLORS parameter.</td>
             </tr>
             <tr>
-              <td>This is a description about the ROSE_COLORS parameter. Here's some <b>bold text</b>.</td>
+              <td>DESC: This is a description about the ROSE_COLORS parameter. Here's some <b>bold text</b>.</td>
             </tr>
             <tr>
               <td><a href="test-ch2.html#norm:ROSE_COLORS">You can use red or yellow roses. The tags backend removes some adoc formating so I don't see bold text but I can see <sup>superscript</sup> as long as I use the inline anchor and not the paragraph anchor.</a></td>
@@ -181,29 +181,89 @@
             <tr>
               <td rowspan=2 id="XLEN">XLEN</td>
               <td rowspan=2>[32, 64]</td>
-              <td rowspan=2>Ch2-A</td>
+              <td rowspan=2>EXT:MockExtZ</td>
               <td><a href="test-ch2.html#norm:XLEN">We use the term XLEN to refer to the width of an integer register in bits (either 32 or 64). No superscript in paragraph anchors for some reason.</a></td>
             </tr>
             <tr>
               <td><a href="test-ch2.html#norm:XLEN">We use the term XLEN to refer to the width of an integer register in bits (either 32 or 64). No superscript in paragraph anchors for some reason.</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1 id="FOOBAR">FOOBAR</td>
+              <td rowspan=1>boolean</td>
+              <td rowspan=1>EXT:MockExtZ</td>
+              <td><a href="test-ch2.html#norm:foobar-ch2">This is the Ch2 part of the foobar normative rule.</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="ASIDLEN1">ASIDLEN1</td>
               <td rowspan=1>range 0 to 16</td>
-              <td rowspan=1>Ch2-A</td>
+              <td rowspan=1>EXT:MockExtZ</td>
               <td><a href="test-ch2.html#norm:ASIDLEN">The number of ASID bits is UNSPECIFIED and may be zero. The number of implemented ASID bits, termed ASIDLEN, may be determined by writing one to every bit position in the ASID field, then reading back the value in satp to see which bit positions in the ASID field hold a one.</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="ASIDLEN2">ASIDLEN2</td>
               <td rowspan=1>range 0 to 16</td>
-              <td rowspan=1>Ch2-A</td>
+              <td rowspan=1>EXT:MockExtZ</td>
               <td><a href="test-ch2.html#norm:ASIDLEN">The number of ASID bits is UNSPECIFIED and may be zero. The number of implemented ASID bits, termed ASIDLEN, may be determined by writing one to every bit position in the ASID field, then reading back the value in satp to see which bit positions in the ASID field hold a one.</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="NO_IMPL_DEF">NO_IMPL_DEF</td>
               <td rowspan=1>bit</td>
-              <td rowspan=1>(none)</td>
+              <td rowspan=1>CHAP:Two</td>
               <td>NOTE: This is a note for a parameter without any implementation-defined behavior. Here's an 2<sup>32</sup> exponent.</td>
+            </tr>
+            <tr>
+              <td rowspan=2 id="MOCK_INST_X">MOCK_INST_X</td>
+              <td rowspan=2>boolean</td>
+              <td rowspan=2>INST:MockInstX</td>
+              <td>NOTE: This is a Mock "X" instruction parameter.</td>
+            </tr>
+            <tr>
+              <td><a href="test-ch2.html#norm:mock-inst-x">Here&#8217;s a normative rule for mock instruction "X".</a></td>
+            </tr>
+            <tr>
+              <td rowspan=2 id="BASE_RV32I">BASE_RV32I</td>
+              <td rowspan=2>boolean</td>
+              <td rowspan=2>BASE:RV32I</td>
+              <td>NOTE: This is a base RV32I parameter.</td>
+            </tr>
+            <tr>
+              <td><a href="test-ch2.html#norm:base-rv32i">Here&#8217;s a normative rule for the RV32I base ISA.</a></td>
+            </tr>
+            <tr>
+              <td rowspan=2 id="BASE_RV32I_RV64I">BASE_RV32I_RV64I</td>
+              <td rowspan=2>boolean</td>
+              <td rowspan=2>BASE:RV32I, BASE:RV64I</td>
+              <td>NOTE: This is a base RV32I or RV64I parameter.</td>
+            </tr>
+            <tr>
+              <td><a href="test-ch2.html#norm:base-rv32i-rv64i">Here&#8217;s a normative rule for the RV32I or RV64I base ISA.</a></td>
+            </tr>
+            <tr>
+              <td rowspan=2 id="MOCK_CSR_X">MOCK_CSR_X</td>
+              <td rowspan=2>boolean</td>
+              <td rowspan=2>CSR:MockCsrX</td>
+              <td>NOTE: This is a Mock "X" CSR parameter.</td>
+            </tr>
+            <tr>
+              <td><a href="test-ch2.html#norm:mock-csr-x">Here&#8217;s a normative rule for mock CSR "X".</a></td>
+            </tr>
+            <tr>
+              <td rowspan=2 id="MOCK_CSR_FIELD_Y">MOCK_CSR_FIELD_Y</td>
+              <td rowspan=2>boolean</td>
+              <td rowspan=2>FLD:MockCsrFieldY</td>
+              <td>NOTE: This is a Mock "Y" CSR field parameter.</td>
+            </tr>
+            <tr>
+              <td><a href="test-ch2.html#norm:mock-csr-field-y">Here&#8217;s a normative rule for mock CSR field "Y".</a></td>
+            </tr>
+            <tr>
+              <td rowspan=2 id="MOCK_EXT_DEP_A_ON_B">MOCK_EXT_DEP_A_ON_B</td>
+              <td rowspan=2>boolean</td>
+              <td rowspan=2>EXT_DEP:MockExtDepAOnB</td>
+              <td>NOTE: This is a Mock extension dependency parameter (A depends B).</td>
+            </tr>
+            <tr>
+              <td><a href="test-ch2.html#norm:mock-ext-dep-A-on-B">Here&#8217;s a normative rule for mock extension dependency of extension A on extension B.</a></td>
             </tr>
           </tbody>
         </table>

@@ -11,6 +11,14 @@ from def_text_to_html import (
     convert_def_text_to_html,
     tag2html_link,
 )
+from shared_utils import (
+    IMPLDEF_CATEGORIES,
+    check_impldef_cat,
+    check_kind,
+    load_json_object,
+    load_yaml_object,
+    make_log_helpers,
+)
 from tag_text_to_html import convert_tag_text_to_html
 
 PN = "create_normative_rules.py"
@@ -23,13 +31,11 @@ IMPLDEFS_NO_CAT_TABLE_NAME_PREFIX = "table-impldefs-no-cat"
 IMPLDEFS_CAT_TABLE_NAME_PREFIX = "table-impldefs-impl-cat-"
 IMPLDEFS_CH_TABLE_NAME_PREFIX = "table-impldefs-ch-"
 
-# Enums
-KINDS = ["base", "extension", "extension_dependency", "instruction", "csr", "csr_field"]
-IMPLDEF_CATEGORIES = ["WARL", "WLRL"]
-
 # Norm rule name checking
 NORM_RULE_NAME_PATTERN = r"^[a-zA-Z][a-zA-Z0-9_-]+$"
 IMPLDEF_NAME_PATTERN = r"^[A-Z][A-Z0-9_]+$"
+
+error, info, fatal = make_log_helpers(PN)
 
 
 ###################################
@@ -159,7 +165,7 @@ class NormativeRuleDef:
         if self.kind is not None:
             if not isinstance(self.kind, str):
                 fatal(f"Provided {type(self.kind).__name__} class for kind in normative rule {name} but need a String")
-            check_kind(self.kind, self.name, None)
+            check_kind(self.kind, self.name, None, fatal, PN)
 
         self.impldef = data.get("impl-def-behavior", False)
         if not isinstance(self.impldef, bool):
@@ -169,7 +175,7 @@ class NormativeRuleDef:
         if self.impldef_cat is not None:
             if not isinstance(self.impldef_cat, str):
                 fatal(f"Provided {type(self.impldef_cat).__name__} class for impldef_cat in normative rule {name} but need a String")
-            check_impldef_cat(self.impldef_cat, self.name, None)
+            check_impldef_cat(self.impldef_cat, self.name, None, fatal, PN)
 
             if not self.impldef:
                 fatal(f"Normative rule {name} has impl-def-category property but impl-def-behavior isn't true")
@@ -260,43 +266,6 @@ class NormativeRuleDefs:
         self._defs_by_name[name] = norm_rule_def
 
 
-#############
-# Functions #
-#############
-
-
-def check_kind(kind: str, nr_name: str, name: Optional[str]):
-    """Create fatal if kind not recognized. The name is None if this is called in the normative rule definition."""
-    if kind not in KINDS:
-        tag_str = "" if name is None else f"tag {name} in "
-        allowed_str = ",".join(KINDS)
-        fatal(f"Don't recognize kind '{kind}' for {tag_str}normative rule {nr_name}\n{PN}: Allowed kinds are: {allowed_str}")
-
-
-def check_impldef_cat(impldef_cat: str, nr_name: str, name: Optional[str]):
-    """Create fatal if impldef_cat not recognized. The name is None if this is called in the normative rule definition."""
-    if impldef_cat not in IMPLDEF_CATEGORIES:
-        tag_str = "" if name is None else f"tag {name} in "
-        allowed_str = ",".join(IMPLDEF_CATEGORIES)
-        fatal(f"Don't recognize impl-def-category '{impldef_cat}' for {tag_str}normative rule {nr_name}\n{PN}: Allowed impl-def-categories are: {allowed_str}")
-
-
-def fatal(msg: str):
-    """Print error and exit."""
-    error(msg)
-    sys.exit(1)
-
-
-def error(msg: str):
-    """Print error message."""
-    print(f"{PN}: ERROR: {msg}", file=sys.stderr)
-
-
-def info(msg: str):
-    """Print info message."""
-    print(f"{PN}: {msg}")
-
-
 def parse_argv() -> Tuple[List[str], List[str], Dict[str, str], str, str, bool]:
     """Parse command line arguments.
 
@@ -363,21 +332,7 @@ def load_tags(tag_fnames: List[str]) -> NormativeTags:
 
     for tag_fname in tag_fnames:
         info(f"Loading tag file {tag_fname}")
-
-        # Read in file to a String
-        try:
-            with open(tag_fname, 'r', encoding='utf-8') as f:
-                file_contents = f.read()
-        except FileNotFoundError as e:
-            fatal(str(e))
-        except Exception as e:
-            fatal(f"Error reading {tag_fname}: {e}")
-
-        # Convert String in JSON format to a Python dict.
-        try:
-            file_data = json.loads(file_contents)
-        except json.JSONDecodeError as e:
-            fatal(f"File {tag_fname} JSON parsing error: {e}")
+        file_data = load_json_object(tag_fname, fatal)
 
         tags_data = file_data.get("tags")
         if tags_data is None:
@@ -398,30 +353,11 @@ def load_definitions(def_fnames: List[str]) -> NormativeRuleDefs:
     if not isinstance(def_fnames, list):
         fatal(f"Need List[String] for def_fnames but passed a {type(def_fnames).__name__}")
 
-    try:
-        import yaml
-    except ImportError:
-        fatal("PyYAML is required but not installed. Run: pip install PyYAML")
-
     defs = NormativeRuleDefs()
 
     for def_fname in def_fnames:
         info(f"Loading definition file {def_fname}")
-
-        # Read in file to a String
-        try:
-            with open(def_fname, 'r', encoding='utf-8') as f:
-                file_contents = f.read()
-        except FileNotFoundError as e:
-            fatal(str(e))
-        except Exception as e:
-            fatal(f"Error reading {def_fname}: {e}")
-
-        # Convert String in YAML format to a Python dict.
-        try:
-            yaml_hash = yaml.safe_load(file_contents)
-        except yaml.YAMLError as e:
-            fatal(f"File {def_fname} YAML syntax error - {e}")
+        yaml_hash = load_yaml_object(def_fname, fatal)
 
         chapter_name = yaml_hash.get("chapter_name")
         if chapter_name is None:
@@ -1002,7 +938,7 @@ def html_table_header(f, table_name: str, table_caption: str):
     f.write('            <col class="col-location">\n')
     f.write('          </colgroup>\n')
     f.write('          <thead>\n')
-    f.write('            <tr><th>Rule Name</th><th>Rule Description</th><th>Origin of Description</th></tr>\n')
+    f.write('            <tr><th>Name</th><th>Information</th><th>Information Source</th></tr>\n')
     f.write('          </thead>\n')
     f.write('          <tbody>\n')
 
@@ -1103,7 +1039,7 @@ def html_table_row(f, nr: NormativeRuleDef, name_is_anchor: bool, omit: Dict[str
         if not first_row:
             f.write('            <tr>\n')
         f.write(f'              <td>{text}</td>\n')
-        f.write('              <td>Rule\'s "summary" property</td>\n')
+        f.write('              <td>Summary</td>\n')
         f.write('            </tr>\n')
         first_row = False
 
@@ -1113,7 +1049,7 @@ def html_table_row(f, nr: NormativeRuleDef, name_is_anchor: bool, omit: Dict[str
         if not first_row:
             f.write('            <tr>\n')
         f.write(f'              <td>{text}</td>\n')
-        f.write('              <td>Rule\'s "note" property</td>\n')
+        f.write('              <td>Note</td>\n')
         f.write('            </tr>\n')
         first_row = False
 
@@ -1123,7 +1059,7 @@ def html_table_row(f, nr: NormativeRuleDef, name_is_anchor: bool, omit: Dict[str
         if not first_row:
             f.write('            <tr>\n')
         f.write(f'              <td>{text}</td>\n')
-        f.write('              <td>Rule\'s "description" property</td>\n')
+        f.write('              <td>Description</td>\n')
         f.write('            </tr>\n')
         first_row = False
 
@@ -1131,22 +1067,22 @@ def html_table_row(f, nr: NormativeRuleDef, name_is_anchor: bool, omit: Dict[str
         if not first_row:
             f.write('            <tr>\n')
         f.write(f'              <td>{nr.kind}</td>\n')
-        f.write('              <td>Rule\'s "kind" property</td>\n')
+        f.write('              <td>Kind</td>\n')
         f.write('            </tr>\n')
         first_row = False
 
     if nr.instances:
         if len(nr.instances) == 1:
             instances_str = nr.instances[0]
-            rule_name = "instance"
+            rule_name = "Instance"
         else:
             instances_str = "[" + ', '.join(nr.instances) + "]"
-            rule_name = "instances"
+            rule_name = "Instances"
 
         if not first_row:
             f.write('            <tr>\n')
         f.write(f'              <td>{instances_str}</td>\n')
-        f.write(f'              <td>Rule\'s "{rule_name}" property</td>\n')
+        f.write(f'              <td>{rule_name}</td>\n')
         f.write('            </tr>\n')
         first_row = False
 
@@ -1154,7 +1090,7 @@ def html_table_row(f, nr: NormativeRuleDef, name_is_anchor: bool, omit: Dict[str
         if not first_row:
             f.write('            <tr>\n')
         f.write('              <td>Implementation-defined behavior</td>\n')
-        f.write('              <td>Rule\'s property</td>\n')
+        f.write('              <td>Implementation-defined behavior</td>\n')
         f.write('            </tr>\n')
         first_row = False
 
