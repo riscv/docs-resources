@@ -1,0 +1,19 @@
+.Chapter One Parameter Definitions: 13 Parameters
+[cols="10%,10%,30%,50%"]
+|===
+
+| Type | Feature(s) | Parameter and Mapping to Normative Rules | Definition
+
+include::test-ch1/all_params.adoc[]
+
+|===
+
+.Chapter Two Parameter Definitions: 12 Parameters
+[cols="10%,10%,30%,50%"]
+|===
+
+| Type | Feature(s) | Parameter and Mapping to Normative Rules | Definition
+
+include::test-ch2/all_params.adoc[]
+
+|===

@@ -1,0 +1,7 @@
+a|
+[#param:HWORD]#HWORD#
+
+Normative Rule(s):
+
+* https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#HWORD[HWORD]
+| See normative rule

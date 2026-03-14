@@ -1,0 +1,8 @@
+a|
+[#param:XLEN]#XLEN#
+
+Normative Rule(s):
+
+* https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#XLEN1[XLEN1]
+* https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#XLEN2[XLEN2]
+| See normative rule

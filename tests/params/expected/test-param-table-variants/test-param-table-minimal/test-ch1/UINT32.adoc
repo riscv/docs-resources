@@ -1,0 +1,7 @@
+a|
+[#param:UINT32]#UINT32#
+
+Normative Rule(s):
+
+* https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#UINT32[UINT32]
+| See normative rule
