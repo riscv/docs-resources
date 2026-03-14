@@ -1,0 +1,11 @@
+a|
+[#param:ROSE_COLORS]#ROSE_COLORS#
+
+Normative Rule(s):
+
+* https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#ROSE_COLORS[ROSE_COLORS]
+| Enum (RED, PINK, WHITE)
+| Ch2-A
+a| NOTE: This is a note about the ROSE_COLORS parameter.
+
+This is a description about the ROSE_COLORS parameter. Here's some *bold text*.

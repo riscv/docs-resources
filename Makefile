@@ -36,6 +36,11 @@ DETECT_TAG_CHANGES_TOOL := $(TOOLS_DIR)/detect_tag_changes.py
 DETECT_TAG_CHANGES_PYTHON := python3 $(DETECT_TAG_CHANGES_TOOL)
 CREATE_PARAMS_TOOL := $(TOOLS_DIR)/create_params.py
 CREATE_PARAMS_PYTHON := python3 $(CREATE_PARAMS_TOOL)
+CREATE_PARAM_ADOC_FILES_TOOL := $(TOOLS_DIR)/create_param_adoc_files.py
+CREATE_PARAM_ADOC_FILES_PYTHON := python3 $(CREATE_PARAM_ADOC_FILES_TOOL)
+PARAM_ADOC_TEST_SCRIPT := $(PARAMS_TESTS_DIR)/test_param_adoc_files.py
+PARAM_ADOC_TEST_PYTHON := python3 $(PARAM_ADOC_TEST_SCRIPT)
+PARAMS_ADOC_TEMPLATE := $(PARAMS_TESTS_DIR)/test-params-template.adoc
 
 # Stuff for building test standards document in HTML to have links into it.
 DOCS = test-ch1 test-ch2
@@ -78,6 +83,9 @@ BUILT_NORM_RULES_HTML := $(BUILD_DIR)/$(NORM_RULE_HTML_OUTPUT_FNAME)
 BUILT_NORM_RULES_TAGS_NO_RULES := $(BUILD_DIR)/$(NORM_RULE_TAGS_NO_RULES_OUTPUT_FNAME)
 BUILT_PARAMS_JSON := $(BUILD_DIR)/$(PARAMS_JSON_OUTPUT_FNAME)
 BUILT_PARAMS_HTML := $(BUILD_DIR)/$(PARAMS_HTML_OUTPUT_FNAME)
+BUILT_PARAM_ADOC_DIR := $(BUILD_DIR)/test-param-generated-adoc
+BUILT_PARAM_ADOC_STAMP := $(BUILD_DIR)/test-param-adoc.done
+BUILT_PARAMS_ADOC := $(BUILD_DIR)/test-params.adoc
 
 # Combine separate fnames into lists.
 BUILT_TEST_HTML_FNAMES := $(BUILT_TEST_CH1_HTML_FNAME) $(BUILT_TEST_CH2_HTML_FNAME)
@@ -91,6 +99,8 @@ EXPECTED_NORM_RULES_JSON := $(NORM_RULE_EXPECTED_DIR)/$(NORM_RULE_JSON_OUTPUT_FN
 EXPECTED_NORM_RULES_HTML := $(NORM_RULE_EXPECTED_DIR)/$(NORM_RULE_HTML_OUTPUT_FNAME)
 EXPECTED_PARAMS_JSON := $(PARAMS_EXPECTED_DIR)/$(PARAMS_JSON_OUTPUT_FNAME)
 EXPECTED_PARAMS_HTML := $(PARAMS_EXPECTED_DIR)/$(PARAMS_HTML_OUTPUT_FNAME)
+EXPECTED_PARAMS_ADOC := $(PARAMS_EXPECTED_DIR)/test-params.adoc
+EXPECTED_PARAM_ADOC_DIR := $(PARAMS_EXPECTED_DIR)/test-param-generated-adoc
 
 # Normative rule definition input YAML files.
 GOOD_NORM_RULE_DEF_FILES := $(NORM_RULE_DEF_DIR)/test-ch1.yaml $(NORM_RULE_DEF_DIR)/test-ch2.yaml
@@ -177,18 +187,19 @@ all: test
 test: build-tests compare-tests test-tag-changes test-adoc2html
 
 # Build tests
-.PHONY: build-tests build-test-tags build-test-norm-rules-json build-test-norm-rules-html build-test-tags-without-rules build-test-params-json build-test-params-html
-build-tests: build-test-tags build-test-norm-rules-json build-test-norm-rules-html build-test-tags-without-rules build-test-params-json build-test-params-html
+.PHONY: build-tests build-test-tags build-test-norm-rules-json build-test-norm-rules-html build-test-tags-without-rules build-test-params-json build-test-params-html build-test-param-adoc
+build-tests: build-test-tags build-test-norm-rules-json build-test-norm-rules-html build-test-tags-without-rules build-test-params-json build-test-params-html build-test-param-adoc
 build-test-tags: $(BUILT_TEST_NORM_TAGS_FNAMES) $(BUILT_DUPLICATE_NORM_TAGS_FNAME)
 build-test-norm-rules-json: $(BUILT_NORM_RULES_JSON)
 build-test-norm-rules-html: $(BUILT_NORM_RULES_HTML)
 build-test-tags-without-rules: $(BUILT_NORM_RULES_TAGS_NO_RULES)
 build-test-params-json: $(BUILT_PARAMS_JSON)
 build-test-params-html: $(BUILT_PARAMS_HTML)
+build-test-param-adoc: $(BUILT_PARAM_ADOC_STAMP)
 
 # Compare tests against expected
 .PHONY: compare-tests
-compare-tests: compare-test-tags compare-test-norm-rules-json compare-test-norm-rules-html compare-test-params-json compare-test-params-html
+compare-tests: compare-test-tags compare-test-norm-rules-json compare-test-norm-rules-html compare-test-params-json compare-test-params-html compare-test-params-adoc compare-test-param-adoc-files
 
 .PHONY: compare-test-tags
 compare-test-tags: compare-test-ch1-tags compare-test-ch2-tags
@@ -222,6 +233,16 @@ compare-test-params-json: $(EXPECTED_PARAMS_JSON) $(BUILT_PARAMS_JSON)
 compare-test-params-html: $(EXPECTED_PARAMS_HTML) $(BUILT_PARAMS_HTML)
 	@echo "CHECKING HTML BUILT PARAMS AGAINST EXPECTED PARAMS"
 	diff $(EXPECTED_PARAMS_HTML) $(BUILT_PARAMS_HTML) && echo "diff PASSED" || (echo "diff FAILED"; exit 1)
+
+.PHONY: compare-test-params-adoc
+compare-test-params-adoc: $(EXPECTED_PARAMS_ADOC) $(BUILT_PARAMS_ADOC)
+	@echo "CHECKING PARAMS ADOC AGAINST EXPECTED"
+	diff $(EXPECTED_PARAMS_ADOC) $(BUILT_PARAMS_ADOC) && echo "diff PASSED" || (echo "diff FAILED"; exit 1)
+
+.PHONY: compare-test-param-adoc-files
+compare-test-param-adoc-files: $(EXPECTED_PARAM_ADOC_DIR) $(BUILT_PARAM_ADOC_DIR)
+	@echo "CHECKING GENERATED PARAM ADOC FILES AGAINST EXPECTED"
+	diff -r $(EXPECTED_PARAM_ADOC_DIR) $(BUILT_PARAM_ADOC_DIR) && echo "diff PASSED" || (echo "diff FAILED"; exit 1)
 
 # Test tag change detection
 .PHONY: test-tag-changes test-tag-changes-basic test-tag-changes-verbose test-tag-changes-no-changes test-tag-changes-additions-only test-tag-changes-whitespace-only test-tag-changes-formatting-only test-tag-changes-update
@@ -266,7 +287,7 @@ test-adoc2html: $(ADOC2HTML_TEST_SCRIPT) $(TOOLS_DIR)/adoc_to_html.py
 
 # Update expected files from built files
 .PHONY: update-expected
-update-expected: update-test-tags update-test-norm-rules-json update-test-norm-rules-html update-test-params-json update-test-params-html
+update-expected: update-test-tags update-test-norm-rules-json update-test-norm-rules-html update-test-params-json update-test-params-html update-test-params-adoc update-test-param-adoc-files
 
 .PHONY: update-test-tags
 update-test-tags: update-test-ch1-tags update-test-ch2-tags
@@ -296,6 +317,17 @@ update-test-params-json: $(BUILT_PARAMS_JSON)
 update-test-params-html: $(BUILT_PARAMS_HTML)
 	mkdir -p $(PARAMS_EXPECTED_DIR)
 	cp -f $(BUILT_PARAMS_HTML) $(EXPECTED_PARAMS_HTML)
+
+.PHONY: update-test-params-adoc
+update-test-params-adoc: $(BUILT_PARAMS_ADOC)
+	mkdir -p $(PARAMS_EXPECTED_DIR)
+	cp -f $(BUILT_PARAMS_ADOC) $(EXPECTED_PARAMS_ADOC)
+
+.PHONY: update-test-param-adoc-files
+update-test-param-adoc-files: $(BUILT_PARAM_ADOC_DIR)
+	rm -rf $(EXPECTED_PARAM_ADOC_DIR)
+	mkdir -p $(EXPECTED_PARAM_ADOC_DIR)
+	cp -f $(BUILT_PARAM_ADOC_DIR)/*.adoc $(EXPECTED_PARAM_ADOC_DIR)
 
 # Build normative tags with ch1 adoc input
 $(BUILT_TEST_CH1_NORM_TAGS_FNAME): $(NORM_RULE_TESTS_DIR)/$(TEST_CH1_INPUT_ADOC_FNAME) $(CONVERTERS_DIR)/$(TAGS_BACKEND)
@@ -335,6 +367,17 @@ $(BUILT_PARAMS_HTML): $(BUILT_NORM_RULES_JSON) $(PARAM_DEF_TEST_FILES) $(CREATE_
 	$(WORKDIR_SETUP)
 	cp -f $(BUILT_NORM_RULES_JSON) $@.workdir/$(BUILD_DIR)
 	$(DOCKER_CMD) $(DOCKER_QUOTE) $(CREATE_PARAMS_PYTHON) --html --norm-rules $(BUILT_NORM_RULES_JSON) $(PARAM_DEF_TEST_ARGS) --output $(BUILT_PARAMS_HTML) $(DOCKER_QUOTE)
+	$(WORKDIR_TEARDOWN)
+
+# Build parameter AsciiDoc row fragments from generated params JSON.
+$(BUILT_PARAM_ADOC_STAMP): $(BUILD_DIR)/$(PARAMS_JSON_OUTPUT_FNAME) $(CREATE_PARAM_ADOC_FILES_TOOL) $(PARAM_ADOC_TEST_SCRIPT) $(PARAMS_ADOC_TEMPLATE)
+	$(WORKDIR_SETUP)
+	cp -f $(BUILD_DIR)/$(PARAMS_JSON_OUTPUT_FNAME) $@.workdir/$(BUILD_DIR)
+	$(DOCKER_CMD) $(DOCKER_QUOTE) $(CREATE_PARAM_ADOC_FILES_PYTHON) --input $(BUILD_DIR)/$(PARAMS_JSON_OUTPUT_FNAME) --output-dir $(BUILT_PARAM_ADOC_DIR) && touch $(BUILT_PARAM_ADOC_STAMP) $(DOCKER_QUOTE)
+	$(DOCKER_CMD) $(DOCKER_QUOTE) $(PARAM_ADOC_TEST_PYTHON) --template $(PARAMS_ADOC_TEMPLATE) --adoc-dir $(BUILT_PARAM_ADOC_DIR) --output $(BUILT_PARAMS_ADOC) $(DOCKER_QUOTE)
+	rm -rf $(BUILT_PARAM_ADOC_DIR)
+	mv $@.workdir/$(BUILT_PARAM_ADOC_DIR) $(BUILT_PARAM_ADOC_DIR)
+	mv $@.workdir/$(BUILT_PARAMS_ADOC) $(BUILT_PARAMS_ADOC)
 	$(WORKDIR_TEARDOWN)
 
 # Build normative rules with HTML output format

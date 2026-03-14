@@ -1,0 +1,9 @@
+a|
+[#param:INT64]#INT64#
+
+Normative Rule(s):
+
+* https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#INT64[INT64]
+| Integer
+| Zch1-B
+| See normative rule

@@ -1,0 +1,10 @@
+// Just used to include all generated adoc parameter files into a table.
+
+.Parameter Definitions
+[cols="30%,10%,10%,50%"]
+|===
+| Parameter and Mapping to Normative Rules | Type | ISA Feature | Definition
+
+// ALL GENERATED PARAMETER ADOC FILES
+
+|===

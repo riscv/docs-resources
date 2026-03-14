@@ -1,0 +1,9 @@
+a|
+[#param:BYTE]#BYTE#
+
+Normative Rule(s):
+
+* https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#BYTE[BYTE]
+| Integer
+| Zch1-A
+| See normative rule

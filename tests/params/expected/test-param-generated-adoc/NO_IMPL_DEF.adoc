@@ -1,0 +1,9 @@
+a|
+[#param:NO_IMPL_DEF]#NO_IMPL_DEF#
+
+Normative Rule(s):
+
+* (none)
+| Integer
+| Two
+| NOTE: This is a note for a parameter without any implementation-defined behavior. Here's an 2^32^ exponent.
