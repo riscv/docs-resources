@@ -1,0 +1,8 @@
+a|
+[#param:FOOBAR]#FOOBAR#
+
+Normative Rule(s):
+
+* https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#FOOBAR_CH1_EXT_X[FOOBAR_CH1_EXT_X]
+* https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#FOOBAR_CH2_EXT_Z[FOOBAR_CH2_EXT_Z]
+| See normative rule

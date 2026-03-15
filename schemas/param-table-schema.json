@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Schema for parameter table layout files",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Optional path/URI to this schema"
+    },
+    "columns": {
+      "type": "array",
+      "description": "Ordered list of parameter columns from left to right",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Display name of the column"
+          },
+          "column": {
+            "type": "string",
+            "description": "Canonical column identifier",
+            "enum": [
+              "PARAM_NAME_AND_NORM_RULE_MAPPING",
+              "TYPE",
+              "FEATURES",
+              "DEFINITION"
+            ]
+          },
+          "width_pct": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 100,
+            "description": "Percentage of total table width allocated to this column"
+          }
+        },
+        "required": ["name", "column", "width_pct"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["columns"],
+  "additionalProperties": false
+}

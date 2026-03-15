@@ -1,0 +1,9 @@
+| Integer
+| BASE:Any
+a|
+[#param:ALL_BASES]#ALL_BASES#
+
+Normative Rule(s):
+
+* https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#ALL_BASES[ALL_BASES]
+| See normative rule

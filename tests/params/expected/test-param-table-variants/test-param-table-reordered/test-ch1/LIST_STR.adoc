@@ -1,0 +1,9 @@
+| Enum (ABC, DEF, GHI)
+| EXT:MockExtY
+a|
+[#param:LIST_STR]#LIST_STR#
+
+Normative Rule(s):
+
+* https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#LIST_STR[LIST_STR]
+| See normative rule

@@ -1,0 +1,7 @@
+a|
+[#param:LIST_INT]#LIST_INT#
+
+Normative Rule(s):
+
+* https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#LIST_INT[LIST_INT]
+| See normative rule

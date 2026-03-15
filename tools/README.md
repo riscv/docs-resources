@@ -12,7 +12,7 @@ This directory contains command-line generators and shared Python helper modules
 | shared_utils.py | Helper module | Shared constants, logging helpers, YAML/JSON loaders, and common validators/formatters. |
 | create_normative_rules.py | CLI tool | Builds normative-rules JSON or HTML from rule-definition YAML and tag JSON files. |
 | create_params.py | CLI tool | Builds params JSON or HTML from normative-rules JSON and parameter-definition YAML files. |
-| create_param_appendix.py | CLI tool | Generates one AsciiDoc row-fragment file per parameter from params JSON. |
+| create_param_appendix.py | CLI tool | Generates parameter-row AsciiDoc fragments plus table include files from params JSON and a table-layout YAML file. |
 | detect_tag_changes.py | CLI tool | Compares two tag JSON files and reports additions, deletions, and modifications. |
 
 ## Script Details
@@ -129,18 +129,31 @@ python3 tools/create_params.py --html \
 ### create_param_appendix.py
 
 Purpose:
-- Creates one AsciiDoc table-row fragment file per parameter from params JSON.
+- Creates one AsciiDoc table-row fragment file per parameter from params JSON,
+  and generates higher-level AsciiDoc include files for appendix assembly.
 
 Inputs:
 - Params JSON file (-i / --input).
+- Parameter table-layout YAML file (-t / --param-table), conforming to schemas/param-table-schema.json.
 
 Outputs:
-- Output directory of one .adoc fragment per parameter (-o / --output-dir).
+- Output directory containing:
+  - Per-parameter row fragments grouped by `def_filename` stem (for example `test-ch1/BOOLEAN.adoc`).
+  - Per-group include files (`<group>/all_params.adoc`).
+  - Top-level include files:
+    - `all_params_a_to_z.adoc` (single table, sorted by parameter name).
+    - `all_params_by_chapter.adoc` (one table per chapter, sorted by chapter name).
+
+Top-level table behavior:
+- Table columns and widths are driven by the `columns` list in the layout YAML.
+- Table header names come from each column `name` in the layout YAML.
+- Table captions include parameter counts (for example `: 25 Parameters`).
 
 Typical command:
 ```bash
 python3 tools/create_param_appendix.py \
   --input build/test-params.json \
+  --param-table tools/default_param_table.yaml \
   --output-dir build/test-param-appendix-adoc-includes
 ```
 

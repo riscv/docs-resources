@@ -1,0 +1,9 @@
+---
+$schema: schemas/param-table-schema.json
+columns:
+  - name: Parameter and Mapping to Normative Rules
+    column: PARAM_NAME_AND_NORM_RULE_MAPPING
+    width_pct: 40
+  - name: Definition
+    column: DEFINITION
+    width_pct: 60
