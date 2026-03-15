@@ -363,7 +363,14 @@ def write_output_files(
         seen_names.add(file_stem)
 
         def_filename = param.get("def_filename", "")
+        if not isinstance(def_filename, str) or not def_filename:
+            fatal(f"Expected non-empty def_filename for parameter {name!r}")
         def_dir_name = Path(def_filename).stem
+        if not def_dir_name:
+            fatal(
+                f"def_filename {def_filename!r} for parameter {name!r} "
+                "has no usable stem for a chapter subdirectory name"
+            )
         param_dir = output_dir / def_dir_name
         param_dir.mkdir(parents=True, exist_ok=True)
 
