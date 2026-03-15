@@ -122,6 +122,14 @@ def load_param_table_yaml(pathname: str) -> List[Dict[str, Any]]:
     """Load and validate parameter table layout YAML."""
     data = load_yaml_object(pathname, fatal)
 
+    allowed_top_level_keys = {"columns", "$schema"}
+    unexpected_top_level_keys = sorted(set(data.keys()) - allowed_top_level_keys)
+    if unexpected_top_level_keys:
+        fatal(
+            f"Unexpected top-level properties in {pathname}: "
+            f"{', '.join(unexpected_top_level_keys)}"
+        )
+
     columns_obj = data.get("columns")
     if not isinstance(columns_obj, list) or not columns_obj:
         fatal(f"Expected non-empty columns array in {pathname}")
