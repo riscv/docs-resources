@@ -96,7 +96,7 @@ BUILT_PARAM_TABLE_VARIANTS_STAMP := $(BUILD_DIR)/test-param-table-variants.done
 
 # Combine separate fnames into lists.
 BUILT_TEST_HTML_FNAMES := $(BUILT_TEST_CH1_HTML_FNAME) $(BUILT_TEST_CH2_HTML_FNAME)
-BUILT_TEST_NORM_TAGS_FNAMES := $(BUILT_TEST_CH1_NORM_TAGS_FNAME) $(BUILT_TEST_CH2_NORM_TAGS_FNAME)
+BUILT_TEST_NORM_TAGS_FNAMES := $(BUILT_TEST_CH2_NORM_TAGS_FNAME) $(BUILT_TEST_CH1_NORM_TAGS_FNAME)
 
 # Copies of expected output files.
 # Use make target "update-expected" to update from build dir contents.
