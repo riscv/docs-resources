@@ -13,6 +13,8 @@ from def_text_to_html import (
     tag2html_link,
 )
 from shared_utils import (
+    IMPLDEF_CATEGORIES,
+    STDS_OBJECT_KINDS,
     check_impldef_cat,
     check_kind,
     format_param_feature,
@@ -148,6 +150,7 @@ def rules_by_name(norm_rules_data: Dict[str, Any], src_filename: str) -> Dict[st
 def resolve_impldef_entries(
     impl_defs: List[str],
     norm_rules_by_name: Dict[str, Dict[str, Any]],
+    norm_rules_filename: str,
     src_filename: str,
     item_name: str,
     item_kind: str,
@@ -159,7 +162,7 @@ def resolve_impldef_entries(
         if norm_rule_opt is None:
             fatal(
                 f"{item_kind} {item_name} in {src_filename} references impl-def {impl_def} "
-                "which is not present in normative rules"
+                f"which is not present in normative rules {norm_rules_filename}"
             )
         assert norm_rule_opt is not None
         resolved_entry = dict(norm_rule_opt)
@@ -169,7 +172,15 @@ def resolve_impldef_entries(
             if not isinstance(kind, str):
                 fatal(
                     f"{item_kind} {item_name} in {src_filename} references impl-def {impl_def} "
-                    f"with non-string kind ({type(kind).__name__})"
+                    f"with non-string kind ({type(kind).__name__}) "
+                    f"in normative rules {norm_rules_filename}"
+                )
+            if kind not in STDS_OBJECT_KINDS:
+                allowed_kinds = ",".join(STDS_OBJECT_KINDS)
+                fatal(
+                    f"{item_kind} {item_name} in {src_filename} references impl-def {impl_def} "
+                    f"with invalid kind {kind!r} in normative rules {norm_rules_filename}. "
+                    f"Allowed kinds are: {allowed_kinds}"
                 )
             check_kind(kind, impl_def, None, fatal, PN)
 
@@ -178,7 +189,15 @@ def resolve_impldef_entries(
             if not isinstance(impldef_cat, str):
                 fatal(
                     f"{item_kind} {item_name} in {src_filename} references impl-def {impl_def} "
-                    f"with non-string impl-def-category ({type(impldef_cat).__name__})"
+                    f"with non-string impl-def-category ({type(impldef_cat).__name__}) "
+                    f"in normative rules {norm_rules_filename}"
+                )
+            if impldef_cat not in IMPLDEF_CATEGORIES:
+                allowed_cats = ",".join(IMPLDEF_CATEGORIES)
+                fatal(
+                    f"{item_kind} {item_name} in {src_filename} references impl-def {impl_def} "
+                    f"with invalid impl-def-category {impldef_cat!r} in normative rules "
+                    f"{norm_rules_filename}. Allowed impl-def-categories are: {allowed_cats}"
                 )
             check_impldef_cat(impldef_cat, impl_def, None, fatal, PN)
 
@@ -248,6 +267,7 @@ def add_parameter_entries(
     def_filename: str,
     chapter_name: str,
     norm_rules_by_name: Dict[str, Dict[str, Any]],
+    norm_rules_filename: str,
 ):
     """Expand one parameter definition entry into one or more output parameter objects."""
     names: List[str] = []
@@ -330,6 +350,7 @@ def add_parameter_entries(
             out_entry["impl-defs"] = resolve_impldef_entries(
                 impl_defs,
                 norm_rules_by_name,
+                norm_rules_filename,
                 def_filename,
                 name,
                 "Parameter",
@@ -344,6 +365,7 @@ def add_csr_entries(
     def_filename: str,
     chapter_name: str,
     norm_rules_by_name: Dict[str, Dict[str, Any]],
+    norm_rules_filename: str,
 ):
     """Expand one CSR definition entry into one or more output CSR objects."""
     names: List[str] = []
@@ -355,6 +377,11 @@ def add_csr_entries(
     elif "names" in entry:
         names_value: Any = entry.get("names")
         if not isinstance(names_value, list):
+            if isinstance(names_value, str):
+                fatal(
+                    f"Found CSR entry with non-list names in {def_filename}; "
+                    f"received single name {names_value!r}. Use name: {names_value!r} instead"
+                )
             fatal(f"Found CSR entry with non-list names in {def_filename}")
         for name in names_value:
             if not isinstance(name, str):
@@ -373,7 +400,12 @@ def add_csr_entries(
             "cannot derive type (impl-def-category required)"
         )
     resolved_impl_defs = resolve_impldef_entries(
-        impl_def_refs, norm_rules_by_name, def_filename, representative_name, "CSR"
+        impl_def_refs,
+        norm_rules_by_name,
+        norm_rules_filename,
+        def_filename,
+        representative_name,
+        "CSR",
     )
 
     # Derive type from impl-def-category; all impl-defs must agree.
@@ -383,7 +415,8 @@ def add_csr_entries(
         if not isinstance(cat, str):
             fatal(
                 f"CSR {representative_name} in {def_filename} references impl-def "
-                f"'{resolved.get('name')}' which has no impl-def-category"
+                f"'{resolved.get('name')}' which has no impl-def-category "
+                f"in normative rules {norm_rules_filename}"
             )
         assert isinstance(cat, str)
         categories.append(cat)
@@ -395,7 +428,8 @@ def add_csr_entries(
         )
         fatal(
             f"CSR {representative_name} in {def_filename} has impl-defs with "
-            f"conflicting impl-def-category values: {details}"
+            f"conflicting impl-def-category values in normative rules {norm_rules_filename}: "
+            f"{details}"
         )
 
     csr_type: str = categories[0]
@@ -454,7 +488,14 @@ def create_params_hash(norm_rules_json: str, param_def_yaml_files: List[str]) ->
             for entry in parameter_definitions:
                 if not isinstance(entry, dict):
                     fatal(f"Found non-object entry in parameter_definitions in {def_file}")
-                add_parameter_entries(parameters, entry, def_file, chapter_name, norm_rules_map)
+                add_parameter_entries(
+                    parameters,
+                    entry,
+                    def_file,
+                    chapter_name,
+                    norm_rules_map,
+                    norm_rules_json,
+                )
 
         csr_definitions_obj: Any = yaml_data.get("csr_definitions")
         if csr_definitions_obj is not None:
@@ -465,7 +506,14 @@ def create_params_hash(norm_rules_json: str, param_def_yaml_files: List[str]) ->
             for entry in csr_definitions:
                 if not isinstance(entry, dict):
                     fatal(f"Found non-object entry in csr_definitions in {def_file}")
-                add_csr_entries(csrs, entry, def_file, chapter_name, norm_rules_map)
+                add_csr_entries(
+                    csrs,
+                    entry,
+                    def_file,
+                    chapter_name,
+                    norm_rules_map,
+                    norm_rules_json,
+                )
 
         if parameter_definitions_obj is None and csr_definitions_obj is None:
             fatal(f"Missing parameter_definitions and csr_definitions arrays in {def_file}")
