@@ -4,6 +4,6 @@ a|
 Normative Rule(s):
 
 * https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#UINT6[UINT6]
-| Integer
+| uint6
 | EXT:MockExtX
 | See normative rule

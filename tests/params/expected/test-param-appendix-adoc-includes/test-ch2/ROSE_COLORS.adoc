@@ -4,7 +4,7 @@ a|
 Normative Rule(s):
 
 * https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#ROSE_COLORS[ROSE_COLORS]
-| Enum (RED, PINK, WHITE)
+| [RED, PINK, WHITE]
 | CHAP:Two
 a| NOTE: This is a note about the ROSE_COLORS parameter.
 

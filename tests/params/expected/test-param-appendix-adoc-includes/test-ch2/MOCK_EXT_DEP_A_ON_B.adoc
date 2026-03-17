@@ -4,6 +4,6 @@ a|
 Normative Rule(s):
 
 * https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#MOCK_EXT_DEP_A_ON_B[MOCK_EXT_DEP_A_ON_B]
-| Boolean
+| boolean
 | EXT_DEP:MockExtDepAOnB
 | NOTE: This is a Mock extension dependency parameter (A depends B).

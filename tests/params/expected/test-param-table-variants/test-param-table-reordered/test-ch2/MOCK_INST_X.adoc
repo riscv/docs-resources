@@ -1,4 +1,4 @@
-| Boolean
+| boolean
 | INST:MockInstX
 a|
 [#param:MOCK_INST_X]#MOCK_INST_X#

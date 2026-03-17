@@ -1,4 +1,4 @@
-| Integer
+| bit
 | CHAP:Two
 a|
 [#param:NO_IMPL_DEF]#NO_IMPL_DEF#

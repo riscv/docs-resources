@@ -1,4 +1,4 @@
-| Boolean
+| boolean
 | BASE:RV32I, BASE:RV64I
 a|
 [#param:BASE_RV32I_RV64I]#BASE_RV32I_RV64I#

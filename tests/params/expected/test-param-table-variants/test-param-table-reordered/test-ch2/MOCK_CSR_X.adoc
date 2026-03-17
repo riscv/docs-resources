@@ -1,4 +1,4 @@
-| Boolean
+| boolean
 | CSR:MockCsrX
 a|
 [#param:MOCK_CSR_X]#MOCK_CSR_X#

@@ -4,6 +4,6 @@ a|
 Normative Rule(s):
 
 * https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#MOCK_CSR_X[MOCK_CSR_X]
-| Boolean
+| boolean
 | CSR:MockCsrX
 | NOTE: This is a Mock "X" CSR parameter.

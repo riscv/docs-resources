@@ -1,4 +1,4 @@
-| Integer
+| bit
 | EXT:MockExtX
 a|
 [#param:BIT]#BIT#

@@ -1,4 +1,4 @@
-| Boolean
+| boolean
 | FLD:MockCsrFieldY
 a|
 [#param:MOCK_CSR_FIELD_Y]#MOCK_CSR_FIELD_Y#

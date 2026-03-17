@@ -1,4 +1,4 @@
-| Integer 1 to 100
+| Range 1 to 100
 | EXT:MockExtY
 a|
 [#param:UINT_1TO100]#UINT_1TO100#
