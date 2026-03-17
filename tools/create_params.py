@@ -471,10 +471,10 @@ def create_params_hash(norm_rules_json: str, param_def_yaml_files: List[str]) ->
             fatal(f"Missing parameter_definitions and csr_definitions arrays in {def_file}")
 
     output: Dict[str, List[Dict[str, Any]]] = {}
-    if saw_parameter_definitions:
-        output["parameters"] = parameters
-    if saw_csr_definitions:
-        output["csrs"] = csrs
+    # Always emit top-level keys so downstream tools can safely index
+    # into data["parameters"] and data["csrs"], even if the lists are empty.
+    output["parameters"] = parameters
+    output["csrs"] = csrs
     return output
 
 
