@@ -7,6 +7,7 @@ Input JSON must conform to schemas/params-schema.json.
 import argparse
 import re
 import sys
+from collections import OrderedDict
 from pathlib import Path
 from typing import Any, Dict, List
 
@@ -383,7 +384,8 @@ def write_output_files(
     table_header = render_table_header_row(columns)
 
     # Map from chapter subdirectory -> list of parameter .adoc filenames written.
-    chapter_files: Dict[Path, List[str]] = {}
+    # Use OrderedDict so that iteration reflects chapter encounter order.
+    chapter_files: OrderedDict[Path, List[str]] = OrderedDict()
     chapter_names: Dict[Path, str] = {}
 
     seen_names = set()
@@ -443,7 +445,9 @@ def write_output_files(
 
     # Write one table per chapter to the top-level by-chapter file.
     chapter_tables: List[str] = []
-    for param_dir in chapter_files.keys():
+    # Iterate chapters in encounter order as recorded in chapter_files (OrderedDict).
+    chapter_dirs = list(chapter_files.keys())
+    for param_dir in chapter_dirs:
         chapter_count = len(chapter_files[param_dir])
         chapter_tables.append(
             f".Chapter {chapter_names[param_dir]} Parameter Definitions: "
