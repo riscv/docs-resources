@@ -1,3 +1,5 @@
+=== One
+
 .Chapter One Parameter Definitions: 13 Parameters
 [cols="10%,10%,30%,50%"]
 |===
@@ -7,6 +9,8 @@
 include::test-ch1/all_params.adoc[]
 
 |===
+
+=== Two
 
 .Chapter Two Parameter Definitions: 12 Parameters
 [cols="10%,10%,30%,50%"]
