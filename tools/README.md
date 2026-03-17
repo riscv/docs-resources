@@ -139,10 +139,10 @@ Inputs:
 Outputs:
 - Output directory containing:
   - Per-parameter row fragments grouped by `def_filename` stem (for example `test-ch1/BOOLEAN.adoc`).
-  - Per-group include files (`<group>/all_params.adoc`).
+  - Per-group include files (`<group>/all_params.adoc`) in input JSON parameter order.
   - Top-level include files:
     - `all_params_a_to_z.adoc` (single table, sorted by parameter name).
-    - `all_params_by_chapter.adoc` (one table per chapter, sorted by chapter name).
+    - `all_params_by_chapter.adoc` (one table per chapter in input JSON chapter encounter order).
 
 Top-level table behavior:
 - Table columns and widths are driven by the `columns` list in the layout YAML.

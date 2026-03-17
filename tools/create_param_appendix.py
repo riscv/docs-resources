@@ -349,7 +349,7 @@ def write_output_files(
     """Write one .adoc file per parameter, organized by def_filename.
 
     Also writes one chapter-level include file per subdirectory that
-    includes all parameter .adoc files in that directory (alphabetical order).
+    includes all parameter .adoc files in input parameter order.
     """
     output_dir.mkdir(parents=True, exist_ok=True)
     table_cols = render_table_cols_spec(columns)
@@ -405,7 +405,7 @@ def write_output_files(
     # Write one chapter-level include file per subdirectory.
     for param_dir, filenames in chapter_files.items():
         include_lines = "\n".join(
-            f"include::{fname}[]" for fname in sorted(filenames)
+            f"include::{fname}[]" for fname in filenames
         )
         chapter_include_path = param_dir / "all_params.adoc"
         try:
@@ -416,7 +416,7 @@ def write_output_files(
 
     # Write one table per chapter to the top-level by-chapter file.
     chapter_tables: List[str] = []
-    for param_dir in sorted(chapter_files.keys(), key=lambda p: (chapter_names[p], p.name)):
+    for param_dir in chapter_files.keys():
         chapter_count = len(chapter_files[param_dir])
         chapter_tables.append(
             f".Chapter {chapter_names[param_dir]} Parameter Definitions: "
