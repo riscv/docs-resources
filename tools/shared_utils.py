@@ -162,7 +162,9 @@ def format_param_feature(
 
     if not features:
         chapter_name = param.get("chapter_name")
-        return chapter_name if isinstance(chapter_name, str) and chapter_name else "(unspecified)"
+        if isinstance(chapter_name, str) and chapter_name:
+            return f"CHAP:{chapter_name}"
+        return "(unspecified)"
 
     return ", ".join(features)
 

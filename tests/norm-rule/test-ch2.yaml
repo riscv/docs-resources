@@ -24,8 +24,6 @@ normative_rule_definitions:
   - name: ROSE_COLORS
     impl-def-behavior: true
     tag: "norm:ROSE_COLORS"
-    kind: extension
-    instance: MockExtZ
   - names: [XLEN1, XLEN2]
     impl-def-behavior: true
     tag: "norm:XLEN"
@@ -77,10 +75,14 @@ normative_rule_definitions:
     tag: "norm:csr_field_warl1"
     impl-def-behavior: true
     impl-def-category: WARL
+    kind: csr_field
+    instance: MockWARL1
   - name: CSR_FIELD_WLRL
     tag: "norm:csr_field_wlrl"
     impl-def-behavior: true
     impl-def-category: WLRL
+    kind: csr_field
+    instance: MockWLRL
   - name: CSR_FIELD_WARL2
     tag: "norm:csr_field_warl2"
     impl-def-behavior: true

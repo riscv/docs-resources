@@ -62,8 +62,55 @@
         ],
         "additionalProperties": false
       }
+    },
+    "csrs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+           "type": "string",
+           "description": "CSR name"
+          },
+          "def_filename": {
+            "type": "string",
+            "description": "Parameter definition file that defines this CSR"
+          },
+          "chapter_name": {
+            "type": "string",
+            "description": "CSRs for specified chapter in standards document"
+          },
+          "note": {
+            "type": "string",
+            "$ref": "param-common-schema.json#/noteDesc"
+          },
+          "description": {
+            "type": "string",
+            "$ref": "param-common-schema.json#/descriptionDesc"
+          },
+          "type": {
+            "$ref": "param-common-schema.json#/csrType"
+          },
+          "impl-defs": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "norm-rules-schema.json#/definitions/normativeRuleEntry"
+                }
+              },
+              { "$ref": "param-common-schema.json#/implDefBehaviorDesc" }
+            ]
+          }
+        },
+        "required": ["name", "def_filename", "chapter_name", "type"],
+        "additionalProperties": false
+      }
     }
   },
-  "required": ["parameters"],
+  "anyOf": [
+    { "required": ["parameters"] },
+    { "required": ["csrs"] }
+  ],
   "additionalProperties": false
 }

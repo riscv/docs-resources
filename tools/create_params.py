@@ -25,6 +25,8 @@ from tag_text_to_html import convert_tag_text_to_html
 PN = "create_params.py"
 PARAMS_CH_TABLE_NAME_PREFIX = "table-params-ch-"
 PARAMS_NO_CH_TABLE_NAME = "table-params-no-ch"
+CSRS_CH_TABLE_NAME_PREFIX = "table-csrs-ch-"
+CSRS_NO_CH_TABLE_NAME = "table-csrs-no-ch"
 
 error, info, fatal = make_log_helpers(PN)
 
@@ -88,27 +90,32 @@ def load_yaml_file(pathname: str) -> Dict[str, Any]:
     return load_yaml_object(pathname, fatal)
 
 
-def normalize_impldef_refs(entry: Dict[str, Any], src_filename: str, param_name: str) -> List[str]:
-    """Return impl-def references from one parameter entry as a normalized array."""
+def normalize_impldef_refs(
+    entry: Dict[str, Any],
+    src_filename: str,
+    item_name: str,
+    item_kind: str,
+) -> List[str]:
+    """Return impl-def references from one definition entry as a normalized array."""
     has_impldef = "impl-def" in entry
     has_impldefs = "impl-defs" in entry
 
     if has_impldef and has_impldefs:
-        fatal(f"Parameter {param_name} in {src_filename} cannot define both impl-def and impl-defs")
+        fatal(f"{item_kind} {item_name} in {src_filename} cannot define both impl-def and impl-defs")
 
     refs: List[str] = []
     if has_impldef:
         impl_def: Any = entry.get("impl-def")
         if not isinstance(impl_def, str):
-            fatal(f"Parameter {param_name} in {src_filename} has non-string impl-def")
+            fatal(f"{item_kind} {item_name} in {src_filename} has non-string impl-def")
         refs = [impl_def]
     elif has_impldefs:
         impl_defs: Any = entry.get("impl-defs")
         if not isinstance(impl_defs, list):
-            fatal(f"Parameter {param_name} in {src_filename} has non-list impl-defs")
+            fatal(f"{item_kind} {item_name} in {src_filename} has non-list impl-defs")
         for impl_def in impl_defs:
             if not isinstance(impl_def, str):
-                fatal(f"Parameter {param_name} in {src_filename} has non-string value in impl-defs")
+                fatal(f"{item_kind} {item_name} in {src_filename} has non-string value in impl-defs")
         refs = list(impl_defs)
 
     return refs
@@ -142,7 +149,8 @@ def resolve_impldef_entries(
     impl_defs: List[str],
     norm_rules_by_name: Dict[str, Dict[str, Any]],
     src_filename: str,
-    param_name: str,
+    item_name: str,
+    item_kind: str,
 ) -> List[Dict[str, Any]]:
     """Resolve impl-def names to normativeRuleEntry objects."""
     resolved: List[Dict[str, Any]] = []
@@ -150,7 +158,7 @@ def resolve_impldef_entries(
         norm_rule_opt = norm_rules_by_name.get(impl_def)
         if norm_rule_opt is None:
             fatal(
-                f"Parameter {param_name} in {src_filename} references impl-def {impl_def} "
+                f"{item_kind} {item_name} in {src_filename} references impl-def {impl_def} "
                 "which is not present in normative rules"
             )
         assert norm_rule_opt is not None
@@ -160,7 +168,7 @@ def resolve_impldef_entries(
         if kind is not None:
             if not isinstance(kind, str):
                 fatal(
-                    f"Parameter {param_name} in {src_filename} references impl-def {impl_def} "
+                    f"{item_kind} {item_name} in {src_filename} references impl-def {impl_def} "
                     f"with non-string kind ({type(kind).__name__})"
                 )
             check_kind(kind, impl_def, None, fatal, PN)
@@ -169,7 +177,7 @@ def resolve_impldef_entries(
         if impldef_cat is not None:
             if not isinstance(impldef_cat, str):
                 fatal(
-                    f"Parameter {param_name} in {src_filename} references impl-def {impl_def} "
+                    f"{item_kind} {item_name} in {src_filename} references impl-def {impl_def} "
                     f"with non-string impl-def-category ({type(impldef_cat).__name__})"
                 )
             check_impldef_cat(impldef_cat, impl_def, None, fatal, PN)
@@ -289,7 +297,7 @@ def add_parameter_entries(
         fatal(f"Found parameter entry without name/names in {def_filename}")
 
     for name in names:
-        impl_defs = normalize_impldef_refs(entry, def_filename, name)
+        impl_defs = normalize_impldef_refs(entry, def_filename, name, "Parameter")
 
         out_entry: Dict[str, Any] = {
             "name": name,
@@ -324,9 +332,97 @@ def add_parameter_entries(
                 norm_rules_by_name,
                 def_filename,
                 name,
+                "Parameter",
             )
 
         parameters.append(out_entry)
+
+
+def add_csr_entries(
+    csrs: List[Dict[str, Any]],
+    entry: Dict[str, Any],
+    def_filename: str,
+    chapter_name: str,
+    norm_rules_by_name: Dict[str, Dict[str, Any]],
+):
+    """Expand one CSR definition entry into one or more output CSR objects."""
+    names: List[str] = []
+    if "name" in entry:
+        name: Any = entry.get("name")
+        if not isinstance(name, str):
+            fatal(f"Found CSR entry with non-string name in {def_filename}")
+        names = [name]
+    elif "names" in entry:
+        names_value: Any = entry.get("names")
+        if not isinstance(names_value, list):
+            fatal(f"Found CSR entry with non-list names in {def_filename}")
+        for name in names_value:
+            if not isinstance(name, str):
+                fatal(f"Found non-string value in CSR names array in {def_filename}")
+        names = list(names_value)
+    else:
+        fatal(f"Found CSR entry without name/names in {def_filename}")
+
+    representative_name = names[0]
+
+    # Resolve impl-defs at entry level (shared across all names in this entry).
+    impl_def_refs = normalize_impldef_refs(entry, def_filename, representative_name, "CSR")
+    if not impl_def_refs:
+        fatal(
+            f"CSR {representative_name} in {def_filename} has no impl-def(s); "
+            "cannot derive type (impl-def-category required)"
+        )
+    resolved_impl_defs = resolve_impldef_entries(
+        impl_def_refs, norm_rules_by_name, def_filename, representative_name, "CSR"
+    )
+
+    # Derive type from impl-def-category; all impl-defs must agree.
+    categories: List[str] = []
+    for resolved in resolved_impl_defs:
+        cat = resolved.get("impl-def-category")
+        if not isinstance(cat, str):
+            fatal(
+                f"CSR {representative_name} in {def_filename} references impl-def "
+                f"'{resolved.get('name')}' which has no impl-def-category"
+            )
+        assert isinstance(cat, str)
+        categories.append(cat)
+
+    if len(set(categories)) > 1:
+        details = ", ".join(
+            f"'{r.get('name')}': {r.get('impl-def-category')!r}"
+            for r in resolved_impl_defs
+        )
+        fatal(
+            f"CSR {representative_name} in {def_filename} has impl-defs with "
+            f"conflicting impl-def-category values: {details}"
+        )
+
+    csr_type: str = categories[0]
+
+    for name in names:
+        out_entry: Dict[str, Any] = {
+            "name": name,
+            "def_filename": Path(def_filename).name,
+            "chapter_name": chapter_name,
+            "type": csr_type,
+        }
+
+        note = entry.get("note")
+        if note is not None:
+            if not isinstance(note, str):
+                fatal(f"CSR {name} in {def_filename} has non-string note")
+            out_entry["note"] = note
+
+        description = entry.get("description")
+        if description is not None:
+            if not isinstance(description, str):
+                fatal(f"CSR {name} in {def_filename} has non-string description")
+            out_entry["description"] = description
+
+        out_entry["impl-defs"] = resolved_impl_defs
+
+        csrs.append(out_entry)
 
 
 def create_params_hash(norm_rules_json: str, param_def_yaml_files: List[str]) -> Dict[str, List[Dict[str, Any]]]:
@@ -335,7 +431,10 @@ def create_params_hash(norm_rules_json: str, param_def_yaml_files: List[str]) ->
     norm_rules_data = load_json_file(norm_rules_json)
     norm_rules_map = rules_by_name(norm_rules_data, norm_rules_json)
 
-    output: Dict[str, List[Dict[str, Any]]] = {"parameters": []}
+    parameters: List[Dict[str, Any]] = []
+    csrs: List[Dict[str, Any]] = []
+    saw_parameter_definitions = False
+    saw_csr_definitions = False
 
     for def_file in param_def_yaml_files:
         info(f"Loading parameter definition file {def_file}")
@@ -347,15 +446,35 @@ def create_params_hash(norm_rules_json: str, param_def_yaml_files: List[str]) ->
         chapter_name = chapter_name_obj
 
         parameter_definitions_obj: Any = yaml_data.get("parameter_definitions")
-        if not isinstance(parameter_definitions_obj, list):
-            fatal(f"Missing or invalid parameter_definitions array in {def_file}")
-        parameter_definitions: List[Any] = parameter_definitions_obj
+        if parameter_definitions_obj is not None:
+            if not isinstance(parameter_definitions_obj, list):
+                fatal(f"Invalid parameter_definitions array in {def_file}")
+            saw_parameter_definitions = True
+            parameter_definitions: List[Any] = parameter_definitions_obj
+            for entry in parameter_definitions:
+                if not isinstance(entry, dict):
+                    fatal(f"Found non-object entry in parameter_definitions in {def_file}")
+                add_parameter_entries(parameters, entry, def_file, chapter_name, norm_rules_map)
 
-        for entry in parameter_definitions:
-            if not isinstance(entry, dict):
-                fatal(f"Found non-object entry in parameter_definitions in {def_file}")
-            add_parameter_entries(output["parameters"], entry, def_file, chapter_name, norm_rules_map)
+        csr_definitions_obj: Any = yaml_data.get("csr_definitions")
+        if csr_definitions_obj is not None:
+            if not isinstance(csr_definitions_obj, list):
+                fatal(f"Invalid csr_definitions array in {def_file}")
+            saw_csr_definitions = True
+            csr_definitions: List[Any] = csr_definitions_obj
+            for entry in csr_definitions:
+                if not isinstance(entry, dict):
+                    fatal(f"Found non-object entry in csr_definitions in {def_file}")
+                add_csr_entries(csrs, entry, def_file, chapter_name, norm_rules_map)
 
+        if parameter_definitions_obj is None and csr_definitions_obj is None:
+            fatal(f"Missing parameter_definitions and csr_definitions arrays in {def_file}")
+
+    output: Dict[str, List[Dict[str, Any]]] = {}
+    if saw_parameter_definitions:
+        output["parameters"] = parameters
+    if saw_csr_definitions:
+        output["csrs"] = csrs
     return output
 
 
@@ -404,11 +523,20 @@ def output_html(filename: str, params_hash: Dict[str, List[Dict[str, Any]]]):
         fatal(f"Need Dict for params_hash but passed a {type(params_hash).__name__}")
 
     params_obj: Any = params_hash.get("parameters")
-    if not isinstance(params_obj, list):
-        fatal("Missing or invalid parameters array")
-    params: List[Dict[str, Any]] = params_obj
+    if params_obj is not None and not isinstance(params_obj, list):
+        fatal("Invalid parameters array")
+    params: List[Dict[str, Any]] = params_obj if isinstance(params_obj, list) else []
+
+    csrs_obj: Any = params_hash.get("csrs")
+    if csrs_obj is not None and not isinstance(csrs_obj, list):
+        fatal("Invalid csrs array")
+    csrs: List[Dict[str, Any]] = csrs_obj if isinstance(csrs_obj, list) else []
+
+    if not params and not csrs:
+        fatal("Missing parameters/csrs arrays")
 
     chapter_names, params_by_chapter, params_no_chapter = params_by_chapter_name(params)
+    csr_chapter_names, csrs_by_chapter, csrs_no_chapter = params_by_chapter_name(csrs)
 
     table_names: List[str] = []
     table_num = 1
@@ -418,17 +546,32 @@ def output_html(filename: str, params_hash: Dict[str, List[Dict[str, Any]]]):
     if params_no_chapter:
         table_names.append(PARAMS_NO_CH_TABLE_NAME)
 
+    csr_table_num = 1
+    for _ in csr_chapter_names:
+        table_names.append(f"{CSRS_CH_TABLE_NAME_PREFIX}{csr_table_num}")
+        csr_table_num += 1
+    if csrs_no_chapter:
+        table_names.append(CSRS_NO_CH_TABLE_NAME)
+
     try:
         with open(filename, "w", encoding="utf-8") as f:
             html_head(f, table_names)
             f.write('<body>\n')
             f.write('  <div class="app">\n')
 
-            html_sidebar(f, chapter_names, params_by_chapter, params_no_chapter)
+            if params:
+                html_sidebar(f, chapter_names, params_by_chapter, params_no_chapter)
+                if csrs:
+                    html_sidebar_csrs(f, csr_chapter_names, csrs_by_chapter, csrs_no_chapter)
+                else:
+                    f.write('    </aside>\n')
+            else:
+                f.write('    <aside class="sidebar">\n')
+                html_sidebar_csrs(f, csr_chapter_names, csrs_by_chapter, csrs_no_chapter)
 
             f.write('    <main>\n')
             f.write('      <style>.grand-total-heading { font-size: 24px; font-weight: bold; }</style>\n')
-            f.write(f'      <h1 class="grand-total-heading">{get_params_counts_str(params)}</h1>\n')
+            f.write(f'      <h1 class="grand-total-heading">{get_params_counts_str(params, csrs)}</h1>\n')
 
             table_num = 1
             for chapter_name in chapter_names:
@@ -448,6 +591,27 @@ def output_html(filename: str, params_hash: Dict[str, List[Dict[str, Any]]]):
                     PARAMS_NO_CH_TABLE_NAME,
                     "No chapter_name",
                     params_no_chapter,
+                    None,
+                )
+
+            csr_table_num = 1
+            for chapter_name in csr_chapter_names:
+                chapter_csrs = csrs_by_chapter[chapter_name]
+                html_csrs_table(
+                    f,
+                    f"{CSRS_CH_TABLE_NAME_PREFIX}{csr_table_num}",
+                    f"Chapter {chapter_name}",
+                    chapter_csrs,
+                    chapter_name,
+                )
+                csr_table_num += 1
+
+            if csrs_no_chapter:
+                html_csrs_table(
+                    f,
+                    CSRS_NO_CH_TABLE_NAME,
+                    "No chapter_name",
+                    csrs_no_chapter,
                     None,
                 )
 
@@ -548,6 +712,42 @@ def html_sidebar(
         )
 
     f.write('      </nav>\n')
+
+
+def html_sidebar_csrs(
+    f,
+    chapter_names: List[str],
+    csrs_by_chapter: Dict[str, List[Dict[str, Any]]],
+    csrs_no_chapter: List[Dict[str, Any]],
+):
+    """Append CSR links in the existing sidebar section."""
+    if not isinstance(chapter_names, list):
+        fatal(f"Need List for chapter_names but passed a {type(chapter_names).__name__}")
+    if not isinstance(csrs_by_chapter, dict):
+        fatal(f"Need Dict for csrs_by_chapter but passed a {type(csrs_by_chapter).__name__}")
+    if not isinstance(csrs_no_chapter, list):
+        fatal(f"Need List for csrs_no_chapter but passed a {type(csrs_no_chapter).__name__}")
+
+    f.write('      <h2 style="margin-top:24px">WARL/WLRL by Chapter</h2>\n')
+    f.write('      <nav class="nav">\n')
+
+    table_num = 1
+    for chapter_name in chapter_names:
+        count = len(csrs_by_chapter[chapter_name])
+        table_name = f"{CSRS_CH_TABLE_NAME_PREFIX}{table_num}"
+        f.write(
+            f'        <a href="#{table_name}" data-target="{table_name}">'
+            f'{chapter_name}<span class="subtitle">{count} entries</span></a>\n'
+        )
+        table_num += 1
+
+    if csrs_no_chapter:
+        f.write(
+            f'        <a href="#{CSRS_NO_CH_TABLE_NAME}" data-target="{CSRS_NO_CH_TABLE_NAME}">'
+            f'No chapter_name<span class="subtitle">{len(csrs_no_chapter)} entries</span></a>\n'
+        )
+
+    f.write('      </nav>\n')
     f.write('    </aside>\n')
 
 
@@ -565,7 +765,21 @@ def html_params_table(
     html_table_footer(f)
 
 
-def html_table_header(f, table_name: str, table_caption: str):
+def html_csrs_table(
+    f,
+    table_name: str,
+    caption_prefix: str,
+    csrs: List[Dict[str, Any]],
+    chapter_name: Optional[str],
+):
+    """Write full CSR table."""
+    html_table_header(f, table_name, f"{caption_prefix}: {len(csrs)} CSRs", "CSR Name")
+    for csr in csrs:
+        html_param_table_row(f, csr, chapter_name)
+    html_table_footer(f)
+
+
+def html_table_header(f, table_name: str, table_caption: str, name_header: str = "Parameter Name"):
     """Write HTML table header."""
     f.write('\n')
     f.write(f'      <section id="{table_name}" class="section">\n')
@@ -578,7 +792,10 @@ def html_table_header(f, table_name: str, table_caption: str):
     f.write('            <col class="col-descriptions">\n')
     f.write('          </colgroup>\n')
     f.write('          <thead>\n')
-    f.write('            <tr><th>Parameter Name</th><th>Type</th><th>Feature(s)</th><th>Information (mostly Normative Rules)</th></tr>\n')
+    f.write(
+        f'            <tr><th>{name_header}</th><th>Type</th><th>Feature(s)</th>'
+        '<th>Information (mostly Normative Rules)</th></tr>\n'
+    )
     f.write('          </thead>\n')
     f.write('          <tbody>\n')
 
@@ -756,12 +973,18 @@ def html_script(f):
     f.write(script)
 
 
-def get_params_counts_str(params: List[Dict[str, Any]]) -> str:
+def get_params_counts_str(params: List[Dict[str, Any]], csrs: List[Dict[str, Any]]) -> str:
     """Build heading summary string for params output."""
-    total = len(params)
-    return (
-        f"{total} Parameter{'s' if total != 1 else ''}"
-    )
+    parts: List[str] = []
+    if params:
+        total_params = len(params)
+        parts.append(f"{total_params} Parameter{'s' if total_params != 1 else ''}")
+    if csrs:
+        total_csrs = len(csrs)
+        parts.append(f"{total_csrs} CSR{'s' if total_csrs != 1 else ''}")
+    if not parts:
+        return "0 Entries"
+    return ", ".join(parts)
 
 
 def main() -> int:
