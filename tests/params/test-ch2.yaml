@@ -47,3 +47,11 @@ parameter_definitions:
     impl-def: MOCK_EXT_DEP_A_ON_B
     type: boolean
     note: This is a Mock extension dependency parameter (A depends B).
+
+csr_definitions:
+  - name: CSR_FIELD_WARL1
+    impl-def: CSR_FIELD_WARL1
+  - name: CSR_FIELD_WLRL
+    impl-def: CSR_FIELD_WLRL
+  - name: CSR_FIELD_WARL2
+    impl-def: CSR_FIELD_WARL2

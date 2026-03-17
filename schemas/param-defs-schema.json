@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Schema for parameter definitions input files",
+  "title": "Schema for parameter definition input files",
   "type": "object",
 
   "properties": {
@@ -68,8 +68,58 @@
         ],
         "additionalProperties": false
       }
+    },
+    "csr_definitions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "param-common-schema.json#/paramName",
+            "description": "Single CSR name"
+          },
+          "names": {
+            "$ref": "param-common-schema.json#/paramNameArray",
+            "description": "Multiple CSR names"
+          },
+          "note": {
+            "type": "string",
+            "$ref": "param-common-schema.json#/noteDesc"
+          },
+          "description": {
+            "type": "string",
+            "$ref": "param-common-schema.json#/descriptionDesc"
+          },
+          "impl-def": {
+            "$ref": "param-common-schema.json#/implDefName",
+            "description": "Name of implementation-defined behavior"
+          },
+          "impl-defs": {
+            "$ref": "param-common-schema.json#/implDefNameArray",
+            "description": "List of implementation-defined behaviors"
+          }
+        },
+        "allOf": [
+          {
+            "oneOf": [
+              { "required": ["name"] },
+              { "required": ["names"] }
+            ]
+          },
+          {
+            "not": {
+              "required": ["impl-def", "impl-defs"]
+            }
+          }
+        ],
+        "additionalProperties": false
+      }
     }
   },
-  "required": ["$schema", "chapter_name", "parameter_definitions"],
+  "required": ["$schema", "chapter_name"],
+  "anyOf": [
+    { "required": ["parameter_definitions"] },
+    { "required": ["csr_definitions"] }
+  ],
   "additionalProperties": false
 }

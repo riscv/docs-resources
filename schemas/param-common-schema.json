@@ -43,6 +43,10 @@
     "minItems": 2,
     "maxItems": 2
   },
+  "csrType": {
+    "type": "string",
+    "enum": ["WARL", "WLRL"]
+  },
   "stringArray": {
     "type": "array",
     "items": { "type": "string" }

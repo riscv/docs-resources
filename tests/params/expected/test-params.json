@@ -463,11 +463,7 @@
           "name": "ROSE_COLORS",
           "def_filename": "tests/norm-rule/test-ch2.yaml",
           "chapter_name": "Two",
-          "kind": "extension",
           "impl-def-behavior": true,
-          "instances": [
-            "MockExtZ"
-          ],
           "tags": [
             {
               "name": "norm:ROSE_COLORS",
@@ -847,6 +843,88 @@
               "name": "norm:mock-ext-dep-A-on-B",
               "context": false,
               "text": "Here&#8217;s a normative rule for mock extension dependency of extension A on extension B.",
+              "tag_filename": "/build/test-ch2-norm-tags.json",
+              "stds_doc_url": "test-ch2.html"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "csrs": [
+    {
+      "name": "CSR_FIELD_WARL1",
+      "def_filename": "test-ch2.yaml",
+      "chapter_name": "Two",
+      "type": "WARL",
+      "impl-defs": [
+        {
+          "name": "CSR_FIELD_WARL1",
+          "def_filename": "tests/norm-rule/test-ch2.yaml",
+          "chapter_name": "Two",
+          "kind": "csr_field",
+          "impl-def-behavior": true,
+          "instances": [
+            "MockWARL1"
+          ],
+          "impl-def-category": "WARL",
+          "tags": [
+            {
+              "name": "norm:csr_field_warl1",
+              "context": false,
+              "text": "This field is write-any-read-legal.",
+              "tag_filename": "/build/test-ch2-norm-tags.json",
+              "stds_doc_url": "test-ch2.html"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "CSR_FIELD_WLRL",
+      "def_filename": "test-ch2.yaml",
+      "chapter_name": "Two",
+      "type": "WLRL",
+      "impl-defs": [
+        {
+          "name": "CSR_FIELD_WLRL",
+          "def_filename": "tests/norm-rule/test-ch2.yaml",
+          "chapter_name": "Two",
+          "kind": "csr_field",
+          "impl-def-behavior": true,
+          "instances": [
+            "MockWLRL"
+          ],
+          "impl-def-category": "WLRL",
+          "tags": [
+            {
+              "name": "norm:csr_field_wlrl",
+              "context": false,
+              "text": "This field is write-legal-read-legal.",
+              "tag_filename": "/build/test-ch2-norm-tags.json",
+              "stds_doc_url": "test-ch2.html"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "CSR_FIELD_WARL2",
+      "def_filename": "test-ch2.yaml",
+      "chapter_name": "Two",
+      "type": "WARL",
+      "impl-defs": [
+        {
+          "name": "CSR_FIELD_WARL2",
+          "def_filename": "tests/norm-rule/test-ch2.yaml",
+          "chapter_name": "Two",
+          "impl-def-behavior": true,
+          "impl-def-category": "WARL",
+          "tags": [
+            {
+              "name": "norm:csr_field_warl2",
+              "context": false,
+              "text": "This field is also write-any-read-legal.",
               "tag_filename": "/build/test-ch2-norm-tags.json",
               "stds_doc_url": "test-ch2.html"
             }

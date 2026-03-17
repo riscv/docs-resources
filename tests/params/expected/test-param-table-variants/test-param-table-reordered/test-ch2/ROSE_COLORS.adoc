@@ -1,5 +1,5 @@
 | Enum (RED, PINK, WHITE)
-| EXT:MockExtZ
+| CHAP:Two
 a|
 [#param:ROSE_COLORS]#ROSE_COLORS#
 

@@ -50,10 +50,14 @@
         <a href="#table-params-ch-1" data-target="table-params-ch-1">One<span class="subtitle">13 entries</span></a>
         <a href="#table-params-ch-2" data-target="table-params-ch-2">Two<span class="subtitle">12 entries</span></a>
       </nav>
+      <h2 style="margin-top:24px">WARL/WLRL by Chapter</h2>
+      <nav class="nav">
+        <a href="#table-csrs-ch-1" data-target="table-csrs-ch-1">Two<span class="subtitle">3 entries</span></a>
+      </nav>
     </aside>
     <main>
       <style>.grand-total-heading { font-size: 24px; font-weight: bold; }</style>
-      <h1 class="grand-total-heading">25 Parameters</h1>
+      <h1 class="grand-total-heading">25 Parameters, 3 CSRs</h1>
 
       <section id="table-params-ch-1" class="section">
         <table>
@@ -169,7 +173,7 @@
             <tr>
               <td rowspan=3 id="ROSE_COLORS">ROSE_COLORS</td>
               <td rowspan=3>[RED, PINK, WHITE]</td>
-              <td rowspan=3>EXT:MockExtZ</td>
+              <td rowspan=3>CHAP:Two</td>
               <td>NOTE: This is a note about the ROSE_COLORS parameter.</td>
             </tr>
             <tr>
@@ -264,6 +268,41 @@
             </tr>
             <tr>
               <td><a href="test-ch2.html#norm:mock-ext-dep-A-on-B">Here&#8217;s a normative rule for mock extension dependency of extension A on extension B.</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="table-csrs-ch-1" class="section">
+        <table>
+          <caption class="sticky-caption">Chapter Two: 3 CSRs</caption>
+          <colgroup>
+            <col class="col-name">
+            <col class="col-type">
+            <col class="col-feature">
+            <col class="col-descriptions">
+          </colgroup>
+          <thead>
+            <tr><th>CSR Name</th><th>Type</th><th>Feature(s)</th><th>Information (mostly Normative Rules)</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td rowspan=1 id="CSR_FIELD_WARL1">CSR_FIELD_WARL1</td>
+              <td rowspan=1>WARL</td>
+              <td rowspan=1>FLD:MockWARL1</td>
+              <td><a href="test-ch2.html#norm:csr_field_warl1">This field is write-any-read-legal.</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1 id="CSR_FIELD_WLRL">CSR_FIELD_WLRL</td>
+              <td rowspan=1>WLRL</td>
+              <td rowspan=1>FLD:MockWLRL</td>
+              <td><a href="test-ch2.html#norm:csr_field_wlrl">This field is write-legal-read-legal.</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1 id="CSR_FIELD_WARL2">CSR_FIELD_WARL2</td>
+              <td rowspan=1>WARL</td>
+              <td rowspan=1>CHAP:Two</td>
+              <td><a href="test-ch2.html#norm:csr_field_warl2">This field is also write-any-read-legal.</a></td>
             </tr>
           </tbody>
         </table>
