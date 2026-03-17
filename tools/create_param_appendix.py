@@ -445,6 +445,7 @@ def write_output_files(
     chapter_tables: List[str] = []
     for param_dir in chapter_files.keys():
         chapter_count = len(chapter_files[param_dir])
+        chapter_tables.append(f"=== {chapter_names[param_dir]}")
         chapter_tables.append(
             f".Chapter {chapter_names[param_dir]} Parameter Definitions: "
             f"{format_param_count_label(chapter_count)}"
