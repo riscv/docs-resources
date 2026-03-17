@@ -4,6 +4,6 @@ a|
 Normative Rule(s):
 
 * https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#HWORD[HWORD]
-| Integer
+| hword
 | EXT:MockExtX
 | See normative rule

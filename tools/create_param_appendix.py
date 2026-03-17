@@ -190,38 +190,65 @@ def safe_filename(name: str) -> str:
 
 
 def infer_type_string(param: Dict[str, Any]) -> str:
-    """Render parameter type for table column 2."""
+    """Render parameter type for table."""
     param_type = param.get("type")
     param_range = param.get("range")
+    param_name = param.get("name", "<unknown>")
 
     if isinstance(param_type, list):
         if all(isinstance(v, str) for v in param_type):
             enum_values = ", ".join(param_type)
-            return f"Enum ({enum_values})"
+            return f"[{enum_values}]"
         if all(isinstance(v, int) for v in param_type):
-            return "Integer"
-        return "Enum"
+            enum_values = ", ".join(map(str, param_type))
+            return f"[{enum_values}]"
+        fatal(
+            f"Parameter {param_name!r} has invalid type array; expected all strings "
+            "or all integers"
+        )
 
     if isinstance(param_type, str):
-        lowered = param_type.lower()
-        if lowered == "boolean":
-            return "Boolean"
-        if lowered in {"bit", "byte", "hword", "word", "dword"}:
-            return "Integer"
+        if param_type in {"boolean", "bit", "byte", "hword", "word", "dword"}:
+            return param_type
 
-        uint_m = re.match(r"^uint(\d+)$", lowered)
-        int_m = re.match(r"^int(\d+)$", lowered)
+        uint_m = re.match(r"^uint(\d+)$", param_type)
+        int_m = re.match(r"^int(\d+)$", param_type)
         if uint_m or int_m:
-            return "Integer"
+            return param_type
 
-        return param_type
+        fatal(
+            f"Parameter {param_name!r} has invalid type of {param_type!r}"
+        )
 
-    if isinstance(param_range, list) and len(param_range) == 2:
+    if isinstance(param_range, list):
+        if len(param_range) != 2:
+            fatal(
+                f"Parameter {param_name!r} has invalid range array; expected exactly 2 values"
+            )
+
         lo, hi = param_range
-        if isinstance(lo, int) and isinstance(hi, int):
-            return f"Integer {lo} to {hi}"
 
-    return "(unspecified)"
+        if isinstance(lo, int) and isinstance(hi, int):
+            if lo > hi:
+                fatal(
+                    f"Parameter {param_name!r} has min range value {lo!r} greater than max range value {hi!r}"
+                )
+            return f"Range {lo} to {hi}"
+
+        if not isinstance(lo, int):
+            fatal(
+                f"Parameter {param_name!r} has non-integer min range value of {lo!r}"
+            )
+
+        if not isinstance(hi, int):
+            fatal(
+                f"Parameter {param_name!r} has non-integer max range value of {hi!r}"
+            )
+
+    fatal(
+        f"Parameter {param_name!r} has neither a valid type nor a valid range"
+    )
+    return ""  # unreachable
 
 
 def infer_normative_rules(param: Dict[str, Any]) -> List[str]:
@@ -349,7 +376,7 @@ def write_output_files(
     """Write one .adoc file per parameter, organized by def_filename.
 
     Also writes one chapter-level include file per subdirectory that
-    includes all parameter .adoc files in that directory (alphabetical order).
+    includes all parameter .adoc files in input parameter order.
     """
     output_dir.mkdir(parents=True, exist_ok=True)
     table_cols = render_table_cols_spec(columns)
@@ -405,7 +432,7 @@ def write_output_files(
     # Write one chapter-level include file per subdirectory.
     for param_dir, filenames in chapter_files.items():
         include_lines = "\n".join(
-            f"include::{fname}[]" for fname in sorted(filenames)
+            f"include::{fname}[]" for fname in filenames
         )
         chapter_include_path = param_dir / "all_params.adoc"
         try:
@@ -416,7 +443,7 @@ def write_output_files(
 
     # Write one table per chapter to the top-level by-chapter file.
     chapter_tables: List[str] = []
-    for param_dir in sorted(chapter_files.keys(), key=lambda p: (chapter_names[p], p.name)):
+    for param_dir in chapter_files.keys():
         chapter_count = len(chapter_files[param_dir])
         chapter_tables.append(
             f".Chapter {chapter_names[param_dir]} Parameter Definitions: "

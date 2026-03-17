@@ -29,9 +29,13 @@
       },
       {
         "type": "array",
-        "items": {
-          "type": ["string", "integer"]
-        }
+        "items": { "type": "string" },
+        "minItems": 1
+      },
+      {
+        "type": "array",
+        "items": { "type": "integer" },
+        "minItems": 1
       }
     ]
   },

@@ -1,4 +1,4 @@
-| Integer
+| uint32
 | EXT:MockExtX
 a|
 [#param:UINT32]#UINT32#

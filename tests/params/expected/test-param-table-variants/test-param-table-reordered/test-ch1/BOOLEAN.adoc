@@ -1,4 +1,4 @@
-| Boolean
+| boolean
 | EXT:MockExtX
 a|
 [#param:BOOLEAN]#BOOLEAN#

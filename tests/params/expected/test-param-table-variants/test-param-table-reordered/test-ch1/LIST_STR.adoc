@@ -1,4 +1,4 @@
-| Enum (ABC, DEF, GHI)
+| [ABC, DEF, GHI]
 | EXT:MockExtY
 a|
 [#param:LIST_STR]#LIST_STR#

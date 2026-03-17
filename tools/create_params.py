@@ -224,6 +224,7 @@ def param_type_to_json_schema(
             return {"type": "string", "enum": list(param_type)}
         return {"enum": list(param_type)}
 
+    # Type matching is case-sensitive; only canonical lowercase tokens are accepted.
     if param_type == "boolean":
         return {"type": "boolean"}
     if param_type == "bit":

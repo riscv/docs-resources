@@ -1,4 +1,4 @@
-| Integer
+| word
 | EXT:MockExtX
 a|
 [#param:WORD]#WORD#

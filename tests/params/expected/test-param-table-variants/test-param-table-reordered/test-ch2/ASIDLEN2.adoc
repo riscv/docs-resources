@@ -1,4 +1,4 @@
-| Integer 0 to 16
+| Range 0 to 16
 | EXT:MockExtZ
 a|
 [#param:ASIDLEN2]#ASIDLEN2#

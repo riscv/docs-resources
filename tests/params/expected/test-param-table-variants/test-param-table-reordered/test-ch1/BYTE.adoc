@@ -1,4 +1,4 @@
-| Integer
+| byte
 | EXT:MockExtX
 a|
 [#param:BYTE]#BYTE#

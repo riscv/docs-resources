@@ -1,4 +1,4 @@
-| Integer
+| [1, 2, 4]
 | EXT:MockExtX, EXT:MockExtY
 a|
 [#param:LIST_INT]#LIST_INT#

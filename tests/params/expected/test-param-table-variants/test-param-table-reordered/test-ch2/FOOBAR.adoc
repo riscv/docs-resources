@@ -1,4 +1,4 @@
-| Boolean
+| boolean
 | EXT:MockExtX, EXT:MockExtZ
 a|
 [#param:FOOBAR]#FOOBAR#

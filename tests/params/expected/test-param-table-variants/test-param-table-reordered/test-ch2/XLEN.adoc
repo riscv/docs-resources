@@ -1,4 +1,4 @@
-| Integer
+| [32, 64]
 | EXT:MockExtZ
 a|
 [#param:XLEN]#XLEN#

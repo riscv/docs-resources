@@ -1,4 +1,4 @@
-| Enum (RED, PINK, WHITE)
+| [RED, PINK, WHITE]
 | CHAP:Two
 a|
 [#param:ROSE_COLORS]#ROSE_COLORS#

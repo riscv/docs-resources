@@ -1,4 +1,4 @@
-| Integer
+| int64
 | EXT:MockExtY
 a|
 [#param:INT64]#INT64#

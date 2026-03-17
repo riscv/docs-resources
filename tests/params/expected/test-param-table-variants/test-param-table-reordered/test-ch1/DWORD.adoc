@@ -1,4 +1,4 @@
-| Integer
+| dword
 | EXT:MockExtX
 a|
 [#param:DWORD]#DWORD#

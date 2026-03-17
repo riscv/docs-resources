@@ -1,4 +1,4 @@
-| Integer
+| int2
 | BASE:Any
 a|
 [#param:ALL_BASES]#ALL_BASES#

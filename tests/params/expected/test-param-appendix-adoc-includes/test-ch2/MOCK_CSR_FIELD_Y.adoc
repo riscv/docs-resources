@@ -4,6 +4,6 @@ a|
 Normative Rule(s):
 
 * https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#MOCK_CSR_FIELD_Y[MOCK_CSR_FIELD_Y]
-| Boolean
+| boolean
 | FLD:MockCsrFieldY
 | NOTE: This is a Mock "Y" CSR field parameter.
