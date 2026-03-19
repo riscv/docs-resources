@@ -22,7 +22,7 @@
     "description": "Array of 2 integers specifying lower and upper bound (in that order)"
   },
   "paramWidthDesc": {
-    "description": "Either an integer width greater than 0 or the name of another parameter that provides the width. Used only with type int or uint"
+    "description": "Either an integer width between 2 and 128 (inclusive) or the name of another parameter that provides the width. Used only with type int or uint"
   },
   "paramType": {
     "oneOf": [
@@ -65,7 +65,8 @@
     "oneOf": [
       {
         "type": "integer",
-        "minimum": 1
+        "minimum": 2,
+        "maximum": 128
       },
       {
         "$ref": "#/paramName"

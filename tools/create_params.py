@@ -243,11 +243,11 @@ def param_type_to_json_schema(
         elif param_type in {"int", "uint"}:
             if isinstance(param_width, int) and not isinstance(param_width, bool):
                 n = param_width
-                if n < 2 or n > 64:
+                if n < 2 or n > 128:
                     signedness = "signed" if param_type == "int" else "unsigned"
                     fatal(
                         f"Parameter {name} in {def_filename} has invalid {signedness} width {n} "
-                        f"for type {param_type!r} (expected 2–64 bits)"
+                        f"for type {param_type!r} (expected 2–128 bits)"
                     )
                 if param_type == "uint":
                     item_schema = {"type": "integer", "minimum": 0, "maximum": (1 << n) - 1}
@@ -363,18 +363,18 @@ def add_parameter_entries(
         if isinstance(param_width, bool):
             fatal(
                 f"Parameter entry in {def_filename} has invalid width; "
-                "expected integer greater than 0 or parameter name"
+                "expected integer in [2, 128] or parameter name"
             )
         elif isinstance(param_width, int):
-            if param_width < 1:
+            if param_width < 2 or param_width > 128:
                 fatal(
                     f"Parameter entry in {def_filename} has invalid width; "
-                    "integer values must be greater than 0"
+                    "integer values must be in [2, 128]"
                 )
         elif not isinstance(param_width, str):
             fatal(
                 f"Parameter entry in {def_filename} has invalid width; "
-                "expected integer greater than 0 or parameter name"
+                "expected integer in [2, 128] or parameter name"
             )
 
     if has_type and isinstance(param_type, str):
