@@ -266,6 +266,10 @@ def test_infer_param_type_string_all_fatal_cases():
             "has non-integer min array value of '0'",
         ),
         (
+            {"name": "P", "type": "boolean", "array": [True, 1]},
+            "has non-integer min array value of True",
+        ),
+        (
             {"name": "P", "type": "boolean", "array": [0, "1"]},
             "has non-integer max array value of '1'",
         ),
@@ -276,6 +280,10 @@ def test_infer_param_type_string_all_fatal_cases():
         (
             {"name": "P", "type": "boolean", "array": [0, True]},
             "has non-integer max array value of True",
+        ),
+        (
+            {"name": "P", "type": "boolean", "array": [0, False]},
+            "has non-integer max array value of False",
         ),
         (
             {"name": "P", "type": "boolean", "array": [-1, 2]},
