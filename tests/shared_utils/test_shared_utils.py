@@ -214,7 +214,15 @@ def test_infer_param_type_string_all_fatal_cases():
             "Expected parameter name to be a non-empty string",
         ),
         (
+            {"name": "P", "type": []},
+            "has an empty type array",
+        ),
+        (
             {"name": "P", "type": ["A", 1]},
+            "has invalid type array; expected all strings or all integers",
+        ),
+        (
+            {"name": "P", "type": [True, False]},
             "has invalid type array; expected all strings or all integers",
         ),
         (
