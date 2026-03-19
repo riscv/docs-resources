@@ -235,19 +235,19 @@ def infer_param_type_string(
 
         lo, hi = param_range
 
-        if isinstance(lo, int) and isinstance(hi, int):
+        if isinstance(lo, int) and not isinstance(lo, bool) and isinstance(hi, int) and not isinstance(hi, bool):
             if lo > hi:
                 fatal(
                     f"Parameter {param_name!r} has min range value {lo!r} greater than max range value {hi!r}"
                 )
             scalar_type = f"range {lo} to {hi}"
 
-        if not isinstance(lo, int):
+        if not isinstance(lo, int) or isinstance(lo, bool):
             fatal(
                 f"Parameter {param_name!r} has non-integer min range value of {lo!r}"
             )
 
-        if not isinstance(hi, int):
+        if not isinstance(hi, int) or isinstance(hi, bool):
             fatal(
                 f"Parameter {param_name!r} has non-integer max range value of {hi!r}"
             )
@@ -264,11 +264,11 @@ def infer_param_type_string(
             )
 
         lo, hi = param_array
-        if isinstance(lo, bool) or not isinstance(lo, int):
+        if not isinstance(lo, int) or isinstance(lo, bool):
             fatal(
                 f"Parameter {param_name!r} has non-integer min array value of {lo!r}"
             )
-        if isinstance(hi, bool) or not isinstance(hi, int):
+        if not isinstance(hi, int) or isinstance(hi, bool):
             fatal(
                 f"Parameter {param_name!r} has non-integer max array value of {hi!r}"
             )
