@@ -191,10 +191,12 @@ def infer_param_type_string(
     scalar_type = ""
 
     if isinstance(param_type, list):
+        if not param_type:
+            fatal(f"Parameter {param_name!r} has an empty type array")
         if all(isinstance(v, str) for v in param_type):
             enum_values = ", ".join(param_type)
             scalar_type = f"[{enum_values}]"
-        elif all(isinstance(v, int) for v in param_type):
+        elif all(isinstance(v, int) and not isinstance(v, bool) for v in param_type):
             enum_values = ", ".join(map(str, param_type))
             scalar_type = f"[{enum_values}]"
         else:
