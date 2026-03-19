@@ -1,4 +1,4 @@
-| uint(MXLEN)
+| MXLEN-bit unsigned integer
 | CHAP:One
 a|
 [#param:UINT_MXLEN]#UINT_MXLEN#

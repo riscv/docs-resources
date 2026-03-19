@@ -4,6 +4,6 @@ a|
 Normative Rule(s):
 
 * https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#ARRAY[ARRAY]
-| array[0..3] of int32
+| array[0..3] of 32-bit signed integer
 | EXT:MockExtX
 | See normative rule

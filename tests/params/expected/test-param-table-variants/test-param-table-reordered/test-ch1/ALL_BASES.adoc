@@ -1,4 +1,4 @@
-| int2
+| 2-bit signed integer
 | BASE:Any
 a|
 [#param:ALL_BASES]#ALL_BASES#

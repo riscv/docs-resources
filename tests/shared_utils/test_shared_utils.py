@@ -141,6 +141,141 @@ def test_format_param_feature_impldefs_and_fallbacks():
     assert shared_utils.format_param_feature({}) == "(unspecified)"
 
 
+def test_infer_param_type_string_success_cases():
+    # Core scalar keyword types.
+    assert (
+        shared_utils.infer_param_type_string(
+            {"name": "P_BOOL", "type": "boolean"},
+            lambda msg: (_ for _ in ()).throw(AssertionError(msg)),
+        )
+        == "boolean"
+    )
+    assert (
+        shared_utils.infer_param_type_string(
+            {"name": "P_INT", "type": "int", "width": 32},
+            lambda msg: (_ for _ in ()).throw(AssertionError(msg)),
+        )
+        == "32-bit signed integer"
+    )
+    assert (
+        shared_utils.infer_param_type_string(
+            {"name": "P_UINT", "type": "uint", "width": "MXLEN"},
+            lambda msg: (_ for _ in ()).throw(AssertionError(msg)),
+        )
+        == "MXLEN-bit unsigned integer"
+    )
+
+    # Unknown string types are preserved (used by CSR paths such as WARL/WLRL).
+    assert (
+        shared_utils.infer_param_type_string(
+            {"name": "P_CSR", "type": "WARL"},
+            lambda msg: (_ for _ in ()).throw(AssertionError(msg)),
+        )
+        == "WARL"
+    )
+
+    # Enumerations.
+    assert (
+        shared_utils.infer_param_type_string(
+            {"name": "P_ENUM_S", "type": ["A", "B"]},
+            lambda msg: (_ for _ in ()).throw(AssertionError(msg)),
+        )
+        == "[A, B]"
+    )
+    assert (
+        shared_utils.infer_param_type_string(
+            {"name": "P_ENUM_I", "type": [1, 2, 3]},
+            lambda msg: (_ for _ in ()).throw(AssertionError(msg)),
+        )
+        == "[1, 2, 3]"
+    )
+
+    # Range and array wrapping.
+    assert (
+        shared_utils.infer_param_type_string(
+            {"name": "P_RANGE", "range": [0, 16]},
+            lambda msg: (_ for _ in ()).throw(AssertionError(msg)),
+        )
+        == "range 0 to 16"
+    )
+    assert (
+        shared_utils.infer_param_type_string(
+            {"name": "P_ARRAY", "type": "uint", "width": 8, "array": [0, 3]},
+            lambda msg: (_ for _ in ()).throw(AssertionError(msg)),
+        )
+        == "array[0..3] of 8-bit unsigned integer"
+    )
+
+
+def test_infer_param_type_string_all_fatal_cases():
+    cases = [
+        (
+            {"type": "boolean"},
+            "Expected parameter name to be a non-empty string",
+        ),
+        (
+            {"name": "P", "type": ["A", 1]},
+            "has invalid type array; expected all strings or all integers",
+        ),
+        (
+            {"name": "P", "type": "int"},
+            "has type 'int' but no valid width",
+        ),
+        (
+            {"name": "P", "type": "uint", "width": True},
+            "has type 'uint' but no valid width",
+        ),
+        (
+            {"name": "P", "type": ""},
+            "has invalid type of ''",
+        ),
+        (
+            {"name": "P", "range": [0]},
+            "has invalid range array; expected exactly 2 values",
+        ),
+        (
+            {"name": "P", "range": [3, 1]},
+            "has min range value 3 greater than max range value 1",
+        ),
+        (
+            {"name": "P", "range": ["0", 1]},
+            "has non-integer min range value of '0'",
+        ),
+        (
+            {"name": "P", "range": [0, "1"]},
+            "has non-integer max range value of '1'",
+        ),
+        (
+            {"name": "P"},
+            "has neither a valid type nor a valid range",
+        ),
+        (
+            {"name": "P", "type": "boolean", "array": [0]},
+            "has invalid array bounds; expected exactly 2 values",
+        ),
+        (
+            {"name": "P", "type": "boolean", "array": ["0", 1]},
+            "has non-integer min array value of '0'",
+        ),
+        (
+            {"name": "P", "type": "boolean", "array": [0, "1"]},
+            "has non-integer max array value of '1'",
+        ),
+        (
+            {"name": "P", "type": "boolean", "array": [-1, 2]},
+            "has invalid array bounds; values must be non-negative",
+        ),
+        (
+            {"name": "P", "type": "boolean", "array": [4, 2]},
+            "has min array value 4 greater than max array value 2",
+        ),
+    ]
+
+    for param, expected_substring in cases:
+        message = expect_fatal(shared_utils.infer_param_type_string, param)
+        assert expected_substring in message
+
+
 def test_check_kind_validation():
     # Known kind should not invoke fatal.
     shared_utils.check_kind("base", "NR-1", None, lambda msg: (_ for _ in ()).throw(AssertionError(msg)), "x.py")
@@ -168,6 +303,8 @@ def main() -> int:
     test_load_json_object_success_and_top_level_validation()
     test_load_yaml_object_success()
     test_format_param_feature_impldefs_and_fallbacks()
+    test_infer_param_type_string_success_cases()
+    test_infer_param_type_string_all_fatal_cases()
     test_check_kind_validation()
     test_check_impldef_cat_validation()
     print("test_shared_utils.py: all tests passed")

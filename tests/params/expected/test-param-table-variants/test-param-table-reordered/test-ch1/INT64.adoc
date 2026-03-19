@@ -1,4 +1,4 @@
-| int64
+| 64-bit signed integer
 | EXT:MockExtY
 a|
 [#param:INT64]#INT64#

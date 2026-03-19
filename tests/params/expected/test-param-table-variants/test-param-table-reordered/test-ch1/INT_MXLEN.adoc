@@ -1,4 +1,4 @@
-| int(MXLEN)
+| MXLEN-bit signed integer
 | CHAP:One
 a|
 [#param:INT_MXLEN]#INT_MXLEN#

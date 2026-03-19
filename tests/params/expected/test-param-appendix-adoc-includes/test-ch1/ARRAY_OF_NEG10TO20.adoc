@@ -4,6 +4,6 @@ a|
 Normative Rule(s):
 
 * https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#ARRAY[ARRAY]
-| array[0..3] of Range -10 to 20
+| array[0..3] of range -10 to 20
 | EXT:MockExtX
 | See normative rule

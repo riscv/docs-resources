@@ -1,4 +1,4 @@
-| uint6
+| 6-bit unsigned integer
 | EXT:MockExtX
 a|
 [#param:UINT6]#UINT6#

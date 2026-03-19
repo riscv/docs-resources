@@ -1,4 +1,4 @@
-| uint32
+| 32-bit unsigned integer
 | EXT:MockExtX
 a|
 [#param:UINT32]#UINT32#

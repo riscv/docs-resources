@@ -18,6 +18,7 @@ from shared_utils import (
     check_impldef_cat,
     check_kind,
     format_param_feature,
+    infer_param_type_string,
     load_json_object,
     load_yaml_object,
     make_log_helpers,
@@ -952,33 +953,6 @@ def html_table_header(f, table_name: str, table_caption: str, name_header: str =
     f.write('          <tbody>\n')
 
 
-def format_param_type_for_html(param: Dict[str, Any]) -> str:
-    """Render parameter type/range value for HTML table display."""
-    scalar_display = "(unspecified)"
-    param_type = param.get("type")
-    param_width = param.get("width")
-    if isinstance(param_type, str):
-        if param_type == "int":
-            scalar_display = f"{param_width}-bit signed integer"
-        elif param_type == "uint":
-            scalar_display = f"{param_width}-bit unsigned integer"
-        else:
-            scalar_display = param_type
-    elif isinstance(param_type, list):
-        values = ", ".join(str(value) for value in param_type)
-        scalar_display = f"[{values}]"
-    else:
-        param_range = param.get("range")
-        if isinstance(param_range, list) and len(param_range) == 2:
-            scalar_display = f"range {param_range[0]} to {param_range[1]}"
-
-    param_array = param.get("array")
-    if isinstance(param_array, list) and len(param_array) == 2:
-        return f"array[{param_array[0]}..{param_array[1]}] of {scalar_display}"
-
-    return scalar_display
-
-
 def html_param_table_row(f, param: Dict[str, Any], chapter_name: Optional[str]):
     """Write one parameter row with expanded details."""
     name = param.get("name", "")
@@ -987,7 +961,10 @@ def html_param_table_row(f, param: Dict[str, Any], chapter_name: Optional[str]):
     impl_defs_all = param.get("impl-defs")
 
     impl_defs = filter_impldefs_for_chapter(impl_defs_all, chapter_name)
-    type_display = format_param_type_for_html(param)
+    type_display = infer_param_type_string(
+        param,
+        fatal,
+    )
 
     feature_param = dict(param)
     if isinstance(impl_defs_all, list):

@@ -4,6 +4,6 @@ a|
 Normative Rule(s):
 
 * (none)
-| int(MXLEN)
+| MXLEN-bit signed integer
 | CHAP:One
 | Signed integer whose width is MXLEN.

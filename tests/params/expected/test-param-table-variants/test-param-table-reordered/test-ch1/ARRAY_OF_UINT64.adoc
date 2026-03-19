@@ -1,4 +1,4 @@
-| array[0..3] of uint64
+| array[0..3] of 64-bit unsigned integer
 | EXT:MockExtX
 a|
 [#param:ARRAY_OF_UINT64]#ARRAY_OF_UINT64#
