@@ -336,12 +336,7 @@ def add_parameter_entries(
             fatal(f"Parameter entry in {def_filename} has invalid array; first value must be less than or equal to second")
 
     if param_width is not None:
-        if isinstance(param_width, bool):
-            fatal(
-                f"Parameter entry in {def_filename} has invalid width; "
-                "expected integer in [2, 64] or parameter name"
-            )
-        elif isinstance(param_width, int):
+        if isinstance(param_width, int):
             if param_width < 2 or param_width > 64:
                 fatal(
                     f"Parameter entry in {def_filename} has invalid width; "
