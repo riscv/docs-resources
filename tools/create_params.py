@@ -294,86 +294,6 @@ def add_parameter_entries(
     """Expand one parameter definition entry into one or more output parameter objects."""
     names: List[str] = []
 
-    has_type = "type" in entry
-    has_range = "range" in entry
-    has_array = "array" in entry
-    if has_type == has_range:
-        fatal(f"Parameter entry in {def_filename} must define exactly one of type or range")
-
-    param_type: Any = entry.get("type")
-    param_range: Any = entry.get("range")
-    param_array: Any = entry.get("array")
-    param_width: Any = entry.get("width")
-    if has_type:
-        if isinstance(param_type, str):
-            pass
-        elif isinstance(param_type, list):
-            for value in param_type:
-                if not isinstance(value, (str, int)):
-                    fatal(
-                        f"Parameter entry in {def_filename} has invalid type array value "
-                        f"{value!r}; expected string or integer"
-                    )
-        else:
-            fatal(f"Parameter entry in {def_filename} has invalid type; expected string or array")
-
-    if has_range:
-        if not isinstance(param_range, list) or len(param_range) != 2:
-            fatal(f"Parameter entry in {def_filename} has invalid range; expected array of 2 integers")
-        if not isinstance(param_range[0], int) or not isinstance(param_range[1], int):
-            fatal(f"Parameter entry in {def_filename} has invalid range; values must be integers")
-        if param_range[0] >= param_range[1]:
-            fatal(f"Parameter entry in {def_filename} has invalid range; first value must be less than second")
-
-    if has_array:
-        if not isinstance(param_array, list) or len(param_array) != 2:
-            fatal(f"Parameter entry in {def_filename} has invalid array; expected array of 2 integers")
-        if not isinstance(param_array[0], int) or not isinstance(param_array[1], int):
-            fatal(f"Parameter entry in {def_filename} has invalid array; values must be integers")
-        if param_array[0] < 0 or param_array[1] < 0:
-            fatal(f"Parameter entry in {def_filename} has invalid array; values must be non-negative")
-        if param_array[0] > param_array[1]:
-            fatal(f"Parameter entry in {def_filename} has invalid array; first value must be less than or equal to second")
-
-    if param_width is not None:
-        if isinstance(param_width, int):
-            if param_width < 2 or param_width > 64:
-                fatal(
-                    f"Parameter entry in {def_filename} has invalid width; "
-                    "integer values must be in [2, 64]"
-                )
-        elif not isinstance(param_width, str):
-            fatal(
-                f"Parameter entry in {def_filename} has invalid width; "
-                "expected integer in [2, 64] or parameter name"
-            )
-
-    if has_type and isinstance(param_type, str):
-        if param_type in {"int", "uint"}:
-            if param_width is None:
-                fatal(
-                    f"Parameter entry in {def_filename} with type {param_type!r} "
-                    "must define width"
-                )
-        elif param_width is not None:
-            fatal(
-                f"Parameter entry in {def_filename} has width but type {param_type!r}; "
-                "width is allowed only with type 'int' or 'uint'"
-            )
-    elif param_width is not None:
-        fatal(
-            f"Parameter entry in {def_filename} has width but no type 'int' or 'uint'; "
-            "width is allowed only with type 'int' or 'uint'"
-        )
-
-    has_impldef = "impl-def" in entry
-    has_impldefs = "impl-defs" in entry
-    if not has_impldef and not has_impldefs and "description" not in entry:
-        fatal(
-            f"Parameter entry in {def_filename} without impl-def/impl-defs "
-            "must define description"
-        )
-
     if "name" in entry:
         name: Any = entry.get("name")
         if not isinstance(name, str):
@@ -390,6 +310,92 @@ def add_parameter_entries(
     else:
         fatal(
             f"Parameter definition in {def_filename} must define either 'name' or 'names'"
+        )
+
+    if len(names) == 1:
+        param_ref = f"Parameter {names[0]}"
+    else:
+        joined_names = ", ".join(names)
+        param_ref = f"Parameter entry with names [{joined_names}]"
+
+    has_type = "type" in entry
+    has_range = "range" in entry
+    has_array = "array" in entry
+    if has_type == has_range:
+        fatal(f"{param_ref} in {def_filename} must define exactly one of type or range")
+
+    param_type: Any = entry.get("type")
+    param_range: Any = entry.get("range")
+    param_array: Any = entry.get("array")
+    param_width: Any = entry.get("width")
+    if has_type:
+        if isinstance(param_type, str):
+            pass
+        elif isinstance(param_type, list):
+            for value in param_type:
+                if not isinstance(value, (str, int)):
+                    fatal(
+                        f"{param_ref} in {def_filename} has invalid type array value "
+                        f"{value!r}; expected string or integer"
+                    )
+        else:
+            fatal(f"{param_ref} in {def_filename} has invalid type; expected string or array")
+
+    if has_range:
+        if not isinstance(param_range, list) or len(param_range) != 2:
+            fatal(f"{param_ref} in {def_filename} has invalid range; expected array of 2 integers")
+        if not isinstance(param_range[0], int) or not isinstance(param_range[1], int):
+            fatal(f"{param_ref} in {def_filename} has invalid range; values must be integers")
+        if param_range[0] >= param_range[1]:
+            fatal(f"{param_ref} in {def_filename} has invalid range; first value must be less than second")
+
+    if has_array:
+        if not isinstance(param_array, list) or len(param_array) != 2:
+            fatal(f"{param_ref} in {def_filename} has invalid array; expected array of 2 integers")
+        if not isinstance(param_array[0], int) or not isinstance(param_array[1], int):
+            fatal(f"{param_ref} in {def_filename} has invalid array; values must be integers")
+        if param_array[0] < 0 or param_array[1] < 0:
+            fatal(f"{param_ref} in {def_filename} has invalid array; values must be non-negative")
+        if param_array[0] > param_array[1]:
+            fatal(f"{param_ref} in {def_filename} has invalid array; first value must be less than or equal to second")
+
+    if param_width is not None:
+        if isinstance(param_width, int):
+            if param_width < 2 or param_width > 64:
+                fatal(
+                    f"{param_ref} in {def_filename} has invalid width; "
+                    "integer values must be in [2, 64]"
+                )
+        elif not isinstance(param_width, str):
+            fatal(
+                f"{param_ref} in {def_filename} has invalid width; "
+                "expected integer in [2, 64] or parameter name"
+            )
+
+    if has_type and isinstance(param_type, str):
+        if param_type in {"int", "uint"}:
+            if param_width is None:
+                fatal(
+                    f"{param_ref} in {def_filename} with type {param_type!r} "
+                    "must define width"
+                )
+        elif param_width is not None:
+            fatal(
+                f"{param_ref} in {def_filename} has width but type {param_type!r}; "
+                "width is allowed only with type 'int' or 'uint'"
+            )
+    elif param_width is not None:
+        fatal(
+            f"{param_ref} in {def_filename} has width but no type 'int' or 'uint'; "
+            "width is allowed only with type 'int' or 'uint'"
+        )
+
+    has_impldef = "impl-def" in entry
+    has_impldefs = "impl-defs" in entry
+    if not has_impldef and not has_impldefs and "description" not in entry:
+        fatal(
+            f"{param_ref} in {def_filename} without impl-def/impl-defs "
+            "must define description"
         )
 
     for name in names:
