@@ -1,4 +1,4 @@
-| array[0..3] of Range -10 to 20
+| array[0..3] of range -10 to 20
 | EXT:MockExtX
 a|
 [#param:ARRAY_OF_NEG10TO20]#ARRAY_OF_NEG10TO20#

@@ -1,4 +1,4 @@
-| array[0..3] of int32
+| array[0..3] of 32-bit signed integer
 | EXT:MockExtX
 a|
 [#param:ARRAY_OF_INT32]#ARRAY_OF_INT32#

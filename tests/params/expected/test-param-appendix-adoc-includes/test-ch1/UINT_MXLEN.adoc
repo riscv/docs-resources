@@ -4,6 +4,6 @@ a|
 Normative Rule(s):
 
 * (none)
-| uint(MXLEN)
+| MXLEN-bit unsigned integer
 | CHAP:One
 | Unsigned integer whose width is MXLEN.

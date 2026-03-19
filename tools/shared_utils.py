@@ -169,6 +169,122 @@ def format_param_feature(
     return ", ".join(features)
 
 
+def infer_param_type_string(
+    param: Dict[str, Any],
+    fatal: Callable[[str], None],
+) -> str:
+    """Render a parameter type string for table output.
+
+    The input shape mirrors entries in params JSON output, including support for
+    scalar type/range forms and optional array bounds.
+    """
+    param_type = param.get("type")
+    param_range = param.get("range")
+    param_array = param.get("array")
+    param_width = param.get("width")
+
+    param_name_obj = param.get("name")
+    if not isinstance(param_name_obj, str) or not param_name_obj:
+        fatal("Expected parameter name to be a non-empty string")
+    param_name = param_name_obj
+
+    scalar_type = ""
+
+    if isinstance(param_type, list):
+        if all(isinstance(v, str) for v in param_type):
+            enum_values = ", ".join(param_type)
+            scalar_type = f"[{enum_values}]"
+        elif all(isinstance(v, int) for v in param_type):
+            enum_values = ", ".join(map(str, param_type))
+            scalar_type = f"[{enum_values}]"
+        else:
+            fatal(
+                f"Parameter {param_name!r} has invalid type array; expected all strings "
+                "or all integers"
+            )
+
+    elif isinstance(param_type, str):
+        if param_type in {"boolean", "bit", "byte", "hword", "word", "dword"}:
+            scalar_type = param_type
+
+        if param_type in {"int", "uint"}:
+            if isinstance(param_width, int) and not isinstance(param_width, bool):
+                signedness = "signed" if param_type == "int" else "unsigned"
+                scalar_type = f"{param_width}-bit {signedness} integer"
+            elif isinstance(param_width, str):
+                signedness = "signed" if param_type == "int" else "unsigned"
+                scalar_type = f"{param_width}-bit {signedness} integer"
+            else:
+                fatal(
+                    f"Parameter {param_name!r} has type {param_type!r} but no valid width"
+                )
+
+        if not scalar_type:
+            # Keep unknown string types representable for callers that include
+            # non-parameter objects (e.g. CSR categories like WARL/WLRL).
+            scalar_type = param_type
+
+        if not scalar_type:
+            fatal(f"Parameter {param_name!r} has invalid type of {param_type!r}")
+
+    elif isinstance(param_range, list):
+        if len(param_range) != 2:
+            fatal(
+                f"Parameter {param_name!r} has invalid range array; expected exactly 2 values"
+            )
+
+        lo, hi = param_range
+
+        if isinstance(lo, int) and isinstance(hi, int):
+            if lo > hi:
+                fatal(
+                    f"Parameter {param_name!r} has min range value {lo!r} greater than max range value {hi!r}"
+                )
+            scalar_type = f"range {lo} to {hi}"
+
+        if not isinstance(lo, int):
+            fatal(
+                f"Parameter {param_name!r} has non-integer min range value of {lo!r}"
+            )
+
+        if not isinstance(hi, int):
+            fatal(
+                f"Parameter {param_name!r} has non-integer max range value of {hi!r}"
+            )
+
+    else:
+        fatal(
+            f"Parameter {param_name!r} has neither a valid type nor a valid range"
+        )
+
+    if isinstance(param_array, list):
+        if len(param_array) != 2:
+            fatal(
+                f"Parameter {param_name!r} has invalid array bounds; expected exactly 2 values"
+            )
+
+        lo, hi = param_array
+        if not isinstance(lo, int):
+            fatal(
+                f"Parameter {param_name!r} has non-integer min array value of {lo!r}"
+            )
+        if not isinstance(hi, int):
+            fatal(
+                f"Parameter {param_name!r} has non-integer max array value of {hi!r}"
+            )
+        if lo < 0 or hi < 0:
+            fatal(
+                f"Parameter {param_name!r} has invalid array bounds; values must be non-negative"
+            )
+        if lo > hi:
+            fatal(
+                f"Parameter {param_name!r} has min array value {lo!r} greater than max array value {hi!r}"
+            )
+        return f"array[{lo}..{hi}] of {scalar_type}"
+
+    return scalar_type
+
+
 def check_kind(
     kind: str,
     nr_name: str,

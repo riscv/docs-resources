@@ -15,6 +15,7 @@ from shared_utils import (
     check_impldef_cat,
     check_kind,
     format_param_feature,
+    infer_param_type_string,
     load_json_object,
     load_yaml_object,
     make_log_helpers,
@@ -193,111 +194,6 @@ def safe_filename(name: str) -> str:
     return re.sub(r"[^A-Za-z0-9_.-]", "_", name)
 
 
-def infer_type_string(param: Dict[str, Any]) -> str:
-    """Render parameter type for table."""
-    param_type = param.get("type")
-    param_range = param.get("range")
-    param_array = param.get("array")
-    param_width = param.get("width")
-    param_name = param.get("name", "<unknown>")
-
-    scalar_type = ""
-
-    if isinstance(param_type, list):
-        if all(isinstance(v, str) for v in param_type):
-            enum_values = ", ".join(param_type)
-            scalar_type = f"[{enum_values}]"
-        elif all(isinstance(v, int) for v in param_type):
-            enum_values = ", ".join(map(str, param_type))
-            scalar_type = f"[{enum_values}]"
-        else:
-            fatal(
-                f"Parameter {param_name!r} has invalid type array; expected all strings "
-                "or all integers"
-            )
-
-    elif isinstance(param_type, str):
-        if param_type in {"boolean", "bit", "byte", "hword", "word", "dword"}:
-            scalar_type = param_type
-
-        if param_type in {"int", "uint"}:
-            if isinstance(param_width, int):
-                scalar_type = f"{param_type}{param_width}"
-            elif isinstance(param_width, str):
-                scalar_type = f"{param_type}({param_width})"
-            else:
-                fatal(
-                    f"Parameter {param_name!r} has type {param_type!r} but no valid width"
-                )
-
-        uint_m = re.match(r"^uint(\d+)$", param_type)
-        int_m = re.match(r"^int(\d+)$", param_type)
-        if uint_m or int_m:
-            scalar_type = param_type
-
-        if not scalar_type:
-            fatal(
-                f"Parameter {param_name!r} has invalid type of {param_type!r}"
-            )
-
-    elif isinstance(param_range, list):
-        if len(param_range) != 2:
-            fatal(
-                f"Parameter {param_name!r} has invalid range array; expected exactly 2 values"
-            )
-
-        lo, hi = param_range
-
-        if isinstance(lo, int) and isinstance(hi, int):
-            if lo > hi:
-                fatal(
-                    f"Parameter {param_name!r} has min range value {lo!r} greater than max range value {hi!r}"
-                )
-            scalar_type = f"Range {lo} to {hi}"
-
-        if not isinstance(lo, int):
-            fatal(
-                f"Parameter {param_name!r} has non-integer min range value of {lo!r}"
-            )
-
-        if not isinstance(hi, int):
-            fatal(
-                f"Parameter {param_name!r} has non-integer max range value of {hi!r}"
-            )
-
-    else:
-        fatal(
-            f"Parameter {param_name!r} has neither a valid type nor a valid range"
-        )
-
-    if isinstance(param_array, list):
-        if len(param_array) != 2:
-            fatal(
-                f"Parameter {param_name!r} has invalid array bounds; expected exactly 2 values"
-            )
-
-        lo, hi = param_array
-        if not isinstance(lo, int):
-            fatal(
-                f"Parameter {param_name!r} has non-integer min array value of {lo!r}"
-            )
-        if not isinstance(hi, int):
-            fatal(
-                f"Parameter {param_name!r} has non-integer max array value of {hi!r}"
-            )
-        if lo < 0 or hi < 0:
-            fatal(
-                f"Parameter {param_name!r} has invalid array bounds; values must be non-negative"
-            )
-        if lo > hi:
-            fatal(
-                f"Parameter {param_name!r} has min array value {lo!r} greater than max array value {hi!r}"
-            )
-        return f"array[{lo}..{hi}] of {scalar_type}"
-
-    return scalar_type
-
-
 def infer_normative_rules(param: Dict[str, Any]) -> List[str]:
     """Return unique normative rule names referenced by impl-defs."""
     impl_defs = param.get("impl-defs")
@@ -393,7 +289,7 @@ def render_parameter_row_fragment(
 ) -> str:
     """Render one AsciiDoc row fragment with configured columns."""
     name = param["name"]
-    type_str = infer_type_string(param)
+    type_str = infer_param_type_string(param, fatal)
     feature = format_param_feature(param)
     norm_rules = infer_normative_rules(param)
 

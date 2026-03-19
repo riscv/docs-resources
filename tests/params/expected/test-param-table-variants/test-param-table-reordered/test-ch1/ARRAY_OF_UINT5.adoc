@@ -1,4 +1,4 @@
-| array[0..3] of uint5
+| array[0..3] of 5-bit unsigned integer
 | EXT:MockExtX
 a|
 [#param:ARRAY_OF_UINT5]#ARRAY_OF_UINT5#
