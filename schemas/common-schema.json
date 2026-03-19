@@ -35,7 +35,8 @@
   },
   "stringArray": {
     "type": "array",
-    "items": { "type": "string" }
+    "items": { "type": "string" },
+    "minItems": 1
   },
   "ruleNamePattern" : {
     "pattern": "^[a-zA-z][a-zA-z0-9_-]+$"
@@ -70,7 +71,8 @@
     "items": {
       "type": "string",
       "$ref": "#/ruleNamePattern"
-    }
+    },
+    "minItems": 1
   },
   "implDefName": {
     "type": "string",
@@ -81,7 +83,8 @@
     "items": {
       "type": "string",
       "$ref": "#/implDefNamePattern"
-    }
+    },
+    "minItems": 1
   },
   "tagName": {
     "type": "string",
@@ -106,6 +109,7 @@
         { "$ref": "#/tagName" },
         { "$ref": "#/tagObject" }
       ]
-    }
+    },
+    "minItems": 1
   }
 }

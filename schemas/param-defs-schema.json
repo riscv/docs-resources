@@ -13,6 +13,7 @@
     },
     "parameter_definitions": {
       "type": "array",
+      "minItems": 1,
       "items": {
         "type": "object",
         "properties": {
@@ -119,6 +120,7 @@
     },
     "csr_definitions": {
       "type": "array",
+      "minItems": 1,
       "items": {
         "type": "object",
         "properties": {

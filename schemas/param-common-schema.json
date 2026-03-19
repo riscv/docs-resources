@@ -79,7 +79,8 @@
   },
   "stringArray": {
     "type": "array",
-    "items": { "type": "string" }
+    "items": { "type": "string" },
+    "minItems": 1
   },
   "implDefNamePattern" : {
     "pattern": "^[A-Z][A-Z0-9_]+$"
@@ -96,7 +97,8 @@
     "items": {
       "type": "string",
       "$ref": "#/implDefNamePattern"
-    }
+    },
+    "minItems": 1
   },
   "paramName": {
     "type": "string",
@@ -107,6 +109,7 @@
     "items": {
       "type": "string",
       "$ref": "#/paramNamePattern"
-    }
+    },
+    "minItems": 1
   }
 }

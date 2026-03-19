@@ -184,7 +184,12 @@ class NormativeRuleDef:
         if "instance" in data and data["instance"] is not None:
             self.instances.append(data["instance"])
         if "instances" in data and data["instances"] is not None:
-            self.instances.extend(data["instances"])
+            instances = data["instances"]
+            if not isinstance(instances, list):
+                fatal(f"Normative rule {name} has non-list instances. Use \"instance\" instead.")
+            if not instances:
+                fatal(f"Normative rule {name} has empty instances")
+            self.instances.extend(instances)
 
         if self.kind is None:
             # Not allowed to have instances without a kind.
@@ -198,13 +203,20 @@ class NormativeRuleDef:
         if "tag" in data and data["tag"] is not None:
             self.tag_refs.append(TagRef(data["tag"]))
         if "tags" in data and data["tags"] is not None:
-            for tag_data in data["tags"]:
+            tags_data = data["tags"]
+            if not isinstance(tags_data, list):
+                fatal(f"Normative rule {name} has non-list tags. Use \"tag\" instead.")
+            if not tags_data:
+                fatal(f"Normative rule {name} has empty tags")
+            for tag_data in tags_data:
                 if isinstance(tag_data, str):
                     self.tag_refs.append(TagRef(tag_data))
                 elif isinstance(tag_data, dict):
                     tag_name = tag_data.get("name")
                     if tag_name is None:
                         fatal(f"Normative rule {name} tag reference {tag_data} missing name")
+                    if not isinstance(tag_name, str):
+                        fatal(f"Normative rule {name} tag reference {tag_data} has non-string name")
 
                     context = tag_data.get("context", False)
                     self.tag_refs.append(TagRef(tag_name, context))
@@ -231,6 +243,8 @@ class NormativeRuleDefs:
             fatal(f"Need String for chapter_name but passed a {type(chapter_name).__name__}")
         if not isinstance(array_data, list):
             fatal(f"Need List for array_data but passed a {type(array_data).__name__}")
+        if not array_data:
+            fatal(f"Need non-empty List for array_data in {def_filename}")
 
         for data in array_data:
             if not isinstance(data, dict):
@@ -242,6 +256,10 @@ class NormativeRuleDefs:
             elif "names" in data and data["names"] is not None:
                 # Add one definition object for each name in array
                 names = data["names"]
+                if not isinstance(names, list):
+                    fatal(f"File {def_filename} has non-list names in normative rule definition entry: {data} (Use \"name\" instead.)")
+                if not names:
+                    fatal(f"File {def_filename} has empty names in normative rule definition entry: {data}")
                 for name in names:
                     self._add_def(name, def_filename, chapter_name, data)
             else:
@@ -337,6 +355,9 @@ def load_tags(tag_fnames: List[str]) -> NormativeTags:
         tags_data = file_data.get("tags")
         if tags_data is None:
             fatal(f"Missing 'tags' key in {tag_fname}")
+        if not isinstance(tags_data, dict):
+            fatal(f"'tags' must be an object in {tag_fname}")
+        assert isinstance(tags_data, dict)
 
         # Add tags from JSON file to Python class.
         tags.add_tags(tag_fname, tags_data)
@@ -362,12 +383,16 @@ def load_definitions(def_fnames: List[str]) -> NormativeRuleDefs:
         chapter_name = yaml_hash.get("chapter_name")
         if chapter_name is None:
             fatal(f"Missing 'chapter_name' key in {def_fname}")
+        if not isinstance(chapter_name, str):
+            fatal(f"'chapter_name' isn't a string in {def_fname}")
+        assert isinstance(chapter_name, str)
 
         array_data = yaml_hash.get("normative_rule_definitions")
         if array_data is None:
             fatal(f"Missing 'normative_rule_definitions' key in {def_fname}")
-        if not isinstance(array_data, list):
-            fatal(f"'normative_rule_definitions' isn't a list in {def_fname}")
+        if not isinstance(array_data, list) or not array_data:
+            fatal(f"'normative_rule_definitions' isn't a non-empty list in {def_fname}")
+        assert isinstance(array_data, list)
 
         defs.add_file_contents(def_fname, chapter_name, array_data)
 
@@ -389,11 +414,11 @@ def create_normative_rules_hash(defs: NormativeRuleDefs, tags: NormativeTags,
 
     info("Creating normative rules from definition files")
 
-    ret = {"normative_rules": []}
+    ret: Dict[str, List[Dict[str, Any]]] = {"normative_rules": []}
 
     for d in defs.norm_rule_defs:
         # Create dict with mandatory definition file arguments.
-        hash_entry = {
+        hash_entry: Dict[str, Any] = {
             "name": d.name,
             "def_filename": d.def_filename,
             "chapter_name": d.chapter_name
@@ -418,15 +443,14 @@ def create_normative_rules_hash(defs: NormativeRuleDefs, tags: NormativeTags,
         if d.description is not None:
             hash_entry["description"] = d.description
 
-        # Always create tags array, even if empty
-        hash_entry["tags"] = []
-
         # Add tag entries
+        resolved_tags: List[Dict[str, Any]] = []
         for tag_ref in d.tag_refs:
             # Lookup tag
             tag = tags.get_tag(tag_ref.name)
             if tag is None:
                 fatal(f"Normative rule {d.name} defined in file {d.def_filename} references non-existent tag {tag_ref.name}")
+            assert tag is not None
 
             url = tag_fname2url.get(tag.tag_filename)
             if url is None:
@@ -440,7 +464,9 @@ def create_normative_rules_hash(defs: NormativeRuleDefs, tags: NormativeTags,
                 "stds_doc_url": url
             }
 
-            hash_entry["tags"].append(resolved_tag)
+            resolved_tags.append(resolved_tag)
+        if resolved_tags:
+            hash_entry["tags"] = resolved_tags
 
         ret["normative_rules"].append(hash_entry)
 
@@ -1106,6 +1132,7 @@ def html_table_row(f, nr: NormativeRuleDef, name_is_anchor: bool, omit: Dict[str
         tag = tags.get_tag(tag_ref.name)
         if tag is None:
             fatal(f"Normative rule {nr.name} defined in file {nr.def_filename} references non-existent tag {tag_ref.name}")
+        assert tag is not None
 
         target_html_fname = tag_fname2url.get(tag.tag_filename)
         if target_html_fname is None:
