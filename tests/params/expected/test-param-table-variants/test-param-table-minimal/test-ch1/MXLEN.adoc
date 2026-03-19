@@ -1,0 +1,7 @@
+a|
+[#param:MXLEN]#MXLEN#
+
+Normative Rule(s):
+
+* (none)
+| Supported machine register widths.

@@ -79,6 +79,7 @@
         "minimum": 0,
         "maximum": 255
       },
+      "description": "8-bit unsigned integer",
       "impl-defs": [
         {
           "name": "BYTE",
@@ -201,7 +202,8 @@
       "name": "UINT6",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
-      "type": "uint6",
+      "type": "uint",
+      "width": 6,
       "json-schema": {
         "type": "integer",
         "minimum": 0,
@@ -233,7 +235,8 @@
       "name": "UINT32",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
-      "type": "uint32",
+      "type": "uint",
+      "width": 32,
       "json-schema": {
         "type": "integer",
         "minimum": 0,
@@ -265,7 +268,8 @@
       "name": "INT64",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
-      "type": "int64",
+      "type": "int",
+      "width": 64,
       "json-schema": {
         "type": "integer",
         "minimum": -9223372036854775808,
@@ -292,6 +296,46 @@
           ]
         }
       ]
+    },
+    {
+      "name": "MXLEN",
+      "def_filename": "test-ch1.yaml",
+      "chapter_name": "One",
+      "type": [
+        32,
+        64
+      ],
+      "json-schema": {
+        "type": "integer",
+        "enum": [
+          32,
+          64
+        ]
+      },
+      "description": "Supported machine register widths."
+    },
+    {
+      "name": "UINT_MXLEN",
+      "def_filename": "test-ch1.yaml",
+      "chapter_name": "One",
+      "type": "uint",
+      "width": "MXLEN",
+      "json-schema": {
+        "type": "integer",
+        "minimum": 0
+      },
+      "description": "Unsigned integer whose width is MXLEN."
+    },
+    {
+      "name": "INT_MXLEN",
+      "def_filename": "test-ch1.yaml",
+      "chapter_name": "One",
+      "type": "int",
+      "width": "MXLEN",
+      "json-schema": {
+        "type": "integer"
+      },
+      "description": "Signed integer whose width is MXLEN."
     },
     {
       "name": "UINT_1TO100",
@@ -411,7 +455,8 @@
       "name": "ALL_BASES",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
-      "type": "int2",
+      "type": "int",
+      "width": 2,
       "json-schema": {
         "type": "integer",
         "minimum": -2,
@@ -783,11 +828,12 @@
       "name": "ARRAY_OF_UINT5",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
-      "type": "uint5",
+      "type": "uint",
       "array": [
         0,
         3
       ],
+      "width": 5,
       "json-schema": {
         "type": "array",
         "items": {
@@ -824,11 +870,12 @@
       "name": "ARRAY_OF_INT32",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
-      "type": "int32",
+      "type": "int",
       "array": [
         0,
         3
       ],
+      "width": 32,
       "json-schema": {
         "type": "array",
         "items": {
@@ -865,11 +912,12 @@
       "name": "ARRAY_OF_UINT64",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
-      "type": "uint64",
+      "type": "uint",
       "array": [
         0,
         3
       ],
+      "width": 64,
       "json-schema": {
         "type": "array",
         "items": {
@@ -1168,7 +1216,8 @@
         "minimum": 0,
         "maximum": 1
       },
-      "note": "This is a note for a parameter without any implementation-defined behavior. Here's an 2^32^ exponent."
+      "note": "This is a note for a parameter without any implementation-defined behavior. Here's an 2^32^ exponent.",
+      "description": "Parameter intentionally defined without implementation-defined behavior."
     },
     {
       "name": "MOCK_INST_X",

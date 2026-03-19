@@ -6,4 +6,6 @@ a|
 Normative Rule(s):
 
 * (none)
-| NOTE: This is a note for a parameter without any implementation-defined behavior. Here's an 2^32^ exponent.
+a| NOTE: This is a note for a parameter without any implementation-defined behavior. Here's an 2^32^ exponent.
+
+Parameter intentionally defined without implementation-defined behavior.

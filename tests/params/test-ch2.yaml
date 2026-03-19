@@ -23,6 +23,7 @@ parameter_definitions:
   - name: NO_IMPL_DEF
     note: This is a note for a parameter without any implementation-defined behavior. Here's an 2^32^ exponent.
     type: bit
+    description: Parameter intentionally defined without implementation-defined behavior.
   - name: MOCK_INST_X
     impl-def: MOCK_INST_X
     type: boolean
