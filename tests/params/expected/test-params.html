@@ -47,7 +47,7 @@
     <aside class="sidebar">
       <h2>Parameters by Chapter</h2>
       <nav class="nav">
-        <a href="#table-params-ch-1" data-target="table-params-ch-1">One<span class="subtitle">13 entries</span></a>
+        <a href="#table-params-ch-1" data-target="table-params-ch-1">One<span class="subtitle">25 entries</span></a>
         <a href="#table-params-ch-2" data-target="table-params-ch-2">Two<span class="subtitle">12 entries</span></a>
       </nav>
       <h2 style="margin-top:24px">WARL/WLRL by Chapter</h2>
@@ -57,11 +57,11 @@
     </aside>
     <main>
       <style>.grand-total-heading { font-size: 24px; font-weight: bold; }</style>
-      <h1 class="grand-total-heading">25 Parameters, 3 CSRs</h1>
+      <h1 class="grand-total-heading">37 Parameters, 3 CSRs</h1>
 
       <section id="table-params-ch-1" class="section">
         <table>
-          <caption class="sticky-caption">Chapter One: 13 Parameters</caption>
+          <caption class="sticky-caption">Chapter One: 25 Parameters</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-type">
@@ -152,6 +152,78 @@
               <td rowspan=1>int2</td>
               <td rowspan=1>BASE:Any</td>
               <td><a href="test-ch1.html#norm:all-bases">Everyone loves RISC-V!</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1 id="ARRAY_OF_LIST_STR">ARRAY_OF_LIST_STR</td>
+              <td rowspan=1>array[3..31] of [A, B, C]</td>
+              <td rowspan=1>EXT:MockExtX</td>
+              <td><a href="test-ch1.html#norm:array">Can have up to 29 performance counters. Reading an unimplemented performance counter either returns a value or raises an illegal instruction exception, depending on the implementation.</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1 id="ARRAY_OF_LIST_INT">ARRAY_OF_LIST_INT</td>
+              <td rowspan=1>array[0..15] of [1, 2, 4]</td>
+              <td rowspan=1>EXT:MockExtX</td>
+              <td><a href="test-ch1.html#norm:array">Can have up to 29 performance counters. Reading an unimplemented performance counter either returns a value or raises an illegal instruction exception, depending on the implementation.</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1 id="ARRAY_OF_BOOLEAN">ARRAY_OF_BOOLEAN</td>
+              <td rowspan=1>array[1..10] of boolean</td>
+              <td rowspan=1>EXT:MockExtX</td>
+              <td><a href="test-ch1.html#norm:array">Can have up to 29 performance counters. Reading an unimplemented performance counter either returns a value or raises an illegal instruction exception, depending on the implementation.</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1 id="ARRAY_OF_BIT">ARRAY_OF_BIT</td>
+              <td rowspan=1>array[0..15] of bit</td>
+              <td rowspan=1>EXT:MockExtX</td>
+              <td><a href="test-ch1.html#norm:array">Can have up to 29 performance counters. Reading an unimplemented performance counter either returns a value or raises an illegal instruction exception, depending on the implementation.</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1 id="ARRAY_OF_BYTE">ARRAY_OF_BYTE</td>
+              <td rowspan=1>array[0..3] of byte</td>
+              <td rowspan=1>EXT:MockExtX</td>
+              <td><a href="test-ch1.html#norm:array">Can have up to 29 performance counters. Reading an unimplemented performance counter either returns a value or raises an illegal instruction exception, depending on the implementation.</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1 id="ARRAY_OF_HWORD">ARRAY_OF_HWORD</td>
+              <td rowspan=1>array[0..3] of hword</td>
+              <td rowspan=1>EXT:MockExtX</td>
+              <td><a href="test-ch1.html#norm:array">Can have up to 29 performance counters. Reading an unimplemented performance counter either returns a value or raises an illegal instruction exception, depending on the implementation.</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1 id="ARRAY_OF_WORD">ARRAY_OF_WORD</td>
+              <td rowspan=1>array[0..31] of word</td>
+              <td rowspan=1>EXT:MockExtX</td>
+              <td><a href="test-ch1.html#norm:array">Can have up to 29 performance counters. Reading an unimplemented performance counter either returns a value or raises an illegal instruction exception, depending on the implementation.</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1 id="ARRAY_OF_DWORD">ARRAY_OF_DWORD</td>
+              <td rowspan=1>array[0..31] of dword</td>
+              <td rowspan=1>EXT:MockExtX</td>
+              <td><a href="test-ch1.html#norm:array">Can have up to 29 performance counters. Reading an unimplemented performance counter either returns a value or raises an illegal instruction exception, depending on the implementation.</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1 id="ARRAY_OF_UINT5">ARRAY_OF_UINT5</td>
+              <td rowspan=1>array[0..3] of uint5</td>
+              <td rowspan=1>EXT:MockExtX</td>
+              <td><a href="test-ch1.html#norm:array">Can have up to 29 performance counters. Reading an unimplemented performance counter either returns a value or raises an illegal instruction exception, depending on the implementation.</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1 id="ARRAY_OF_INT32">ARRAY_OF_INT32</td>
+              <td rowspan=1>array[0..3] of int32</td>
+              <td rowspan=1>EXT:MockExtX</td>
+              <td><a href="test-ch1.html#norm:array">Can have up to 29 performance counters. Reading an unimplemented performance counter either returns a value or raises an illegal instruction exception, depending on the implementation.</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1 id="ARRAY_OF_UINT64">ARRAY_OF_UINT64</td>
+              <td rowspan=1>array[0..3] of uint64</td>
+              <td rowspan=1>EXT:MockExtX</td>
+              <td><a href="test-ch1.html#norm:array">Can have up to 29 performance counters. Reading an unimplemented performance counter either returns a value or raises an illegal instruction exception, depending on the implementation.</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1 id="ARRAY_OF_NEG10TO20">ARRAY_OF_NEG10TO20</td>
+              <td rowspan=1>array[0..3] of range -10 to 20</td>
+              <td rowspan=1>EXT:MockExtX</td>
+              <td><a href="test-ch1.html#norm:array">Can have up to 29 performance counters. Reading an unimplemented performance counter either returns a value or raises an illegal instruction exception, depending on the implementation.</a></td>
             </tr>
           </tbody>
         </table>

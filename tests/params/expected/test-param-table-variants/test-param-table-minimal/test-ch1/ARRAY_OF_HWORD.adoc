@@ -1,0 +1,7 @@
+a|
+[#param:ARRAY_OF_HWORD]#ARRAY_OF_HWORD#
+
+Normative Rule(s):
+
+* https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#ARRAY[ARRAY]
+| See normative rule

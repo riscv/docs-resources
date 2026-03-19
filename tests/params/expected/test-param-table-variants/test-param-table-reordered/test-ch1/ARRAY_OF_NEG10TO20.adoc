@@ -1,0 +1,9 @@
+| array[0..3] of Range -10 to 20
+| EXT:MockExtX
+a|
+[#param:ARRAY_OF_NEG10TO20]#ARRAY_OF_NEG10TO20#
+
+Normative Rule(s):
+
+* https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#ARRAY[ARRAY]
+| See normative rule

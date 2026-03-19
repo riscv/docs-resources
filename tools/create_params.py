@@ -208,58 +208,74 @@ def resolve_impldef_entries(
 def param_type_to_json_schema(
     param_type: Any,
     param_range: Any,
+    param_array: Any,
     def_filename: str,
     name: str,
 ) -> Dict[str, Any]:
-    """Convert a type or range property value to an equivalent JSON Schema object."""
+    """Convert a type/range plus optional array bounds to a JSON Schema object."""
     if param_range is not None:
-        return {"type": "integer", "minimum": param_range[0], "maximum": param_range[1]}
-
-    if isinstance(param_type, list):
+        item_schema = {"type": "integer", "minimum": param_range[0], "maximum": param_range[1]}
+    elif isinstance(param_type, list):
         all_int = all(isinstance(v, int) for v in param_type)
         all_str = all(isinstance(v, str) for v in param_type)
         if all_int:
-            return {"type": "integer", "enum": list(param_type)}
-        if all_str:
-            return {"type": "string", "enum": list(param_type)}
-        return {"enum": list(param_type)}
+            item_schema = {"type": "integer", "enum": list(param_type)}
+        elif all_str:
+            item_schema = {"type": "string", "enum": list(param_type)}
+        else:
+            item_schema = {"enum": list(param_type)}
+    else:
+        # Type matching is case-sensitive; only canonical lowercase tokens are accepted.
+        if param_type == "boolean":
+            item_schema = {"type": "boolean"}
+        elif param_type == "bit":
+            item_schema = {"type": "integer", "minimum": 0, "maximum": 1}
+        elif param_type == "byte":
+            item_schema = {"type": "integer", "minimum": 0, "maximum": 255}
+        elif param_type == "hword":
+            item_schema = {"type": "integer", "minimum": 0, "maximum": 65535}
+        elif param_type == "word":
+            item_schema = {"type": "integer", "minimum": 0, "maximum": 4294967295}
+        elif param_type == "dword":
+            item_schema = {"type": "integer", "minimum": 0, "maximum": 18446744073709551615}
+        else:
+            m = re.match(r'^uint(\d+)$', param_type)
+            if m:
+                n = int(m.group(1))
+                if n < 2 or n > 64:
+                    fatal(
+                        f"Parameter {name} in {def_filename} has invalid unsigned width {n} "
+                        f"for type {param_type!r} (expected 2–64 bits)"
+                    )
+                item_schema = {"type": "integer", "minimum": 0, "maximum": (1 << n) - 1}
+            else:
+                m = re.match(r'^int(\d+)$', param_type)
+                if m:
+                    n = int(m.group(1))
+                    if n < 2 or n > 64:
+                        fatal(
+                            f"Parameter {name} in {def_filename} has invalid signed width {n} "
+                            f"for type {param_type!r} (expected 2–64 bits)"
+                        )
+                    item_schema = {
+                        "type": "integer",
+                        "minimum": -(1 << (n - 1)),
+                        "maximum": (1 << (n - 1)) - 1,
+                    }
+                else:
+                    fatal(f"Parameter {name} in {def_filename} has unrecognized type {param_type!r}")
+                    return {}  # unreachable
 
-    # Type matching is case-sensitive; only canonical lowercase tokens are accepted.
-    if param_type == "boolean":
-        return {"type": "boolean"}
-    if param_type == "bit":
-        return {"type": "integer", "minimum": 0, "maximum": 1}
-    if param_type == "byte":
-        return {"type": "integer", "minimum": 0, "maximum": 255}
-    if param_type == "hword":
-        return {"type": "integer", "minimum": 0, "maximum": 65535}
-    if param_type == "word":
-        return {"type": "integer", "minimum": 0, "maximum": 4294967295}
-    if param_type == "dword":
-        return {"type": "integer", "minimum": 0, "maximum": 18446744073709551615}
+    if param_array is None:
+        return item_schema
 
-    m = re.match(r'^uint(\d+)$', param_type)
-    if m:
-        n = int(m.group(1))
-        if n < 2 or n > 64:
-            fatal(
-                f"Parameter {name} in {def_filename} has invalid unsigned width {n} "
-                f"for type {param_type!r} (expected 2–64 bits)"
-            )
-        return {"type": "integer", "minimum": 0, "maximum": (1 << n) - 1}
-
-    m = re.match(r'^int(\d+)$', param_type)
-    if m:
-        n = int(m.group(1))
-        if n < 2 or n > 64:
-            fatal(
-                f"Parameter {name} in {def_filename} has invalid signed width {n} "
-                f"for type {param_type!r} (expected 2–64 bits)"
-            )
-        return {"type": "integer", "minimum": -(1 << (n - 1)), "maximum": (1 << (n - 1)) - 1}
-
-    fatal(f"Parameter {name} in {def_filename} has unrecognized type {param_type!r}")
-    return {}  # unreachable
+    array_len = param_array[1] - param_array[0] + 1
+    return {
+        "type": "array",
+        "items": item_schema,
+        "minItems": array_len,
+        "maxItems": array_len,
+    }
 
 
 def add_parameter_entries(
@@ -275,11 +291,13 @@ def add_parameter_entries(
 
     has_type = "type" in entry
     has_range = "range" in entry
+    has_array = "array" in entry
     if has_type == has_range:
         fatal(f"Parameter entry in {def_filename} must define exactly one of type or range")
 
     param_type: Any = entry.get("type")
     param_range: Any = entry.get("range")
+    param_array: Any = entry.get("array")
     if has_type:
         if isinstance(param_type, str):
             pass
@@ -300,6 +318,16 @@ def add_parameter_entries(
             fatal(f"Parameter entry in {def_filename} has invalid range; values must be integers")
         if param_range[0] >= param_range[1]:
             fatal(f"Parameter entry in {def_filename} has invalid range; first value must be less than second")
+
+    if has_array:
+        if not isinstance(param_array, list) or len(param_array) != 2:
+            fatal(f"Parameter entry in {def_filename} has invalid array; expected array of 2 integers")
+        if not isinstance(param_array[0], int) or not isinstance(param_array[1], int):
+            fatal(f"Parameter entry in {def_filename} has invalid array; values must be integers")
+        if param_array[0] < 0 or param_array[1] < 0:
+            fatal(f"Parameter entry in {def_filename} has invalid array; values must be non-negative")
+        if param_array[0] > param_array[1]:
+            fatal(f"Parameter entry in {def_filename} has invalid array; first value must be less than or equal to second")
 
     if "name" in entry:
         name: Any = entry.get("name")
@@ -330,9 +358,11 @@ def add_parameter_entries(
             out_entry["type"] = param_type
         if has_range:
             out_entry["range"] = list(param_range)
+        if has_array:
+            out_entry["array"] = list(param_array)
 
         out_entry["json-schema"] = param_type_to_json_schema(
-            param_type, param_range, def_filename, name
+            param_type, param_range, param_array, def_filename, name
         )
 
         note = entry.get("note")
@@ -851,18 +881,23 @@ def html_table_header(f, table_name: str, table_caption: str, name_header: str =
 
 def format_param_type_for_html(param: Dict[str, Any]) -> str:
     """Render parameter type/range value for HTML table display."""
+    scalar_display = "(unspecified)"
     param_type = param.get("type")
     if isinstance(param_type, str):
-        return param_type
-    if isinstance(param_type, list):
+        scalar_display = param_type
+    elif isinstance(param_type, list):
         values = ", ".join(str(value) for value in param_type)
-        return f"[{values}]"
+        scalar_display = f"[{values}]"
+    else:
+        param_range = param.get("range")
+        if isinstance(param_range, list) and len(param_range) == 2:
+            scalar_display = f"range {param_range[0]} to {param_range[1]}"
 
-    param_range = param.get("range")
-    if isinstance(param_range, list) and len(param_range) == 2:
-        return f"range {param_range[0]} to {param_range[1]}"
+    param_array = param.get("array")
+    if isinstance(param_array, list) and len(param_array) == 2:
+        return f"array[{param_array[0]}..{param_array[1]}] of {scalar_display}"
 
-    return "(unspecified)"
+    return scalar_display
 
 
 def html_param_table_row(f, param: Dict[str, Any], chapter_name: Optional[str]):

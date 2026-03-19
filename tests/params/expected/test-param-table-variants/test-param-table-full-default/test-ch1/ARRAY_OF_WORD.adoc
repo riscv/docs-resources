@@ -1,0 +1,9 @@
+a|
+[#param:ARRAY_OF_WORD]#ARRAY_OF_WORD#
+
+Normative Rule(s):
+
+* https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#ARRAY[ARRAY]
+| array[0..31] of word
+| EXT:MockExtX
+| See normative rule

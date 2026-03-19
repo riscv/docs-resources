@@ -1,10 +1,22 @@
-.Parameter Definitions (A-Z): 25 Parameters
+.Parameter Definitions (A-Z): 37 Parameters
 [cols="40%,60%"]
 |===
 
 | Parameter and Mapping to Normative Rules | Definition
 
 include::test-ch1/ALL_BASES.adoc[]
+include::test-ch1/ARRAY_OF_BIT.adoc[]
+include::test-ch1/ARRAY_OF_BOOLEAN.adoc[]
+include::test-ch1/ARRAY_OF_BYTE.adoc[]
+include::test-ch1/ARRAY_OF_DWORD.adoc[]
+include::test-ch1/ARRAY_OF_HWORD.adoc[]
+include::test-ch1/ARRAY_OF_INT32.adoc[]
+include::test-ch1/ARRAY_OF_LIST_INT.adoc[]
+include::test-ch1/ARRAY_OF_LIST_STR.adoc[]
+include::test-ch1/ARRAY_OF_NEG10TO20.adoc[]
+include::test-ch1/ARRAY_OF_UINT5.adoc[]
+include::test-ch1/ARRAY_OF_UINT64.adoc[]
+include::test-ch1/ARRAY_OF_WORD.adoc[]
 include::test-ch2/ASIDLEN1.adoc[]
 include::test-ch2/ASIDLEN2.adoc[]
 include::test-ch2/BASE_RV32I.adoc[]

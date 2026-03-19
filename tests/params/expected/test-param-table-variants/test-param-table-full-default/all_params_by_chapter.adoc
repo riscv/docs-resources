@@ -1,6 +1,6 @@
 === One
 
-.Chapter One Parameter Definitions: 13 Parameters
+.Chapter One Parameter Definitions: 25 Parameters
 [cols="30%,10%,10%,50%"]
 |===
 
