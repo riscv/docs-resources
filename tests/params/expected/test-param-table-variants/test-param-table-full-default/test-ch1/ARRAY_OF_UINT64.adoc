@@ -1,0 +1,9 @@
+a|
+[#param:ARRAY_OF_UINT64]#ARRAY_OF_UINT64#
+
+Normative Rule(s):
+
+* https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#ARRAY[ARRAY]
+| array[0..3] of uint64
+| EXT:MockExtX
+| See normative rule

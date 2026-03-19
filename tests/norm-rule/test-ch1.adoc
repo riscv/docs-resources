@@ -319,3 +319,7 @@ This is a list with values 1, 2 and 4.
 
 [[norm:foobar-ch1]]
 This is the Ch1 part of the foobar normative rule.
+
+[[norm:array]]
+Can have up to 29 performance counters. Reading an unimplemented performance counter either
+returns a value or raises an illegal instruction exception, depending on the implementation.

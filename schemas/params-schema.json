@@ -35,6 +35,9 @@
           "range": {
             "$ref": "param-common-schema.json#/paramRange"
           },
+          "array": {
+            "$ref": "param-common-schema.json#/paramArray"
+          },
           "json-schema": {
             "type": "object",
             "description": "JSON Schema equivalent of the type or range property"

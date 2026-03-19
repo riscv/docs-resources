@@ -45,6 +45,9 @@
           },
           "range": {
             "$ref": "param-common-schema.json#/paramRange"
+          },
+          "array": {
+            "$ref": "param-common-schema.json#/paramArray"
           }
         },
         "allOf": [

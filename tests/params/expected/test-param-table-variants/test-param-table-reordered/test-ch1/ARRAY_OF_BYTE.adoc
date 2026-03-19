@@ -1,0 +1,9 @@
+| array[0..3] of byte
+| EXT:MockExtX
+a|
+[#param:ARRAY_OF_BYTE]#ARRAY_OF_BYTE#
+
+Normative Rule(s):
+
+* https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#ARRAY[ARRAY]
+| See normative rule

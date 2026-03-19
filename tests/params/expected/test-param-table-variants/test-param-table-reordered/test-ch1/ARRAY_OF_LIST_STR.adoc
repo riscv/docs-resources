@@ -1,0 +1,9 @@
+| array[3..31] of [A, B, C]
+| EXT:MockExtX
+a|
+[#param:ARRAY_OF_LIST_STR]#ARRAY_OF_LIST_STR#
+
+Normative Rule(s):
+
+* https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#ARRAY[ARRAY]
+| See normative rule

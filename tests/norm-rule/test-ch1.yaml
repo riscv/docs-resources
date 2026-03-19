@@ -235,3 +235,8 @@ normative_rule_definitions:
     impl-def-behavior: true
     kind: extension
     instance: MockExtX
+  - name: ARRAY
+    tag: "norm:array"
+    impl-def-behavior: true
+    kind: extension
+    instance: MockExtX

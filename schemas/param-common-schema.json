@@ -41,8 +41,20 @@
   },
   "paramRange": {
     "type": "array",
+    "description": "Inclusive range [lo, hi] as two non-negative integers",
     "items": {
-      "type": "integer"
+      "type": "integer",
+      "minimum": 0
+    },
+    "minItems": 2,
+    "maxItems": 2
+  },
+  "paramArray": {
+    "type": "array",
+    "description": "Inclusive index bounds [lo, hi] as two non-negative integers",
+    "items": {
+      "type": "integer",
+      "minimum": 0
     },
     "minItems": 2,
     "maxItems": 2

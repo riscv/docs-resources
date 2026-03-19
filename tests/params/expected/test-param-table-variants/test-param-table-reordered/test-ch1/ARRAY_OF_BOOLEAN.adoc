@@ -1,0 +1,9 @@
+| array[1..10] of boolean
+| EXT:MockExtX
+a|
+[#param:ARRAY_OF_BOOLEAN]#ARRAY_OF_BOOLEAN#
+
+Normative Rule(s):
+
+* https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#ARRAY[ARRAY]
+| See normative rule

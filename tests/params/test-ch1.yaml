@@ -45,3 +45,51 @@ parameter_definitions:
   - name: ALL_BASES
     impl-def: ALL_BASES
     type: int2
+  - name: ARRAY_OF_LIST_STR
+    impl-def: ARRAY
+    type: [A, B, C]
+    array: [3, 31]
+  - name: ARRAY_OF_LIST_INT
+    impl-def: ARRAY
+    type: [1, 2, 4]
+    array: [0, 15]
+  - name: ARRAY_OF_BOOLEAN
+    impl-def: ARRAY
+    type: boolean
+    array: [1, 10]
+  - name: ARRAY_OF_BIT
+    impl-def: ARRAY
+    type: bit
+    array: [0, 15]
+  - name: ARRAY_OF_BYTE
+    impl-def: ARRAY
+    type: byte
+    array: [0, 3]
+  - name: ARRAY_OF_HWORD
+    impl-def: ARRAY
+    type: hword
+    array: [0, 3]
+  - name: ARRAY_OF_WORD
+    impl-def: ARRAY
+    type: word
+    array: [0, 31]
+  - name: ARRAY_OF_DWORD
+    impl-def: ARRAY
+    type: dword
+    array: [0, 31]
+  - name: ARRAY_OF_UINT5
+    impl-def: ARRAY
+    type: uint5
+    array: [0, 3]
+  - name: ARRAY_OF_INT32
+    impl-def: ARRAY
+    type: int32
+    array: [0, 3]
+  - name: ARRAY_OF_UINT64
+    impl-def: ARRAY
+    type: uint64
+    array: [0, 3]
+  - name: ARRAY_OF_NEG10TO20
+    impl-def: ARRAY
+    range: [-10, 20]
+    array: [0, 3]
