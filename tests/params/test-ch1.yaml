@@ -15,6 +15,7 @@ parameter_definitions:
   - name: BYTE
     impl-def: BYTE
     type: byte
+    description: 8-bit unsigned integer
   - name: HWORD
     impl-def: HWORD
     type: hword
@@ -27,12 +28,25 @@ parameter_definitions:
   - name: UINT6
     impl-def: UINT6
     type: uint6
-  - name: UINT32
+  - name: UINT_OF_WIDTH_32
     impl-def: UINT32
-    type: uint32
-  - name: INT64
+    type: uint
+    width: 32
+  - name: INT64_OF_WIDTH_64
     impl-def: INT64
-    type: int64
+    type: int
+    width: 64
+  - name: MXLEN
+    type: [32, 64]
+    description: Supported machine register widths.
+  - name: UINT_MXLEN
+    type: uint
+    width: MXLEN
+    description: Unsigned integer whose width is MXLEN.
+  - name: INT_MXLEN
+    type: int
+    width: MXLEN
+    description: Signed integer whose width is MXLEN.
   - name: UINT_1TO100
     impl-def: UINT_1TO100
     range: [1, 100]

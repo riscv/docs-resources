@@ -79,6 +79,7 @@
         "minimum": 0,
         "maximum": 255
       },
+      "description": "8-bit unsigned integer",
       "impl-defs": [
         {
           "name": "BYTE",
@@ -230,10 +231,11 @@
       ]
     },
     {
-      "name": "UINT32",
+      "name": "UINT_OF_WIDTH_32",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
-      "type": "uint32",
+      "type": "uint",
+      "width": 32,
       "json-schema": {
         "type": "integer",
         "minimum": 0,
@@ -262,10 +264,11 @@
       ]
     },
     {
-      "name": "INT64",
+      "name": "INT64_OF_WIDTH_64",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
-      "type": "int64",
+      "type": "int",
+      "width": 64,
       "json-schema": {
         "type": "integer",
         "minimum": -9223372036854775808,
@@ -292,6 +295,46 @@
           ]
         }
       ]
+    },
+    {
+      "name": "MXLEN",
+      "def_filename": "test-ch1.yaml",
+      "chapter_name": "One",
+      "type": [
+        32,
+        64
+      ],
+      "json-schema": {
+        "type": "integer",
+        "enum": [
+          32,
+          64
+        ]
+      },
+      "description": "Supported machine register widths."
+    },
+    {
+      "name": "UINT_MXLEN",
+      "def_filename": "test-ch1.yaml",
+      "chapter_name": "One",
+      "type": "uint",
+      "width": "MXLEN",
+      "json-schema": {
+        "type": "integer",
+        "minimum": 0
+      },
+      "description": "Unsigned integer whose width is MXLEN."
+    },
+    {
+      "name": "INT_MXLEN",
+      "def_filename": "test-ch1.yaml",
+      "chapter_name": "One",
+      "type": "int",
+      "width": "MXLEN",
+      "json-schema": {
+        "type": "integer"
+      },
+      "description": "Signed integer whose width is MXLEN."
     },
     {
       "name": "UINT_1TO100",
@@ -1168,7 +1211,8 @@
         "minimum": 0,
         "maximum": 1
       },
-      "note": "This is a note for a parameter without any implementation-defined behavior. Here's an 2^32^ exponent."
+      "note": "This is a note for a parameter without any implementation-defined behavior. Here's an 2^32^ exponent.",
+      "description": "Parameter intentionally defined without implementation-defined behavior."
     },
     {
       "name": "MOCK_INST_X",

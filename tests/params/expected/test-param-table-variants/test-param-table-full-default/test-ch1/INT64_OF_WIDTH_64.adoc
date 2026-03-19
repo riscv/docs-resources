@@ -1,5 +1,5 @@
 a|
-[#param:INT64]#INT64#
+[#param:INT64_OF_WIDTH_64]#INT64_OF_WIDTH_64#
 
 Normative Rule(s):
 

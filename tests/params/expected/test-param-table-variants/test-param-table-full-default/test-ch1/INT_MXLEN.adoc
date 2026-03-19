@@ -1,0 +1,9 @@
+a|
+[#param:INT_MXLEN]#INT_MXLEN#
+
+Normative Rule(s):
+
+* (none)
+| int(MXLEN)
+| CHAP:One
+| Signed integer whose width is MXLEN.

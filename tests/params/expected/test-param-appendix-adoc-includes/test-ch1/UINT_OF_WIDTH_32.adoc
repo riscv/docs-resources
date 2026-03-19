@@ -1,7 +1,9 @@
 a|
-[#param:UINT32]#UINT32#
+[#param:UINT_OF_WIDTH_32]#UINT_OF_WIDTH_32#
 
 Normative Rule(s):
 
 * https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#UINT32[UINT32]
+| uint32
+| EXT:MockExtX
 | See normative rule

@@ -16,16 +16,19 @@
     "description": "A parameter that maps to one or more implementation-defined behaviors in the standards documentation"
   },
   "paramTypeDesc": {
-    "description": "Can be boolean, bit, byte, hword, word, dword, int2-int64, uint2-uint64, array of strings, or array of integers. Use \"range\" for min/max ranges"
+    "description": "Can be boolean, bit, byte, hword, word, dword, int, uint, int2-int64, uint2-uint64, array of strings, or array of integers. Use \"range\" for min/max ranges. Specify width property for int/uint"
   },
   "paramRangeDesc": {
     "description": "Array of 2 integers specifying lower and upper bound (in that order)"
+  },
+  "paramWidthDesc": {
+    "description": "Either an integer width greater than 0 or the name of another parameter that provides the width. Used only with type int or uint"
   },
   "paramType": {
     "oneOf": [
       {
         "type": "string",
-        "pattern": "^(boolean|bit|byte|hword|word|dword|int([2-9]|[1-5][0-9]|6[0-4])|uint([2-9]|[1-5][0-9]|6[0-4]))$"
+        "pattern": "^(boolean|bit|byte|hword|word|dword|int|uint|int([2-9]|[1-5][0-9]|6[0-4])|uint([2-9]|[1-5][0-9]|6[0-4]))$"
       },
       {
         "type": "array",
@@ -41,10 +44,9 @@
   },
   "paramRange": {
     "type": "array",
-    "description": "Inclusive range [lo, hi] as two non-negative integers",
+    "description": "Inclusive range [lo, hi] as two integers",
     "items": {
-      "type": "integer",
-      "minimum": 0
+      "type": "integer"
     },
     "minItems": 2,
     "maxItems": 2
@@ -58,6 +60,17 @@
     },
     "minItems": 2,
     "maxItems": 2
+  },
+  "paramWidth": {
+    "oneOf": [
+      {
+        "type": "integer",
+        "minimum": 1
+      },
+      {
+        "$ref": "#/paramName"
+      }
+    ]
   },
   "csrType": {
     "type": "string",

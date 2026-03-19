@@ -1,9 +1,7 @@
 a|
-[#param:INT64]#INT64#
+[#param:INT64_OF_WIDTH_64]#INT64_OF_WIDTH_64#
 
 Normative Rule(s):
 
 * https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#INT64[INT64]
-| int64
-| EXT:MockExtY
 | See normative rule

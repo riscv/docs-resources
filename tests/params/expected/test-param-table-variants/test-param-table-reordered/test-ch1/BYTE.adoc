@@ -6,4 +6,4 @@ a|
 Normative Rule(s):
 
 * https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#BYTE[BYTE]
-| See normative rule
+| 8-bit unsigned integer

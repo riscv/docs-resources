@@ -209,10 +209,12 @@ def param_type_to_json_schema(
     param_type: Any,
     param_range: Any,
     param_array: Any,
+    param_width: Any,
     def_filename: str,
     name: str,
 ) -> Dict[str, Any]:
     """Convert a type/range plus optional array bounds to a JSON Schema object."""
+    item_schema: Dict[str, Any] = {}
     if param_range is not None:
         item_schema = {"type": "integer", "minimum": param_range[0], "maximum": param_range[1]}
     elif isinstance(param_type, list):
@@ -238,6 +240,33 @@ def param_type_to_json_schema(
             item_schema = {"type": "integer", "minimum": 0, "maximum": 4294967295}
         elif param_type == "dword":
             item_schema = {"type": "integer", "minimum": 0, "maximum": 18446744073709551615}
+        elif param_type in {"int", "uint"}:
+            if isinstance(param_width, int) and not isinstance(param_width, bool):
+                n = param_width
+                if n < 2 or n > 64:
+                    signedness = "signed" if param_type == "int" else "unsigned"
+                    fatal(
+                        f"Parameter {name} in {def_filename} has invalid {signedness} width {n} "
+                        f"for type {param_type!r} (expected 2–64 bits)"
+                    )
+                if param_type == "uint":
+                    item_schema = {"type": "integer", "minimum": 0, "maximum": (1 << n) - 1}
+                else:
+                    item_schema = {
+                        "type": "integer",
+                        "minimum": -(1 << (n - 1)),
+                        "maximum": (1 << (n - 1)) - 1,
+                    }
+            elif isinstance(param_width, str):
+                if param_type == "uint":
+                    item_schema = {"type": "integer", "minimum": 0}
+                else:
+                    item_schema = {"type": "integer"}
+            else:
+                fatal(
+                    f"Parameter {name} in {def_filename} has type {param_type!r} "
+                    "but no usable width"
+                )
         else:
             m = re.match(r'^uint(\d+)$', param_type)
             if m:
@@ -298,6 +327,7 @@ def add_parameter_entries(
     param_type: Any = entry.get("type")
     param_range: Any = entry.get("range")
     param_array: Any = entry.get("array")
+    param_width: Any = entry.get("width")
     if has_type:
         if isinstance(param_type, str):
             pass
@@ -329,6 +359,50 @@ def add_parameter_entries(
         if param_array[0] > param_array[1]:
             fatal(f"Parameter entry in {def_filename} has invalid array; first value must be less than or equal to second")
 
+    if param_width is not None:
+        if isinstance(param_width, bool):
+            fatal(
+                f"Parameter entry in {def_filename} has invalid width; "
+                "expected integer greater than 0 or parameter name"
+            )
+        elif isinstance(param_width, int):
+            if param_width < 1:
+                fatal(
+                    f"Parameter entry in {def_filename} has invalid width; "
+                    "integer values must be greater than 0"
+                )
+        elif not isinstance(param_width, str):
+            fatal(
+                f"Parameter entry in {def_filename} has invalid width; "
+                "expected integer greater than 0 or parameter name"
+            )
+
+    if has_type and isinstance(param_type, str):
+        if param_type in {"int", "uint"}:
+            if param_width is None:
+                fatal(
+                    f"Parameter entry in {def_filename} with type {param_type!r} "
+                    "must define width"
+                )
+        elif param_width is not None:
+            fatal(
+                f"Parameter entry in {def_filename} has width but type {param_type!r}; "
+                "width is allowed only with type 'int' or 'uint'"
+            )
+    elif param_width is not None:
+        fatal(
+            f"Parameter entry in {def_filename} has width but no type 'int' or 'uint'; "
+            "width is allowed only with type 'int' or 'uint'"
+        )
+
+    has_impldef = "impl-def" in entry
+    has_impldefs = "impl-defs" in entry
+    if not has_impldef and not has_impldefs and "description" not in entry:
+        fatal(
+            f"Parameter entry in {def_filename} without impl-def/impl-defs "
+            "must define description"
+        )
+
     if "name" in entry:
         name: Any = entry.get("name")
         if not isinstance(name, str):
@@ -343,7 +417,9 @@ def add_parameter_entries(
                 fatal(f"Found non-string value in names array in {def_filename}")
         names = list(names_value)
     else:
-        fatal(f"Found parameter entry without name/names in {def_filename}")
+        fatal(
+            f"Parameter definition in {def_filename} must define either 'name' or 'names'"
+        )
 
     for name in names:
         impl_defs = normalize_impldef_refs(entry, def_filename, name, "Parameter")
@@ -360,9 +436,11 @@ def add_parameter_entries(
             out_entry["range"] = list(param_range)
         if has_array:
             out_entry["array"] = list(param_array)
+        if param_width is not None:
+            out_entry["width"] = param_width
 
         out_entry["json-schema"] = param_type_to_json_schema(
-            param_type, param_range, param_array, def_filename, name
+            param_type, param_range, param_array, param_width, def_filename, name
         )
 
         note = entry.get("note")
@@ -548,6 +626,16 @@ def create_params_hash(norm_rules_json: str, param_def_yaml_files: List[str]) ->
 
         if parameter_definitions_obj is None and csr_definitions_obj is None:
             fatal(f"Missing parameter_definitions and csr_definitions arrays in {def_file}")
+
+    # Validate that string-valued width fields reference an existing parameter name.
+    param_name_set = {p["name"] for p in parameters if isinstance(p.get("name"), str)}
+    for p in parameters:
+        width = p.get("width")
+        if isinstance(width, str) and width not in param_name_set:
+            fatal(
+                f"Parameter {p['name']} in {p['def_filename']} has string width {width!r} "
+                "which is not the name of a known parameter"
+            )
 
     output: Dict[str, List[Dict[str, Any]]] = {}
     # Always emit top-level keys so downstream tools can safely index
@@ -883,8 +971,12 @@ def format_param_type_for_html(param: Dict[str, Any]) -> str:
     """Render parameter type/range value for HTML table display."""
     scalar_display = "(unspecified)"
     param_type = param.get("type")
+    param_width = param.get("width")
     if isinstance(param_type, str):
-        scalar_display = param_type
+        if param_type in {"int", "uint"}:
+            scalar_display = f"{param_type} of width {param_width}"
+        else:
+            scalar_display = param_type
     elif isinstance(param_type, list):
         values = ", ".join(str(value) for value in param_type)
         scalar_display = f"[{values}]"

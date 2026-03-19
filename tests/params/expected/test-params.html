@@ -47,7 +47,7 @@
     <aside class="sidebar">
       <h2>Parameters by Chapter</h2>
       <nav class="nav">
-        <a href="#table-params-ch-1" data-target="table-params-ch-1">One<span class="subtitle">25 entries</span></a>
+        <a href="#table-params-ch-1" data-target="table-params-ch-1">One<span class="subtitle">28 entries</span></a>
         <a href="#table-params-ch-2" data-target="table-params-ch-2">Two<span class="subtitle">12 entries</span></a>
       </nav>
       <h2 style="margin-top:24px">WARL/WLRL by Chapter</h2>
@@ -57,11 +57,11 @@
     </aside>
     <main>
       <style>.grand-total-heading { font-size: 24px; font-weight: bold; }</style>
-      <h1 class="grand-total-heading">37 Parameters, 3 CSRs</h1>
+      <h1 class="grand-total-heading">40 Parameters, 3 CSRs</h1>
 
       <section id="table-params-ch-1" class="section">
         <table>
-          <caption class="sticky-caption">Chapter One: 25 Parameters</caption>
+          <caption class="sticky-caption">Chapter One: 28 Parameters</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-type">
@@ -88,9 +88,12 @@
               <td><a href="test-ch1.html#norm:bit">This is a bit.</a></td>
             </tr>
             <tr>
-              <td rowspan=1 id="BYTE">BYTE</td>
-              <td rowspan=1>byte</td>
-              <td rowspan=1>EXT:MockExtX</td>
+              <td rowspan=2 id="BYTE">BYTE</td>
+              <td rowspan=2>byte</td>
+              <td rowspan=2>EXT:MockExtX</td>
+              <td>DESC: 8-bit unsigned integer</td>
+            </tr>
+            <tr>
               <td><a href="test-ch1.html#norm:byte">This is a byte.</a></td>
             </tr>
             <tr>
@@ -118,16 +121,34 @@
               <td><a href="test-ch1.html#norm:uint6">This is a 6-bit unsigned integer.</a></td>
             </tr>
             <tr>
-              <td rowspan=1 id="UINT32">UINT32</td>
-              <td rowspan=1>uint32</td>
+              <td rowspan=1 id="UINT_OF_WIDTH_32">UINT_OF_WIDTH_32</td>
+              <td rowspan=1>uint of width 32</td>
               <td rowspan=1>EXT:MockExtX</td>
               <td><a href="test-ch1.html#norm:uint32">This is a 32-bit unsigned integer. Should be 0 to &#60; 2<sup>32</sup>-1. Need to use inline anchor to see superscript.</a></td>
             </tr>
             <tr>
-              <td rowspan=1 id="INT64">INT64</td>
-              <td rowspan=1>int64</td>
+              <td rowspan=1 id="INT64_OF_WIDTH_64">INT64_OF_WIDTH_64</td>
+              <td rowspan=1>int of width 64</td>
               <td rowspan=1>EXT:MockExtY</td>
               <td><a href="test-ch1.html#norm:int64">This is a 64-bit signed integer.</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1 id="MXLEN">MXLEN</td>
+              <td rowspan=1>[32, 64]</td>
+              <td rowspan=1>CHAP:One</td>
+              <td>DESC: Supported machine register widths.</td>
+            </tr>
+            <tr>
+              <td rowspan=1 id="UINT_MXLEN">UINT_MXLEN</td>
+              <td rowspan=1>uint of width MXLEN</td>
+              <td rowspan=1>CHAP:One</td>
+              <td>DESC: Unsigned integer whose width is MXLEN.</td>
+            </tr>
+            <tr>
+              <td rowspan=1 id="INT_MXLEN">INT_MXLEN</td>
+              <td rowspan=1>int of width MXLEN</td>
+              <td rowspan=1>CHAP:One</td>
+              <td>DESC: Signed integer whose width is MXLEN.</td>
             </tr>
             <tr>
               <td rowspan=1 id="UINT_1TO100">UINT_1TO100</td>
@@ -282,10 +303,13 @@
               <td><a href="test-ch2.html#norm:ASIDLEN">The number of ASID bits is UNSPECIFIED and may be zero. The number of implemented ASID bits, termed ASIDLEN, may be determined by writing one to every bit position in the ASID field, then reading back the value in satp to see which bit positions in the ASID field hold a one.</a></td>
             </tr>
             <tr>
-              <td rowspan=1 id="NO_IMPL_DEF">NO_IMPL_DEF</td>
-              <td rowspan=1>bit</td>
-              <td rowspan=1>CHAP:Two</td>
+              <td rowspan=2 id="NO_IMPL_DEF">NO_IMPL_DEF</td>
+              <td rowspan=2>bit</td>
+              <td rowspan=2>CHAP:Two</td>
               <td>NOTE: This is a note for a parameter without any implementation-defined behavior. Here's an 2<sup>32</sup> exponent.</td>
+            </tr>
+            <tr>
+              <td>DESC: Parameter intentionally defined without implementation-defined behavior.</td>
             </tr>
             <tr>
               <td rowspan=2 id="MOCK_INST_X">MOCK_INST_X</td>

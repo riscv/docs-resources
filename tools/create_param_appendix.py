@@ -194,6 +194,7 @@ def infer_type_string(param: Dict[str, Any]) -> str:
     param_type = param.get("type")
     param_range = param.get("range")
     param_array = param.get("array")
+    param_width = param.get("width")
     param_name = param.get("name", "<unknown>")
 
     scalar_type = ""
@@ -214,6 +215,16 @@ def infer_type_string(param: Dict[str, Any]) -> str:
     elif isinstance(param_type, str):
         if param_type in {"boolean", "bit", "byte", "hword", "word", "dword"}:
             scalar_type = param_type
+
+        if param_type in {"int", "uint"}:
+            if isinstance(param_width, int):
+                scalar_type = f"{param_type}{param_width}"
+            elif isinstance(param_width, str):
+                scalar_type = f"{param_type}({param_width})"
+            else:
+                fatal(
+                    f"Parameter {param_name!r} has type {param_type!r} but no valid width"
+                )
 
         uint_m = re.match(r"^uint(\d+)$", param_type)
         int_m = re.match(r"^int(\d+)$", param_type)

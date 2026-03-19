@@ -48,6 +48,12 @@
           },
           "array": {
             "$ref": "param-common-schema.json#/paramArray"
+          },
+          "width": {
+            "allOf": [
+              { "$ref": "param-common-schema.json#/paramWidth" },
+              { "$ref": "param-common-schema.json#/paramWidthDesc" }
+            ]
           }
         },
         "allOf": [
@@ -58,6 +64,32 @@
             ]
           },
           {
+            "if": {
+              "required": ["width"]
+            },
+            "then": {
+              "properties": {
+                "type": {
+                  "enum": ["int", "uint"]
+                }
+              },
+              "required": ["type"]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "type": {
+                  "enum": ["int", "uint"]
+                }
+              },
+              "required": ["type"]
+            },
+            "then": {
+              "required": ["width"]
+            }
+          },
+          {
             "oneOf": [
               { "required": ["name"] },
               { "required": ["names"] }
@@ -66,6 +98,19 @@
           {
             "not": {
               "required": ["impl-def", "impl-defs"]
+            }
+          },
+          {
+            "if": {
+              "not": {
+                "anyOf": [
+                  { "required": ["impl-def"] },
+                  { "required": ["impl-defs"] }
+                ]
+              }
+            },
+            "then": {
+              "required": ["description"]
             }
           }
         ],

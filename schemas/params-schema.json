@@ -38,6 +38,12 @@
           "array": {
             "$ref": "param-common-schema.json#/paramArray"
           },
+          "width": {
+            "allOf": [
+              { "$ref": "param-common-schema.json#/paramWidth" },
+              { "$ref": "param-common-schema.json#/paramWidthDesc" }
+            ]
+          },
           "json-schema": {
             "type": "object",
             "description": "JSON Schema equivalent of the type or range property"
@@ -61,6 +67,32 @@
               { "required": ["type"] },
               { "required": ["range"] }
             ]
+          },
+          {
+            "if": {
+              "required": ["width"]
+            },
+            "then": {
+              "properties": {
+                "type": {
+                  "enum": ["int", "uint"]
+                }
+              },
+              "required": ["type"]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "type": {
+                  "enum": ["int", "uint"]
+                }
+              },
+              "required": ["type"]
+            },
+            "then": {
+              "required": ["width"]
+            }
           }
         ],
         "additionalProperties": false
