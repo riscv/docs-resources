@@ -264,11 +264,11 @@ def infer_param_type_string(
             )
 
         lo, hi = param_array
-        if not isinstance(lo, int):
+        if isinstance(lo, bool) or not isinstance(lo, int):
             fatal(
                 f"Parameter {param_name!r} has non-integer min array value of {lo!r}"
             )
-        if not isinstance(hi, int):
+        if isinstance(hi, bool) or not isinstance(hi, int):
             fatal(
                 f"Parameter {param_name!r} has non-integer max array value of {hi!r}"
             )
