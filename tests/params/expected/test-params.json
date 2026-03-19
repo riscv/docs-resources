@@ -202,7 +202,8 @@
       "name": "UINT6",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
-      "type": "uint6",
+      "type": "uint",
+      "width": 6,
       "json-schema": {
         "type": "integer",
         "minimum": 0,
@@ -231,7 +232,7 @@
       ]
     },
     {
-      "name": "UINT_OF_WIDTH_32",
+      "name": "UINT32",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
       "type": "uint",
@@ -264,7 +265,7 @@
       ]
     },
     {
-      "name": "INT64_OF_WIDTH_64",
+      "name": "INT64",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
       "type": "int",
@@ -454,7 +455,8 @@
       "name": "ALL_BASES",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
-      "type": "int2",
+      "type": "int",
+      "width": 2,
       "json-schema": {
         "type": "integer",
         "minimum": -2,
@@ -826,11 +828,12 @@
       "name": "ARRAY_OF_UINT5",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
-      "type": "uint5",
+      "type": "uint",
       "array": [
         0,
         3
       ],
+      "width": 5,
       "json-schema": {
         "type": "array",
         "items": {
@@ -867,11 +870,12 @@
       "name": "ARRAY_OF_INT32",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
-      "type": "int32",
+      "type": "int",
       "array": [
         0,
         3
       ],
+      "width": 32,
       "json-schema": {
         "type": "array",
         "items": {
@@ -908,11 +912,12 @@
       "name": "ARRAY_OF_UINT64",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
-      "type": "uint64",
+      "type": "uint",
       "array": [
         0,
         3
       ],
+      "width": 64,
       "json-schema": {
         "type": "array",
         "items": {

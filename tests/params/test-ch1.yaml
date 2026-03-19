@@ -27,12 +27,13 @@ parameter_definitions:
     type: dword
   - name: UINT6
     impl-def: UINT6
-    type: uint6
-  - name: UINT_OF_WIDTH_32
+    type: uint
+    width: 6
+  - name: UINT32
     impl-def: UINT32
     type: uint
     width: 32
-  - name: INT64_OF_WIDTH_64
+  - name: INT64
     impl-def: INT64
     type: int
     width: 64
@@ -58,7 +59,8 @@ parameter_definitions:
     type: [1, 2, 4]
   - name: ALL_BASES
     impl-def: ALL_BASES
-    type: int2
+    type: int
+    width: 2
   - name: ARRAY_OF_LIST_STR
     impl-def: ARRAY
     type: [A, B, C]
@@ -93,15 +95,18 @@ parameter_definitions:
     array: [0, 31]
   - name: ARRAY_OF_UINT5
     impl-def: ARRAY
-    type: uint5
+    type: uint
+    width: 5
     array: [0, 3]
   - name: ARRAY_OF_INT32
     impl-def: ARRAY
-    type: int32
+    type: int
+    width: 32
     array: [0, 3]
   - name: ARRAY_OF_UINT64
     impl-def: ARRAY
-    type: uint64
+    type: uint
+    width: 64
     array: [0, 3]
   - name: ARRAY_OF_NEG10TO20
     impl-def: ARRAY

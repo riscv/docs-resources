@@ -126,6 +126,65 @@ python3 tools/create_params.py --html \
   --output build/test-params.html
 ```
 
+Parameter Type Encoding:
+- Each parameter definition must include exactly one of `type` or `range`.
+- `type` may be one of:
+  - Unsigned integers: `boolean`, `bit`, `byte`, `hword`, `word`, `dword`, `uint`
+  - Signed integers: `int`
+  - List of strings (e.g. `[ABC, DEF]`) or integers (e.g., `[32, 64]`)
+    These can also be used to represent enums.
+- `width` (in bits) is required when `type` is `int` or `uint`.
+  - Integer width: `2..64` (inclusive, use `bit` for 1-bit integers)
+  - Or the name of another parameter that supplies the bit width
+- `array` is optional and, when present, wraps the base integer/range/list as a fixed-length array.
+  - Format: `[lo, hi]` where `lo >= 0` and `lo <= hi`
+- `range` is an inclusive integer range of two integers.
+  - Format: `[lo, hi]` where `lo < hi` (negative values are allowed)
+
+Examples:
+```yaml
+# Scalar fixed-width integer
+- name: UINT_OF_WIDTH_32
+  impl-def: UINT32
+  type: uint
+  width: 32
+
+# Scalar width derived from another parameter
+- name: MXLEN
+  type: [32, 64]
+  description: Supported machine register widths.
+- name: INT_MXLEN
+  type: int
+  width: MXLEN
+  description: Signed integer whose width is MXLEN.
+
+# Lists (AKA enums) values
+- name: MODE
+  impl-def: MODE
+  type: [A, B, C]
+- name: XLEN
+  impl-defs: [XLEN1, XLEN2]
+  type: [32, 64]
+
+# Range form (inclusive)
+- name: PRIORITY
+  impl-def: PRIORITY
+  range: [-10, 20]
+
+# Array of uint values with fixed element count
+- name: ARRAY_OF_UINT5
+  impl-def: ARRAY
+  type: uint
+  width: 5
+  array: [0, 3]
+
+# Array of ranged integers
+- name: ARRAY_OF_NEG10TO20
+  impl-def: ARRAY
+  range: [-10, 20]
+  array: [0, 3]
+```
+
 ### create_param_appendix.py
 
 Purpose:

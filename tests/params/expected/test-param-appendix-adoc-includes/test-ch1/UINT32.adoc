@@ -1,5 +1,5 @@
 a|
-[#param:UINT_OF_WIDTH_32]#UINT_OF_WIDTH_32#
+[#param:UINT32]#UINT32#
 
 Normative Rule(s):
 

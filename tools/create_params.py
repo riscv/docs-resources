@@ -243,11 +243,11 @@ def param_type_to_json_schema(
         elif param_type in {"int", "uint"}:
             if isinstance(param_width, int) and not isinstance(param_width, bool):
                 n = param_width
-                if n < 2 or n > 128:
+                if n < 2 or n > 64:
                     signedness = "signed" if param_type == "int" else "unsigned"
                     fatal(
                         f"Parameter {name} in {def_filename} has invalid {signedness} width {n} "
-                        f"for type {param_type!r} (expected 2–128 bits)"
+                        f"for type {param_type!r} (expected 2–64 bits)"
                     )
                 if param_type == "uint":
                     item_schema = {"type": "integer", "minimum": 0, "maximum": (1 << n) - 1}
@@ -268,32 +268,8 @@ def param_type_to_json_schema(
                     "but no usable width"
                 )
         else:
-            m = re.match(r'^uint(\d+)$', param_type)
-            if m:
-                n = int(m.group(1))
-                if n < 2 or n > 64:
-                    fatal(
-                        f"Parameter {name} in {def_filename} has invalid unsigned width {n} "
-                        f"for type {param_type!r} (expected 2–64 bits)"
-                    )
-                item_schema = {"type": "integer", "minimum": 0, "maximum": (1 << n) - 1}
-            else:
-                m = re.match(r'^int(\d+)$', param_type)
-                if m:
-                    n = int(m.group(1))
-                    if n < 2 or n > 64:
-                        fatal(
-                            f"Parameter {name} in {def_filename} has invalid signed width {n} "
-                            f"for type {param_type!r} (expected 2–64 bits)"
-                        )
-                    item_schema = {
-                        "type": "integer",
-                        "minimum": -(1 << (n - 1)),
-                        "maximum": (1 << (n - 1)) - 1,
-                    }
-                else:
-                    fatal(f"Parameter {name} in {def_filename} has unrecognized type {param_type!r}")
-                    return {}  # unreachable
+            fatal(f"Parameter {name} in {def_filename} has unrecognized type {param_type!r}")
+            return {}  # unreachable
 
     if param_array is None:
         return item_schema
@@ -363,18 +339,18 @@ def add_parameter_entries(
         if isinstance(param_width, bool):
             fatal(
                 f"Parameter entry in {def_filename} has invalid width; "
-                "expected integer in [2, 128] or parameter name"
+                "expected integer in [2, 64] or parameter name"
             )
         elif isinstance(param_width, int):
-            if param_width < 2 or param_width > 128:
+            if param_width < 2 or param_width > 64:
                 fatal(
                     f"Parameter entry in {def_filename} has invalid width; "
-                    "integer values must be in [2, 128]"
+                    "integer values must be in [2, 64]"
                 )
         elif not isinstance(param_width, str):
             fatal(
                 f"Parameter entry in {def_filename} has invalid width; "
-                "expected integer in [2, 128] or parameter name"
+                "expected integer in [2, 64] or parameter name"
             )
 
     if has_type and isinstance(param_type, str):
@@ -973,8 +949,10 @@ def format_param_type_for_html(param: Dict[str, Any]) -> str:
     param_type = param.get("type")
     param_width = param.get("width")
     if isinstance(param_type, str):
-        if param_type in {"int", "uint"}:
-            scalar_display = f"{param_type} of width {param_width}"
+        if param_type == "int":
+            scalar_display = f"{param_width}-bit signed integer"
+        elif param_type == "uint":
+            scalar_display = f"{param_width}-bit unsigned integer"
         else:
             scalar_display = param_type
     elif isinstance(param_type, list):
