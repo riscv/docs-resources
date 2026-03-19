@@ -72,8 +72,8 @@ def load_params_json(pathname: str) -> Dict[str, Any]:
     data = load_json_object(pathname, fatal)
 
     params_obj: Any = data.get("parameters")
-    if not isinstance(params_obj, list):
-        fatal(f"Expected parameters array in {pathname}")
+    if not isinstance(params_obj, list) or not params_obj:
+        fatal(f"Expected non-empty parameters array in {pathname}")
 
     for idx, param in enumerate(params_obj):
         if not isinstance(param, dict):
@@ -87,6 +87,8 @@ def load_params_json(pathname: str) -> Dict[str, Any]:
             continue
         if not isinstance(impl_defs, list):
             fatal(f"Expected parameters[{idx}].impl-defs to be an array")
+        if not impl_defs:
+            fatal(f"Expected parameters[{idx}].impl-defs to be a non-empty array")
 
         for impl_idx, impl_def in enumerate(impl_defs):
             if not isinstance(impl_def, dict):
@@ -95,7 +97,7 @@ def load_params_json(pathname: str) -> Dict[str, Any]:
                 )
 
             rule_name = impl_def.get("name")
-            nr_name = rule_name if isinstance(rule_name, str) else name
+            nr_name: str = rule_name if isinstance(rule_name, str) else name
 
             kind = impl_def.get("kind")
             if kind is not None:
@@ -133,6 +135,7 @@ def load_param_table_yaml(pathname: str) -> List[Dict[str, Any]]:
     columns_obj = data.get("columns")
     if not isinstance(columns_obj, list) or not columns_obj:
         fatal(f"Expected non-empty columns array in {pathname}")
+    assert isinstance(columns_obj, list)
 
     seen_column_ids = set()
     seen_column_names = set()
@@ -170,6 +173,7 @@ def load_param_table_yaml(pathname: str) -> List[Dict[str, Any]]:
         width_pct = col.get("width_pct")
         if not isinstance(width_pct, (int, float)) or isinstance(width_pct, bool):
             fatal(f"Expected columns[{idx}].width_pct to be a number")
+        assert isinstance(width_pct, (int, float)) and not isinstance(width_pct, bool)
         if width_pct <= 0 or width_pct > 100:
             fatal(f"Expected columns[{idx}].width_pct to be > 0 and <= 100")
 

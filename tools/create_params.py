@@ -114,7 +114,9 @@ def normalize_impldef_refs(
     elif has_impldefs:
         impl_defs: Any = entry.get("impl-defs")
         if not isinstance(impl_defs, list):
-            fatal(f"{item_kind} {item_name} in {src_filename} has non-list impl-defs")
+            fatal(f"{item_kind} {item_name} in {src_filename} has non-list impl-defs. Use \"impl-def\" instead.")
+        if not impl_defs:
+            fatal(f"{item_kind} {item_name} in {src_filename} has empty impl-defs")
         for impl_def in impl_defs:
             if not isinstance(impl_def, str):
                 fatal(f"{item_kind} {item_name} in {src_filename} has non-string value in impl-defs")
@@ -126,8 +128,8 @@ def normalize_impldef_refs(
 def rules_by_name(norm_rules_data: Dict[str, Any], src_filename: str) -> Dict[str, Dict[str, Any]]:
     """Create lookup map from normative rule name to its JSON object."""
     rules_obj: Any = norm_rules_data.get("normative_rules")
-    if not isinstance(rules_obj, list):
-        fatal(f"Missing or invalid normative_rules array in {src_filename}")
+    if not isinstance(rules_obj, list) or not rules_obj:
+        fatal(f"Missing, invalid, or empty normative_rules array in {src_filename}")
     rules: List[Any] = rules_obj
 
     by_name: Dict[str, Dict[str, Any]] = {}
@@ -294,11 +296,37 @@ def add_parameter_entries(
     """Expand one parameter definition entry into one or more output parameter objects."""
     names: List[str] = []
 
+    if "name" in entry:
+        name: Any = entry.get("name")
+        if not isinstance(name, str):
+            fatal(f"Found parameter entry with non-string name in {def_filename}")
+        names = [name]
+    elif "names" in entry:
+        names_value: Any = entry.get("names")
+        if not isinstance(names_value, list):
+            fatal(f"Found parameter entry with non-list names in {def_filename} (Use \"name\" instead.)")
+        if not names_value:
+            fatal(f"Found parameter entry with empty names in {def_filename}")
+        for name in names_value:
+            if not isinstance(name, str):
+                fatal(f"Found non-string value in names array in {def_filename}")
+        names = list(names_value)
+    else:
+        fatal(
+            f"Parameter definition in {def_filename} must define either 'name' or 'names'"
+        )
+
+    if len(names) == 1:
+        param_ref = f"Parameter {names[0]}"
+    else:
+        joined_names = ", ".join(names)
+        param_ref = f"Parameter entry with names [{joined_names}]"
+
     has_type = "type" in entry
     has_range = "range" in entry
     has_array = "array" in entry
     if has_type == has_range:
-        fatal(f"Parameter entry in {def_filename} must define exactly one of type or range")
+        fatal(f"{param_ref} in {def_filename} must define exactly one of type or range")
 
     param_type: Any = entry.get("type")
     param_range: Any = entry.get("range")
@@ -308,43 +336,45 @@ def add_parameter_entries(
         if isinstance(param_type, str):
             pass
         elif isinstance(param_type, list):
+            if not param_type:
+                fatal(f"{param_ref} in {def_filename} has empty type array")
             for value in param_type:
                 if not isinstance(value, (str, int)):
                     fatal(
-                        f"Parameter entry in {def_filename} has invalid type array value "
+                        f"{param_ref} in {def_filename} has invalid type array value "
                         f"{value!r}; expected string or integer"
                     )
         else:
-            fatal(f"Parameter entry in {def_filename} has invalid type; expected string or array")
+            fatal(f"{param_ref} in {def_filename} has invalid type; expected string or array")
 
     if has_range:
         if not isinstance(param_range, list) or len(param_range) != 2:
-            fatal(f"Parameter entry in {def_filename} has invalid range; expected array of 2 integers")
+            fatal(f"{param_ref} in {def_filename} has invalid range; expected array of 2 integers")
         if not isinstance(param_range[0], int) or not isinstance(param_range[1], int):
-            fatal(f"Parameter entry in {def_filename} has invalid range; values must be integers")
+            fatal(f"{param_ref} in {def_filename} has invalid range; values must be integers")
         if param_range[0] >= param_range[1]:
-            fatal(f"Parameter entry in {def_filename} has invalid range; first value must be less than second")
+            fatal(f"{param_ref} in {def_filename} has invalid range; first value must be less than second")
 
     if has_array:
         if not isinstance(param_array, list) or len(param_array) != 2:
-            fatal(f"Parameter entry in {def_filename} has invalid array; expected array of 2 integers")
+            fatal(f"{param_ref} in {def_filename} has invalid array; expected array of 2 integers")
         if not isinstance(param_array[0], int) or not isinstance(param_array[1], int):
-            fatal(f"Parameter entry in {def_filename} has invalid array; values must be integers")
+            fatal(f"{param_ref} in {def_filename} has invalid array; values must be integers")
         if param_array[0] < 0 or param_array[1] < 0:
-            fatal(f"Parameter entry in {def_filename} has invalid array; values must be non-negative")
+            fatal(f"{param_ref} in {def_filename} has invalid array; values must be non-negative")
         if param_array[0] > param_array[1]:
-            fatal(f"Parameter entry in {def_filename} has invalid array; first value must be less than or equal to second")
+            fatal(f"{param_ref} in {def_filename} has invalid array; first value must be less than or equal to second")
 
     if param_width is not None:
         if isinstance(param_width, int):
             if param_width < 2 or param_width > 64:
                 fatal(
-                    f"Parameter entry in {def_filename} has invalid width; "
+                    f"{param_ref} in {def_filename} has invalid width; "
                     "integer values must be in [2, 64]"
                 )
         elif not isinstance(param_width, str):
             fatal(
-                f"Parameter entry in {def_filename} has invalid width; "
+                f"{param_ref} in {def_filename} has invalid width; "
                 "expected integer in [2, 64] or parameter name"
             )
 
@@ -352,17 +382,17 @@ def add_parameter_entries(
         if param_type in {"int", "uint"}:
             if param_width is None:
                 fatal(
-                    f"Parameter entry in {def_filename} with type {param_type!r} "
+                    f"{param_ref} in {def_filename} with type {param_type!r} "
                     "must define width"
                 )
         elif param_width is not None:
             fatal(
-                f"Parameter entry in {def_filename} has width but type {param_type!r}; "
+                f"{param_ref} in {def_filename} has width but type {param_type!r}; "
                 "width is allowed only with type 'int' or 'uint'"
             )
     elif param_width is not None:
         fatal(
-            f"Parameter entry in {def_filename} has width but no type 'int' or 'uint'; "
+            f"{param_ref} in {def_filename} has width but no type 'int' or 'uint'; "
             "width is allowed only with type 'int' or 'uint'"
         )
 
@@ -370,26 +400,8 @@ def add_parameter_entries(
     has_impldefs = "impl-defs" in entry
     if not has_impldef and not has_impldefs and "description" not in entry:
         fatal(
-            f"Parameter entry in {def_filename} without impl-def/impl-defs "
+            f"{param_ref} in {def_filename} without impl-def/impl-defs "
             "must define description"
-        )
-
-    if "name" in entry:
-        name: Any = entry.get("name")
-        if not isinstance(name, str):
-            fatal(f"Found parameter entry with non-string name in {def_filename}")
-        names = [name]
-    elif "names" in entry:
-        names_value: Any = entry.get("names")
-        if not isinstance(names_value, list):
-            fatal(f"Found parameter entry with non-list names in {def_filename}")
-        for name in names_value:
-            if not isinstance(name, str):
-                fatal(f"Found non-string value in names array in {def_filename}")
-        names = list(names_value)
-    else:
-        fatal(
-            f"Parameter definition in {def_filename} must define either 'name' or 'names'"
         )
 
     for name in names:
@@ -463,6 +475,8 @@ def add_csr_entries(
                     f"received single name {names_value!r}. Use name: {names_value!r} instead"
                 )
             fatal(f"Found CSR entry with non-list names in {def_filename}")
+        if not names_value:
+            fatal(f"Found CSR entry with empty names in {def_filename}")
         for name in names_value:
             if not isinstance(name, str):
                 fatal(f"Found non-string value in CSR names array in {def_filename}")
@@ -561,8 +575,8 @@ def create_params_hash(norm_rules_json: str, param_def_yaml_files: List[str]) ->
 
         parameter_definitions_obj: Any = yaml_data.get("parameter_definitions")
         if parameter_definitions_obj is not None:
-            if not isinstance(parameter_definitions_obj, list):
-                fatal(f"Invalid parameter_definitions array in {def_file}")
+            if not isinstance(parameter_definitions_obj, list) or not parameter_definitions_obj:
+                fatal(f"Invalid or empty parameter_definitions array in {def_file}")
             saw_parameter_definitions = True
             parameter_definitions: List[Any] = parameter_definitions_obj
             for entry in parameter_definitions:
@@ -579,8 +593,8 @@ def create_params_hash(norm_rules_json: str, param_def_yaml_files: List[str]) ->
 
         csr_definitions_obj: Any = yaml_data.get("csr_definitions")
         if csr_definitions_obj is not None:
-            if not isinstance(csr_definitions_obj, list):
-                fatal(f"Invalid csr_definitions array in {def_file}")
+            if not isinstance(csr_definitions_obj, list) or not csr_definitions_obj:
+                fatal(f"Invalid or empty csr_definitions array in {def_file}")
             saw_csr_definitions = True
             csr_definitions: List[Any] = csr_definitions_obj
             for entry in csr_definitions:
@@ -609,10 +623,10 @@ def create_params_hash(norm_rules_json: str, param_def_yaml_files: List[str]) ->
             )
 
     output: Dict[str, List[Dict[str, Any]]] = {}
-    # Always emit top-level keys so downstream tools can safely index
-    # into data["parameters"] and data["csrs"], even if the lists are empty.
-    output["parameters"] = parameters
-    output["csrs"] = csrs
+    if parameters:
+        output["parameters"] = parameters
+    if csrs:
+        output["csrs"] = csrs
     return output
 
 
