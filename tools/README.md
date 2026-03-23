@@ -214,24 +214,25 @@ Notes on output behavior:
 
 Examples:
 ```yaml
-# Type-based CSR (enumerated legal values)
-- reg-name: mstatus
-  impl-def: MSTATUS_IMPL
-  type: [0, 1, 3]
+# Type-based CSR field (potentially legal enumerated values)
+- reg-name: mtvec
+  field-name: MODE
+  impl-def: MTVEC_MODE_WARL
+  type: [0, 1]
 
-# Width-based CSR (width references an existing parameter)
+# Width-based CSR field (width references an existing parameter)
 - reg-name: satp
-  impl-def: SATP_IMPL
-  width: XLEN
+  field-name: ASID
+  impl-def: SATP_ASID_WARL
+  width: ASIDLEN
 
-# Read-only-mask CSR (read-only mask only)
+# Read-only-mask CSR (read-only, mask only, read-only bits default to 0)
 - reg-name: zort
   impl-def: ZORT_IMPL
   ro-mask: 0xF0F0F0F0
 
-# Read-only-mask/value CSR field entries on multiple registers
-- reg-names: [foo, bar]
-  field-name: DEF
+# Read-only-mask/value CSR field references multiple impl-defs
+- reg-names: foo
   impl-defs: [FOO_IMPL, BAR_IMPL]
   ro-mask: 0b1111
   ro-value: 0b0011
