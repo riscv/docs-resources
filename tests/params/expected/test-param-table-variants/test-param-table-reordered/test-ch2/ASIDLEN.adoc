@@ -1,0 +1,9 @@
+| range 0 to 16
+| EXT:MockExtZ
+a|
+[#param:ASIDLEN]#ASIDLEN#
+
+Normative Rule(s):
+
+* https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#ASIDLEN[ASIDLEN]
+| See normative rule

@@ -63,10 +63,12 @@
     "norm:uint32": "This is a 32-bit unsigned integer. Should be 0 to &amp;lt; 2^32^-1. Need to use inline anchor to see superscript.",
     "norm:int64": "This is a 64-bit signed integer.",
     "norm:uint-1to100": "This is an unsigned integer in the range of 1 to 100.",
+    "norm:uint-4to8": "This is an unsigned integer in the range of 4 to 8.",
     "norm:list-str": "Name|Description\n===\nABC|Letters \"ABC\"¶DEF|Letters \"DEF\"¶GHI|Letters \"GHI\"\n===",
     "norm:list-int": "This is a list with values 1, 2 and 4.",
     "norm:foobar-ch1": "This is the Ch1 part of the foobar normative rule.",
-    "norm:array": "Can have up to 29 performance counters. Reading an unimplemented performance counter either returns a value or raises an illegal instruction exception, depending on the implementation."
+    "norm:array": "Can have up to 29 performance counters. Reading an unimplemented performance counter either returns a value or raises an illegal instruction exception, depending on the implementation.",
+    "norm:satp_asid_warl_asidlen": "The satp.ASID CSR field width is specified by the ASIDLEN parameter value."
   },
   "sections": {
     "title": "",
@@ -183,7 +185,16 @@
       {
         "title": "Chapter 2 - Implementation-Defined Behaviors",
         "id": "_chapter_2_implementation_defined_behaviors",
-        "children": [],
+        "children": [
+          {
+            "title": "Chapter 2.1 - WARL",
+            "id": "_chapter_2_1_warl",
+            "children": [],
+            "tags": [
+              "norm:satp_asid_warl_asidlen"
+            ]
+          }
+        ],
         "tags": [
           "norm:boolean",
           "norm:bit",
@@ -196,6 +207,7 @@
           "norm:uint32",
           "norm:int64",
           "norm:uint-1to100",
+          "norm:uint-4to8",
           "norm:list-str",
           "norm:list-int",
           "norm:foobar-ch1",

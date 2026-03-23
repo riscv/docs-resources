@@ -5,6 +5,7 @@ multiple Python scripts in the tools directory.
 """
 
 import sys
+import traceback
 from importlib import import_module
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
@@ -23,6 +24,34 @@ STDS_OBJECT_KINDS: List[str] = [
 
 
 IMPLDEF_CATEGORIES: List[str] = ["WARL", "WLRL"]
+
+# Explicit mapping from impl-def-category values (implDefCategoryType in common-schema.json)
+# to output CSR category values (csrCategory in param-common-schema.json).
+# These use separate schema definitions so they cannot be assumed identical.
+IMPLDEF_CATEGORY_TO_CSR_CATEGORY: Dict[str, str] = {
+    "WARL": "WARL",
+    "WLRL": "WLRL",
+}
+
+
+def impldef_category_to_csr_category(
+    impldef_cat: str,
+    fatal: Callable[[str], None],
+) -> str:
+    """Convert an impl-def-category value to its output CSR category.
+
+    Uses an explicit mapping so that changes to either schema are caught
+    at the mapping site rather than silently passed through.
+    """
+    result = IMPLDEF_CATEGORY_TO_CSR_CATEGORY.get(impldef_cat)
+    if result is None:
+        allowed_str = ",".join(IMPLDEF_CATEGORY_TO_CSR_CATEGORY)
+        fatal(
+            f"No CSR category mapping for impl-def-category {impldef_cat!r}. "
+            f"Allowed impl-def-categories are: {allowed_str}"
+        )
+        return ""  # unreachable; fatal() does not return
+    return result
 
 
 STDS_OBJECT_KIND_TO_FEATURE: Dict[str, str] = {
@@ -62,6 +91,7 @@ def make_log_helpers(program_name: str) -> Tuple[Callable[[str], None], Callable
 
     def fatal(msg: str):
         error(msg)
+        traceback.print_stack(file=sys.stderr)
         sys.exit(1)
 
     return error, info, fatal
@@ -183,10 +213,20 @@ def infer_param_type_string(
     param_array = param.get("array")
     param_width = param.get("width")
 
+    param_name = "<unknown>"
     param_name_obj = param.get("name")
-    if not isinstance(param_name_obj, str) or not param_name_obj:
-        fatal("Expected parameter name to be a non-empty string")
-    param_name = param_name_obj
+    if isinstance(param_name_obj, str) and param_name_obj:
+        param_name = param_name_obj
+    else:
+        reg_name_obj = param.get("reg-name")
+        field_name_obj = param.get("field-name")
+        if isinstance(reg_name_obj, str) and reg_name_obj:
+            if isinstance(field_name_obj, str) and field_name_obj:
+                param_name = f"{reg_name_obj}.{field_name_obj}"
+            else:
+                param_name = reg_name_obj
+        else:
+            fatal("Expected parameter name or CSR reg-name to be a non-empty string")
 
     scalar_type = ""
 

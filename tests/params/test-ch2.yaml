@@ -17,7 +17,7 @@ parameter_definitions:
   - name: FOOBAR
     impl-defs: [FOOBAR_CH1_EXT_X, FOOBAR_CH2_EXT_Z]
     type: boolean
-  - names: [ASIDLEN1, ASIDLEN2]
+  - names: [ASIDLEN, ASIDLEN1, ASIDLEN2]
     impl-def: ASIDLEN
     range: [0, 16]
   - name: NO_IMPL_DEF
@@ -50,9 +50,29 @@ parameter_definitions:
     note: This is a Mock extension dependency parameter (A depends B).
 
 csr_definitions:
-  - name: CSR_FIELD_WARL1
-    impl-def: CSR_FIELD_WARL1
-  - name: CSR_FIELD_WLRL
-    impl-def: CSR_FIELD_WLRL
-  - name: CSR_FIELD_WARL2
-    impl-def: CSR_FIELD_WARL2
+  # Case 1: CSR field with a list of possible legal values. Some values may be mandatory and some optional
+  # but that isn't tracked here.
+  - reg-name: foo
+    field-name: ABC
+    impl-def: FOO_ABC_WARL_LEGAL_LIST
+    type: [0, 3, 10]
+
+  # Case 2: CSR field with width specified by a named parameter's value.
+  - reg-name: foo
+    field-name: DEF
+    impl-def: FOO_DEF_WARL_WIDTH_UINT4TO8
+    width: UINT_4TO8
+
+  # Case 3a: CSR with some bits that are read-only and some bits that are read-write.
+  # Any bit in the mask that is 1 is allowed to be read-only in an implementation.
+  # The value specifies the read-only value.
+  - reg-name: bar
+    impl-def: BAR_WARL_READONLY_VALUE
+    ro-mask: 0xF0F0F0F0
+    ro-value: 0xa0b0c0d0
+
+  # Case 3b: Similar to Case 3a but the read-only value defaults to 0 if not specified.
+  - reg-name: zort
+    field-name: XYZ
+    impl-def: ZORT_XYZ_WLRL_READONLY_ZERO
+    ro-mask: 0b1111

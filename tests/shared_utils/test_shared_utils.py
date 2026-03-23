@@ -77,7 +77,9 @@ def test_make_log_helpers_fatal_exits():
     else:
         raise AssertionError("Expected SystemExit from fatal helper")
 
-    assert err.getvalue() == "sample.py: ERROR: stop\n"
+    stderr_output = err.getvalue()
+    assert stderr_output.startswith("sample.py: ERROR: stop\n")
+    assert "traceback.print_stack" in stderr_output
 
 
 def test_load_json_object_success_and_top_level_validation():
@@ -211,7 +213,7 @@ def test_infer_param_type_string_all_fatal_cases():
     cases = [
         (
             {"type": "boolean"},
-            "Expected parameter name to be a non-empty string",
+            "Expected parameter name or CSR reg-name to be a non-empty string",
         ),
         (
             {"name": "P", "type": []},

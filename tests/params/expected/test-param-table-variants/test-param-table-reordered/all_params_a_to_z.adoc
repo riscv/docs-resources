@@ -1,4 +1,4 @@
-.Parameter Definitions (A-Z): 40 Parameters
+.Parameter Definitions (A-Z): 42 Parameters
 [cols="10%,10%,30%,50%"]
 |===
 
@@ -17,6 +17,7 @@ include::test-ch1/ARRAY_OF_NEG10TO20.adoc[]
 include::test-ch1/ARRAY_OF_UINT5.adoc[]
 include::test-ch1/ARRAY_OF_UINT64.adoc[]
 include::test-ch1/ARRAY_OF_WORD.adoc[]
+include::test-ch2/ASIDLEN.adoc[]
 include::test-ch2/ASIDLEN1.adoc[]
 include::test-ch2/ASIDLEN2.adoc[]
 include::test-ch2/BASE_RV32I.adoc[]
@@ -41,6 +42,7 @@ include::test-ch2/ROSE_COLORS.adoc[]
 include::test-ch1/UINT32.adoc[]
 include::test-ch1/UINT6.adoc[]
 include::test-ch1/UINT_1TO100.adoc[]
+include::test-ch1/UINT_4TO8.adoc[]
 include::test-ch1/UINT_MXLEN.adoc[]
 include::test-ch1/WORD.adoc[]
 include::test-ch2/XLEN.adoc[]
