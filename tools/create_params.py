@@ -654,8 +654,8 @@ def add_csr_entries(
         for value in raw_legal:
             if not isinstance(value, (int, str)) or isinstance(value, bool):
                 fatal(
-                    f"CSR {representative_name} in {def_filename} has non-integer "
-                    f"value in enum.legal: {value!r}"
+                    f"CSR {representative_name} in {def_filename} has invalid value in enum.legal: "
+                    f"{value!r}; expected integer, hex string, or binary string"
                 )
             csr_legal_enum.append(parse_multibase_int(value, "enum.legal", representative_name))
 
@@ -676,7 +676,7 @@ def add_csr_entries(
 
         if raw_illegal_return is not None:
             if not isinstance(raw_illegal_return, (int, str)) or isinstance(raw_illegal_return, bool):
-                fatal(f"CSR {representative_name} in {def_filename} has non-integer illegal-write-return: {raw_illegal_return!r}")
+                fatal(f"CSR {representative_name} in {def_filename} has invalid illegal-write-return: {raw_illegal_return!r}; expected integer, hex string, or binary string")
             csr_illegal_write_return = parse_multibase_int(raw_illegal_return, "illegal-write-return", representative_name)
 
     if has_width:
