@@ -87,8 +87,8 @@
         "description": "Array of one or more legal values (decimal integer, 0x hex, or 0b binary)"
       },
       "illegal-write-ignore": {
-        "type": "boolean",
-        "description": "If true, illegal writes are silently ignored"
+        "const": true,
+        "description": "Must be true; indicates illegal writes are silently ignored"
       },
       "illegal-write-return": {
         "$ref": "#/multiBaseValue",
@@ -111,8 +111,8 @@
         "description": "Array of one or more legal integers (converted to decimal)"
       },
       "illegal-write-ignore": {
-        "type": "boolean",
-        "description": "If true, illegal writes are silently ignored"
+        "const": true,
+        "description": "Must be true; indicates illegal writes are silently ignored"
       },
       "illegal-write-return": {
         "type": "integer",
