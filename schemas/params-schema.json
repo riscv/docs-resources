@@ -171,6 +171,37 @@
             "then": {
               "required": ["ro-mask"]
             }
+          },
+          {
+            "oneOf": [
+              {
+                "required": ["type"],
+                "not": {
+                  "anyOf": [
+                    { "required": ["width"] },
+                    { "required": ["ro-mask"] }
+                  ]
+                }
+              },
+              {
+                "required": ["width"],
+                "not": {
+                  "anyOf": [
+                    { "required": ["type"] },
+                    { "required": ["ro-mask"] }
+                  ]
+                }
+              },
+              {
+                "required": ["ro-mask"],
+                "not": {
+                  "anyOf": [
+                    { "required": ["type"] },
+                    { "required": ["width"] }
+                  ]
+                }
+              }
+            ]
           }
         ],
         "additionalProperties": false
