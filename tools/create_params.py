@@ -672,7 +672,12 @@ def add_csr_entries(
         if raw_illegal_ignore is not None:
             if not isinstance(raw_illegal_ignore, bool):
                 fatal(f"CSR {representative_name} in {def_filename} has non-boolean illegal-write-ignore: {raw_illegal_ignore!r}")
-            csr_illegal_write_ignore = raw_illegal_ignore
+            if raw_illegal_ignore is not True:
+                fatal(
+                    f"CSR {representative_name} in {def_filename} must set 'illegal-write-ignore' to true "
+                    f"when present (got {raw_illegal_ignore!r})"
+                )
+            csr_illegal_write_ignore = True
 
         if raw_illegal_return is not None:
             if not isinstance(raw_illegal_return, (str, int)) or isinstance(raw_illegal_return, bool):
