@@ -150,7 +150,7 @@
           },
           "enum": {
             "$ref": "param-common-schema.json#/csrEnum",
-            "description": "Enum list of possible legal write values"
+            "description": "Enum definition specifying legal write values and associated behavior (including handling of illegal writes)"
           },
           "width": {
             "$ref": "param-common-schema.json#/paramName",
