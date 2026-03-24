@@ -652,12 +652,12 @@ def add_csr_entries(
             fatal(f"CSR {representative_name} in {def_filename} has invalid or empty enum.legal")
         csr_legal_enum = []
         for value in raw_legal:
-            if not isinstance(value, int) or isinstance(value, bool):
+            if not isinstance(value, (int, str)) or isinstance(value, bool):
                 fatal(
                     f"CSR {representative_name} in {def_filename} has non-integer "
                     f"value in enum.legal: {value!r}"
                 )
-            csr_legal_enum.append(value)
+            csr_legal_enum.append(parse_multibase_int(value, "enum.legal", representative_name))
 
         # Parse illegal-write behavior (must be one of the two)
         raw_illegal_ignore = raw_enum.get("illegal-write-ignore")
@@ -675,9 +675,9 @@ def add_csr_entries(
             csr_illegal_write_ignore = raw_illegal_ignore
 
         if raw_illegal_return is not None:
-            if not isinstance(raw_illegal_return, int) or isinstance(raw_illegal_return, bool):
+            if not isinstance(raw_illegal_return, (int, str)) or isinstance(raw_illegal_return, bool):
                 fatal(f"CSR {representative_name} in {def_filename} has non-integer illegal-write-return: {raw_illegal_return!r}")
-            csr_illegal_write_return = raw_illegal_return
+            csr_illegal_write_return = parse_multibase_int(raw_illegal_return, "illegal-write-return", representative_name)
 
     if has_width:
         raw_width = entry.get("width")
