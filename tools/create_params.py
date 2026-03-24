@@ -544,9 +544,9 @@ def add_csr_entries(
         if isinstance(value, str):
             try:
                 if value.startswith("0x"):
-                    return int(value[2:], 16)
+                    return int(value[2:].replace("_", ""), 16)
                 if value.startswith("0b"):
-                    return int(value[2:], 2)
+                    return int(value[2:].replace("_", ""), 2)
             except ValueError:
                 pass
         fatal(

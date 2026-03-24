@@ -1593,7 +1593,7 @@
       "chapter_name": "Two",
       "category": "WARL",
       "ro-mask": 4042322160,
-      "ro-value": 2695938256,
+      "ro-value": 18446744073709551615,
       "impl-defs": [
         {
           "name": "BAR_WARL_READONLY_VALUE",

@@ -69,7 +69,7 @@ csr_definitions:
   - reg-name: bar
     impl-def: BAR_WARL_READONLY_VALUE
     ro-mask: 0xF0F0F0F0
-    ro-value: 0xa0b0c0d0
+    ro-value: 0xFFFF_FFFF_FFFF_FFFF
 
   # Case 3b: Similar to Case 3a but the read-only value defaults to 0 if not specified.
   - reg-name: zort

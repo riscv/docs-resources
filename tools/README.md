@@ -229,7 +229,7 @@ Examples:
 # Read-only-mask CSR (read-only, mask only, read-only bits default to 0)
 - reg-name: zort
   impl-def: ZORT_IMPL
-  ro-mask: 0xF0F0F0F0
+  ro-mask: 0xF0F0_F0F0
 
 # Read-only-mask/value CSR field references multiple impl-defs
 - reg-names: foo
