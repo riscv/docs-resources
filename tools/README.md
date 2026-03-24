@@ -212,9 +212,9 @@ CSR selector properties:
   - Both accept decimal integer, hex string (`0x...`), or binary string (`0b...`).
 
 Notes on output behavior:
-- JSON output copies the authored `enum` object into the generated `csrs` entry.
+- JSON output preserves the structure of the authored `enum` object in the generated `csrs` entry, but normalizes any multibase numeric values (for example hex `0x...` or binary `0b...`) to plain integers.
 - JSON output stores `ro-mask`/`ro-value` as integers.
-- HTML output preserves the original authored literal text for `ro-mask`/`ro-value` when available (for example `0xF0F0` or `0b1100`).
+- HTML output uses internal underscore-prefixed fields to preserve the original authored literal text for `enum` values and `ro-mask`/`ro-value` when available (for example `0xF0F0` or `0b1100`).
 
 Examples:
 ```yaml
