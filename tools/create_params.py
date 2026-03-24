@@ -630,7 +630,6 @@ def add_csr_entries(
 
     representative_name = names[0]
 
-    csr_enum_input: Optional[List[int]] = None
     csr_width_input: Optional[str] = None
     csr_read_only_mask: Optional[int] = None
     csr_read_only_value: Optional[int] = None
