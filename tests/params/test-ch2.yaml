@@ -50,17 +50,31 @@ parameter_definitions:
     note: This is a Mock extension dependency parameter (A depends B).
 
 csr_definitions:
-  # Case 1: CSR field with a list of possible legal values. Some values may be mandatory and some optional
-  # but that isn't tracked here.
+  # Case 1a: Enum with list of potentially legal values.
+  # Some values may be mandatory and some optional for an implementation but that isn't tracked here.
+  # Returns 0x7fff if written with an illegal value.
+  # Legal values use a mix of decimal, binary (0b11), and hex (0xffff_ffff) to test multibase support.
   - reg-name: foo
     field-name: ABC
-    impl-def: FOO_ABC_WARL_LEGAL_LIST
-    type: [0, 3, 10]
+    impl-def: FOO_ABC_WARL_ENUM
+    enum:
+      legal: [0, 0b11, 0xffff_ffff]
+      illegal-write-return: 0x7fff
+
+  # Case 1b: Enum with list of potentially legal values.
+  # Ignores writes of illegal values (i.e. the write has no effect).
+  # Legal values use decimal and hex (0xf0) to further test multibase support.
+  - reg-name: foo
+    field-name: DEF
+    impl-def: FOO_DEF_WARL_ENUM
+    enum:
+      legal: [-1, 0xf0]
+      illegal-write-ignore: true
 
   # Case 2: CSR field with width specified by a named parameter's value.
   - reg-name: foo
-    field-name: DEF
-    impl-def: FOO_DEF_WARL_WIDTH_UINT4TO8
+    field-name: GHI
+    impl-def: FOO_GHI_WARL_WIDTH_UINT4TO8
     width: UINT_4TO8
 
   # Case 3a: CSR with some bits that are read-only and some bits that are read-write.

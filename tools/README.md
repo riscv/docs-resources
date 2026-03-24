@@ -187,7 +187,7 @@ Examples:
 CSR Definition Encoding:
 - Use `csr_definitions` entries for CSRs, with `reg-name` (single CSR) or `reg-names` (multiple CSRs).
 - A CSR entry must include exactly one selector property:
-  - `type`
+  - `enum`
   - `width`
   - `ro-mask`
 - `ro-value` is optional, but if present then `ro-mask` is required.
@@ -198,8 +198,11 @@ CSR Definition Encoding:
   - The category is mapped into CSR category (`WARL`/`WLRL`) for output grouping.
 
 CSR selector properties:
-- `type`: List of legal integer values for the CSR (or CSR field).
-  - Format: `[v0, v1, ...]` where each value is an integer.
+- `enum`: Object specifying legal values and illegal-write behavior.
+  - `legal`: Array of one or more integers representing legal write values (required).
+  - `illegal-write-ignore`: Boolean specifying whether illegal writes are silently ignored (mutually exclusive with `illegal-write-return`).
+  - `illegal-write-return`: Integer value to return on illegal writes (mutually exclusive with `illegal-write-ignore`).
+  - Must specify `legal` and exactly one of `illegal-write-ignore` or `illegal-write-return`.
 - `width`: Name of a parameter that defines CSR width.
   - Format: `width: <parameter_name>`.
 - `ro-mask`/`ro-value`: Bit-mask model for read-only bits.
@@ -209,16 +212,19 @@ CSR selector properties:
   - Both accept decimal integer, hex string (`0x...`), or binary string (`0b...`).
 
 Notes on output behavior:
+- JSON output copies the authored `enum` object into the generated `csrs` entry.
 - JSON output stores `ro-mask`/`ro-value` as integers.
 - HTML output preserves the original authored literal text for `ro-mask`/`ro-value` when available (for example `0xF0F0` or `0b1100`).
 
 Examples:
 ```yaml
-# Type-based CSR field (potentially legal enumerated values)
+# Enum: Legal CSR field values plus illegal-write behavior
 - reg-name: mtvec
   field-name: MODE
   impl-def: MTVEC_MODE_WARL
-  type: [0, 1]
+  enum:
+    legal: [0, 1]
+    illegal-write-ignore: true
 
 # Width-based CSR field (width references an existing parameter)
 - reg-name: satp

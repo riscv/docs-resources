@@ -148,9 +148,9 @@
             "$ref": "param-common-schema.json#/csrNameArray",
             "description": "Multiple CSR field names"
           },
-          "type": {
-            "$ref": "param-common-schema.json#/csrType",
-            "description": "List of possible legal values"
+          "enum": {
+            "$ref": "param-common-schema.json#/csrEnum",
+            "description": "Enum list of possible legal write values"
           },
           "width": {
             "$ref": "param-common-schema.json#/paramName",
@@ -187,7 +187,7 @@
           },
           {
             "oneOf": [
-              { "required": ["type"] },
+              { "required": ["enum"] },
               { "required": ["width"] },
               { "required": ["ro-mask"] }
             ]

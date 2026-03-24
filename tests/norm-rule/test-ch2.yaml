@@ -71,14 +71,20 @@ normative_rule_definitions:
     instance: MockExtDepAOnB
 
   # CSR field types
-  - name: FOO_ABC_WARL_LEGAL_LIST
-    tag: "norm:foo_abc_warl_legal_list"
+  - name: FOO_ABC_WARL_ENUM
+    tag: "norm:foo_abc_warl_enum"
     impl-def-behavior: true
     impl-def-category: WARL
     kind: csr_field
     instance: foo.ABC
-  - name: FOO_DEF_WARL_WIDTH_UINT4TO8
-    tag: "norm:foo_def_warl_width_uint4to8"
+  - name: FOO_DEF_WARL_ENUM
+    tag: "norm:foo_def_warl_enum"
+    impl-def-behavior: true
+    impl-def-category: WARL
+    kind: csr_field
+    instance: foo.DEF
+  - name: FOO_GHI_WARL_WIDTH_UINT4TO8
+    tag: "norm:foo_ghi_warl_width_uint4to8"
     impl-def-behavior: true
     impl-def-category: WARL
   - name: BAR_WARL_READONLY_VALUE

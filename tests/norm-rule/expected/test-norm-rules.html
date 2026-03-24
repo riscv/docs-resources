@@ -155,7 +155,7 @@
   </aside>
     <main>
       <style>.grand-total-heading { font-size: 24px; font-weight: bold; }</style>
-      <h1 class="grand-total-heading">94 Normative Rules: Includes 31 Implementation-Defined Behaviors (26 No Category, 4 WARL, 1 WLRL)</h1>
+      <h1 class="grand-total-heading">95 Normative Rules: Includes 32 Implementation-Defined Behaviors (26 No Category, 5 WARL, 1 WLRL)</h1>
 
       <section id="table-norm-rules-ch-1" class="section">
         <table>
@@ -821,7 +821,7 @@
 
       <section id="table-norm-rules-ch-2" class="section">
         <table>
-          <caption class="sticky-caption">Chapter Two: 20 Normative Rules: Includes 15 Implementation-Defined Behaviors (11 No Category, 3 WARL, 1 WLRL)</caption>
+          <caption class="sticky-caption">Chapter Two: 21 Normative Rules: Includes 16 Implementation-Defined Behaviors (11 No Category, 4 WARL, 1 WLRL)</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-description">
@@ -1048,7 +1048,7 @@
               <td><a href="test-ch2.html#norm:mock-ext-dep-A-on-B">norm:mock-ext-dep-A-on-B</a></td>
             </tr>
             <tr>
-              <td rowspan=5 id="FOO_ABC_WARL_LEGAL_LIST">FOO_ABC_WARL_LEGAL_LIST</td>
+              <td rowspan=5 id="FOO_ABC_WARL_ENUM">FOO_ABC_WARL_ENUM</td>
               <td>csr_field</td>
               <td>Kind</td>
             </tr>
@@ -1065,11 +1065,19 @@
               <td>Implementation-defined behavior category</td>
             </tr>
             <tr>
-              <td>The architecturally-defined values for the 4-bit foo.ABC CSR field are 0, 3, or 10.<br>An implementation can support any subset of these values.</td>
-              <td><a href="test-ch2.html#norm:foo_abc_warl_legal_list">norm:foo_abc_warl_legal_list</a></td>
+              <td>The architecturally-defined values for the 4-bit foo.ABC<br>CSR field are 0, 0b11, or 0xffff_ffff. Returns 0x7fff if written with an illegal value.</td>
+              <td><a href="test-ch2.html#norm:foo_abc_warl_enum">norm:foo_abc_warl_enum</a></td>
             </tr>
             <tr>
-              <td rowspan=3 id="FOO_DEF_WARL_WIDTH_UINT4TO8">FOO_DEF_WARL_WIDTH_UINT4TO8</td>
+              <td rowspan=5 id="FOO_DEF_WARL_ENUM">FOO_DEF_WARL_ENUM</td>
+              <td>csr_field</td>
+              <td>Kind</td>
+            </tr>
+            <tr>
+              <td>foo.DEF</td>
+              <td>Instance</td>
+            </tr>
+            <tr>
               <td>Implementation-defined behavior</td>
               <td>Implementation-defined behavior</td>
             </tr>
@@ -1078,8 +1086,21 @@
               <td>Implementation-defined behavior category</td>
             </tr>
             <tr>
-              <td>The foo.DEF CSR field width ranges from 4 to 8 bits as specified by the UINT_4TO8 parameter value.</td>
-              <td><a href="test-ch2.html#norm:foo_def_warl_width_uint4to8">norm:foo_def_warl_width_uint4to8</a></td>
+              <td>The architecturally-defined values for the 8-bit foo.DEF<br>CSR field are -1 or 0xf0.  Ignores writes with an illegal value.</td>
+              <td><a href="test-ch2.html#norm:foo_def_warl_enum">norm:foo_def_warl_enum</a></td>
+            </tr>
+            <tr>
+              <td rowspan=3 id="FOO_GHI_WARL_WIDTH_UINT4TO8">FOO_GHI_WARL_WIDTH_UINT4TO8</td>
+              <td>Implementation-defined behavior</td>
+              <td>Implementation-defined behavior</td>
+            </tr>
+            <tr>
+              <td>WARL</td>
+              <td>Implementation-defined behavior category</td>
+            </tr>
+            <tr>
+              <td>The foo.GHI CSR field width ranges from 4 to 8 bits as specified by the UINT_4TO8 parameter value.</td>
+              <td><a href="test-ch2.html#norm:foo_ghi_warl_width_uint4to8">norm:foo_ghi_warl_width_uint4to8</a></td>
             </tr>
             <tr>
               <td rowspan=5 id="BAR_WARL_READONLY_VALUE">BAR_WARL_READONLY_VALUE</td>
@@ -1479,7 +1500,7 @@
 
       <section id="table-impldefs-impl-cat-WARL" class="section">
         <table>
-          <caption class="sticky-caption">WARL Category (A-Z): All 4 Implementation-Defined Behaviors</caption>
+          <caption class="sticky-caption">WARL Category (A-Z): All 5 Implementation-Defined Behaviors</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-description">
@@ -1503,7 +1524,7 @@
               <td><a href="test-ch2.html#norm:bar_warl_readonly_value">norm:bar_warl_readonly_value</a></td>
             </tr>
             <tr>
-              <td rowspan=3><a href="#FOO_ABC_WARL_LEGAL_LIST">FOO_ABC_WARL_LEGAL_LIST</a></td>
+              <td rowspan=3><a href="#FOO_ABC_WARL_ENUM">FOO_ABC_WARL_ENUM</a></td>
               <td>csr_field</td>
               <td>Kind</td>
             </tr>
@@ -1512,13 +1533,26 @@
               <td>Instance</td>
             </tr>
             <tr>
-              <td>The architecturally-defined values for the 4-bit foo.ABC CSR field are 0, 3, or 10.<br>An implementation can support any subset of these values.</td>
-              <td><a href="test-ch2.html#norm:foo_abc_warl_legal_list">norm:foo_abc_warl_legal_list</a></td>
+              <td>The architecturally-defined values for the 4-bit foo.ABC<br>CSR field are 0, 0b11, or 0xffff_ffff. Returns 0x7fff if written with an illegal value.</td>
+              <td><a href="test-ch2.html#norm:foo_abc_warl_enum">norm:foo_abc_warl_enum</a></td>
             </tr>
             <tr>
-              <td rowspan=1><a href="#FOO_DEF_WARL_WIDTH_UINT4TO8">FOO_DEF_WARL_WIDTH_UINT4TO8</a></td>
-              <td>The foo.DEF CSR field width ranges from 4 to 8 bits as specified by the UINT_4TO8 parameter value.</td>
-              <td><a href="test-ch2.html#norm:foo_def_warl_width_uint4to8">norm:foo_def_warl_width_uint4to8</a></td>
+              <td rowspan=3><a href="#FOO_DEF_WARL_ENUM">FOO_DEF_WARL_ENUM</a></td>
+              <td>csr_field</td>
+              <td>Kind</td>
+            </tr>
+            <tr>
+              <td>foo.DEF</td>
+              <td>Instance</td>
+            </tr>
+            <tr>
+              <td>The architecturally-defined values for the 8-bit foo.DEF<br>CSR field are -1 or 0xf0.  Ignores writes with an illegal value.</td>
+              <td><a href="test-ch2.html#norm:foo_def_warl_enum">norm:foo_def_warl_enum</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1><a href="#FOO_GHI_WARL_WIDTH_UINT4TO8">FOO_GHI_WARL_WIDTH_UINT4TO8</a></td>
+              <td>The foo.GHI CSR field width ranges from 4 to 8 bits as specified by the UINT_4TO8 parameter value.</td>
+              <td><a href="test-ch2.html#norm:foo_ghi_warl_width_uint4to8">norm:foo_ghi_warl_width_uint4to8</a></td>
             </tr>
             <tr>
               <td rowspan=3><a href="#SATP_ASID_WARL_ASIDLEN">SATP_ASID_WARL_ASIDLEN</a></td>
@@ -1800,7 +1834,7 @@
 
       <section id="table-impldefs-ch-2" class="section">
         <table>
-          <caption class="sticky-caption">Chapter Two: All 15 Implementation-Defined Behaviors</caption>
+          <caption class="sticky-caption">Chapter Two: All 16 Implementation-Defined Behaviors</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-description">
@@ -1946,7 +1980,7 @@
               <td><a href="test-ch2.html#norm:mock-ext-dep-A-on-B">norm:mock-ext-dep-A-on-B</a></td>
             </tr>
             <tr>
-              <td rowspan=4><a href="#FOO_ABC_WARL_LEGAL_LIST">FOO_ABC_WARL_LEGAL_LIST</a></td>
+              <td rowspan=4><a href="#FOO_ABC_WARL_ENUM">FOO_ABC_WARL_ENUM</a></td>
               <td>csr_field</td>
               <td>Kind</td>
             </tr>
@@ -1959,17 +1993,34 @@
               <td>Implementation-defined behavior category</td>
             </tr>
             <tr>
-              <td>The architecturally-defined values for the 4-bit foo.ABC CSR field are 0, 3, or 10.<br>An implementation can support any subset of these values.</td>
-              <td><a href="test-ch2.html#norm:foo_abc_warl_legal_list">norm:foo_abc_warl_legal_list</a></td>
+              <td>The architecturally-defined values for the 4-bit foo.ABC<br>CSR field are 0, 0b11, or 0xffff_ffff. Returns 0x7fff if written with an illegal value.</td>
+              <td><a href="test-ch2.html#norm:foo_abc_warl_enum">norm:foo_abc_warl_enum</a></td>
             </tr>
             <tr>
-              <td rowspan=2><a href="#FOO_DEF_WARL_WIDTH_UINT4TO8">FOO_DEF_WARL_WIDTH_UINT4TO8</a></td>
+              <td rowspan=4><a href="#FOO_DEF_WARL_ENUM">FOO_DEF_WARL_ENUM</a></td>
+              <td>csr_field</td>
+              <td>Kind</td>
+            </tr>
+            <tr>
+              <td>foo.DEF</td>
+              <td>Instance</td>
+            </tr>
+            <tr>
               <td>WARL</td>
               <td>Implementation-defined behavior category</td>
             </tr>
             <tr>
-              <td>The foo.DEF CSR field width ranges from 4 to 8 bits as specified by the UINT_4TO8 parameter value.</td>
-              <td><a href="test-ch2.html#norm:foo_def_warl_width_uint4to8">norm:foo_def_warl_width_uint4to8</a></td>
+              <td>The architecturally-defined values for the 8-bit foo.DEF<br>CSR field are -1 or 0xf0.  Ignores writes with an illegal value.</td>
+              <td><a href="test-ch2.html#norm:foo_def_warl_enum">norm:foo_def_warl_enum</a></td>
+            </tr>
+            <tr>
+              <td rowspan=2><a href="#FOO_GHI_WARL_WIDTH_UINT4TO8">FOO_GHI_WARL_WIDTH_UINT4TO8</a></td>
+              <td>WARL</td>
+              <td>Implementation-defined behavior category</td>
+            </tr>
+            <tr>
+              <td>The foo.GHI CSR field width ranges from 4 to 8 bits as specified by the UINT_4TO8 parameter value.</td>
+              <td><a href="test-ch2.html#norm:foo_ghi_warl_width_uint4to8">norm:foo_ghi_warl_width_uint4to8</a></td>
             </tr>
             <tr>
               <td rowspan=4><a href="#BAR_WARL_READONLY_VALUE">BAR_WARL_READONLY_VALUE</a></td>

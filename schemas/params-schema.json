@@ -134,8 +134,9 @@
             "$ref": "param-common-schema.json#/csrCategory",
             "description": "CSR category"
           },
-          "type": {
-            "$ref": "param-common-schema.json#/csrType"
+          "enum": {
+            "$ref": "param-common-schema.json#/csrEnumOutput",
+            "description": "CSR legal values and illegal-write behavior"
           },
           "width": {
             "$ref": "param-common-schema.json#/paramName",
@@ -175,7 +176,7 @@
           {
             "oneOf": [
               {
-                "required": ["type"],
+                "required": ["enum"],
                 "not": {
                   "anyOf": [
                     { "required": ["width"] },
@@ -187,7 +188,7 @@
                 "required": ["width"],
                 "not": {
                   "anyOf": [
-                    { "required": ["type"] },
+                    { "required": ["enum"] },
                     { "required": ["ro-mask"] }
                   ]
                 }
@@ -196,7 +197,7 @@
                 "required": ["ro-mask"],
                 "not": {
                   "anyOf": [
-                    { "required": ["type"] },
+                    { "required": ["enum"] },
                     { "required": ["width"] }
                   ]
                 }
