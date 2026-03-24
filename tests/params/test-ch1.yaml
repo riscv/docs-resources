@@ -51,6 +51,9 @@ parameter_definitions:
   - name: UINT_1TO100
     impl-def: UINT_1TO100
     range: [1, 100]
+  - name: UINT_4TO8
+    impl-def: UINT_4TO8
+    range: [4, 8]
   - name: LIST_STR
     impl-def: LIST_STR
     type: [ABC, DEF, GHI]
@@ -112,3 +115,9 @@ parameter_definitions:
     impl-def: ARRAY
     range: [-10, 20]
     array: [0, 3]
+
+csr_definitions:
+  - reg-name: satp
+    field-name: MODE
+    impl-defs: [SATP_ASID_WARL_ASIDLEN, ASIDLEN]
+    width: ASIDLEN

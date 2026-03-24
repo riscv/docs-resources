@@ -106,9 +106,13 @@
       "items": {
         "type": "object",
         "properties": {
-          "name": {
+          "reg-name": {
            "type": "string",
            "description": "CSR name"
+          },
+          "field-name": {
+            "type": "string",
+            "description": "CSR field name"
           },
           "def_filename": {
             "type": "string",
@@ -126,8 +130,24 @@
             "type": "string",
             "$ref": "param-common-schema.json#/descriptionDesc"
           },
+          "category": {
+            "$ref": "param-common-schema.json#/csrCategory",
+            "description": "CSR category"
+          },
           "type": {
             "$ref": "param-common-schema.json#/csrType"
+          },
+          "width": {
+            "$ref": "param-common-schema.json#/paramName",
+            "description": "Name of a parameter that provides the bit width"
+          },
+          "ro-mask": {
+            "type": "integer",
+            "description": "Decimal integer mask specifying read-only bits"
+          },
+          "ro-value": {
+            "type": "integer",
+            "description": "Decimal integer value of read-only bits"
           },
           "impl-defs": {
             "allOf": [
@@ -142,7 +162,48 @@
             ]
           }
         },
-        "required": ["name", "def_filename", "chapter_name", "type"],
+        "required": ["reg-name", "def_filename", "chapter_name", "category"],
+        "allOf": [
+          {
+            "if": {
+              "required": ["ro-value"]
+            },
+            "then": {
+              "required": ["ro-mask"]
+            }
+          },
+          {
+            "oneOf": [
+              {
+                "required": ["type"],
+                "not": {
+                  "anyOf": [
+                    { "required": ["width"] },
+                    { "required": ["ro-mask"] }
+                  ]
+                }
+              },
+              {
+                "required": ["width"],
+                "not": {
+                  "anyOf": [
+                    { "required": ["type"] },
+                    { "required": ["ro-mask"] }
+                  ]
+                }
+              },
+              {
+                "required": ["ro-mask"],
+                "not": {
+                  "anyOf": [
+                    { "required": ["type"] },
+                    { "required": ["width"] }
+                  ]
+                }
+              }
+            ]
+          }
+        ],
         "additionalProperties": false
       }
     }

@@ -131,8 +131,7 @@ Parameter Type Encoding:
 - `type` may be one of:
   - Unsigned integers: `boolean`, `bit`, `byte`, `hword`, `word`, `dword`, `uint`
   - Signed integers: `int`
-  - List of strings (e.g. `[ABC, DEF]`) or integers (e.g., `[32, 64]`)
-    These can also be used to represent enums.
+  - Enum composed of strings (e.g. `[ABC, DEF]`) or integers (e.g., `[32, 64]`)
 - `width` (in bits) is required when `type` is `int` or `uint`.
   - Integer width: `2..64` (inclusive, use `bit` for 1-bit integers)
   - Or the name of another parameter that supplies the bit width
@@ -183,6 +182,60 @@ Examples:
   impl-def: ARRAY
   range: [-10, 20]
   array: [0, 3]
+```
+
+CSR Definition Encoding:
+- Use `csr_definitions` entries for CSRs, with `reg-name` (single CSR) or `reg-names` (multiple CSRs).
+- A CSR entry must include exactly one selector property:
+  - `type`
+  - `width`
+  - `ro-mask`
+- `ro-value` is optional, but if present then `ro-mask` is required.
+- CSR `width` must be a string naming an existing parameter that supplies the width.
+- Every CSR entry must include `impl-def` or `impl-defs`.
+  - At least one referenced normative rule must provide `impl-def-category`.
+  - Any provided `impl-def-category` values across referenced impl-defs must agree.
+  - The category is mapped into CSR category (`WARL`/`WLRL`) for output grouping.
+
+CSR selector properties:
+- `type`: List of legal integer values for the CSR (or CSR field).
+  - Format: `[v0, v1, ...]` where each value is an integer.
+- `width`: Name of a parameter that defines CSR width.
+  - Format: `width: <parameter_name>`.
+- `ro-mask`/`ro-value`: Bit-mask model for read-only bits.
+  - `ro-mask` marks read-only bits (`1` = read-only, `0` = read-write).
+  - `ro-value` provides the value for read-only bits.
+  - If `ro-mask` is present and `ro-value` is omitted, read-only bits default to `0`.
+  - Both accept decimal integer, hex string (`0x...`), or binary string (`0b...`).
+
+Notes on output behavior:
+- JSON output stores `ro-mask`/`ro-value` as integers.
+- HTML output preserves the original authored literal text for `ro-mask`/`ro-value` when available (for example `0xF0F0` or `0b1100`).
+
+Examples:
+```yaml
+# Type-based CSR field (potentially legal enumerated values)
+- reg-name: mtvec
+  field-name: MODE
+  impl-def: MTVEC_MODE_WARL
+  type: [0, 1]
+
+# Width-based CSR field (width references an existing parameter)
+- reg-name: satp
+  field-name: ASID
+  impl-def: SATP_ASID_WARL
+  width: ASIDLEN
+
+# Read-only-mask CSR (read-only, mask only, read-only bits default to 0)
+- reg-name: zort
+  impl-def: ZORT_IMPL
+  ro-mask: 0xF0F0_F0F0
+
+# Read-only-mask/value CSR field references multiple impl-defs
+- reg-names: foo
+  impl-defs: [FOO_IMPL, BAR_IMPL]
+  ro-mask: 0b1111
+  ro-value: 0b0011
 ```
 
 ### create_param_appendix.py

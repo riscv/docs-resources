@@ -1,6 +1,7 @@
 include::ROSE_COLORS.adoc[]
 include::XLEN.adoc[]
 include::FOOBAR.adoc[]
+include::ASIDLEN.adoc[]
 include::ASIDLEN1.adoc[]
 include::ASIDLEN2.adoc[]
 include::NO_IMPL_DEF.adoc[]

@@ -304,6 +304,9 @@ This is a 64-bit signed integer.
 [[norm:uint-1to100]]
 This is an unsigned integer in the range of 1 to 100.
 
+[[norm:uint-4to8]]
+This is an unsigned integer in the range of 4 to 8.
+
 [[norm:list-str]]
 [cols="1,1"]
 |===
@@ -323,3 +326,7 @@ This is the Ch1 part of the foobar normative rule.
 [[norm:array]]
 Can have up to 29 performance counters. Reading an unimplemented performance counter either
 returns a value or raises an illegal instruction exception, depending on the implementation.
+
+=== Chapter 2.1 - WARL
+
+[#norm:satp_asid_warl_asidlen]#The `satp.ASID` CSR field width is specified by the ASIDLEN parameter value.#

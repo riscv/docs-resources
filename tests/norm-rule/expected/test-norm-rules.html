@@ -155,11 +155,11 @@
   </aside>
     <main>
       <style>.grand-total-heading { font-size: 24px; font-weight: bold; }</style>
-      <h1 class="grand-total-heading">91 Normative Rules: Includes 28 Implementation-Defined Behaviors (25 No Category, 2 WARL, 1 WLRL)</h1>
+      <h1 class="grand-total-heading">94 Normative Rules: Includes 31 Implementation-Defined Behaviors (26 No Category, 4 WARL, 1 WLRL)</h1>
 
       <section id="table-norm-rules-ch-1" class="section">
         <table>
-          <caption class="sticky-caption">Chapter One: 72 Normative Rules: Includes 14 Implementation-Defined Behaviors</caption>
+          <caption class="sticky-caption">Chapter One: 74 Normative Rules: Includes 16 Implementation-Defined Behaviors (15 No Category, 1 WARL)</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-description">
@@ -710,6 +710,23 @@
               <td><a href="test-ch1.html#norm:uint-1to100">norm:uint-1to100</a></td>
             </tr>
             <tr>
+              <td rowspan=4 id="UINT_4TO8">UINT_4TO8</td>
+              <td>extension</td>
+              <td>Kind</td>
+            </tr>
+            <tr>
+              <td>MockExtY</td>
+              <td>Instance</td>
+            </tr>
+            <tr>
+              <td>Implementation-defined behavior</td>
+              <td>Implementation-defined behavior</td>
+            </tr>
+            <tr>
+              <td>This is an unsigned integer in the range of 4 to 8.</td>
+              <td><a href="test-ch1.html#norm:uint-4to8">norm:uint-4to8</a></td>
+            </tr>
+            <tr>
               <td rowspan=4 id="LIST_STR">LIST_STR</td>
               <td>extension</td>
               <td>Kind</td>
@@ -777,13 +794,34 @@
               <td>Can have up to 29 performance counters. Reading an unimplemented performance counter either returns a value or raises an illegal instruction exception, depending on the implementation.</td>
               <td><a href="test-ch1.html#norm:array">norm:array</a></td>
             </tr>
+            <tr>
+              <td rowspan=5 id="SATP_ASID_WARL_ASIDLEN">SATP_ASID_WARL_ASIDLEN</td>
+              <td>csr_field</td>
+              <td>Kind</td>
+            </tr>
+            <tr>
+              <td>satp.ASID</td>
+              <td>Instance</td>
+            </tr>
+            <tr>
+              <td>Implementation-defined behavior</td>
+              <td>Implementation-defined behavior</td>
+            </tr>
+            <tr>
+              <td>WARL</td>
+              <td>Implementation-defined behavior category</td>
+            </tr>
+            <tr>
+              <td>The satp.ASID CSR field width is specified by the ASIDLEN parameter value.</td>
+              <td><a href="test-ch1.html#norm:satp_asid_warl_asidlen">norm:satp_asid_warl_asidlen</a></td>
+            </tr>
           </tbody>
         </table>
       </section>
 
       <section id="table-norm-rules-ch-2" class="section">
         <table>
-          <caption class="sticky-caption">Chapter Two: 19 Normative Rules: Includes 14 Implementation-Defined Behaviors (11 No Category, 2 WARL, 1 WLRL)</caption>
+          <caption class="sticky-caption">Chapter Two: 20 Normative Rules: Includes 15 Implementation-Defined Behaviors (11 No Category, 3 WARL, 1 WLRL)</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-description">
@@ -1010,12 +1048,12 @@
               <td><a href="test-ch2.html#norm:mock-ext-dep-A-on-B">norm:mock-ext-dep-A-on-B</a></td>
             </tr>
             <tr>
-              <td rowspan=5 id="CSR_FIELD_WARL1">CSR_FIELD_WARL1</td>
+              <td rowspan=5 id="FOO_ABC_WARL_LEGAL_LIST">FOO_ABC_WARL_LEGAL_LIST</td>
               <td>csr_field</td>
               <td>Kind</td>
             </tr>
             <tr>
-              <td>MockWARL1</td>
+              <td>foo.ABC</td>
               <td>Instance</td>
             </tr>
             <tr>
@@ -1027,16 +1065,50 @@
               <td>Implementation-defined behavior category</td>
             </tr>
             <tr>
-              <td>This field is write-any-read-legal.</td>
-              <td><a href="test-ch2.html#norm:csr_field_warl1">norm:csr_field_warl1</a></td>
+              <td>The architecturally-defined values for the 4-bit foo.ABC CSR field are 0, 3, or 10.<br>An implementation can support any subset of these values.</td>
+              <td><a href="test-ch2.html#norm:foo_abc_warl_legal_list">norm:foo_abc_warl_legal_list</a></td>
             </tr>
             <tr>
-              <td rowspan=5 id="CSR_FIELD_WLRL">CSR_FIELD_WLRL</td>
+              <td rowspan=3 id="FOO_DEF_WARL_WIDTH_UINT4TO8">FOO_DEF_WARL_WIDTH_UINT4TO8</td>
+              <td>Implementation-defined behavior</td>
+              <td>Implementation-defined behavior</td>
+            </tr>
+            <tr>
+              <td>WARL</td>
+              <td>Implementation-defined behavior category</td>
+            </tr>
+            <tr>
+              <td>The foo.DEF CSR field width ranges from 4 to 8 bits as specified by the UINT_4TO8 parameter value.</td>
+              <td><a href="test-ch2.html#norm:foo_def_warl_width_uint4to8">norm:foo_def_warl_width_uint4to8</a></td>
+            </tr>
+            <tr>
+              <td rowspan=5 id="BAR_WARL_READONLY_VALUE">BAR_WARL_READONLY_VALUE</td>
+              <td>csr</td>
+              <td>Kind</td>
+            </tr>
+            <tr>
+              <td>bar</td>
+              <td>Instance</td>
+            </tr>
+            <tr>
+              <td>Implementation-defined behavior</td>
+              <td>Implementation-defined behavior</td>
+            </tr>
+            <tr>
+              <td>WARL</td>
+              <td>Implementation-defined behavior category</td>
+            </tr>
+            <tr>
+              <td>An implementation may treat each bit of the bar CSR as<br>read-only or read-write. Read-only bits are 0.</td>
+              <td><a href="test-ch2.html#norm:bar_warl_readonly_value">norm:bar_warl_readonly_value</a></td>
+            </tr>
+            <tr>
+              <td rowspan=5 id="ZORT_XYZ_WLRL_READONLY_ZERO">ZORT_XYZ_WLRL_READONLY_ZERO</td>
               <td>csr_field</td>
               <td>Kind</td>
             </tr>
             <tr>
-              <td>MockWLRL</td>
+              <td>zort.XYZ</td>
               <td>Instance</td>
             </tr>
             <tr>
@@ -1048,21 +1120,8 @@
               <td>Implementation-defined behavior category</td>
             </tr>
             <tr>
-              <td>This field is write-legal-read-legal.</td>
-              <td><a href="test-ch2.html#norm:csr_field_wlrl">norm:csr_field_wlrl</a></td>
-            </tr>
-            <tr>
-              <td rowspan=3 id="CSR_FIELD_WARL2">CSR_FIELD_WARL2</td>
-              <td>Implementation-defined behavior</td>
-              <td>Implementation-defined behavior</td>
-            </tr>
-            <tr>
-              <td>WARL</td>
-              <td>Implementation-defined behavior category</td>
-            </tr>
-            <tr>
-              <td>This field is also write-any-read-legal.</td>
-              <td><a href="test-ch2.html#norm:csr_field_warl2">norm:csr_field_warl2</a></td>
+              <td>An implementation may treat each bit of the zort.XYZ CSR as<br>read-only or read-write. Read-only bits can be 0 or 1.</td>
+              <td><a href="test-ch2.html#norm:zort_xyz_wlrl_readonly_zero">norm:zort_xyz_wlrl_readonly_zero</a></td>
             </tr>
           </tbody>
         </table>
@@ -1070,7 +1129,7 @@
 
       <section id="table-impldefs-no-cat" class="section">
         <table>
-          <caption class="sticky-caption">No Category (A-Z): All 25 Implementation-Defined Behaviors</caption>
+          <caption class="sticky-caption">No Category (A-Z): All 26 Implementation-Defined Behaviors</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-description">
@@ -1361,6 +1420,19 @@
             <tr>
               <td>This is an unsigned integer in the range of 1 to 100.</td>
               <td><a href="test-ch1.html#norm:uint-1to100">norm:uint-1to100</a></td>
+            </tr>
+            <tr>
+              <td rowspan=3><a href="#UINT_4TO8">UINT_4TO8</a></td>
+              <td>extension</td>
+              <td>Kind</td>
+            </tr>
+            <tr>
+              <td>MockExtY</td>
+              <td>Instance</td>
+            </tr>
+            <tr>
+              <td>This is an unsigned integer in the range of 4 to 8.</td>
+              <td><a href="test-ch1.html#norm:uint-4to8">norm:uint-4to8</a></td>
             </tr>
             <tr>
               <td rowspan=3><a href="#WORD">WORD</a></td>
@@ -1407,7 +1479,7 @@
 
       <section id="table-impldefs-impl-cat-WARL" class="section">
         <table>
-          <caption class="sticky-caption">WARL Category (A-Z): All 2 Implementation-Defined Behaviors</caption>
+          <caption class="sticky-caption">WARL Category (A-Z): All 4 Implementation-Defined Behaviors</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-description">
@@ -1418,22 +1490,48 @@
           </thead>
           <tbody>
             <tr>
-              <td rowspan=3><a href="#CSR_FIELD_WARL1">CSR_FIELD_WARL1</a></td>
+              <td rowspan=3><a href="#BAR_WARL_READONLY_VALUE">BAR_WARL_READONLY_VALUE</a></td>
+              <td>csr</td>
+              <td>Kind</td>
+            </tr>
+            <tr>
+              <td>bar</td>
+              <td>Instance</td>
+            </tr>
+            <tr>
+              <td>An implementation may treat each bit of the bar CSR as<br>read-only or read-write. Read-only bits are 0.</td>
+              <td><a href="test-ch2.html#norm:bar_warl_readonly_value">norm:bar_warl_readonly_value</a></td>
+            </tr>
+            <tr>
+              <td rowspan=3><a href="#FOO_ABC_WARL_LEGAL_LIST">FOO_ABC_WARL_LEGAL_LIST</a></td>
               <td>csr_field</td>
               <td>Kind</td>
             </tr>
             <tr>
-              <td>MockWARL1</td>
+              <td>foo.ABC</td>
               <td>Instance</td>
             </tr>
             <tr>
-              <td>This field is write-any-read-legal.</td>
-              <td><a href="test-ch2.html#norm:csr_field_warl1">norm:csr_field_warl1</a></td>
+              <td>The architecturally-defined values for the 4-bit foo.ABC CSR field are 0, 3, or 10.<br>An implementation can support any subset of these values.</td>
+              <td><a href="test-ch2.html#norm:foo_abc_warl_legal_list">norm:foo_abc_warl_legal_list</a></td>
             </tr>
             <tr>
-              <td rowspan=1><a href="#CSR_FIELD_WARL2">CSR_FIELD_WARL2</a></td>
-              <td>This field is also write-any-read-legal.</td>
-              <td><a href="test-ch2.html#norm:csr_field_warl2">norm:csr_field_warl2</a></td>
+              <td rowspan=1><a href="#FOO_DEF_WARL_WIDTH_UINT4TO8">FOO_DEF_WARL_WIDTH_UINT4TO8</a></td>
+              <td>The foo.DEF CSR field width ranges from 4 to 8 bits as specified by the UINT_4TO8 parameter value.</td>
+              <td><a href="test-ch2.html#norm:foo_def_warl_width_uint4to8">norm:foo_def_warl_width_uint4to8</a></td>
+            </tr>
+            <tr>
+              <td rowspan=3><a href="#SATP_ASID_WARL_ASIDLEN">SATP_ASID_WARL_ASIDLEN</a></td>
+              <td>csr_field</td>
+              <td>Kind</td>
+            </tr>
+            <tr>
+              <td>satp.ASID</td>
+              <td>Instance</td>
+            </tr>
+            <tr>
+              <td>The satp.ASID CSR field width is specified by the ASIDLEN parameter value.</td>
+              <td><a href="test-ch1.html#norm:satp_asid_warl_asidlen">norm:satp_asid_warl_asidlen</a></td>
             </tr>
           </tbody>
         </table>
@@ -1452,17 +1550,17 @@
           </thead>
           <tbody>
             <tr>
-              <td rowspan=3><a href="#CSR_FIELD_WLRL">CSR_FIELD_WLRL</a></td>
+              <td rowspan=3><a href="#ZORT_XYZ_WLRL_READONLY_ZERO">ZORT_XYZ_WLRL_READONLY_ZERO</a></td>
               <td>csr_field</td>
               <td>Kind</td>
             </tr>
             <tr>
-              <td>MockWLRL</td>
+              <td>zort.XYZ</td>
               <td>Instance</td>
             </tr>
             <tr>
-              <td>This field is write-legal-read-legal.</td>
-              <td><a href="test-ch2.html#norm:csr_field_wlrl">norm:csr_field_wlrl</a></td>
+              <td>An implementation may treat each bit of the zort.XYZ CSR as<br>read-only or read-write. Read-only bits can be 0 or 1.</td>
+              <td><a href="test-ch2.html#norm:zort_xyz_wlrl_readonly_zero">norm:zort_xyz_wlrl_readonly_zero</a></td>
             </tr>
           </tbody>
         </table>
@@ -1470,7 +1568,7 @@
 
       <section id="table-impldefs-ch-1" class="section">
         <table>
-          <caption class="sticky-caption">Chapter One: All 14 Implementation-Defined Behaviors</caption>
+          <caption class="sticky-caption">Chapter One: All 16 Implementation-Defined Behaviors</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-description">
@@ -1615,6 +1713,19 @@
               <td><a href="test-ch1.html#norm:uint-1to100">norm:uint-1to100</a></td>
             </tr>
             <tr>
+              <td rowspan=3><a href="#UINT_4TO8">UINT_4TO8</a></td>
+              <td>extension</td>
+              <td>Kind</td>
+            </tr>
+            <tr>
+              <td>MockExtY</td>
+              <td>Instance</td>
+            </tr>
+            <tr>
+              <td>This is an unsigned integer in the range of 4 to 8.</td>
+              <td><a href="test-ch1.html#norm:uint-4to8">norm:uint-4to8</a></td>
+            </tr>
+            <tr>
               <td rowspan=3><a href="#LIST_STR">LIST_STR</a></td>
               <td>extension</td>
               <td>Kind</td>
@@ -1666,13 +1777,30 @@
               <td>Can have up to 29 performance counters. Reading an unimplemented performance counter either returns a value or raises an illegal instruction exception, depending on the implementation.</td>
               <td><a href="test-ch1.html#norm:array">norm:array</a></td>
             </tr>
+            <tr>
+              <td rowspan=4><a href="#SATP_ASID_WARL_ASIDLEN">SATP_ASID_WARL_ASIDLEN</a></td>
+              <td>csr_field</td>
+              <td>Kind</td>
+            </tr>
+            <tr>
+              <td>satp.ASID</td>
+              <td>Instance</td>
+            </tr>
+            <tr>
+              <td>WARL</td>
+              <td>Implementation-defined behavior category</td>
+            </tr>
+            <tr>
+              <td>The satp.ASID CSR field width is specified by the ASIDLEN parameter value.</td>
+              <td><a href="test-ch1.html#norm:satp_asid_warl_asidlen">norm:satp_asid_warl_asidlen</a></td>
+            </tr>
           </tbody>
         </table>
       </section>
 
       <section id="table-impldefs-ch-2" class="section">
         <table>
-          <caption class="sticky-caption">Chapter Two: All 14 Implementation-Defined Behaviors</caption>
+          <caption class="sticky-caption">Chapter Two: All 15 Implementation-Defined Behaviors</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-description">
@@ -1818,12 +1946,12 @@
               <td><a href="test-ch2.html#norm:mock-ext-dep-A-on-B">norm:mock-ext-dep-A-on-B</a></td>
             </tr>
             <tr>
-              <td rowspan=4><a href="#CSR_FIELD_WARL1">CSR_FIELD_WARL1</a></td>
+              <td rowspan=4><a href="#FOO_ABC_WARL_LEGAL_LIST">FOO_ABC_WARL_LEGAL_LIST</a></td>
               <td>csr_field</td>
               <td>Kind</td>
             </tr>
             <tr>
-              <td>MockWARL1</td>
+              <td>foo.ABC</td>
               <td>Instance</td>
             </tr>
             <tr>
@@ -1831,16 +1959,42 @@
               <td>Implementation-defined behavior category</td>
             </tr>
             <tr>
-              <td>This field is write-any-read-legal.</td>
-              <td><a href="test-ch2.html#norm:csr_field_warl1">norm:csr_field_warl1</a></td>
+              <td>The architecturally-defined values for the 4-bit foo.ABC CSR field are 0, 3, or 10.<br>An implementation can support any subset of these values.</td>
+              <td><a href="test-ch2.html#norm:foo_abc_warl_legal_list">norm:foo_abc_warl_legal_list</a></td>
             </tr>
             <tr>
-              <td rowspan=4><a href="#CSR_FIELD_WLRL">CSR_FIELD_WLRL</a></td>
+              <td rowspan=2><a href="#FOO_DEF_WARL_WIDTH_UINT4TO8">FOO_DEF_WARL_WIDTH_UINT4TO8</a></td>
+              <td>WARL</td>
+              <td>Implementation-defined behavior category</td>
+            </tr>
+            <tr>
+              <td>The foo.DEF CSR field width ranges from 4 to 8 bits as specified by the UINT_4TO8 parameter value.</td>
+              <td><a href="test-ch2.html#norm:foo_def_warl_width_uint4to8">norm:foo_def_warl_width_uint4to8</a></td>
+            </tr>
+            <tr>
+              <td rowspan=4><a href="#BAR_WARL_READONLY_VALUE">BAR_WARL_READONLY_VALUE</a></td>
+              <td>csr</td>
+              <td>Kind</td>
+            </tr>
+            <tr>
+              <td>bar</td>
+              <td>Instance</td>
+            </tr>
+            <tr>
+              <td>WARL</td>
+              <td>Implementation-defined behavior category</td>
+            </tr>
+            <tr>
+              <td>An implementation may treat each bit of the bar CSR as<br>read-only or read-write. Read-only bits are 0.</td>
+              <td><a href="test-ch2.html#norm:bar_warl_readonly_value">norm:bar_warl_readonly_value</a></td>
+            </tr>
+            <tr>
+              <td rowspan=4><a href="#ZORT_XYZ_WLRL_READONLY_ZERO">ZORT_XYZ_WLRL_READONLY_ZERO</a></td>
               <td>csr_field</td>
               <td>Kind</td>
             </tr>
             <tr>
-              <td>MockWLRL</td>
+              <td>zort.XYZ</td>
               <td>Instance</td>
             </tr>
             <tr>
@@ -1848,17 +2002,8 @@
               <td>Implementation-defined behavior category</td>
             </tr>
             <tr>
-              <td>This field is write-legal-read-legal.</td>
-              <td><a href="test-ch2.html#norm:csr_field_wlrl">norm:csr_field_wlrl</a></td>
-            </tr>
-            <tr>
-              <td rowspan=2><a href="#CSR_FIELD_WARL2">CSR_FIELD_WARL2</a></td>
-              <td>WARL</td>
-              <td>Implementation-defined behavior category</td>
-            </tr>
-            <tr>
-              <td>This field is also write-any-read-legal.</td>
-              <td><a href="test-ch2.html#norm:csr_field_warl2">norm:csr_field_warl2</a></td>
+              <td>An implementation may treat each bit of the zort.XYZ CSR as<br>read-only or read-write. Read-only bits can be 0 or 1.</td>
+              <td><a href="test-ch2.html#norm:zort_xyz_wlrl_readonly_zero">norm:zort_xyz_wlrl_readonly_zero</a></td>
             </tr>
           </tbody>
         </table>

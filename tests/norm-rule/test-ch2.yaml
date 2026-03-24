@@ -71,19 +71,25 @@ normative_rule_definitions:
     instance: MockExtDepAOnB
 
   # CSR field types
-  - name: CSR_FIELD_WARL1
-    tag: "norm:csr_field_warl1"
+  - name: FOO_ABC_WARL_LEGAL_LIST
+    tag: "norm:foo_abc_warl_legal_list"
     impl-def-behavior: true
     impl-def-category: WARL
     kind: csr_field
-    instance: MockWARL1
-  - name: CSR_FIELD_WLRL
-    tag: "norm:csr_field_wlrl"
+    instance: foo.ABC
+  - name: FOO_DEF_WARL_WIDTH_UINT4TO8
+    tag: "norm:foo_def_warl_width_uint4to8"
+    impl-def-behavior: true
+    impl-def-category: WARL
+  - name: BAR_WARL_READONLY_VALUE
+    tag: "norm:bar_warl_readonly_value"
+    impl-def-behavior: true
+    impl-def-category: WARL
+    kind: csr
+    instance: bar
+  - name: ZORT_XYZ_WLRL_READONLY_ZERO
+    tag: "norm:zort_xyz_wlrl_readonly_zero"
     impl-def-behavior: true
     impl-def-category: WLRL
     kind: csr_field
-    instance: MockWLRL
-  - name: CSR_FIELD_WARL2
-    tag: "norm:csr_field_warl2"
-    impl-def-behavior: true
-    impl-def-category: WARL
+    instance: zort.XYZ

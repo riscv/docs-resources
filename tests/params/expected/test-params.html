@@ -47,21 +47,23 @@
     <aside class="sidebar">
       <h2>Parameters by Chapter</h2>
       <nav class="nav">
-        <a href="#table-params-ch-1" data-target="table-params-ch-1">One<span class="subtitle">28 entries</span></a>
-        <a href="#table-params-ch-2" data-target="table-params-ch-2">Two<span class="subtitle">12 entries</span></a>
+        <a href="#table-params-ch-1" data-target="table-params-ch-1">One<span class="subtitle">29 entries</span></a>
+        <a href="#table-params-ch-2" data-target="table-params-ch-2">Two<span class="subtitle">13 entries</span></a>
       </nav>
       <h2 style="margin-top:24px">WARL/WLRL by Chapter</h2>
       <nav class="nav">
-        <a href="#table-csrs-ch-1" data-target="table-csrs-ch-1">Two<span class="subtitle">3 entries</span></a>
+        <a href="#table-csrs-ch-1-warl" data-target="table-csrs-ch-1-warl">One WARL<span class="subtitle">1 entry</span></a>
+        <a href="#table-csrs-ch-2-warl" data-target="table-csrs-ch-2-warl">Two WARL<span class="subtitle">3 entries</span></a>
+        <a href="#table-csrs-ch-2-wlrl" data-target="table-csrs-ch-2-wlrl">Two WLRL<span class="subtitle">1 entry</span></a>
       </nav>
     </aside>
     <main>
       <style>.grand-total-heading { font-size: 24px; font-weight: bold; }</style>
-      <h1 class="grand-total-heading">40 Parameters, 3 CSRs</h1>
+      <h1 class="grand-total-heading">42 Parameters, 5 WARL/WLRL CSRs</h1>
 
       <section id="table-params-ch-1" class="section">
         <table>
-          <caption class="sticky-caption">Chapter One: 28 Parameters</caption>
+          <caption class="sticky-caption">Chapter One: 29 Parameters</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-type">
@@ -155,6 +157,12 @@
               <td rowspan=1>range 1 to 100</td>
               <td rowspan=1>EXT:MockExtY</td>
               <td><a href="test-ch1.html#norm:uint-1to100">This is an unsigned integer in the range of 1 to 100.</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1 id="UINT_4TO8">UINT_4TO8</td>
+              <td rowspan=1>range 4 to 8</td>
+              <td rowspan=1>EXT:MockExtY</td>
+              <td><a href="test-ch1.html#norm:uint-4to8">This is an unsigned integer in the range of 4 to 8.</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="LIST_STR">LIST_STR</td>
@@ -252,7 +260,7 @@
 
       <section id="table-params-ch-2" class="section">
         <table>
-          <caption class="sticky-caption">Chapter Two: 12 Parameters</caption>
+          <caption class="sticky-caption">Chapter Two: 13 Parameters</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-type">
@@ -289,6 +297,12 @@
               <td rowspan=1>boolean</td>
               <td rowspan=1>EXT:MockExtZ</td>
               <td><a href="test-ch2.html#norm:foobar-ch2">This is the Ch2 part of the foobar normative rule.</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1 id="ASIDLEN">ASIDLEN</td>
+              <td rowspan=1>range 0 to 16</td>
+              <td rowspan=1>EXT:MockExtZ</td>
+              <td><a href="test-ch2.html#norm:ASIDLEN">The number of ASID bits is UNSPECIFIED and may be zero. The number of implemented ASID bits, termed ASIDLEN, may be determined by writing one to every bit position in the ASID field, then reading back the value in satp to see which bit positions in the ASID field hold a one.</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="ASIDLEN1">ASIDLEN1</td>
@@ -369,9 +383,9 @@
         </table>
       </section>
 
-      <section id="table-csrs-ch-1" class="section">
+      <section id="table-csrs-ch-1-warl" class="section">
         <table>
-          <caption class="sticky-caption">Chapter Two: 3 CSRs</caption>
+          <caption class="sticky-caption">Chapter One WARL: 1 CSR</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-type">
@@ -383,22 +397,68 @@
           </thead>
           <tbody>
             <tr>
-              <td rowspan=1 id="CSR_FIELD_WARL1">CSR_FIELD_WARL1</td>
-              <td rowspan=1>WARL</td>
-              <td rowspan=1>FLD:MockWARL1</td>
-              <td><a href="test-ch2.html#norm:csr_field_warl1">This field is write-any-read-legal.</a></td>
+              <td rowspan=1 id="satp.MODE">satp.MODE</td>
+              <td rowspan=1>width:ASIDLEN</td>
+              <td rowspan=1>FLD:satp.ASID</td>
+              <td><a href="test-ch1.html#norm:satp_asid_warl_asidlen">The satp.ASID CSR field width is specified by the ASIDLEN parameter value.</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="table-csrs-ch-2-warl" class="section">
+        <table>
+          <caption class="sticky-caption">Chapter Two WARL: 3 CSRs</caption>
+          <colgroup>
+            <col class="col-name">
+            <col class="col-type">
+            <col class="col-feature">
+            <col class="col-descriptions">
+          </colgroup>
+          <thead>
+            <tr><th>CSR Name</th><th>Type</th><th>Feature(s)</th><th>Information (mostly Normative Rules)</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td rowspan=1 id="foo.ABC">foo.ABC</td>
+              <td rowspan=1>[0, 3, 10]</td>
+              <td rowspan=1>FLD:foo.ABC</td>
+              <td><a href="test-ch2.html#norm:foo_abc_warl_legal_list">The architecturally-defined values for the 4-bit foo.ABC CSR field are 0, 3, or 10.<br>An implementation can support any subset of these values.</a></td>
             </tr>
             <tr>
-              <td rowspan=1 id="CSR_FIELD_WLRL">CSR_FIELD_WLRL</td>
-              <td rowspan=1>WLRL</td>
-              <td rowspan=1>FLD:MockWLRL</td>
-              <td><a href="test-ch2.html#norm:csr_field_wlrl">This field is write-legal-read-legal.</a></td>
-            </tr>
-            <tr>
-              <td rowspan=1 id="CSR_FIELD_WARL2">CSR_FIELD_WARL2</td>
-              <td rowspan=1>WARL</td>
+              <td rowspan=1 id="foo.DEF">foo.DEF</td>
+              <td rowspan=1>width:UINT_4TO8</td>
               <td rowspan=1>CHAP:Two</td>
-              <td><a href="test-ch2.html#norm:csr_field_warl2">This field is also write-any-read-legal.</a></td>
+              <td><a href="test-ch2.html#norm:foo_def_warl_width_uint4to8">The foo.DEF CSR field width ranges from 4 to 8 bits as specified by the UINT_4TO8 parameter value.</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1 id="bar">bar</td>
+              <td rowspan=1>ro-mask: 0xF0F0F0F0<br>ro-value: 0xFFFF_FFFF_FFFF_FFFF</td>
+              <td rowspan=1>CSR:bar</td>
+              <td><a href="test-ch2.html#norm:bar_warl_readonly_value">An implementation may treat each bit of the bar CSR as<br>read-only or read-write. Read-only bits are 0.</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="table-csrs-ch-2-wlrl" class="section">
+        <table>
+          <caption class="sticky-caption">Chapter Two WLRL: 1 CSR</caption>
+          <colgroup>
+            <col class="col-name">
+            <col class="col-type">
+            <col class="col-feature">
+            <col class="col-descriptions">
+          </colgroup>
+          <thead>
+            <tr><th>CSR Name</th><th>Type</th><th>Feature(s)</th><th>Information (mostly Normative Rules)</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td rowspan=1 id="zort.XYZ">zort.XYZ</td>
+              <td rowspan=1>ro-mask: 0b1111</td>
+              <td rowspan=1>FLD:zort.XYZ</td>
+              <td><a href="test-ch2.html#norm:zort_xyz_wlrl_readonly_zero">An implementation may treat each bit of the zort.XYZ CSR as<br>read-only or read-write. Read-only bits can be 0 or 1.</a></td>
             </tr>
           </tbody>
         </table>

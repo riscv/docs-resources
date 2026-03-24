@@ -124,12 +124,12 @@
       "items": {
         "type": "object",
         "properties": {
-          "name": {
-            "$ref": "param-common-schema.json#/paramName",
+          "reg-name": {
+            "$ref": "param-common-schema.json#/csrName",
             "description": "Single CSR name"
           },
-          "names": {
-            "$ref": "param-common-schema.json#/paramNameArray",
+          "reg-names": {
+            "$ref": "param-common-schema.json#/csrNameArray",
             "description": "Multiple CSR names"
           },
           "note": {
@@ -139,6 +139,30 @@
           "description": {
             "type": "string",
             "$ref": "param-common-schema.json#/descriptionDesc"
+          },
+          "field-name": {
+            "$ref": "param-common-schema.json#/csrName",
+            "description": "Single CSR field name"
+          },
+          "field-names": {
+            "$ref": "param-common-schema.json#/csrNameArray",
+            "description": "Multiple CSR field names"
+          },
+          "type": {
+            "$ref": "param-common-schema.json#/csrType",
+            "description": "List of possible legal values"
+          },
+          "width": {
+            "$ref": "param-common-schema.json#/paramName",
+            "description": "Name of a parameter that provides the bit width"
+          },
+          "ro-mask": {
+            "$ref": "param-common-schema.json#/multiBaseValue",
+            "description": "Mask specifying read-only bits (1 = read-only, 0 = read-write). Supports decimal, hex (0x...), or binary (0b...)."
+          },
+          "ro-value": {
+            "$ref": "param-common-schema.json#/multiBaseValue",
+            "description": "Mask providing value of read-only bits. Supports decimal, hex (0x...), or binary (0b...)."
           },
           "impl-def": {
             "$ref": "param-common-schema.json#/implDefName",
@@ -152,9 +176,29 @@
         "allOf": [
           {
             "oneOf": [
-              { "required": ["name"] },
-              { "required": ["names"] }
+              { "required": ["reg-name"] },
+              { "required": ["reg-names"] }
             ]
+          },
+          {
+            "not": {
+              "required": ["field-name", "field-names"]
+            }
+          },
+          {
+            "oneOf": [
+              { "required": ["type"] },
+              { "required": ["width"] },
+              { "required": ["ro-mask"] }
+            ]
+          },
+          {
+            "if": {
+              "required": ["ro-value"]
+            },
+            "then": {
+              "required": ["ro-mask"]
+            }
           },
           {
             "not": {

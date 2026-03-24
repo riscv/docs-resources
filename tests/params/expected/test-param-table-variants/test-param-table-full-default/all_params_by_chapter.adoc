@@ -1,6 +1,6 @@
 === One
 
-.Chapter One Parameter Definitions: 28 Parameters
+.Chapter One Parameter Definitions: 29 Parameters
 [cols="30%,10%,10%,50%"]
 |===
 
@@ -12,7 +12,7 @@ include::test-ch1/all_params.adoc[]
 
 === Two
 
-.Chapter Two Parameter Definitions: 12 Parameters
+.Chapter Two Parameter Definitions: 13 Parameters
 [cols="30%,10%,10%,50%"]
 |===
 

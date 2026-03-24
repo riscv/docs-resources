@@ -73,9 +73,25 @@
       }
     ]
   },
-  "csrType": {
+  "csrCategory": {
     "type": "string",
     "enum": ["WARL", "WLRL"]
+  },
+  "csrType": {
+    "type": "array",
+    "items": { "type": "integer" },
+    "minItems": 1
+  },
+  "multiBaseValue": {
+    "oneOf": [
+      {
+        "type": "string",
+        "pattern": "^(0x[0-9a-fA-F_]+|0b[01_]+)$"
+      },
+      {
+        "type": "integer"
+      }
+    ]
   },
   "stringArray": {
     "type": "array",
@@ -87,6 +103,9 @@
   },
   "paramNamePattern" : {
     "$ref": "#/implDefNamePattern"
+  },
+  "csrNamePattern" : {
+    "pattern": "^[a-zA-Z][a-zA-Z0-9_]+$"
   },
   "implDefName": {
     "type": "string",
@@ -109,6 +128,18 @@
     "items": {
       "type": "string",
       "$ref": "#/paramNamePattern"
+    },
+    "minItems": 1
+  },
+  "csrName": {
+    "type": "string",
+    "$ref": "#/csrNamePattern"
+  },
+  "csrNameArray": {
+    "type": "array",
+    "items": {
+      "type": "string",
+      "$ref": "#/csrNamePattern"
     },
     "minItems": 1
   }

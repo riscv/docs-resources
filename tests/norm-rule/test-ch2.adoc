@@ -82,8 +82,13 @@ Here's a normative rule for mock extension dependency of extension A on extensio
 
 === Chapter 2.3 - CSR Field Types
 
-The ABC field of the DEF CSR is WARL. [#norm:csr_field_warl1]#This field is write-any-read-legal.#
+[#norm:foo_abc_warl_legal_list]#The architecturally-defined values for the 4-bit `foo.ABC` CSR field are 0, 3, or 10.
+An implementation can support any subset of these values.#
 
-The GHI field of the JKL CSR is WLRL. [#norm:csr_field_wlrl]#This field is write-legal-read-legal.#
+[#norm:foo_def_warl_width_uint4to8]#The `foo.DEF` CSR field width ranges from 4 to 8 bits as specified by the UINT_4TO8 parameter value.#
 
-The JKL field of the MNO CSR is WARL. [#norm:csr_field_warl2]#This field is also write-any-read-legal.#
+[#norm:zort_xyz_wlrl_readonly_zero]#An implementation may treat each bit of the `zort.XYZ` CSR as
+read-only or read-write. Read-only bits can be 0 or 1.#
+
+[#norm:bar_warl_readonly_value]#An implementation may treat each bit of the `bar` CSR as
+read-only or read-write. Read-only bits are 0.#

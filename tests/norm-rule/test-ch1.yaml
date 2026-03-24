@@ -220,6 +220,11 @@ normative_rule_definitions:
     impl-def-behavior: true
     kind: extension
     instance: MockExtY
+  - name: UINT_4TO8
+    tag: "norm:uint-4to8"
+    impl-def-behavior: true
+    kind: extension
+    instance: MockExtY
   - name: LIST_STR
     tag: "norm:list-str"
     impl-def-behavior: true
@@ -240,3 +245,9 @@ normative_rule_definitions:
     impl-def-behavior: true
     kind: extension
     instance: MockExtX
+  - name: SATP_ASID_WARL_ASIDLEN
+    tag: "norm:satp_asid_warl_asidlen"
+    impl-def-behavior: true
+    impl-def-category: WARL
+    kind: csr_field
+    instance: satp.ASID

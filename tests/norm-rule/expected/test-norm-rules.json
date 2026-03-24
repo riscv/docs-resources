@@ -1116,6 +1116,25 @@
       ]
     },
     {
+      "name": "UINT_4TO8",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "One",
+      "kind": "extension",
+      "impl-def-behavior": true,
+      "instances": [
+        "MockExtY"
+      ],
+      "tags": [
+        {
+          "name": "norm:uint-4to8",
+          "context": false,
+          "text": "This is an unsigned integer in the range of 4 to 8.",
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
+        }
+      ]
+    },
+    {
       "name": "LIST_STR",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
       "chapter_name": "One",
@@ -1187,6 +1206,26 @@
           "name": "norm:array",
           "context": false,
           "text": "Can have up to 29 performance counters. Reading an unimplemented performance counter either returns a value or raises an illegal instruction exception, depending on the implementation.",
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
+        }
+      ]
+    },
+    {
+      "name": "SATP_ASID_WARL_ASIDLEN",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "One",
+      "kind": "csr_field",
+      "impl-def-behavior": true,
+      "instances": [
+        "satp.ASID"
+      ],
+      "impl-def-category": "WARL",
+      "tags": [
+        {
+          "name": "norm:satp_asid_warl_asidlen",
+          "context": false,
+          "text": "The satp.ASID CSR field width is specified by the ASIDLEN parameter value.",
           "tag_filename": "/build/test-ch1-norm-tags.json",
           "stds_doc_url": "test-ch1.html"
         }
@@ -1489,56 +1528,76 @@
       ]
     },
     {
-      "name": "CSR_FIELD_WARL1",
+      "name": "FOO_ABC_WARL_LEGAL_LIST",
       "def_filename": "tests/norm-rule/test-ch2.yaml",
       "chapter_name": "Two",
       "kind": "csr_field",
       "impl-def-behavior": true,
       "instances": [
-        "MockWARL1"
+        "foo.ABC"
       ],
       "impl-def-category": "WARL",
       "tags": [
         {
-          "name": "norm:csr_field_warl1",
+          "name": "norm:foo_abc_warl_legal_list",
           "context": false,
-          "text": "This field is write-any-read-legal.",
+          "text": "The architecturally-defined values for the 4-bit foo.ABC CSR field are 0, 3, or 10.\nAn implementation can support any subset of these values.",
           "tag_filename": "/build/test-ch2-norm-tags.json",
           "stds_doc_url": "test-ch2.html"
         }
       ]
     },
     {
-      "name": "CSR_FIELD_WLRL",
+      "name": "FOO_DEF_WARL_WIDTH_UINT4TO8",
+      "def_filename": "tests/norm-rule/test-ch2.yaml",
+      "chapter_name": "Two",
+      "impl-def-behavior": true,
+      "impl-def-category": "WARL",
+      "tags": [
+        {
+          "name": "norm:foo_def_warl_width_uint4to8",
+          "context": false,
+          "text": "The foo.DEF CSR field width ranges from 4 to 8 bits as specified by the UINT_4TO8 parameter value.",
+          "tag_filename": "/build/test-ch2-norm-tags.json",
+          "stds_doc_url": "test-ch2.html"
+        }
+      ]
+    },
+    {
+      "name": "BAR_WARL_READONLY_VALUE",
+      "def_filename": "tests/norm-rule/test-ch2.yaml",
+      "chapter_name": "Two",
+      "kind": "csr",
+      "impl-def-behavior": true,
+      "instances": [
+        "bar"
+      ],
+      "impl-def-category": "WARL",
+      "tags": [
+        {
+          "name": "norm:bar_warl_readonly_value",
+          "context": false,
+          "text": "An implementation may treat each bit of the bar CSR as\nread-only or read-write. Read-only bits are 0.",
+          "tag_filename": "/build/test-ch2-norm-tags.json",
+          "stds_doc_url": "test-ch2.html"
+        }
+      ]
+    },
+    {
+      "name": "ZORT_XYZ_WLRL_READONLY_ZERO",
       "def_filename": "tests/norm-rule/test-ch2.yaml",
       "chapter_name": "Two",
       "kind": "csr_field",
       "impl-def-behavior": true,
       "instances": [
-        "MockWLRL"
+        "zort.XYZ"
       ],
       "impl-def-category": "WLRL",
       "tags": [
         {
-          "name": "norm:csr_field_wlrl",
+          "name": "norm:zort_xyz_wlrl_readonly_zero",
           "context": false,
-          "text": "This field is write-legal-read-legal.",
-          "tag_filename": "/build/test-ch2-norm-tags.json",
-          "stds_doc_url": "test-ch2.html"
-        }
-      ]
-    },
-    {
-      "name": "CSR_FIELD_WARL2",
-      "def_filename": "tests/norm-rule/test-ch2.yaml",
-      "chapter_name": "Two",
-      "impl-def-behavior": true,
-      "impl-def-category": "WARL",
-      "tags": [
-        {
-          "name": "norm:csr_field_warl2",
-          "context": false,
-          "text": "This field is also write-any-read-legal.",
+          "text": "An implementation may treat each bit of the zort.XYZ CSR as\nread-only or read-write. Read-only bits can be 0 or 1.",
           "tag_filename": "/build/test-ch2-norm-tags.json",
           "stds_doc_url": "test-ch2.html"
         }
