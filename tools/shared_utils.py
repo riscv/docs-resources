@@ -45,7 +45,7 @@ def impldef_category_to_csr_category(
     """
     result = IMPLDEF_CATEGORY_TO_CSR_CATEGORY.get(impldef_cat)
     if result is None:
-        allowed_str = ",".join(IMPLDEF_CATEGORY_TO_CSR_CATEGORY)
+        allowed_str = ", ".join(sorted(IMPLDEF_CATEGORY_TO_CSR_CATEGORY))
         fatal(
             f"No CSR category mapping for impl-def-category {impldef_cat!r}. "
             f"Allowed impl-def-categories are: {allowed_str}"
