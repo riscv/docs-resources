@@ -630,7 +630,6 @@ def add_csr_entries(
 
     representative_name = names[0]
 
-    csr_enum_input: Optional[List[int]] = None
     csr_width_input: Optional[str] = None
     csr_read_only_mask: Optional[int] = None
     csr_read_only_value: Optional[int] = None
@@ -672,12 +671,24 @@ def add_csr_entries(
         if raw_illegal_ignore is not None:
             if not isinstance(raw_illegal_ignore, bool):
                 fatal(f"CSR {representative_name} in {def_filename} has non-boolean illegal-write-ignore: {raw_illegal_ignore!r}")
-            csr_illegal_write_ignore = raw_illegal_ignore
+            if raw_illegal_ignore is not True:
+                fatal(
+                    f"CSR {representative_name} in {def_filename} must set 'illegal-write-ignore' to true "
+                    f"when present (got {raw_illegal_ignore!r})"
+                )
+            csr_illegal_write_ignore = True
 
         if raw_illegal_return is not None:
-            if not isinstance(raw_illegal_return, (int, str)) or isinstance(raw_illegal_return, bool):
-                fatal(f"CSR {representative_name} in {def_filename} has non-integer illegal-write-return: {raw_illegal_return!r}")
-            csr_illegal_write_return = parse_multibase_int(raw_illegal_return, "illegal-write-return", representative_name)
+            if not isinstance(raw_illegal_return, (str, int)) or isinstance(raw_illegal_return, bool):
+                fatal(
+                    f"CSR {representative_name} in {def_filename} has invalid illegal-write-return "
+                    f"{raw_illegal_return!r}; expected integer, hex string, or binary string"
+                )
+            csr_illegal_write_return = parse_multibase_int(
+                raw_illegal_return,
+                "illegal-write-return",
+                representative_name,
+            )
 
     if has_width:
         raw_width = entry.get("width")
