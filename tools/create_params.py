@@ -675,9 +675,16 @@ def add_csr_entries(
             csr_illegal_write_ignore = raw_illegal_ignore
 
         if raw_illegal_return is not None:
-            if not isinstance(raw_illegal_return, int) or isinstance(raw_illegal_return, bool):
-                fatal(f"CSR {representative_name} in {def_filename} has non-integer illegal-write-return: {raw_illegal_return!r}")
-            csr_illegal_write_return = raw_illegal_return
+            if not isinstance(raw_illegal_return, (str, int)) or isinstance(raw_illegal_return, bool):
+                fatal(
+                    f"CSR {representative_name} in {def_filename} has invalid illegal-write-return "
+                    f"{raw_illegal_return!r}; expected integer, hex string, or binary string"
+                )
+            csr_illegal_write_return = parse_multibase_int(
+                raw_illegal_return,
+                "illegal-write-return",
+                representative_name,
+            )
 
     if has_width:
         raw_width = entry.get("width")
