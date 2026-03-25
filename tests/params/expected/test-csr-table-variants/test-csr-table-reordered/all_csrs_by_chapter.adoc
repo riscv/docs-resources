@@ -4,7 +4,7 @@
 [cols="20%,15%,20%,45%"]
 |===
 
-| Type | Features(s) | Name | Implementation-defined Behavior(s)
+| Type | Feature(s) | Name | Implementation-defined Behavior(s)
 
 include::test-ch1/warl_csrs.adoc[]
 
@@ -16,7 +16,7 @@ include::test-ch1/warl_csrs.adoc[]
 [cols="20%,15%,20%,45%"]
 |===
 
-| Type | Features(s) | Name | Implementation-defined Behavior(s)
+| Type | Feature(s) | Name | Implementation-defined Behavior(s)
 
 include::test-ch2/warl_csrs.adoc[]
 
@@ -26,7 +26,7 @@ include::test-ch2/warl_csrs.adoc[]
 [cols="20%,15%,20%,45%"]
 |===
 
-| Type | Features(s) | Name | Implementation-defined Behavior(s)
+| Type | Feature(s) | Name | Implementation-defined Behavior(s)
 
 include::test-ch2/wlrl_csrs.adoc[]
 

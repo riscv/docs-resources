@@ -254,7 +254,7 @@ Outputs:
 Default columns and order (tools/default_csr_table.yaml):
 - `Name` (from `reg-name`, optionally `reg-name.field-name`)
 - `Type`
-- `Features(s)`
+- `Feature(s)`
 - `Implementation-defined Behavior(s)`
 
 Typical command:

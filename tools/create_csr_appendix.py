@@ -417,7 +417,7 @@ def write_output_files(
     a_to_z_lines = "\n".join(
         [
             (
-                ".WALR/WLRL CSR Definitions (A-Z): "
+                ".WARL/WLRL CSR Definitions (A-Z): "
                 f"{format_csr_count_label(a_to_z_count)}"
             ),
             f"[cols=\"{table_cols}\"]",

@@ -1,8 +1,8 @@
-.WALR/WLRL CSR Definitions (A-Z): 5 CSRs
+.WARL/WLRL CSR Definitions (A-Z): 5 CSRs
 [cols="20%,20%,15%,45%"]
 |===
 
-| Name | Type | Features(s) | Implementation-defined Behavior(s)
+| Name | Type | Feature(s) | Implementation-defined Behavior(s)
 
 include::test-ch2/foo.ABC.adoc[]
 include::test-ch2/foo.GHI.adoc[]

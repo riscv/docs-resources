@@ -1,4 +1,4 @@
-.WALR/WLRL CSR Definitions (A-Z): 5 CSRs
+.WARL/WLRL CSR Definitions (A-Z): 5 CSRs
 [cols="40%,60%"]
 |===
 

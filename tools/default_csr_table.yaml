@@ -7,7 +7,7 @@ columns:
   - name: Type
     column: TYPE
     width_pct: 20
-  - name: Features(s)
+  - name: Feature(s)
     column: FEATURES
     width_pct: 15
   - name: Implementation-defined Behavior(s)
