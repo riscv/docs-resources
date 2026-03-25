@@ -2,7 +2,6 @@
 """Create params JSON from normative rules JSON and parameter definition YAML files."""
 
 import argparse
-from importlib import import_module
 import json
 import re
 import sys
