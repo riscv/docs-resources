@@ -10,6 +10,13 @@ import sys
 from pathlib import Path
 from typing import Any, Dict, List
 
+from appendix_shared_utils import (
+    infer_normative_rules,
+    render_table_cols_spec,
+    render_table_header_row,
+    safe_filename,
+)
+
 from shared_utils import (
     NORM_RULES_BASE_URL,
     check_impldef_cat,
@@ -189,29 +196,6 @@ def load_param_table_yaml(pathname: str) -> List[Dict[str, Any]]:
     return columns_obj
 
 
-def safe_filename(name: str) -> str:
-    """Map a parameter name to a safe output filename stem."""
-    return re.sub(r"[^A-Za-z0-9_.-]", "_", name)
-
-
-def infer_normative_rules(param: Dict[str, Any]) -> List[str]:
-    """Return unique normative rule names referenced by impl-defs."""
-    impl_defs = param.get("impl-defs")
-    if not isinstance(impl_defs, list):
-        return []
-
-    names: List[str] = []
-    seen = set()
-    for impl_def in impl_defs:
-        if not isinstance(impl_def, dict):
-            continue
-        name = impl_def.get("name")
-        if isinstance(name, str) and name not in seen:
-            seen.add(name)
-            names.append(name)
-    return names
-
-
 def has_block_content(text: str) -> bool:
     """Return True when text should be emitted in an AsciiDoc block cell."""
     if "!===" in text:
@@ -265,16 +249,6 @@ def render_param_name_and_norm_rule_mapping_cell(
         lines.append("* (none)")
 
     return "\n".join(lines)
-
-
-def render_table_cols_spec(columns: List[Dict[str, Any]]) -> str:
-    """Render AsciiDoc cols specification from column widths."""
-    return ",".join(f"{col['width_pct']}%" for col in columns)
-
-
-def render_table_header_row(columns: List[Dict[str, Any]]) -> str:
-    """Render AsciiDoc header row from configured display names."""
-    return "| " + " | ".join(str(col["name"]) for col in columns)
 
 
 def format_param_count_label(count: int) -> str:

@@ -1,0 +1,5 @@
+| ro-mask
+| FLD:zort.XYZ
+| zort.XYZ
+a|
+* https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#ZORT_XYZ_WLRL_RO_MASK[ZORT_XYZ_WLRL_RO_MASK]

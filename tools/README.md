@@ -13,6 +13,7 @@ This directory contains command-line generators and shared Python helper modules
 | create_normative_rules.py | CLI tool | Builds normative-rules JSON or HTML from rule-definition YAML and tag JSON files. |
 | create_params.py | CLI tool | Builds params JSON or HTML from normative-rules JSON and parameter-definition YAML files. |
 | create_param_appendix.py | CLI tool | Generates parameter-row AsciiDoc fragments plus table include files from params JSON and a table-layout YAML file. |
+| create_csr_appendix.py | CLI tool | Generates CSR-row AsciiDoc fragments plus table include files from the csrs array in params JSON and a CSR table-layout YAML file. |
 | detect_tag_changes.py | CLI tool | Compares two tag JSON files and reports additions, deletions, and modifications. |
 
 ## Script Details
@@ -230,6 +231,38 @@ python3 tools/create_param_appendix.py \
   --input build/test-params.json \
   --param-table tools/default_param_table.yaml \
   --output-dir build/test-param-appendix-adoc-includes
+```
+
+### create_csr_appendix.py
+
+Purpose:
+- Creates one AsciiDoc table-row fragment file per CSR from the `csrs` array in params JSON,
+  and generates higher-level AsciiDoc include files for appendix assembly.
+
+Inputs:
+- Params JSON file (-i / --input).
+- CSR table-layout YAML file (-t / --csr-table), conforming to schemas/csr-table-schema.json.
+
+Outputs:
+- Output directory containing:
+  - Per-CSR row fragments grouped by AsciiDoc filename.
+  - Per-adoc include files (`<adoc>/all_csrs.adoc`) in input JSON CSR order.
+  - Top-level include files:
+    - `all_csrs_a_to_z.adoc` (single table, sorted by CSR name).
+    - `all_csrs_by_chapter.adoc` (one table per chapter in input JSON chapter encounter order).
+
+Default columns and order (tools/default_csr_table.yaml):
+- `Name` (from `reg-name`, optionally `reg-name.field-name`)
+- `Type`
+- `Feature(s)`
+- `Implementation-defined Behavior(s)`
+
+Typical command:
+```bash
+python3 tools/create_csr_appendix.py \
+  --input build/test-params.json \
+  --csr-table tools/default_csr_table.yaml \
+  --output-dir build/test-csr-appendix-adoc-includes
 ```
 
 ### detect_tag_changes.py

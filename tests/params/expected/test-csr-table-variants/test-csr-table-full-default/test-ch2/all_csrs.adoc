@@ -1,0 +1,4 @@
+include::foo.ABC.adoc[]
+include::foo.GHI.adoc[]
+include::zort.XYZ.adoc[]
+include::qux.QQQ.adoc[]
