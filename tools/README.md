@@ -81,7 +81,7 @@ Typical command:
 ```
 ### create_params.py
 Purpose:
-- Creates params JSON/HMTL outputs from normative-rules JSON plus parameter-definition YAML files.
+- Creates params JSON/HTML outputs from normative-rules JSON plus parameter-definition YAML files.
 
 Inputs:
 - Normative-rules JSON file (-n / --norm-rules)
