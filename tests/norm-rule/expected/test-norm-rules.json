@@ -1541,41 +1541,21 @@
         {
           "name": "norm:foo_abc_warl_enum",
           "context": false,
-          "text": "The architecturally-defined values for the 4-bit foo.ABC\nCSR field are 0, 0b11, or 0xffff_ffff. Returns 0x7fff if written with an illegal value.",
+          "text": "An implementation may support any or all of the following values for the 4-bit foo.ABC field: 0, 4, 15.",
           "tag_filename": "/build/test-ch2-norm-tags.json",
           "stds_doc_url": "test-ch2.html"
         }
       ]
     },
     {
-      "name": "FOO_DEF_WARL_ENUM",
-      "def_filename": "tests/norm-rule/test-ch2.yaml",
-      "chapter_name": "Two",
-      "kind": "csr_field",
-      "impl-def-behavior": true,
-      "instances": [
-        "foo.DEF"
-      ],
-      "impl-def-category": "WARL",
-      "tags": [
-        {
-          "name": "norm:foo_def_warl_enum",
-          "context": false,
-          "text": "The architecturally-defined values for the 8-bit foo.DEF\nCSR field are -1 or 0xf0.  Ignores writes with an illegal value.",
-          "tag_filename": "/build/test-ch2-norm-tags.json",
-          "stds_doc_url": "test-ch2.html"
-        }
-      ]
-    },
-    {
-      "name": "FOO_GHI_WARL_WIDTH_UINT4TO8",
+      "name": "FOO_GHI_WARL_VAR_WIDTH",
       "def_filename": "tests/norm-rule/test-ch2.yaml",
       "chapter_name": "Two",
       "impl-def-behavior": true,
       "impl-def-category": "WARL",
       "tags": [
         {
-          "name": "norm:foo_ghi_warl_width_uint4to8",
+          "name": "norm:foo_ghi_warl_var_width",
           "context": false,
           "text": "The foo.GHI CSR field width ranges from 4 to 8 bits as specified by the UINT_4TO8 parameter value.",
           "tag_filename": "/build/test-ch2-norm-tags.json",
@@ -1584,27 +1564,7 @@
       ]
     },
     {
-      "name": "BAR_WARL_READONLY_VALUE",
-      "def_filename": "tests/norm-rule/test-ch2.yaml",
-      "chapter_name": "Two",
-      "kind": "csr",
-      "impl-def-behavior": true,
-      "instances": [
-        "bar"
-      ],
-      "impl-def-category": "WARL",
-      "tags": [
-        {
-          "name": "norm:bar_warl_readonly_value",
-          "context": false,
-          "text": "An implementation may treat each bit of the bar CSR as\nread-only or read-write. Read-only bits are 0.",
-          "tag_filename": "/build/test-ch2-norm-tags.json",
-          "stds_doc_url": "test-ch2.html"
-        }
-      ]
-    },
-    {
-      "name": "ZORT_XYZ_WLRL_READONLY_ZERO",
+      "name": "ZORT_XYZ_WLRL_RO_MASK",
       "def_filename": "tests/norm-rule/test-ch2.yaml",
       "chapter_name": "Two",
       "kind": "csr_field",
@@ -1615,16 +1575,16 @@
       "impl-def-category": "WLRL",
       "tags": [
         {
-          "name": "norm:zort_xyz_wlrl_readonly_zero",
+          "name": "norm:zort_xyz_wlrl_ro_mask",
           "context": false,
-          "text": "An implementation may treat each bit of the zort.XYZ CSR as\nread-only or read-write. Read-only bits can be 0 or 1.",
+          "text": "An implementation may treat each bit of the zort.XYZ\nCSR as read-only or read-write",
           "tag_filename": "/build/test-ch2-norm-tags.json",
           "stds_doc_url": "test-ch2.html"
         }
       ]
     },
     {
-      "name": "QUX_QQQ_WLRL_NO_SELECTOR",
+      "name": "QUX_QQQ_WLRL_OTHER",
       "def_filename": "tests/norm-rule/test-ch2.yaml",
       "chapter_name": "Two",
       "kind": "csr_field",
@@ -1635,9 +1595,9 @@
       "impl-def-category": "WLRL",
       "tags": [
         {
-          "name": "norm:qux_qqq_wlrl_no_selector",
+          "name": "norm:qux_qqq_wlrl_other",
           "context": false,
-          "text": "The qux.QQQ CSR field has implementation-defined behavior\nwithout an enum, width, or read-only mask selector.",
+          "text": "The qux.QQQ CSR field has implementation-defined behavior\nthat doesn't match any of the defined WARL/WLRL types.",
           "tag_filename": "/build/test-ch2-norm-tags.json",
           "stds_doc_url": "test-ch2.html"
         }

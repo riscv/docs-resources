@@ -148,21 +148,17 @@
             "$ref": "param-common-schema.json#/csrNameArray",
             "description": "Multiple CSR field names"
           },
-          "enum": {
-            "$ref": "param-common-schema.json#/csrEnum",
-            "description": "Enum definition specifying legal write values and associated behavior (including handling of illegal writes)"
+          "type": {
+            "allOf": [
+              { "$ref": "param-common-schema.json#/csrType" },
+              { "$ref": "param-common-schema.json#/csrTypeDesc" }
+            ]
           },
-          "width": {
-            "$ref": "param-common-schema.json#/paramName",
-            "description": "Name of a parameter that provides the bit width"
-          },
-          "ro-mask": {
-            "$ref": "param-common-schema.json#/multiBaseValue",
-            "description": "Mask specifying read-only bits (1 = read-only, 0 = read-write). Supports decimal, hex (0x...), or binary (0b...)."
-          },
-          "ro-value": {
-            "$ref": "param-common-schema.json#/multiBaseValue",
-            "description": "Mask providing value of read-only bits. Supports decimal, hex (0x...), or binary (0b...)."
+          "width-parameter": {
+            "allOf": [
+              { "$ref": "param-common-schema.json#/paramName" },
+              { "$ref": "param-common-schema.json#/csrWidthParameterDesc" }
+            ]
           },
           "impl-def": {
             "$ref": "param-common-schema.json#/implDefName",
@@ -186,20 +182,22 @@
             }
           },
           {
-            "not": {
-              "anyOf": [
-                { "required": ["enum", "width"] },
-                { "required": ["enum", "ro-mask"] },
-                { "required": ["width", "ro-mask"] }
-              ]
-            }
+            "required": ["type"]
           },
           {
             "if": {
-              "required": ["ro-value"]
+              "properties": {
+                "type": { "const": "var-width" }
+              },
+              "required": ["type"]
             },
             "then": {
-              "required": ["ro-mask"]
+              "required": ["width-parameter"]
+            },
+            "else": {
+              "not": {
+                "required": ["width-parameter"]
+              }
             }
           },
           {

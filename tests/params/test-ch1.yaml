@@ -119,5 +119,6 @@ parameter_definitions:
 csr_definitions:
   - reg-name: satp
     field-name: MODE
+    type: var-width
+    width-parameter: ASIDLEN
     impl-defs: [SATP_ASID_WARL_ASIDLEN, ASIDLEN]
-    width: ASIDLEN

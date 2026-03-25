@@ -24,6 +24,12 @@
   "paramWidthDesc": {
     "description": "Either an integer bit width between 2 and 64 (inclusive) or the name of another parameter that provides the bit width. Used only with type \"int\" or \"uint\""
   },
+  "csrWidthParameterDesc": {
+    "description": "Name of the parameter referenced by a CSR entry. Required only when type is \"var-width\"."
+  },
+  "csrTypeDesc": {
+    "description": "CSR encoding type discriminator. Legal values are \"legal-enum\", \"var-width\", \"ro-mask\", and \"other\"."
+  },
   "paramType": {
     "oneOf": [
       {
@@ -77,64 +83,9 @@
     "type": "string",
     "enum": ["WARL", "WLRL"]
   },
-  "csrEnum": {
-    "type": "object",
-    "properties": {
-      "legal": {
-        "type": "array",
-        "items": { "$ref": "#/multiBaseValue" },
-        "minItems": 1,
-        "description": "Array of one or more legal values (decimal integer, 0x hex, or 0b binary)"
-      },
-      "illegal-write-ignore": {
-        "const": true,
-        "description": "Must be true; indicates illegal writes are silently ignored"
-      },
-      "illegal-write-return": {
-        "$ref": "#/multiBaseValue",
-        "description": "If specified, illegal writes return this value (decimal integer, 0x hex, or 0b binary)"
-      }
-    },
-    "required": ["legal"],
-    "oneOf": [
-      { "required": ["legal", "illegal-write-ignore"] },
-      { "required": ["legal", "illegal-write-return"] }
-    ]
-  },
-  "csrEnumOutput": {
-    "type": "object",
-    "properties": {
-      "legal": {
-        "type": "array",
-        "items": { "type": "integer" },
-        "minItems": 1,
-        "description": "Array of one or more legal integers (converted to decimal)"
-      },
-      "illegal-write-ignore": {
-        "const": true,
-        "description": "Must be true; indicates illegal writes are silently ignored"
-      },
-      "illegal-write-return": {
-        "type": "integer",
-        "description": "Value returned on illegal writes (converted to decimal)"
-      }
-    },
-    "required": ["legal"],
-    "oneOf": [
-      { "required": ["legal", "illegal-write-ignore"] },
-      { "required": ["legal", "illegal-write-return"] }
-    ]
-  },
-  "multiBaseValue": {
-    "oneOf": [
-      {
-        "type": "string",
-        "pattern": "^(0x[0-9a-fA-F_]+|0b[01_]+)$"
-      },
-      {
-        "type": "integer"
-      }
-    ]
+  "csrType": {
+    "type": "string",
+    "enum": ["legal-enum", "var-width", "ro-mask", "other"]
   },
   "stringArray": {
     "type": "array",
