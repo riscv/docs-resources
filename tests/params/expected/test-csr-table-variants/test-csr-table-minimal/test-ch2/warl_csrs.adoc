@@ -1,0 +1,2 @@
+include::foo.ABC.adoc[]
+include::foo.GHI.adoc[]

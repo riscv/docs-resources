@@ -1,0 +1,3 @@
+| foo.GHI
+a|
+* https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#FOO_GHI_WARL_VAR_WIDTH[FOO_GHI_WARL_VAR_WIDTH]

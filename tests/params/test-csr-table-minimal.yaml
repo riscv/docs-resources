@@ -1,0 +1,9 @@
+---
+$schema: schemas/csr-table-schema.json
+columns:
+  - name: Name
+    column: NAME
+    width_pct: 40
+  - name: Implementation-defined Behavior(s)
+    column: IMPLEMENTATION_DEFINED_BEHAVIORS
+    width_pct: 60

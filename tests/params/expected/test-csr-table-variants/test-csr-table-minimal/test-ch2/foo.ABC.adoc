@@ -1,0 +1,3 @@
+| foo.ABC
+a|
+* https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#FOO_ABC_WARL_ENUM[FOO_ABC_WARL_ENUM]
