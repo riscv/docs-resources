@@ -48,40 +48,35 @@ Usage:
 ### tag_text_to_html.py
 
 Purpose:
-  - `legal-enum` - Standard defines the legal value behavior for the CSR/field.
-  - `var-width` - CSR/field width is determined by another named parameter.
-  - `ro-mask` - CSR/field allows implementation-defined read-only bit behavior.
+- Converts tag text to HTML and applies tag-specific display behavior.
+
+Key capabilities:
+- Pipeline conversion via convert_tag_text_to_html.
+- Returns a "(No text available)" placeholder for empty tag text.
+- Prefixes context-only tag text with "[CONTEXT]".
+
 Usage:
-- A CSR/field with `type: var-width` must also include `width-parameter`.
-  - `width-parameter` must be the name of an existing parameter and conforms to the shared `paramName` schema.
-- `width-parameter` is not allowed for CSR entries whose `type` is not `var-width`.
 - Imported by create_normative_rules.py and create_params.py.
 
 ### shared_utils.py
 
 Purpose:
-CSR entry properties:
-- `width-parameter`: Required only with `type: var-width`.
-  - Format: `width-parameter: <parameter_name>`.
-  - The referenced parameter must exist in the combined parameter definitions.
-- One or more tag JSON files (-t).
-- Tag-file to URL mappings (-tag2url).
+- Provides shared constants, logging helpers, file loaders, and common validators/formatters used across tools scripts.
 
-# Legal-enum CSR field
-- JSON (default) or HTML output file.
+Key capabilities:
+- make_log_helpers: creates script-scoped error/info/fatal callable helpers.
+- load_json_object / load_yaml_object: safe JSON and YAML file loaders with error reporting.
+- infer_param_type_string: renders human-readable parameter type strings for table output.
+- format_param_feature: renders a parameter feature string from chapter name and impl-defs.
+- Constants for standards object kinds, impl-def categories, and CSR category mappings.
 
-Typical command:
-```bash
-  -t /build/test-ch1-norm-tags.json \
-# Width-based CSR field (var-width references an existing parameter)
-  -tag2url /build/test-ch1-norm-tags.json test-ch1.html \
-  -tag2url /build/test-ch2-norm-tags.json test-ch2.html \
-  build/test-norm-rules.json
-  width-parameter: ASIDLEN
-```
+Usage:
+- Imported by create_normative_rules.py, create_params.py, and create_param_appendix.py.
+
 ### create_params.py
+
 Purpose:
-- Creates params JSON/HMTL outputs from normative-rules JSON plus parameter-definition YAML files.
+- Creates params JSON/HTML outputs from normative-rules JSON plus parameter-definition YAML files.
 
 Inputs:
 - Normative-rules JSON file (-n / --norm-rules)
@@ -90,7 +85,7 @@ Inputs:
 Outputs:
 - JSON (default) or HTML file.
 ```bash
-# Explicitly "other"
+python3 tools/create_params.py \
   --norm-rules build/test-norm-rules.json \
   --param-def tests/params/test-ch1.yaml \
   --param-def tests/params/test-ch2.yaml \
