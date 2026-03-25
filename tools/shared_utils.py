@@ -209,6 +209,7 @@ def infer_param_type_string(
     scalar type/range forms and optional array bounds.
     """
     param_type = param.get("type")
+    param_enum = param.get("enum")
     param_range = param.get("range")
     param_array = param.get("array")
     param_width = param.get("width")
@@ -244,6 +245,19 @@ def infer_param_type_string(
                 f"Parameter {param_name!r} has invalid type array; expected all strings "
                 "or all integers"
             )
+
+    elif isinstance(param_enum, dict):
+        enum_legal = param_enum.get("legal")
+        if not isinstance(enum_legal, list) or not enum_legal:
+            fatal(
+                f"Parameter {param_name!r} has invalid enum object; expected non-empty legal list"
+            )
+        if not all(isinstance(v, int) and not isinstance(v, bool) for v in enum_legal):
+            fatal(
+                f"Parameter {param_name!r} has invalid enum.legal array; expected all integers"
+            )
+        enum_values = ", ".join(map(str, enum_legal))
+        scalar_type = f"[{enum_values}]"
 
     elif isinstance(param_type, str):
         if param_type in {"boolean", "bit", "byte", "hword", "word", "dword"}:
@@ -296,7 +310,7 @@ def infer_param_type_string(
 
     else:
         fatal(
-            f"Parameter {param_name!r} has neither a valid type nor a valid range"
+            f"Parameter {param_name!r} has neither a valid type, enum, nor a valid range"
         )
 
     if isinstance(param_array, list):

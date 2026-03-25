@@ -53,13 +53,13 @@
       <h2 style="margin-top:24px">WARL/WLRL by Chapter</h2>
       <nav class="nav">
         <a href="#table-csrs-ch-1-warl" data-target="table-csrs-ch-1-warl">One WARL<span class="subtitle">1 entry</span></a>
-        <a href="#table-csrs-ch-2-warl" data-target="table-csrs-ch-2-warl">Two WARL<span class="subtitle">3 entries</span></a>
-        <a href="#table-csrs-ch-2-wlrl" data-target="table-csrs-ch-2-wlrl">Two WLRL<span class="subtitle">1 entry</span></a>
+        <a href="#table-csrs-ch-2-warl" data-target="table-csrs-ch-2-warl">Two WARL<span class="subtitle">4 entries</span></a>
+        <a href="#table-csrs-ch-2-wlrl" data-target="table-csrs-ch-2-wlrl">Two WLRL<span class="subtitle">2 entries</span></a>
       </nav>
     </aside>
     <main>
       <style>.grand-total-heading { font-size: 24px; font-weight: bold; }</style>
-      <h1 class="grand-total-heading">42 Parameters, 5 WARL/WLRL CSRs</h1>
+      <h1 class="grand-total-heading">42 Parameters, 7 WARL/WLRL CSRs</h1>
 
       <section id="table-params-ch-1" class="section">
         <table>
@@ -398,7 +398,7 @@
           <tbody>
             <tr>
               <td rowspan=1 id="satp.MODE">satp.MODE</td>
-              <td rowspan=1>width:ASIDLEN</td>
+              <td rowspan=1>width: ASIDLEN</td>
               <td rowspan=1>FLD:satp.ASID</td>
               <td><a href="test-ch1.html#norm:satp_asid_warl_asidlen">The satp.ASID CSR field width is specified by the ASIDLEN parameter value.</a></td>
             </tr>
@@ -408,7 +408,7 @@
 
       <section id="table-csrs-ch-2-warl" class="section">
         <table>
-          <caption class="sticky-caption">Chapter Two WARL: 3 CSRs</caption>
+          <caption class="sticky-caption">Chapter Two WARL: 4 CSRs</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-type">
@@ -421,15 +421,21 @@
           <tbody>
             <tr>
               <td rowspan=1 id="foo.ABC">foo.ABC</td>
-              <td rowspan=1>[0, 3, 10]</td>
+              <td rowspan=1>Enum<br>legal: [0, 0b11, 0xffff_ffff]<br>Illegal write returns: 0x7fff</td>
               <td rowspan=1>FLD:foo.ABC</td>
-              <td><a href="test-ch2.html#norm:foo_abc_warl_legal_list">The architecturally-defined values for the 4-bit foo.ABC CSR field are 0, 3, or 10.<br>An implementation can support any subset of these values.</a></td>
+              <td><a href="test-ch2.html#norm:foo_abc_warl_enum">The architecturally-defined values for the 4-bit foo.ABC<br>CSR field are 0, 0b11, or 0xffff_ffff. Returns 0x7fff if written with an illegal value.</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="foo.DEF">foo.DEF</td>
-              <td rowspan=1>width:UINT_4TO8</td>
+              <td rowspan=1>Enum<br>legal: [-1, 0xf0]<br>Ignores illegal writes</td>
+              <td rowspan=1>FLD:foo.DEF</td>
+              <td><a href="test-ch2.html#norm:foo_def_warl_enum">The architecturally-defined values for the 8-bit foo.DEF<br>CSR field are -1 or 0xf0.  Ignores writes with an illegal value.</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1 id="foo.GHI">foo.GHI</td>
+              <td rowspan=1>width: UINT_4TO8</td>
               <td rowspan=1>CHAP:Two</td>
-              <td><a href="test-ch2.html#norm:foo_def_warl_width_uint4to8">The foo.DEF CSR field width ranges from 4 to 8 bits as specified by the UINT_4TO8 parameter value.</a></td>
+              <td><a href="test-ch2.html#norm:foo_ghi_warl_width_uint4to8">The foo.GHI CSR field width ranges from 4 to 8 bits as specified by the UINT_4TO8 parameter value.</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="bar">bar</td>
@@ -443,7 +449,7 @@
 
       <section id="table-csrs-ch-2-wlrl" class="section">
         <table>
-          <caption class="sticky-caption">Chapter Two WLRL: 1 CSR</caption>
+          <caption class="sticky-caption">Chapter Two WLRL: 2 CSRs</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-type">
@@ -459,6 +465,12 @@
               <td rowspan=1>ro-mask: 0b1111</td>
               <td rowspan=1>FLD:zort.XYZ</td>
               <td><a href="test-ch2.html#norm:zort_xyz_wlrl_readonly_zero">An implementation may treat each bit of the zort.XYZ CSR as<br>read-only or read-write. Read-only bits can be 0 or 1.</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1 id="qux.QQQ">qux.QQQ</td>
+              <td rowspan=1>WLRL</td>
+              <td rowspan=1>FLD:qux.QQQ</td>
+              <td><a href="test-ch2.html#norm:qux_qqq_wlrl_no_selector">The qux.QQQ CSR field has implementation-defined behavior<br>without an enum, width, or read-only mask selector.</a></td>
             </tr>
           </tbody>
         </table>

@@ -191,6 +191,20 @@ def test_infer_param_type_string_success_cases():
         )
         == "[1, 2, 3]"
     )
+    assert (
+        shared_utils.infer_param_type_string(
+            {
+                "reg-name": "foo",
+                "field-name": "ABC",
+                "enum": {
+                    "legal": [0, 3, 10],
+                    "illegal-write-return": 0,
+                },
+            },
+            lambda msg: (_ for _ in ()).throw(AssertionError(msg)),
+        )
+        == "[0, 3, 10]"
+    )
 
     # Range and array wrapping.
     assert (
@@ -265,7 +279,7 @@ def test_infer_param_type_string_all_fatal_cases():
         ),
         (
             {"name": "P"},
-            "has neither a valid type nor a valid range",
+            "has neither a valid type, enum, nor a valid range",
         ),
         (
             {"name": "P", "type": "boolean", "array": [0]},

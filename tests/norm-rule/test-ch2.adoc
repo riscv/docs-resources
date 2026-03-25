@@ -82,13 +82,19 @@ Here's a normative rule for mock extension dependency of extension A on extensio
 
 === Chapter 2.3 - CSR Field Types
 
-[#norm:foo_abc_warl_legal_list]#The architecturally-defined values for the 4-bit `foo.ABC` CSR field are 0, 3, or 10.
-An implementation can support any subset of these values.#
+[#norm:foo_abc_warl_enum]#The architecturally-defined values for the 4-bit `foo.ABC`
+CSR field are 0, 0b11, or 0xffff_ffff. Returns 0x7fff if written with an illegal value.#
 
-[#norm:foo_def_warl_width_uint4to8]#The `foo.DEF` CSR field width ranges from 4 to 8 bits as specified by the UINT_4TO8 parameter value.#
+[#norm:foo_def_warl_enum]#The architecturally-defined values for the 8-bit `foo.DEF`
+CSR field are -1 or 0xf0.  Ignores writes with an illegal value.#
+
+[#norm:foo_ghi_warl_width_uint4to8]#The `foo.GHI` CSR field width ranges from 4 to 8 bits as specified by the UINT_4TO8 parameter value.#
 
 [#norm:zort_xyz_wlrl_readonly_zero]#An implementation may treat each bit of the `zort.XYZ` CSR as
 read-only or read-write. Read-only bits can be 0 or 1.#
 
 [#norm:bar_warl_readonly_value]#An implementation may treat each bit of the `bar` CSR as
 read-only or read-write. Read-only bits are 0.#
+
+[#norm:qux_qqq_wlrl_no_selector]#The `qux.QQQ` CSR field has implementation-defined behavior
+without an enum, width, or read-only mask selector.#

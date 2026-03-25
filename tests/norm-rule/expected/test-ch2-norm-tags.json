@@ -17,10 +17,12 @@
     "norm:mock-csr-x": "Here&#8217;s a normative rule for mock CSR \"X\".",
     "norm:mock-csr-field-y": "Here&#8217;s a normative rule for mock CSR field \"Y\".",
     "norm:mock-ext-dep-A-on-B": "Here&#8217;s a normative rule for mock extension dependency of extension A on extension B.",
-    "norm:foo_abc_warl_legal_list": "The architecturally-defined values for the 4-bit foo.ABC CSR field are 0, 3, or 10.\nAn implementation can support any subset of these values.",
-    "norm:foo_def_warl_width_uint4to8": "The foo.DEF CSR field width ranges from 4 to 8 bits as specified by the UINT_4TO8 parameter value.",
+    "norm:foo_abc_warl_enum": "The architecturally-defined values for the 4-bit foo.ABC\nCSR field are 0, 0b11, or 0xffff_ffff. Returns 0x7fff if written with an illegal value.",
+    "norm:foo_def_warl_enum": "The architecturally-defined values for the 8-bit foo.DEF\nCSR field are -1 or 0xf0.  Ignores writes with an illegal value.",
+    "norm:foo_ghi_warl_width_uint4to8": "The foo.GHI CSR field width ranges from 4 to 8 bits as specified by the UINT_4TO8 parameter value.",
     "norm:zort_xyz_wlrl_readonly_zero": "An implementation may treat each bit of the zort.XYZ CSR as\nread-only or read-write. Read-only bits can be 0 or 1.",
-    "norm:bar_warl_readonly_value": "An implementation may treat each bit of the bar CSR as\nread-only or read-write. Read-only bits are 0."
+    "norm:bar_warl_readonly_value": "An implementation may treat each bit of the bar CSR as\nread-only or read-write. Read-only bits are 0.",
+    "norm:qux_qqq_wlrl_no_selector": "The qux.QQQ CSR field has implementation-defined behavior\nwithout an enum, width, or read-only mask selector."
   },
   "sections": {
     "title": "",
@@ -66,10 +68,12 @@
             "id": "_chapter_2_3_csr_field_types",
             "children": [],
             "tags": [
-              "norm:foo_abc_warl_legal_list",
-              "norm:foo_def_warl_width_uint4to8",
+              "norm:foo_abc_warl_enum",
+              "norm:foo_def_warl_enum",
+              "norm:foo_ghi_warl_width_uint4to8",
               "norm:zort_xyz_wlrl_readonly_zero",
-              "norm:bar_warl_readonly_value"
+              "norm:bar_warl_readonly_value",
+              "norm:qux_qqq_wlrl_no_selector"
             ]
           }
         ],
