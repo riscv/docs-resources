@@ -174,35 +174,13 @@
             }
           },
           {
-            "oneOf": [
-              {
-                "required": ["enum"],
-                "not": {
-                  "anyOf": [
-                    { "required": ["width"] },
-                    { "required": ["ro-mask"] }
-                  ]
-                }
-              },
-              {
-                "required": ["width"],
-                "not": {
-                  "anyOf": [
-                    { "required": ["enum"] },
-                    { "required": ["ro-mask"] }
-                  ]
-                }
-              },
-              {
-                "required": ["ro-mask"],
-                "not": {
-                  "anyOf": [
-                    { "required": ["enum"] },
-                    { "required": ["width"] }
-                  ]
-                }
-              }
-            ]
+            "not": {
+              "anyOf": [
+                { "required": ["enum", "width"] },
+                { "required": ["enum", "ro-mask"] },
+                { "required": ["width", "ro-mask"] }
+              ]
+            }
           }
         ],
         "additionalProperties": false

@@ -186,7 +186,7 @@ Examples:
 
 CSR Definition Encoding:
 - Use `csr_definitions` entries for CSRs, with `reg-name` (single CSR) or `reg-names` (multiple CSRs).
-- A CSR entry must include exactly one selector property:
+- CSR selector properties are optional. If provided, use at most one of:
   - `enum`
   - `width`
   - `ro-mask`

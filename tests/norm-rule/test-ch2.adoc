@@ -95,3 +95,6 @@ read-only or read-write. Read-only bits can be 0 or 1.#
 
 [#norm:bar_warl_readonly_value]#An implementation may treat each bit of the `bar` CSR as
 read-only or read-write. Read-only bits are 0.#
+
+[#norm:qux_qqq_wlrl_no_selector]#The `qux.QQQ` CSR field has implementation-defined behavior
+without an enum, width, or read-only mask selector.#

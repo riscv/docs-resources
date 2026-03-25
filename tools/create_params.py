@@ -593,9 +593,9 @@ def add_csr_entries(
     has_read_only_value = "ro-value" in entry
 
     selector_count = int(has_enum) + int(has_width) + int(has_read_only_mask)
-    if selector_count != 1:
+    if selector_count > 1:
         fatal(
-            f"Found CSR entry in {def_filename} that must define exactly one of "
+            f"Found CSR entry in {def_filename} that cannot define more than one of "
             "'enum', 'width', or 'ro-mask'"
         )
     if has_read_only_value and not has_read_only_mask:

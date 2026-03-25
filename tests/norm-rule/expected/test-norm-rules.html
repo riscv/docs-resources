@@ -155,7 +155,7 @@
   </aside>
     <main>
       <style>.grand-total-heading { font-size: 24px; font-weight: bold; }</style>
-      <h1 class="grand-total-heading">95 Normative Rules: Includes 32 Implementation-Defined Behaviors (26 No Category, 5 WARL, 1 WLRL)</h1>
+      <h1 class="grand-total-heading">96 Normative Rules: Includes 33 Implementation-Defined Behaviors (26 No Category, 5 WARL, 2 WLRL)</h1>
 
       <section id="table-norm-rules-ch-1" class="section">
         <table>
@@ -821,7 +821,7 @@
 
       <section id="table-norm-rules-ch-2" class="section">
         <table>
-          <caption class="sticky-caption">Chapter Two: 21 Normative Rules: Includes 16 Implementation-Defined Behaviors (11 No Category, 4 WARL, 1 WLRL)</caption>
+          <caption class="sticky-caption">Chapter Two: 22 Normative Rules: Includes 17 Implementation-Defined Behaviors (11 No Category, 4 WARL, 2 WLRL)</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-description">
@@ -1143,6 +1143,27 @@
             <tr>
               <td>An implementation may treat each bit of the zort.XYZ CSR as<br>read-only or read-write. Read-only bits can be 0 or 1.</td>
               <td><a href="test-ch2.html#norm:zort_xyz_wlrl_readonly_zero">norm:zort_xyz_wlrl_readonly_zero</a></td>
+            </tr>
+            <tr>
+              <td rowspan=5 id="QUX_QQQ_WLRL_NO_SELECTOR">QUX_QQQ_WLRL_NO_SELECTOR</td>
+              <td>csr_field</td>
+              <td>Kind</td>
+            </tr>
+            <tr>
+              <td>qux.QQQ</td>
+              <td>Instance</td>
+            </tr>
+            <tr>
+              <td>Implementation-defined behavior</td>
+              <td>Implementation-defined behavior</td>
+            </tr>
+            <tr>
+              <td>WLRL</td>
+              <td>Implementation-defined behavior category</td>
+            </tr>
+            <tr>
+              <td>The qux.QQQ CSR field has implementation-defined behavior<br>without an enum, width, or read-only mask selector.</td>
+              <td><a href="test-ch2.html#norm:qux_qqq_wlrl_no_selector">norm:qux_qqq_wlrl_no_selector</a></td>
             </tr>
           </tbody>
         </table>
@@ -1573,7 +1594,7 @@
 
       <section id="table-impldefs-impl-cat-WLRL" class="section">
         <table>
-          <caption class="sticky-caption">WLRL Category (A-Z): All 1 Implementation-Defined Behaviors</caption>
+          <caption class="sticky-caption">WLRL Category (A-Z): All 2 Implementation-Defined Behaviors</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-description">
@@ -1583,6 +1604,19 @@
             <tr><th>Name</th><th>Information</th><th>Information Source</th></tr>
           </thead>
           <tbody>
+            <tr>
+              <td rowspan=3><a href="#QUX_QQQ_WLRL_NO_SELECTOR">QUX_QQQ_WLRL_NO_SELECTOR</a></td>
+              <td>csr_field</td>
+              <td>Kind</td>
+            </tr>
+            <tr>
+              <td>qux.QQQ</td>
+              <td>Instance</td>
+            </tr>
+            <tr>
+              <td>The qux.QQQ CSR field has implementation-defined behavior<br>without an enum, width, or read-only mask selector.</td>
+              <td><a href="test-ch2.html#norm:qux_qqq_wlrl_no_selector">norm:qux_qqq_wlrl_no_selector</a></td>
+            </tr>
             <tr>
               <td rowspan=3><a href="#ZORT_XYZ_WLRL_READONLY_ZERO">ZORT_XYZ_WLRL_READONLY_ZERO</a></td>
               <td>csr_field</td>
@@ -1834,7 +1868,7 @@
 
       <section id="table-impldefs-ch-2" class="section">
         <table>
-          <caption class="sticky-caption">Chapter Two: All 16 Implementation-Defined Behaviors</caption>
+          <caption class="sticky-caption">Chapter Two: All 17 Implementation-Defined Behaviors</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-description">
@@ -2055,6 +2089,23 @@
             <tr>
               <td>An implementation may treat each bit of the zort.XYZ CSR as<br>read-only or read-write. Read-only bits can be 0 or 1.</td>
               <td><a href="test-ch2.html#norm:zort_xyz_wlrl_readonly_zero">norm:zort_xyz_wlrl_readonly_zero</a></td>
+            </tr>
+            <tr>
+              <td rowspan=4><a href="#QUX_QQQ_WLRL_NO_SELECTOR">QUX_QQQ_WLRL_NO_SELECTOR</a></td>
+              <td>csr_field</td>
+              <td>Kind</td>
+            </tr>
+            <tr>
+              <td>qux.QQQ</td>
+              <td>Instance</td>
+            </tr>
+            <tr>
+              <td>WLRL</td>
+              <td>Implementation-defined behavior category</td>
+            </tr>
+            <tr>
+              <td>The qux.QQQ CSR field has implementation-defined behavior<br>without an enum, width, or read-only mask selector.</td>
+              <td><a href="test-ch2.html#norm:qux_qqq_wlrl_no_selector">norm:qux_qqq_wlrl_no_selector</a></td>
             </tr>
           </tbody>
         </table>

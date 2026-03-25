@@ -54,12 +54,12 @@
       <nav class="nav">
         <a href="#table-csrs-ch-1-warl" data-target="table-csrs-ch-1-warl">One WARL<span class="subtitle">1 entry</span></a>
         <a href="#table-csrs-ch-2-warl" data-target="table-csrs-ch-2-warl">Two WARL<span class="subtitle">4 entries</span></a>
-        <a href="#table-csrs-ch-2-wlrl" data-target="table-csrs-ch-2-wlrl">Two WLRL<span class="subtitle">1 entry</span></a>
+        <a href="#table-csrs-ch-2-wlrl" data-target="table-csrs-ch-2-wlrl">Two WLRL<span class="subtitle">2 entries</span></a>
       </nav>
     </aside>
     <main>
       <style>.grand-total-heading { font-size: 24px; font-weight: bold; }</style>
-      <h1 class="grand-total-heading">42 Parameters, 6 WARL/WLRL CSRs</h1>
+      <h1 class="grand-total-heading">42 Parameters, 7 WARL/WLRL CSRs</h1>
 
       <section id="table-params-ch-1" class="section">
         <table>
@@ -449,7 +449,7 @@
 
       <section id="table-csrs-ch-2-wlrl" class="section">
         <table>
-          <caption class="sticky-caption">Chapter Two WLRL: 1 CSR</caption>
+          <caption class="sticky-caption">Chapter Two WLRL: 2 CSRs</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-type">
@@ -465,6 +465,12 @@
               <td rowspan=1>ro-mask: 0b1111</td>
               <td rowspan=1>FLD:zort.XYZ</td>
               <td><a href="test-ch2.html#norm:zort_xyz_wlrl_readonly_zero">An implementation may treat each bit of the zort.XYZ CSR as<br>read-only or read-write. Read-only bits can be 0 or 1.</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1 id="qux.QQQ">qux.QQQ</td>
+              <td rowspan=1>WLRL</td>
+              <td rowspan=1>FLD:qux.QQQ</td>
+              <td><a href="test-ch2.html#norm:qux_qqq_wlrl_no_selector">The qux.QQQ CSR field has implementation-defined behavior<br>without an enum, width, or read-only mask selector.</a></td>
             </tr>
           </tbody>
         </table>

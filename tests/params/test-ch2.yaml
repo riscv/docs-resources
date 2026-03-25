@@ -90,3 +90,8 @@ csr_definitions:
     field-name: XYZ
     impl-def: ZORT_XYZ_WLRL_READONLY_ZERO
     ro-mask: 0b1111
+
+  # Case 4: CSR field with no selector property (enum/width/ro-mask all omitted).
+  - reg-name: qux
+    field-name: QQQ
+    impl-def: QUX_QQQ_WLRL_NO_SELECTOR

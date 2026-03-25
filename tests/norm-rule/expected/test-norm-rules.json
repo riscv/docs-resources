@@ -1622,6 +1622,26 @@
           "stds_doc_url": "test-ch2.html"
         }
       ]
+    },
+    {
+      "name": "QUX_QQQ_WLRL_NO_SELECTOR",
+      "def_filename": "tests/norm-rule/test-ch2.yaml",
+      "chapter_name": "Two",
+      "kind": "csr_field",
+      "impl-def-behavior": true,
+      "instances": [
+        "qux.QQQ"
+      ],
+      "impl-def-category": "WLRL",
+      "tags": [
+        {
+          "name": "norm:qux_qqq_wlrl_no_selector",
+          "context": false,
+          "text": "The qux.QQQ CSR field has implementation-defined behavior\nwithout an enum, width, or read-only mask selector.",
+          "tag_filename": "/build/test-ch2-norm-tags.json",
+          "stds_doc_url": "test-ch2.html"
+        }
+      ]
     }
   ]
 }

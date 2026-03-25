@@ -99,3 +99,9 @@ normative_rule_definitions:
     impl-def-category: WLRL
     kind: csr_field
     instance: zort.XYZ
+  - name: QUX_QQQ_WLRL_NO_SELECTOR
+    tag: "norm:qux_qqq_wlrl_no_selector"
+    impl-def-behavior: true
+    impl-def-category: WLRL
+    kind: csr_field
+    instance: qux.QQQ
