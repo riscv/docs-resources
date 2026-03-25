@@ -7,7 +7,7 @@ import json
 import re
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Set, Tuple
 
 from def_text_to_html import (
     convert_def_text_to_html,
@@ -32,6 +32,7 @@ PARAMS_CH_TABLE_NAME_PREFIX = "table-params-ch-"
 PARAMS_NO_CH_TABLE_NAME = "table-params-no-ch"
 CSRS_CH_TABLE_NAME_PREFIX = "table-csrs-ch-"
 CSRS_NO_CH_TABLE_NAME = "table-csrs-no-ch"
+CSR_TYPES: Set[str] = {"legal-enum", "var-width", "ro-mask", "other"}
 
 error, info, fatal = make_log_helpers(PN)
 
@@ -110,93 +111,7 @@ def load_yaml_file(pathname: str) -> Dict[str, Any]:
     return load_yaml_object(pathname, fatal)
 
 
-def load_csr_literal_texts(pathname: str) -> List[Dict[str, Any]]:
-    """Load raw scalar token text for CSR definitions from YAML source."""
-    yaml_module: Any = None
-    try:
-        yaml_module = import_module("yaml")
-    except ImportError:
-        fatal("PyYAML is required but not installed. Run: pip install PyYAML")
 
-    root_node: Any = None
-    try:
-        with open(pathname, "r", encoding="utf-8") as f:
-            root_node = yaml_module.compose(f)
-    except FileNotFoundError as e:
-        fatal(str(e))
-    except yaml_module.YAMLError as e:
-        fatal(f"YAML parse error in {pathname}: {e}")
-    except Exception as e:
-        fatal(f"Error reading YAML file {pathname}: {e}")
-
-    if root_node is None:
-        return []
-
-    top_map: Dict[str, Any] = {}
-    top_pairs = getattr(root_node, "value", None)
-    if isinstance(top_pairs, list):
-        for pair in top_pairs:
-            if not isinstance(pair, tuple) or len(pair) != 2:
-                continue
-            key_node, val_node = pair
-            key_text = getattr(key_node, "value", None)
-            if isinstance(key_text, str):
-                top_map[key_text] = val_node
-
-    csr_seq_node = top_map.get("csr_definitions")
-    csr_items = getattr(csr_seq_node, "value", None)
-    if not isinstance(csr_items, list):
-        return []
-
-    wanted_scalar_keys = {"ro-mask", "ro-value"}
-    literal_rows: List[Dict[str, Any]] = []
-    for item_node in csr_items:
-        row: Dict[str, Any] = {}
-        item_pairs = getattr(item_node, "value", None)
-        if isinstance(item_pairs, list):
-            for pair in item_pairs:
-                if not isinstance(pair, tuple) or len(pair) != 2:
-                    continue
-                key_node, val_node = pair
-                key_text = getattr(key_node, "value", None)
-                if not isinstance(key_text, str):
-                    continue
-
-                if key_text in wanted_scalar_keys:
-                    val_text = getattr(val_node, "value", None)
-                    if isinstance(val_text, str):
-                        row[key_text] = val_text
-
-                elif key_text == "enum":
-                    # Navigate into the nested enum mapping to capture raw texts.
-                    enum_pairs = getattr(val_node, "value", None)
-                    if isinstance(enum_pairs, list):
-                        for enum_pair in enum_pairs:
-                            if not isinstance(enum_pair, tuple) or len(enum_pair) != 2:
-                                continue
-                            enum_key_node, enum_val_node = enum_pair
-                            enum_key = getattr(enum_key_node, "value", None)
-                            if not isinstance(enum_key, str):
-                                continue
-
-                            if enum_key == "legal":
-                                legal_item_nodes = getattr(enum_val_node, "value", None)
-                                if isinstance(legal_item_nodes, list):
-                                    texts = [
-                                        t for node in legal_item_nodes
-                                        if isinstance(t := getattr(node, "value", None), str)
-                                    ]
-                                    if texts:
-                                        row["_enum-legal-texts"] = texts
-
-                            elif enum_key == "illegal-write-return":
-                                t = getattr(enum_val_node, "value", None)
-                                if isinstance(t, str):
-                                    row["_enum-illegal-write-return-text"] = t
-
-        literal_rows.append(row)
-
-    return literal_rows
 
 
 def normalize_impldef_refs(
@@ -565,43 +480,35 @@ def add_csr_entries(
     chapter_name: str,
     norm_rules_by_name: Dict[str, Dict[str, Any]],
     norm_rules_filename: str,
-    literal_texts: Optional[Dict[str, str]] = None,
 ):
     """Expand one CSR definition entry into one or more output CSR objects."""
-    def parse_multibase_int(value: Any, label: str, csr_name: str) -> int:
-        if isinstance(value, bool):
-            fatal(f"CSR {csr_name} in {def_filename} has invalid {label} {value!r}")
-        if isinstance(value, int):
-            return value
-        if isinstance(value, str):
-            try:
-                if value.startswith("0x"):
-                    return int(value[2:].replace("_", ""), 16)
-                if value.startswith("0b"):
-                    return int(value[2:].replace("_", ""), 2)
-            except ValueError:
-                pass
-        fatal(
-            f"CSR {csr_name} in {def_filename} has invalid {label} {value!r}; "
-            "expected integer, hex string, or binary string"
-        )
-        return 0
+    raw_csr_type = entry.get("type")
+    raw_parameter_name = entry.get("width-parameter")
 
-    has_enum = "enum" in entry
-    has_width = "width" in entry
-    has_read_only_mask = "ro-mask" in entry
-    has_read_only_value = "ro-value" in entry
-
-    selector_count = int(has_enum) + int(has_width) + int(has_read_only_mask)
-    if selector_count > 1:
+    if not isinstance(raw_csr_type, str):
+        fatal(f"Found CSR entry with missing or non-string type in {def_filename}")
+    if raw_csr_type not in CSR_TYPES:
+        allowed_types = ", ".join(sorted(CSR_TYPES))
         fatal(
-            f"Found CSR entry in {def_filename} that cannot define more than one of "
-            "'enum', 'width', or 'ro-mask'"
+            f"Found CSR entry with invalid type {raw_csr_type!r} in {def_filename}. "
+            f"Allowed types are: {allowed_types}"
         )
-    if has_read_only_value and not has_read_only_mask:
+    csr_type = raw_csr_type
+
+    parameter_name: Optional[str] = None
+    if raw_parameter_name is not None:
+        if not isinstance(raw_parameter_name, str):
+            fatal(f"Found CSR entry with non-string width-parameter in {def_filename}")
+        parameter_name = raw_parameter_name
+
+    if csr_type == "var-width":
+        if parameter_name is None:
+            fatal(
+                f"Found CSR entry in {def_filename} with type 'var-width' but no width-parameter property"
+            )
+    elif parameter_name is not None:
         fatal(
-            f"Found CSR entry in {def_filename} with 'ro-value' but no "
-            "'ro-mask'"
+            f"Found CSR entry in {def_filename} with type {csr_type!r} that also defines 'width-parameter'"
         )
 
     names: List[str] = []
@@ -629,103 +536,6 @@ def add_csr_entries(
         fatal(f"Found CSR entry without reg-name/reg-names in {def_filename}")
 
     representative_name = names[0]
-
-    csr_width_input: Optional[str] = None
-    csr_read_only_mask: Optional[int] = None
-    csr_read_only_value: Optional[int] = None
-    csr_read_only_mask_text: Optional[str] = None
-    csr_read_only_value_text: Optional[str] = None
-    csr_legal_enum: Optional[List[int]] = None
-    csr_illegal_write_ignore: Optional[bool] = None
-    csr_illegal_write_return: Optional[int] = None
-
-    if has_enum:
-        raw_enum = entry.get("enum")
-        if not isinstance(raw_enum, dict):
-            fatal(f"CSR {representative_name} in {def_filename} has invalid enum (must be an object)")
-
-        # Parse legal values. YAML auto-converts hex/binary literals to integers;
-        # original text preservation is handled separately via load_csr_literal_texts.
-        raw_legal = raw_enum.get("legal")
-        if not isinstance(raw_legal, list) or not raw_legal:
-            fatal(f"CSR {representative_name} in {def_filename} has invalid or empty enum.legal")
-        csr_legal_enum = []
-        for value in raw_legal:
-            if not isinstance(value, int) or isinstance(value, bool):
-                fatal(
-                    f"CSR {representative_name} in {def_filename} has non-integer "
-                    f"value in enum.legal: {value!r}"
-                )
-            csr_legal_enum.append(value)
-
-        # Parse illegal-write behavior (must be one of the two)
-        raw_illegal_ignore = raw_enum.get("illegal-write-ignore")
-        raw_illegal_return = raw_enum.get("illegal-write-return")
-
-        if raw_illegal_ignore is None and raw_illegal_return is None:
-            fatal(f"CSR {representative_name} in {def_filename} must specify either 'illegal-write-ignore' or 'illegal-write-return' in enum")
-
-        if raw_illegal_ignore is not None and raw_illegal_return is not None:
-            fatal(f"CSR {representative_name} in {def_filename} must specify only one of 'illegal-write-ignore' or 'illegal-write-return' in enum")
-
-        if raw_illegal_ignore is not None:
-            if not isinstance(raw_illegal_ignore, bool):
-                fatal(f"CSR {representative_name} in {def_filename} has non-boolean illegal-write-ignore: {raw_illegal_ignore!r}")
-            if raw_illegal_ignore is not True:
-                fatal(
-                    f"CSR {representative_name} in {def_filename} must set 'illegal-write-ignore' to true "
-                    f"when present (got {raw_illegal_ignore!r})"
-                )
-            csr_illegal_write_ignore = True
-
-        if raw_illegal_return is not None:
-            if not isinstance(raw_illegal_return, (str, int)) or isinstance(raw_illegal_return, bool):
-                fatal(
-                    f"CSR {representative_name} in {def_filename} has invalid illegal-write-return "
-                    f"{raw_illegal_return!r}; expected integer, hex string, or binary string"
-                )
-            csr_illegal_write_return = parse_multibase_int(
-                raw_illegal_return,
-                "illegal-write-return",
-                representative_name,
-            )
-
-    if has_width:
-        raw_width = entry.get("width")
-        if not isinstance(raw_width, str):
-            fatal(f"CSR {representative_name} in {def_filename} has non-string width")
-        csr_width_input = raw_width
-
-    if has_read_only_mask:
-        raw_mask = entry.get("ro-mask")
-        if not isinstance(raw_mask, (str, int)) or isinstance(raw_mask, bool):
-            fatal(
-                f"CSR {representative_name} in {def_filename} has invalid ro-mask "
-                f"{raw_mask!r}; expected integer, hex string, or binary string"
-            )
-        raw_read_only_value = entry.get("ro-value")
-        if raw_read_only_value is not None and (
-            not isinstance(raw_read_only_value, (str, int)) or isinstance(raw_read_only_value, bool)
-        ):
-            fatal(
-                f"CSR {representative_name} in {def_filename} has invalid ro-value "
-                f"{raw_read_only_value!r}; expected integer, hex string, or binary string"
-            )
-        csr_read_only_mask = parse_multibase_int(raw_mask, "ro-mask", representative_name)
-        if isinstance(literal_texts, dict) and isinstance(literal_texts.get("ro-mask"), str):
-            csr_read_only_mask_text = literal_texts["ro-mask"]
-        else:
-            csr_read_only_mask_text = str(raw_mask)
-        if raw_read_only_value is not None:
-            csr_read_only_value = parse_multibase_int(
-                raw_read_only_value,
-                "ro-value",
-                representative_name,
-            )
-            if isinstance(literal_texts, dict) and isinstance(literal_texts.get("ro-value"), str):
-                csr_read_only_value_text = literal_texts["ro-value"]
-            else:
-                csr_read_only_value_text = str(raw_read_only_value)
 
     # Resolve impl-defs at entry level (shared across all names in this entry).
     impl_def_refs = normalize_impldef_refs(entry, def_filename, representative_name, "CSR")
@@ -807,35 +617,11 @@ def add_csr_entries(
             "def_filename": Path(def_filename).name,
             "chapter_name": chapter_name,
             "category": csr_category,
+            "type": csr_type,
         }
 
-        if csr_legal_enum is not None:
-            enum_dict = {"legal": list(csr_legal_enum)}
-            if csr_illegal_write_ignore is not None:
-                enum_dict["illegal-write-ignore"] = csr_illegal_write_ignore
-            if csr_illegal_write_return is not None:
-                enum_dict["illegal-write-return"] = csr_illegal_write_return
-            out_entry["enum"] = enum_dict
-            # Preserve original literal texts from YAML AST (stripped before JSON output, used by HTML).
-            if isinstance(literal_texts, dict):
-                legal_texts = literal_texts.get("_enum-legal-texts")
-                if isinstance(legal_texts, list) and legal_texts:
-                    out_entry["_enum-legal-texts"] = legal_texts
-                return_text = literal_texts.get("_enum-illegal-write-return-text")
-                if isinstance(return_text, str):
-                    out_entry["_enum-illegal-write-return-text"] = return_text
-
-        if csr_width_input is not None:
-            out_entry["width"] = csr_width_input
-
-        if csr_read_only_mask is not None:
-            out_entry["ro-mask"] = csr_read_only_mask
-            if isinstance(csr_read_only_mask_text, str):
-                out_entry["_ro-mask-text"] = csr_read_only_mask_text
-            if csr_read_only_value is not None:
-                out_entry["ro-value"] = csr_read_only_value
-                if isinstance(csr_read_only_value_text, str):
-                    out_entry["_ro-value-text"] = csr_read_only_value_text
+        if parameter_name is not None:
+            out_entry["width-parameter"] = parameter_name
 
         note = entry.get("note")
         if note is not None:
@@ -879,8 +665,6 @@ def create_params_hash(norm_rules_json: str, param_def_yaml_files: List[str]) ->
     for def_file in param_def_yaml_files:
         info(f"Loading parameter definition file {def_file}")
         yaml_data = load_yaml_file(def_file)
-        csr_literal_rows = load_csr_literal_texts(def_file)
-
         chapter_name_obj: Any = yaml_data.get("chapter_name")
         if not isinstance(chapter_name_obj, str):
             fatal(f"Missing or invalid chapter_name in {def_file}")
@@ -913,7 +697,6 @@ def create_params_hash(norm_rules_json: str, param_def_yaml_files: List[str]) ->
             for idx, entry in enumerate(csr_definitions):
                 if not isinstance(entry, dict):
                     fatal(f"Found non-object entry in csr_definitions in {def_file}")
-                literal_row = csr_literal_rows[idx] if idx < len(csr_literal_rows) else None
                 add_csr_entries(
                     csrs,
                     entry,
@@ -921,7 +704,6 @@ def create_params_hash(norm_rules_json: str, param_def_yaml_files: List[str]) ->
                     chapter_name,
                     norm_rules_map,
                     norm_rules_json,
-                    literal_row,
                 )
 
         if parameter_definitions_obj is None and csr_definitions_obj is None:
@@ -938,11 +720,14 @@ def create_params_hash(norm_rules_json: str, param_def_yaml_files: List[str]) ->
             )
 
     for c in csrs:
-        width = c.get("width")
-        if isinstance(width, str) and width not in param_name_set:
+        parameter_name = c.get("width-parameter")
+        if isinstance(parameter_name, str) and parameter_name not in param_name_set:
             csr_name = c.get("reg-name", "<unknown>")
+            field_name = c.get("field-name")
+            if isinstance(field_name, str) and field_name:
+                csr_name = f"{csr_name}.{field_name}"
             fatal(
-                f"CSR {csr_name} in {c['def_filename']} has width {width!r} "
+                f"CSR {csr_name} in {c['def_filename']} has width-parameter {parameter_name!r} "
                 "which is not the name of a known parameter"
             )
 
@@ -1415,78 +1200,14 @@ def html_csr_table_row(f, csr: Dict[str, Any], chapter_name: Optional[str]):
     impl_defs_all = csr.get("impl-defs")
     impl_defs = filter_impldefs_for_chapter(impl_defs_all, chapter_name)
 
-    csr_parts: List[str] = []
-    width_value = csr.get("width")
-    if isinstance(width_value, str):
-        csr_parts.append(f"width: {width_value}")
+    csr_type = csr.get("type")
+    type_display = csr_type if isinstance(csr_type, str) and csr_type else "other"
 
-    if "ro-mask" in csr:
-        mask_text_obj = csr.get("_ro-mask-text")
-        if isinstance(mask_text_obj, str) and mask_text_obj:
-            mask_text = mask_text_obj
-        else:
-            mask_text = str(csr.get("ro-mask"))
-        csr_parts.append(f"ro-mask: {mask_text}")
-
-        if "ro-value" in csr:
-            value_text_obj = csr.get("_ro-value-text")
-            if isinstance(value_text_obj, str) and value_text_obj:
-                value_text = value_text_obj
-            else:
-                value_text = str(csr.get("ro-value"))
-            csr_parts.append(f"ro-value: {value_text}")
-
-    if csr_parts:
-        type_display = "<br>".join(csr_parts)
-    elif "enum" in csr:
-        enum_value = csr.get("enum")
-        if not isinstance(enum_value, dict):
-            fatal(f"CSR {name} has invalid enum output; expected object")
-            return
-
-        legal_values = enum_value.get("legal")
-        if not isinstance(legal_values, list) or not legal_values:
-            fatal(f"CSR {name} has invalid enum.legal output; expected non-empty list")
-            return
-        if not all(isinstance(value, int) and not isinstance(value, bool) for value in legal_values):
-            fatal(f"CSR {name} has invalid enum.legal output; expected integers")
-            return
-
-        legal_texts = csr.get("_enum-legal-texts")
-        if isinstance(legal_texts, list) and len(legal_texts) == len(legal_values):
-            legal_display = "[" + ", ".join(legal_texts) + "]"
-        else:
-            legal_display = str(legal_values)
-
-        enum_lines = ["Enum", f"legal: {legal_display}"]
-        if enum_value.get("illegal-write-ignore") is True:
-            enum_lines.append("Ignores illegal writes")
-        elif "illegal-write-return" in enum_value:
-            illegal_write_return = enum_value.get("illegal-write-return")
-            if not isinstance(illegal_write_return, int) or isinstance(illegal_write_return, bool):
-                fatal(f"CSR {name} has invalid illegal-write-return output; expected integer")
-                return
-            illegal_return_text = csr.get("_enum-illegal-write-return-text")
-            if isinstance(illegal_return_text, str):
-                enum_lines.append(f"Illegal write returns: {illegal_return_text}")
-            else:
-                enum_lines.append(f"Illegal write returns: {illegal_write_return}")
-        else:
-            fatal(
-                f"CSR {name} enum output must include illegal-write-ignore or illegal-write-return"
-            )
-            return
-
-        type_display = "<br>".join(enum_lines)
-    else:
-        category = csr.get("category")
-        if isinstance(category, str) and category:
-            type_display = category
-        else:
-            type_display = infer_param_type_string(
-                csr,
-                fatal,
-            )
+    # For var-width types, append the width-parameter value
+    if type_display == "var-width":
+        width_param = csr.get("width-parameter")
+        if isinstance(width_param, str) and width_param:
+            type_display = f"var-width = {width_param}"
 
     feature_csr = dict(csr)
     if isinstance(impl_defs_all, list):

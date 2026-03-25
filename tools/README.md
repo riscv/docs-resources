@@ -48,70 +48,49 @@ Usage:
 ### tag_text_to_html.py
 
 Purpose:
-- Converts one normative tag text string to display-ready HTML.
-
-Key capabilities:
-- Uses def_text_to_html conversion pipeline.
-- Handles empty content with a placeholder.
-- Adds optional [CONTEXT] prefix.
-
+  - `legal-enum` - Standard defines the legal value behavior for the CSR/field.
+  - `var-width` - CSR/field width is determined by another named parameter.
+  - `ro-mask` - CSR/field allows implementation-defined read-only bit behavior.
 Usage:
+- A CSR/field with `type: var-width` must also include `width-parameter`.
+  - `width-parameter` must be the name of an existing parameter and conforms to the shared `paramName` schema.
+- `width-parameter` is not allowed for CSR entries whose `type` is not `var-width`.
 - Imported by create_normative_rules.py and create_params.py.
 
 ### shared_utils.py
 
 Purpose:
-- Central shared utilities used by multiple scripts.
-
-Key capabilities:
-- Shared constants for standards object kinds and categories.
-- Shared logging-helper factory.
-- JSON and YAML loader wrappers with consistent fatal-error handling.
-- Shared format_param_feature, check_kind, and check_impldef_cat routines.
-
-Usage:
-- Imported by create_normative_rules.py, create_params.py, and create_param_appendix.py.
-
-### create_normative_rules.py
-
-Purpose:
-- Creates normative rules output from definition YAML and extracted tag JSON inputs.
-
-Inputs:
-- One or more normative-rule definition YAML files (-d).
+CSR entry properties:
+- `width-parameter`: Required only with `type: var-width`.
+  - Format: `width-parameter: <parameter_name>`.
+  - The referenced parameter must exist in the combined parameter definitions.
 - One or more tag JSON files (-t).
 - Tag-file to URL mappings (-tag2url).
 
-Outputs:
+# Legal-enum CSR field
 - JSON (default) or HTML output file.
 
 Typical command:
 ```bash
-python3 tools/create_normative_rules.py \
-  -d tests/norm-rule/test-ch1.yaml \
-  -d tests/norm-rule/test-ch2.yaml \
   -t /build/test-ch1-norm-tags.json \
-  -t /build/test-ch2-norm-tags.json \
+# Width-based CSR field (var-width references an existing parameter)
   -tag2url /build/test-ch1-norm-tags.json test-ch1.html \
   -tag2url /build/test-ch2-norm-tags.json test-ch2.html \
   build/test-norm-rules.json
+  width-parameter: ASIDLEN
 ```
-
 ### create_params.py
-
 Purpose:
-- Creates params output from normative-rules JSON plus parameter-definition YAML files.
+- Creates params JSON/HMTL outputs from normative-rules JSON plus parameter-definition YAML files.
 
 Inputs:
-- Normative-rules JSON (-n / --norm-rules).
-- One or more parameter definition YAML files (-d / --param-def).
+- Normative-rules JSON file (-n / --norm-rules)
+- Parameter definition files (-d / --param-def)
 
 Outputs:
 - JSON (default) or HTML file.
-
-Typical commands:
 ```bash
-python3 tools/create_params.py \
+# Explicitly "other"
   --norm-rules build/test-norm-rules.json \
   --param-def tests/params/test-ch1.yaml \
   --param-def tests/params/test-ch2.yaml \
@@ -186,62 +165,45 @@ Examples:
 
 CSR Definition Encoding:
 - Use `csr_definitions` entries for CSRs, with `reg-name` (single CSR) or `reg-names` (multiple CSRs).
-- CSR selector properties are optional. If provided, use at most one of:
-  - `enum`
-  - `width`
-  - `ro-mask`
-- `ro-value` is optional, but if present then `ro-mask` is required.
-- CSR `width` must be a string naming an existing parameter that supplies the width.
+- Every CSR/field entry must include `type` with one of:
+  - `legal-enum` - Standard defines legal values and implementation supports a subset that doesn't use all possible bit encodings (e.g., 10 values in a 4-bit field). Implementation's config file provides:
+    - A list of supported legal write values
+    - An indication of whether illegal write values are ignored or map to one specified legal value
+  - `var-width` - CSR/field is variable width and the `width-parameter` property provides the name of the parameter that provides its value.
+  - `ro-mask` - CSR/field allows implementation to treat some bits as read-only. Implementation's config file provides:
+    - mask: A bit mask (1 = read-only, 0 = read-write) of read-only bits
+    - value: The value of those read-only bits. If they are all zero the value can be omitted.
+  - `other` - CSR/field doesn't match any of the other `type` choices
 - Every CSR entry must include `impl-def` or `impl-defs`.
   - At least one referenced normative rule must provide `impl-def-category`.
   - Any provided `impl-def-category` values across referenced impl-defs must agree.
   - The category is mapped into CSR category (`WARL`/`WLRL`) for output grouping.
 
-CSR selector properties:
-- `enum`: Object specifying legal values and illegal-write behavior.
-  - `legal`: Array of one or more integers representing legal write values (required).
-  - `illegal-write-ignore`: Boolean specifying whether illegal writes are silently ignored (mutually exclusive with `illegal-write-return`).
-  - `illegal-write-return`: Integer value to return on illegal writes (mutually exclusive with `illegal-write-ignore`).
-  - Must specify `legal` and exactly one of `illegal-write-ignore` or `illegal-write-return`.
-- `width`: Name of a parameter that defines CSR width.
-  - Format: `width: <parameter_name>`.
-- `ro-mask`/`ro-value`: Bit-mask model for read-only bits.
-  - `ro-mask` marks read-only bits (`1` = read-only, `0` = read-write).
-  - `ro-value` provides the value for read-only bits.
-  - If `ro-mask` is present and `ro-value` is omitted, read-only bits default to `0`.
-  - Both accept decimal integer, hex string (`0x...`), or binary string (`0b...`).
-
-Notes on output behavior:
-- JSON output preserves the structure of the authored `enum` object in the generated `csrs` entry, but normalizes any multibase numeric values (for example hex `0x...` or binary `0b...`) to plain integers.
-- JSON output stores `ro-mask`/`ro-value` as integers.
-- HTML output uses internal underscore-prefixed fields to preserve the original authored literal text for `enum` values and `ro-mask`/`ro-value` when available (for example `0xF0F0` or `0b1100`).
-
 Examples:
 ```yaml
-# Enum: Legal CSR field values plus illegal-write behavior
+# Legal-enum: Implementation's config file provides legal values and behavior when writing illegal values
 - reg-name: mtvec
   field-name: MODE
+  type: legal-enum
   impl-def: MTVEC_MODE_WARL
-  enum:
-    legal: [0, 1]
-    illegal-write-ignore: true
 
-# Width-based CSR field (width references an existing parameter)
+# Width-based CSR field (var-width parameter name provided by `width-parameter` property)
 - reg-name: satp
   field-name: ASID
+  type: var-width
+  width-parameter: ASIDLEN
   impl-def: SATP_ASID_WARL
-  width: ASIDLEN
 
-# Read-only-mask CSR (read-only, mask only, read-only bits default to 0)
+# Read-only-mask: Implementation's config file provides bit mask and value of read-only bits
 - reg-name: zort
+  type: ro-mask
   impl-def: ZORT_IMPL
-  ro-mask: 0xF0F0_F0F0
 
-# Read-only-mask/value CSR field references multiple impl-defs
-- reg-names: foo
-  impl-defs: [FOO_IMPL, BAR_IMPL]
-  ro-mask: 0b1111
-  ro-value: 0b0011
+# Explicitly "other" (doesn't match other `type` values)
+- reg-name: mstatus
+  field-name: MPP
+  type: other
+  impl-def: MSTATUS_MPP_WLRL
 ```
 
 ### create_param_appendix.py

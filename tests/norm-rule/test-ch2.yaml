@@ -77,30 +77,18 @@ normative_rule_definitions:
     impl-def-category: WARL
     kind: csr_field
     instance: foo.ABC
-  - name: FOO_DEF_WARL_ENUM
-    tag: "norm:foo_def_warl_enum"
+  - name: FOO_GHI_WARL_VAR_WIDTH
+    tag: "norm:foo_ghi_warl_var_width"
     impl-def-behavior: true
     impl-def-category: WARL
-    kind: csr_field
-    instance: foo.DEF
-  - name: FOO_GHI_WARL_WIDTH_UINT4TO8
-    tag: "norm:foo_ghi_warl_width_uint4to8"
-    impl-def-behavior: true
-    impl-def-category: WARL
-  - name: BAR_WARL_READONLY_VALUE
-    tag: "norm:bar_warl_readonly_value"
-    impl-def-behavior: true
-    impl-def-category: WARL
-    kind: csr
-    instance: bar
-  - name: ZORT_XYZ_WLRL_READONLY_ZERO
-    tag: "norm:zort_xyz_wlrl_readonly_zero"
+  - name: ZORT_XYZ_WLRL_RO_MASK
+    tag: "norm:zort_xyz_wlrl_ro_mask"
     impl-def-behavior: true
     impl-def-category: WLRL
     kind: csr_field
     instance: zort.XYZ
-  - name: QUX_QQQ_WLRL_NO_SELECTOR
-    tag: "norm:qux_qqq_wlrl_no_selector"
+  - name: QUX_QQQ_WLRL_OTHER
+    tag: "norm:qux_qqq_wlrl_other"
     impl-def-behavior: true
     impl-def-category: WLRL
     kind: csr_field

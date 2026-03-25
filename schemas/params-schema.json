@@ -134,21 +134,17 @@
             "$ref": "param-common-schema.json#/csrCategory",
             "description": "CSR category"
           },
-          "enum": {
-            "$ref": "param-common-schema.json#/csrEnumOutput",
-            "description": "CSR legal values and illegal-write behavior"
+          "type": {
+            "allOf": [
+              { "$ref": "param-common-schema.json#/csrType" },
+              { "$ref": "param-common-schema.json#/csrTypeDesc" }
+            ]
           },
-          "width": {
-            "$ref": "param-common-schema.json#/paramName",
-            "description": "Name of a parameter that provides the bit width"
-          },
-          "ro-mask": {
-            "type": "integer",
-            "description": "Decimal integer mask specifying read-only bits"
-          },
-          "ro-value": {
-            "type": "integer",
-            "description": "Decimal integer value of read-only bits"
+          "width-parameter": {
+            "allOf": [
+              { "$ref": "param-common-schema.json#/paramName" },
+              { "$ref": "param-common-schema.json#/csrWidthParameterDesc" }
+            ]
           },
           "impl-defs": {
             "allOf": [
@@ -163,23 +159,22 @@
             ]
           }
         },
-        "required": ["reg-name", "def_filename", "chapter_name", "category"],
+        "required": ["reg-name", "def_filename", "chapter_name", "category", "type"],
         "allOf": [
           {
             "if": {
-              "required": ["ro-value"]
+              "properties": {
+                "type": { "const": "var-width" }
+              },
+              "required": ["type"]
             },
             "then": {
-              "required": ["ro-mask"]
-            }
-          },
-          {
-            "not": {
-              "anyOf": [
-                { "required": ["enum", "width"] },
-                { "required": ["enum", "ro-mask"] },
-                { "required": ["width", "ro-mask"] }
-              ]
+              "required": ["width-parameter"]
+            },
+            "else": {
+              "not": {
+                "required": ["width-parameter"]
+              }
             }
           }
         ],
