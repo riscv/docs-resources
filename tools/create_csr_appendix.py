@@ -350,7 +350,16 @@ def write_output_files(
 
         chapter_files.setdefault(csr_dir, []).append(f"{file_stem}.adoc")
 
-        category = csr.get("category", "")
+        category_value = csr.get("category")
+        if not isinstance(category_value, str) or not category_value:
+            fatal(f"Expected non-empty category for CSR {name!r}")
+        category: str = category_value
+        if category not in IMPLDEF_CATEGORIES:
+            allowed_str = ", ".join(IMPLDEF_CATEGORIES)
+            fatal(
+                f"Unrecognized category {category!r} for CSR {name!r}; "
+                f"allowed values are: {allowed_str}"
+            )
         chapter_category_files.setdefault((csr_dir, category), []).append(f"{file_stem}.adoc")
 
     for csr_dir, filenames in chapter_files.items():
