@@ -1,4 +1,4 @@
-| ro-mask
+| ConstMask
 | FLD:zort.XYZ
 | zort.XYZ
 a|

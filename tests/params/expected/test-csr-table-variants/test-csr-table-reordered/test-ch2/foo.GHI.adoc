@@ -1,4 +1,4 @@
-| var-width = UINT_4TO8
+| VarWidth = UINT_4TO8
 | CHAP:Two
 | foo.GHI
 a|

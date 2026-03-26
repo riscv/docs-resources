@@ -31,7 +31,7 @@ PARAMS_CH_TABLE_NAME_PREFIX = "table-params-ch-"
 PARAMS_NO_CH_TABLE_NAME = "table-params-no-ch"
 CSRS_CH_TABLE_NAME_PREFIX = "table-csrs-ch-"
 CSRS_NO_CH_TABLE_NAME = "table-csrs-no-ch"
-CSR_TYPES: Set[str] = {"legal-enum", "var-width", "ro-mask", "other"}
+CSR_TYPES: Set[str] = {"LegalEnum", "VarWidth", "ConstMask", "Other"}
 
 error, info, fatal = make_log_helpers(PN)
 
@@ -500,10 +500,10 @@ def add_csr_entries(
             fatal(f"Found CSR entry with non-string width-parameter in {def_filename}")
         parameter_name = raw_parameter_name
 
-    if csr_type == "var-width":
+    if csr_type == "VarWidth":
         if parameter_name is None:
             fatal(
-                f"Found CSR entry in {def_filename} with type 'var-width' but no width-parameter property"
+                f"Found CSR entry in {def_filename} with type 'VarWidth' but no width-parameter property"
             )
     elif parameter_name is not None:
         fatal(
@@ -1200,13 +1200,13 @@ def html_csr_table_row(f, csr: Dict[str, Any], chapter_name: Optional[str]):
     impl_defs = filter_impldefs_for_chapter(impl_defs_all, chapter_name)
 
     csr_type = csr.get("type")
-    type_display = csr_type if isinstance(csr_type, str) and csr_type else "other"
+    type_display = csr_type if isinstance(csr_type, str) and csr_type else "Other"
 
-    # For var-width types, append the width-parameter value
-    if type_display == "var-width":
+    # For VarWidth types, append the width-parameter value
+    if type_display == "VarWidth":
         width_param = csr.get("width-parameter")
         if isinstance(width_param, str) and width_param:
-            type_display = f"var-width = {width_param}"
+            type_display = f"VarWidth = {width_param}"
 
     feature_csr = dict(csr)
     if isinstance(impl_defs_all, list):

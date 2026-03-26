@@ -162,14 +162,14 @@ Examples:
 CSR Definition Encoding:
 - Use `csr_definitions` entries for CSRs, with `reg-name` (single CSR) or `reg-names` (multiple CSRs).
 - Every CSR/field entry must include `type` with one of:
-  - `legal-enum` - Standard defines legal values and implementation supports a subset that doesn't use all possible bit encodings (e.g., 10 values in a 4-bit field). Implementation's config file provides:
+  - `LegalEnum` - Standard defines legal values and implementation supports a subset that doesn't use all possible bit encodings (e.g., 10 values in a 4-bit field). Implementation's config file provides:
     - A list of supported legal write values
     - An indication of whether illegal write values are ignored or map to one specified legal value
-  - `var-width` - CSR/field is variable width and the `width-parameter` property provides the name of the parameter that provides its value.
-  - `ro-mask` - CSR/field allows implementation to treat some bits as read-only. Implementation's config file provides:
-    - mask: A bit mask (1 = read-only, 0 = read-write) of read-only bits
-    - value: The value of those read-only bits. If they are all zero the value can be omitted.
-  - `other` - CSR/field doesn't match any of the other `type` choices
+  - `VarWidth` - CSR/field is variable width and the `width-parameter` property provides the name of the parameter that provides its value.
+  - `ConstMask` - CSR/field allows implementation to treat some bits as constant values. Writes are ignored and reads return the constant value. Implementation's config file provides:
+    - mask: A bit mask (1 = constant, 0 = variable) of constant bits
+    - value: The value of those constant bits. If they are all zero the value can be omitted.
+  - `Other` - CSR/field doesn't match any of the other `type` choices
 - Every CSR entry must include `impl-def` or `impl-defs`.
   - At least one referenced normative rule must provide `impl-def-category`.
   - Any provided `impl-def-category` values across referenced impl-defs must agree.
@@ -177,29 +177,29 @@ CSR Definition Encoding:
 
 Examples:
 ```yaml
-# Legal-enum: Implementation's config file provides legal values and behavior when writing illegal values
+# Implementation's config file provides legal values and behavior when writing illegal values
 - reg-name: mtvec
   field-name: MODE
-  type: legal-enum
   impl-def: MTVEC_MODE_WARL
+  type: LegalEnum
 
-# Width-based CSR field (var-width parameter name provided by `width-parameter` property)
+# Width-based CSR field (VarWidth parameter name provided by `width-parameter` property)
 - reg-name: satp
   field-name: ASID
-  type: var-width
-  width-parameter: ASIDLEN
   impl-def: SATP_ASID_WARL
+  type: VarWidth
+  width-parameter: ASIDLEN
 
-# Read-only-mask: Implementation's config file provides bit mask and value of read-only bits
+# Implementation's config file provides bit mask of constant bits and their value (if not all 0).
 - reg-name: zort
-  type: ro-mask
   impl-def: ZORT_IMPL
+  type: ConstMask
 
-# Explicitly "other" (doesn't match other `type` values)
+# Explicitly "Other" (doesn't match other `type` values)
 - reg-name: mstatus
   field-name: MPP
-  type: other
   impl-def: MSTATUS_MPP_WLRL
+  type: Other
 ```
 
 ### create_param_appendix.py

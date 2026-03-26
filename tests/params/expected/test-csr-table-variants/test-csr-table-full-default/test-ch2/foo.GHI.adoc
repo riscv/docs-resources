@@ -1,5 +1,5 @@
 | foo.GHI
-| var-width = UINT_4TO8
+| VarWidth = UINT_4TO8
 | CHAP:Two
 a|
 * https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#FOO_GHI_WARL_VAR_WIDTH[FOO_GHI_WARL_VAR_WIDTH]

@@ -398,7 +398,7 @@
           <tbody>
             <tr>
               <td rowspan=1 id="satp.MODE">satp.MODE</td>
-              <td rowspan=1>var-width = ASIDLEN</td>
+              <td rowspan=1>VarWidth = ASIDLEN</td>
               <td rowspan=1>FLD:satp.ASID</td>
               <td><a href="test-ch1.html#norm:satp_asid_warl_asidlen">The satp.ASID CSR field width is specified by the ASIDLEN parameter value.</a></td>
             </tr>
@@ -421,13 +421,13 @@
           <tbody>
             <tr>
               <td rowspan=1 id="foo.ABC">foo.ABC</td>
-              <td rowspan=1>legal-enum</td>
+              <td rowspan=1>LegalEnum</td>
               <td rowspan=1>FLD:foo.ABC</td>
               <td><a href="test-ch2.html#norm:foo_abc_warl_enum">An implementation may support any or all of the following values for the 4-bit foo.ABC field: 0, 4, 15.</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="foo.GHI">foo.GHI</td>
-              <td rowspan=1>var-width = UINT_4TO8</td>
+              <td rowspan=1>VarWidth = UINT_4TO8</td>
               <td rowspan=1>CHAP:Two</td>
               <td><a href="test-ch2.html#norm:foo_ghi_warl_var_width">The foo.GHI CSR field width ranges from 4 to 8 bits as specified by the UINT_4TO8 parameter value.</a></td>
             </tr>
@@ -450,13 +450,13 @@
           <tbody>
             <tr>
               <td rowspan=1 id="zort.XYZ">zort.XYZ</td>
-              <td rowspan=1>ro-mask</td>
+              <td rowspan=1>ConstMask</td>
               <td rowspan=1>FLD:zort.XYZ</td>
               <td><a href="test-ch2.html#norm:zort_xyz_wlrl_ro_mask">An implementation may treat each bit of the zort.XYZ<br>CSR as read-only or read-write</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="qux.QQQ">qux.QQQ</td>
-              <td rowspan=1>other</td>
+              <td rowspan=1>Other</td>
               <td rowspan=1>FLD:qux.QQQ</td>
               <td><a href="test-ch2.html#norm:qux_qqq_wlrl_other">The qux.QQQ CSR field has implementation-defined behavior<br>that doesn't match any of the defined WARL/WLRL types.</a></td>
             </tr>
