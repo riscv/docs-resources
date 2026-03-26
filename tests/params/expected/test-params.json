@@ -1535,6 +1535,7 @@
       "chapter_name": "Two",
       "category": "WARL",
       "type": "LegalEnum",
+      "func-of-reg-name": "foo",
       "func-of-field-name": "GHI",
       "impl-defs": [
         {

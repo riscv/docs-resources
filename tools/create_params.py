@@ -635,8 +635,11 @@ def add_csr_entries(
 
         if parameter_name is not None:
             out_entry["width-parameter"] = parameter_name
-        if func_of_reg_name is not None:
-            out_entry["func-of-reg-name"] = func_of_reg_name
+        effective_func_of_reg_name = func_of_reg_name
+        if effective_func_of_reg_name is None and func_of_field_name is not None:
+            effective_func_of_reg_name = name
+        if effective_func_of_reg_name is not None:
+            out_entry["func-of-reg-name"] = effective_func_of_reg_name
         if func_of_field_name is not None:
             out_entry["func-of-field-name"] = func_of_field_name
 

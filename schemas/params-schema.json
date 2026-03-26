@@ -182,6 +182,14 @@
                 "required": ["width-parameter"]
               }
             }
+          },
+          {
+            "if": {
+              "required": ["func-of-field-name"]
+            },
+            "then": {
+              "required": ["func-of-reg-name"]
+            }
           }
         ],
         "additionalProperties": false
