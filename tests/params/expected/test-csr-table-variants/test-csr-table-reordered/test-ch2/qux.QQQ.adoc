@@ -1,4 +1,5 @@
-| Other
+a| Other +
+func-of: foo.GHI
 | FLD:qux.QQQ
 | qux.QQQ
 a|

@@ -1235,9 +1235,14 @@ def html_csr_table_row(f, csr: Dict[str, Any], chapter_name: Optional[str]):
         isinstance(func_of_field_name, str)
         and func_of_field_name
     ):
-        func_of_target = ""
+        base_reg_name: str = ""
         if isinstance(func_of_reg_name, str) and func_of_reg_name:
-            func_of_target = func_of_reg_name
+            base_reg_name = func_of_reg_name
+        elif isinstance(func_of_field_name, str) and func_of_field_name:
+            if isinstance(reg_name, str) and reg_name:
+                base_reg_name = reg_name
+
+        func_of_target = base_reg_name
         if isinstance(func_of_field_name, str) and func_of_field_name:
             if func_of_target:
                 func_of_target = f"{func_of_target}.{func_of_field_name}"

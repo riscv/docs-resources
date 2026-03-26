@@ -1535,7 +1535,6 @@
       "chapter_name": "Two",
       "category": "WARL",
       "type": "LegalEnum",
-      "func-of-reg-name": "foo",
       "func-of-field-name": "GHI",
       "impl-defs": [
         {
@@ -1624,6 +1623,8 @@
       "chapter_name": "Two",
       "category": "WLRL",
       "type": "Other",
+      "func-of-reg-name": "foo",
+      "func-of-field-name": "GHI",
       "impl-defs": [
         {
           "name": "QUX_QQQ_WLRL_OTHER",
