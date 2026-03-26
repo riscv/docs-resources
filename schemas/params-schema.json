@@ -164,7 +164,7 @@
           {
             "if": {
               "properties": {
-                "type": { "const": "var-width" }
+                "type": { "const": "VarWidth" }
               },
               "required": ["type"]
             },

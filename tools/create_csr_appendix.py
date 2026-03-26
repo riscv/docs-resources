@@ -226,12 +226,12 @@ def render_name_cell(csr: Dict[str, Any]) -> str:
 def render_type_cell(csr: Dict[str, Any]) -> str:
     """Render TYPE column cell."""
     csr_type = csr.get("type")
-    type_display = csr_type if isinstance(csr_type, str) and csr_type else "other"
+    type_display = csr_type if isinstance(csr_type, str) and csr_type else "Other"
 
-    if type_display == "var-width":
+    if type_display == "VarWidth":
         width_parameter = csr.get("width-parameter")
         if isinstance(width_parameter, str) and width_parameter:
-            type_display = f"var-width = {width_parameter}"
+            type_display = f"VarWidth = {width_parameter}"
 
     return f"| {type_display}"
 

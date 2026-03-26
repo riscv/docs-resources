@@ -1484,7 +1484,7 @@
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
       "category": "WARL",
-      "type": "var-width",
+      "type": "VarWidth",
       "width-parameter": "ASIDLEN",
       "impl-defs": [
         {
@@ -1534,7 +1534,7 @@
       "def_filename": "test-ch2.yaml",
       "chapter_name": "Two",
       "category": "WARL",
-      "type": "legal-enum",
+      "type": "LegalEnum",
       "impl-defs": [
         {
           "name": "FOO_ABC_WARL_ENUM",
@@ -1564,7 +1564,7 @@
       "def_filename": "test-ch2.yaml",
       "chapter_name": "Two",
       "category": "WARL",
-      "type": "var-width",
+      "type": "VarWidth",
       "width-parameter": "UINT_4TO8",
       "impl-defs": [
         {
@@ -1591,7 +1591,7 @@
       "def_filename": "test-ch2.yaml",
       "chapter_name": "Two",
       "category": "WLRL",
-      "type": "ro-mask",
+      "type": "ConstMask",
       "impl-defs": [
         {
           "name": "ZORT_XYZ_WLRL_RO_MASK",
@@ -1621,7 +1621,7 @@
       "def_filename": "test-ch2.yaml",
       "chapter_name": "Two",
       "category": "WLRL",
-      "type": "other",
+      "type": "Other",
       "impl-defs": [
         {
           "name": "QUX_QQQ_WLRL_OTHER",

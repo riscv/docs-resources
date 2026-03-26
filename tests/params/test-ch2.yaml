@@ -53,24 +53,24 @@ csr_definitions:
   # Case 1a: Enum
   - reg-name: foo
     field-name: ABC
-    type: legal-enum
+    type: LegalEnum
     impl-def: FOO_ABC_WARL_ENUM
 
   # Case 2: CSR field with width specified by a named parameter's value.
   - reg-name: foo
     field-name: GHI
-    type: var-width
+    type: VarWidth
     width-parameter: UINT_4TO8
     impl-def: FOO_GHI_WARL_VAR_WIDTH
 
   # Case 3: CSR field with some bits that are read-only and some bits that are read-write.
   - reg-name: zort
     field-name: XYZ
-    type: ro-mask
+    type: ConstMask
     impl-def: ZORT_XYZ_WLRL_RO_MASK
 
   # Case 4: CSR field that doesn't match any of the above cases.
   - reg-name: qux
     field-name: QQQ
-    type: other
+    type: Other
     impl-def: QUX_QQQ_WLRL_OTHER

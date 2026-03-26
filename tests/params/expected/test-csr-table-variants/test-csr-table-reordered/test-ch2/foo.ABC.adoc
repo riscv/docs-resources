@@ -1,4 +1,4 @@
-| legal-enum
+| LegalEnum
 | FLD:foo.ABC
 | foo.ABC
 a|

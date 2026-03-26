@@ -25,10 +25,10 @@
     "description": "Either an integer bit width between 2 and 64 (inclusive) or the name of another parameter that provides the bit width. Used only with type \"int\" or \"uint\""
   },
   "csrWidthParameterDesc": {
-    "description": "Name of the parameter referenced by a CSR entry. Required only when type is \"var-width\"."
+    "description": "Name of the parameter referenced by a CSR entry. Required only when type is \"VarWidth\"."
   },
   "csrTypeDesc": {
-    "description": "CSR encoding type discriminator. Legal values are \"legal-enum\", \"var-width\", \"ro-mask\", and \"other\"."
+    "description": "CSR encoding type discriminator. Legal values are \"LegalEnum\", \"VarWidth\", \"ConstMask\", and \"Other\"."
   },
   "paramType": {
     "oneOf": [
@@ -85,7 +85,7 @@
   },
   "csrType": {
     "type": "string",
-    "enum": ["legal-enum", "var-width", "ro-mask", "other"]
+    "enum": ["LegalEnum", "VarWidth", "ConstMask", "Other"]
   },
   "stringArray": {
     "type": "array",
