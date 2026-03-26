@@ -242,13 +242,23 @@ def render_type_cell(csr: Dict[str, Any]) -> str:
         isinstance(func_of_field_name, str)
         and func_of_field_name
     ):
-        func_of_target = ""
+        # Determine the base register name for func-of:
+        # 1. Prefer an explicit func-of-reg-name if provided.
+        # 2. Otherwise, when only func-of-field-name is given, default to this CSR's reg-name.
+        base_reg_name: str = ""
         if isinstance(func_of_reg_name, str) and func_of_reg_name:
-            func_of_target = func_of_reg_name
+            base_reg_name = func_of_reg_name
+        elif isinstance(func_of_field_name, str) and func_of_field_name:
+            reg_name = csr.get("reg-name")
+            if isinstance(reg_name, str) and reg_name:
+                base_reg_name = reg_name
+
+        func_of_target = base_reg_name
         if isinstance(func_of_field_name, str) and func_of_field_name:
             if func_of_target:
                 func_of_target = f"{func_of_target}.{func_of_field_name}"
             else:
+                # No usable register name; fall back to just the field name.
                 func_of_target = func_of_field_name
         return f"a| {type_display} +\nfunc-of: {func_of_target}"
 
