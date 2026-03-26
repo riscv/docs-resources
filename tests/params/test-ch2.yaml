@@ -54,6 +54,8 @@ csr_definitions:
   - reg-name: foo
     field-name: ABC
     type: LegalEnum
+    func-of-reg-name: foo
+    func-of-field-name: GHI
     impl-def: FOO_ABC_WARL_ENUM
 
   # Case 2: CSR field with width specified by a named parameter's value.

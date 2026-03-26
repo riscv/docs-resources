@@ -144,6 +144,12 @@
             "$ref": "param-common-schema.json#/csrName",
             "description": "Single CSR field name"
           },
+          "func-of-reg-name": {
+            "$ref": "param-common-schema.json#/funcOfRegName"
+          },
+          "func-of-field-name": {
+            "$ref": "param-common-schema.json#/funcOfFieldName"
+          },
           "field-names": {
             "$ref": "param-common-schema.json#/csrNameArray",
             "description": "Multiple CSR field names"

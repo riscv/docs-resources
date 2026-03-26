@@ -136,5 +136,17 @@
       "$ref": "#/csrNamePattern"
     },
     "minItems": 1
+  },
+  "funcOfRegName": {
+    "allOf": [
+      { "$ref": "#/csrName" },
+      { "description": "CSR name associated with function-of relationship" }
+    ]
+  },
+  "funcOfFieldName": {
+    "allOf": [
+      { "$ref": "#/csrName" },
+      { "description": "CSR field name associated with function-of relationship" }
+    ]
   }
 }

@@ -1,4 +1,5 @@
-| LegalEnum
+a| LegalEnum +
+func-of: foo.GHI
 | FLD:foo.ABC
 | foo.ABC
 a|

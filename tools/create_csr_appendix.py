@@ -233,6 +233,25 @@ def render_type_cell(csr: Dict[str, Any]) -> str:
         if isinstance(width_parameter, str) and width_parameter:
             type_display = f"VarWidth = {width_parameter}"
 
+    func_of_reg_name = csr.get("func-of-reg-name")
+    func_of_field_name = csr.get("func-of-field-name")
+    if (
+        isinstance(func_of_reg_name, str)
+        and func_of_reg_name
+    ) or (
+        isinstance(func_of_field_name, str)
+        and func_of_field_name
+    ):
+        func_of_target = ""
+        if isinstance(func_of_reg_name, str) and func_of_reg_name:
+            func_of_target = func_of_reg_name
+        if isinstance(func_of_field_name, str) and func_of_field_name:
+            if func_of_target:
+                func_of_target = f"{func_of_target}.{func_of_field_name}"
+            else:
+                func_of_target = func_of_field_name
+        return f"a| {type_display} +\nfunc-of: {func_of_target}"
+
     return f"| {type_display}"
 
 

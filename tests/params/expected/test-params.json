@@ -1535,6 +1535,8 @@
       "chapter_name": "Two",
       "category": "WARL",
       "type": "LegalEnum",
+      "func-of-reg-name": "foo",
+      "func-of-field-name": "GHI",
       "impl-defs": [
         {
           "name": "FOO_ABC_WARL_ENUM",
@@ -1550,7 +1552,7 @@
             {
               "name": "norm:foo_abc_warl_enum",
               "context": false,
-              "text": "An implementation may support any or all of the following values for the 4-bit foo.ABC field: 0, 4, 15.",
+              "text": "An implementation may support any or all of the following values for the 4-bit foo.ABC field: When foo.GHI is 0, legal values are 0, 4, 15. When foo.GHI is non-zero, legal values are 1, 2, 3.",
               "tag_filename": "/build/test-ch2-norm-tags.json",
               "stds_doc_url": "test-ch2.html"
             }
