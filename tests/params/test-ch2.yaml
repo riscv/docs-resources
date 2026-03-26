@@ -54,6 +54,7 @@ csr_definitions:
   - reg-name: foo
     field-name: ABC
     type: LegalEnum
+    func-of-field-name: GHI
     impl-def: FOO_ABC_WARL_ENUM
 
   # Case 2: CSR field with width specified by a named parameter's value.
@@ -70,7 +71,10 @@ csr_definitions:
     impl-def: ZORT_XYZ_WLRL_RO_MASK
 
   # Case 4: CSR field that doesn't match any of the above cases.
+  # Also test func-of relationship to a field in a different register.
   - reg-name: qux
     field-name: QQQ
+    func-of-reg-name: foo
+    func-of-field-name: GHI
     type: Other
     impl-def: QUX_QQQ_WLRL_OTHER

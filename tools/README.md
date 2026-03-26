@@ -174,14 +174,26 @@ CSR Definition Encoding:
   - At least one referenced normative rule must provide `impl-def-category`.
   - Any provided `impl-def-category` values across referenced impl-defs must agree.
   - The category is mapped into CSR category (`WARL`/`WLRL`) for output grouping.
+- If CSR/field type values are a function of another CSR/field:
+  - `func-of-reg-name`: Name of other CSR register (can be omitted if same CSR as this one)
+  - `func-of-field-name`: Name of other CSR field (can be omitted if entire CSR value)
+- In HTML and AsciiDoc output, the `Type` column adds `func-of: <reg>[.<field>]` on a new line when either of these properties is present.
 
 Examples:
 ```yaml
-# Implementation's config file provides legal values and behavior when writing illegal values
+# Implementation supports a list of legal values (specified in config file)
 - reg-name: mtvec
   field-name: MODE
   impl-def: MTVEC_MODE_WARL
   type: LegalEnum
+
+# Implementation has field legal values a function of another field (specified in config file)
+- reg-name: mtvec
+  field-name: BASE
+  impl-def: MTVEC_BASE_WARL
+  type: LegalEnum
+  func-of-reg-name: mtvec
+  func-of-field-name: MODE
 
 # Width-based CSR field (VarWidth parameter name provided by `width-parameter` property)
 - reg-name: satp

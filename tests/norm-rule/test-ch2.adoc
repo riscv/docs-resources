@@ -82,7 +82,7 @@ Here's a normative rule for mock extension dependency of extension A on extensio
 
 === Chapter 2.3 - CSR Field Types
 
-[#norm:foo_abc_warl_enum]#An implementation may support any or all of the following values for the 4-bit `foo.ABC` field: 0, 4, 15.#
+[#norm:foo_abc_warl_enum]#An implementation may support any or all of the following values for the 4-bit `foo.ABC` field: When `foo.GHI` is 0, legal values are 0, 4, 15. When `foo.GHI` is non-zero, legal values are 1, 2, 3.#
 
 [#norm:foo_ghi_warl_var_width]#The `foo.GHI` CSR field width ranges from 4 to 8 bits as specified by the UINT_4TO8 parameter value.#
 

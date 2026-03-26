@@ -483,6 +483,8 @@ def add_csr_entries(
     """Expand one CSR definition entry into one or more output CSR objects."""
     raw_csr_type = entry.get("type")
     raw_parameter_name = entry.get("width-parameter")
+    raw_func_of_reg_name = entry.get("func-of-reg-name")
+    raw_func_of_field_name = entry.get("func-of-field-name")
 
     if not isinstance(raw_csr_type, str):
         fatal(f"Found CSR entry with missing or non-string type in {def_filename}")
@@ -499,6 +501,18 @@ def add_csr_entries(
         if not isinstance(raw_parameter_name, str):
             fatal(f"Found CSR entry with non-string width-parameter in {def_filename}")
         parameter_name = raw_parameter_name
+
+    func_of_reg_name: Optional[str] = None
+    if raw_func_of_reg_name is not None:
+        if not isinstance(raw_func_of_reg_name, str):
+            fatal(f"Found CSR entry with non-string func-of-reg-name in {def_filename}")
+        func_of_reg_name = raw_func_of_reg_name
+
+    func_of_field_name: Optional[str] = None
+    if raw_func_of_field_name is not None:
+        if not isinstance(raw_func_of_field_name, str):
+            fatal(f"Found CSR entry with non-string func-of-field-name in {def_filename}")
+        func_of_field_name = raw_func_of_field_name
 
     if csr_type == "VarWidth":
         if parameter_name is None:
@@ -621,6 +635,13 @@ def add_csr_entries(
 
         if parameter_name is not None:
             out_entry["width-parameter"] = parameter_name
+        effective_func_of_reg_name = func_of_reg_name
+        if effective_func_of_reg_name is None and func_of_field_name is not None:
+            effective_func_of_reg_name = name
+        if effective_func_of_reg_name is not None:
+            out_entry["func-of-reg-name"] = effective_func_of_reg_name
+        if func_of_field_name is not None:
+            out_entry["func-of-field-name"] = func_of_field_name
 
         note = entry.get("note")
         if note is not None:
@@ -1207,6 +1228,30 @@ def html_csr_table_row(f, csr: Dict[str, Any], chapter_name: Optional[str]):
         width_param = csr.get("width-parameter")
         if isinstance(width_param, str) and width_param:
             type_display = f"VarWidth = {width_param}"
+
+    func_of_reg_name = csr.get("func-of-reg-name")
+    func_of_field_name = csr.get("func-of-field-name")
+    if (
+        isinstance(func_of_reg_name, str)
+        and func_of_reg_name
+    ) or (
+        isinstance(func_of_field_name, str)
+        and func_of_field_name
+    ):
+        base_reg_name: str = ""
+        if isinstance(func_of_reg_name, str) and func_of_reg_name:
+            base_reg_name = func_of_reg_name
+        elif isinstance(func_of_field_name, str) and func_of_field_name:
+            if isinstance(reg_name, str) and reg_name:
+                base_reg_name = reg_name
+
+        func_of_target = base_reg_name
+        if isinstance(func_of_field_name, str) and func_of_field_name:
+            if func_of_target:
+                func_of_target = f"{func_of_target}.{func_of_field_name}"
+            else:
+                func_of_target = func_of_field_name
+        type_display = f"{type_display}<br>func-of: {func_of_target}"
 
     feature_csr = dict(csr)
     if isinstance(impl_defs_all, list):

@@ -114,6 +114,12 @@
             "type": "string",
             "description": "CSR field name"
           },
+          "func-of-reg-name": {
+            "$ref": "param-common-schema.json#/funcOfRegName"
+          },
+          "func-of-field-name": {
+            "$ref": "param-common-schema.json#/funcOfFieldName"
+          },
           "def_filename": {
             "type": "string",
             "description": "Parameter definition file that defines this CSR"
@@ -175,6 +181,14 @@
               "not": {
                 "required": ["width-parameter"]
               }
+            }
+          },
+          {
+            "if": {
+              "required": ["func-of-field-name"]
+            },
+            "then": {
+              "required": ["func-of-reg-name"]
             }
           }
         ],
