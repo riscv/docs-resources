@@ -163,8 +163,8 @@ CSR Definition Encoding:
 - Use `csr_definitions` entries for CSRs, with `reg-name` (single CSR) or `reg-names` (multiple CSRs).
 - Every CSR/field entry must include `type` with one of:
   - `LegalEnum` - Standard defines legal values and implementation supports a subset that doesn't use all possible bit encodings (e.g., 10 values in a 4-bit field). Implementation's config file provides:
-    - A list of supported legal write values
-    - An indication of whether illegal write values are ignored or map to one specified legal value
+    - A list of supported legal write values. An empty list indicates the CSR/field is treated as read-only zero.
+    - An indication of whether illegal write values are ignored or how they map to legal values
   - `VarWidth` - CSR/field is variable width and the `width-parameter` property provides the name of the parameter that provides its value.
   - `ConstMask` - CSR/field allows implementation to treat some bits as constant values. Writes are ignored and reads return the constant value. Implementation's config file provides:
     - mask: A bit mask (1 = constant, 0 = variable) of constant bits
