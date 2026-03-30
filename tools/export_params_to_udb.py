@@ -73,17 +73,22 @@ def main():
         impl_defs = param.get('impl-defs', [])
         extension_names = []
         for impldef in impl_defs:
-            if impldef.get('kind') == 'extension':
+            kind = impldef.get('kind')
+            if kind == 'extension':
                 instances = impldef.get('instances')
                 if isinstance(instances, list):
                     for ext_name in instances:
                         if isinstance(ext_name, str):
                             extension_names.append(ext_name)
-        if extension_names:
-            if len(extension_names) == 1:
-                defined_by = {"extension": {"name": extension_names[0]}}
-            else:
-                defined_by = {"extension": {"anyOf": [{"name": n} for n in extension_names]}}
+            elif kind == 'base':
+                # Treat 'base' as an extension named 'I'
+                extension_names.append('I')
+        if not extension_names:
+            extension_names = ['I']
+        if len(extension_names) == 1:
+            defined_by = {"extension": {"name": extension_names[0]}}
+        else:
+            defined_by = {"extension": {"anyOf": [{"name": n} for n in extension_names]}}
 
         # Map input to output schema
         out_obj = {

@@ -13,4 +13,7 @@ schema:
   - RED
   - PINK
   - WHITE
+definedBy:
+  extension:
+    name: I
 $source: test-ch2.yaml

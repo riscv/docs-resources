@@ -6,4 +6,7 @@ long_name: INT_MXLEN parameter
 description: Signed integer whose width is MXLEN.
 schema:
   type: integer
+definedBy:
+  extension:
+    name: I
 $source: test-ch1.yaml

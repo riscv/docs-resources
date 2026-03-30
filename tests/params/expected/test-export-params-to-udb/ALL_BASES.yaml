@@ -8,4 +8,7 @@ schema:
   type: integer
   minimum: -2
   maximum: 1
+definedBy:
+  extension:
+    name: I
 $source: test-ch1.yaml

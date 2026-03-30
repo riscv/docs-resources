@@ -6,4 +6,7 @@ long_name: MOCK_EXT_DEP_A_ON_B parameter
 description: 'NOTE: This is a Mock extension dependency parameter (A depends B).'
 schema:
   type: boolean
+definedBy:
+  extension:
+    name: I
 $source: test-ch2.yaml

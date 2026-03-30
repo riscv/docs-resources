@@ -56,7 +56,8 @@ parameter_definitions:
   - name: MXLEN
     long-name: MXLEN parameter
     type: [32, 64]
-    description: Supported machine register widths.
+    description: |
+      Supported machine register widths. Doesn't have an impl-def just for testing purposes.
   - name: UINT_MXLEN
     long-name: UINT_MXLEN parameter
     type: uint

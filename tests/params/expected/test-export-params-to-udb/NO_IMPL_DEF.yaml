@@ -11,4 +11,7 @@ schema:
   type: integer
   minimum: 0
   maximum: 1
+definedBy:
+  extension:
+    name: I
 $source: test-ch2.yaml
