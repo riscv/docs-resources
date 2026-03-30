@@ -5,7 +5,8 @@ name: NO_IMPL_DEF
 long_name: NO_IMPL_DEF parameter
 description: 'Parameter intentionally defined without implementation-defined behavior.
 
-  NOTE: This is a note for a parameter without any implementation-defined behavior. Here''s an 2^32^ exponent.'
+  NOTE: This is a note for a parameter without any implementation-defined behavior.
+  Here''s an 2^32^ exponent.'
 definedBy: Two
 schema:
   type: integer

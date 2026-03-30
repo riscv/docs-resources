@@ -10,9 +10,9 @@ schema:
   items:
     type: string
     enum:
-      - A
-      - B
-      - C
+    - A
+    - B
+    - C
   minItems: 29
   maxItems: 29
 $source: test-ch1.yaml

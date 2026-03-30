@@ -8,6 +8,6 @@ definedBy: Two
 schema:
   type: integer
   enum:
-    - 32
-    - 64
+  - 32
+  - 64
 $source: test-ch2.yaml

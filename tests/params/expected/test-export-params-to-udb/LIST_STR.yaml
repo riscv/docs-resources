@@ -8,7 +8,7 @@ definedBy: One
 schema:
   type: string
   enum:
-    - ABC
-    - DEF
-    - GHI
+  - ABC
+  - DEF
+  - GHI
 $source: test-ch1.yaml

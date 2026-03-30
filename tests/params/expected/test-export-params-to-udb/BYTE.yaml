@@ -3,7 +3,8 @@ $schema: param_schema.json#
 kind: parameter
 name: BYTE
 long_name: 8-bit unsigned integer
-description: 'Here''s a longer description for the BYTE parameter. It is an 8-bit unsigned integer.
+description: 'Here''s a longer description for the BYTE parameter. It is an 8-bit
+  unsigned integer.
 
   '
 definedBy: One
