@@ -4,7 +4,6 @@ kind: parameter
 name: MOCK_CSR_X
 long_name: MOCK_CSR_X parameter
 description: 'NOTE: This is a Mock "X" CSR parameter.'
-definedBy: Two
 schema:
   type: boolean
 $source: test-ch2.yaml

@@ -4,7 +4,6 @@ kind: parameter
 name: ARRAY_OF_BIT
 long_name: ARRAY_OF_BIT parameter
 description: ''
-definedBy: One
 schema:
   type: array
   items:
@@ -13,4 +12,7 @@ schema:
     maximum: 1
   minItems: 16
   maxItems: 16
+definedBy:
+  extension:
+    name: MockExtX
 $source: test-ch1.yaml

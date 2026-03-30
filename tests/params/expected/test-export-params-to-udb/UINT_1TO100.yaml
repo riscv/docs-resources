@@ -4,9 +4,11 @@ kind: parameter
 name: UINT_1TO100
 long_name: UINT_1TO100 parameter
 description: ''
-definedBy: One
 schema:
   type: integer
   minimum: 1
   maximum: 100
+definedBy:
+  extension:
+    name: MockExtY
 $source: test-ch1.yaml

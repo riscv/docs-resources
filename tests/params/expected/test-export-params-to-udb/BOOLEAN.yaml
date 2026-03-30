@@ -4,7 +4,9 @@ kind: parameter
 name: BOOLEAN
 long_name: BOOLEAN parameter
 description: ''
-definedBy: One
 schema:
   type: boolean
+definedBy:
+  extension:
+    name: MockExtX
 $source: test-ch1.yaml

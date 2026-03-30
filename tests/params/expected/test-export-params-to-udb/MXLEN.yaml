@@ -4,7 +4,6 @@ kind: parameter
 name: MXLEN
 long_name: MXLEN parameter
 description: Supported machine register widths.
-definedBy: One
 schema:
   type: integer
   enum:

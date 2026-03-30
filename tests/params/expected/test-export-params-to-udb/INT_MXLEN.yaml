@@ -4,7 +4,6 @@ kind: parameter
 name: INT_MXLEN
 long_name: INT_MXLEN parameter
 description: Signed integer whose width is MXLEN.
-definedBy: One
 schema:
   type: integer
 $source: test-ch1.yaml

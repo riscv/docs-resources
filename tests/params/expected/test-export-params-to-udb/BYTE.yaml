@@ -7,9 +7,11 @@ description: 'Here''s a longer description for the BYTE parameter. It is an 8-bi
   unsigned integer.
 
   '
-definedBy: One
 schema:
   type: integer
   minimum: 0
   maximum: 255
+definedBy:
+  extension:
+    name: MockExtX
 $source: test-ch1.yaml

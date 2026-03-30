@@ -48,6 +48,11 @@ parameter_definitions:
     impl-def: INT64
     type: int
     width: 64
+  - name: INT2
+    long-name: Signed 2-bit integer
+    impl-def: INT2
+    type: int
+    width: 2
   - name: MXLEN
     long-name: MXLEN parameter
     type: [32, 64]

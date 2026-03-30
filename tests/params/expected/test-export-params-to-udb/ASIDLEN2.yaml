@@ -4,9 +4,11 @@ kind: parameter
 name: ASIDLEN2
 long_name: ASIDLEN parameter
 description: ''
-definedBy: Two
 schema:
   type: integer
   minimum: 0
   maximum: 16
+definedBy:
+  extension:
+    name: MockExtZ
 $source: test-ch2.yaml

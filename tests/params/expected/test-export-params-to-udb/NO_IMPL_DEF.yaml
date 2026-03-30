@@ -7,7 +7,6 @@ description: 'Parameter intentionally defined without implementation-defined beh
 
   NOTE: This is a note for a parameter without any implementation-defined behavior.
   Here''s an 2^32^ exponent.'
-definedBy: Two
 schema:
   type: integer
   minimum: 0

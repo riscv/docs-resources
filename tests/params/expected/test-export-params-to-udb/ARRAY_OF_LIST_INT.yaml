@@ -4,7 +4,6 @@ kind: parameter
 name: ARRAY_OF_LIST_INT
 long_name: ARRAY_OF_LIST_INT parameter
 description: ''
-definedBy: One
 schema:
   type: array
   items:
@@ -15,4 +14,7 @@ schema:
     - 4
   minItems: 16
   maxItems: 16
+definedBy:
+  extension:
+    name: MockExtX
 $source: test-ch1.yaml

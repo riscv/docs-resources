@@ -1,0 +1,9 @@
+| 2-bit signed integer
+| EXT:MockExtY
+a|
+[#param:INT2]#INT2#
+
+Normative Rule(s):
+
+* https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#INT2[INT2]
+| See normative rule

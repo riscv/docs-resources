@@ -4,7 +4,11 @@ kind: parameter
 name: FOOBAR
 long_name: FOOBAR parameter
 description: ''
-definedBy: Two
 schema:
   type: boolean
+definedBy:
+  extension:
+    anyOf:
+    - name: MockExtX
+    - name: MockExtZ
 $source: test-ch2.yaml

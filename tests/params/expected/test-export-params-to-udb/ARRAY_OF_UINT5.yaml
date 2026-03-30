@@ -4,7 +4,6 @@ kind: parameter
 name: ARRAY_OF_UINT5
 long_name: ARRAY_OF_UINT5 parameter
 description: ''
-definedBy: One
 schema:
   type: array
   items:
@@ -13,4 +12,7 @@ schema:
     maximum: 31
   minItems: 4
   maxItems: 4
+definedBy:
+  extension:
+    name: MockExtX
 $source: test-ch1.yaml

@@ -4,7 +4,6 @@ kind: parameter
 name: ARRAY_OF_DWORD
 long_name: ARRAY_OF_DWORD parameter
 description: ''
-definedBy: One
 schema:
   type: array
   items:
@@ -13,4 +12,7 @@ schema:
     maximum: 18446744073709551615
   minItems: 32
   maxItems: 32
+definedBy:
+  extension:
+    name: MockExtX
 $source: test-ch1.yaml

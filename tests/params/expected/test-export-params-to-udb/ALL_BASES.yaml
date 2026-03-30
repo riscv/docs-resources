@@ -4,7 +4,6 @@ kind: parameter
 name: ALL_BASES
 long_name: ALL_BASES parameter
 description: ''
-definedBy: One
 schema:
   type: integer
   minimum: -2

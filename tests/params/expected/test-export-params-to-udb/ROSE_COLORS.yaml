@@ -7,7 +7,6 @@ description: 'This is a description about the ROSE_COLORS parameter. Here''s som
   *bold text*.
 
   NOTE: This is a note about the ROSE_COLORS parameter.'
-definedBy: Two
 schema:
   type: string
   enum:
