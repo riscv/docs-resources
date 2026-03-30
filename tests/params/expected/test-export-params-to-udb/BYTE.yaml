@@ -1,0 +1,17 @@
+---
+$schema: param_schema.json#
+kind: parameter
+name: BYTE
+long_name: 8-bit unsigned integer
+description: 'Here''s a longer description for the BYTE parameter. It is an 8-bit
+  unsigned integer.
+
+  '
+schema:
+  type: integer
+  minimum: 0
+  maximum: 255
+definedBy:
+  extension:
+    name: MockExtX
+$source: test-ch1.yaml

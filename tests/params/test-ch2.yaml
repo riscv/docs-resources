@@ -6,45 +6,57 @@ $schema: "../../schemas/param-defs-schema.json#"
 chapter_name: Two
 
 parameter_definitions:
+
   - name: ROSE_COLORS
+    long-name: ROSE_COLORS parameter
     impl-def: ROSE_COLORS
     note: This is a note about the ROSE_COLORS parameter.
     description: This is a description about the ROSE_COLORS parameter. Here's some *bold text*.
     type: [RED, PINK, WHITE]
   - name: XLEN
+    long-name: XLEN parameter
     impl-defs: [XLEN1, XLEN2]
     type: [32, 64]
   - name: FOOBAR
+    long-name: FOOBAR parameter
     impl-defs: [FOOBAR_CH1_EXT_X, FOOBAR_CH2_EXT_Z]
     type: boolean
   - names: [ASIDLEN, ASIDLEN1, ASIDLEN2]
+    long-name: ASIDLEN parameter
     impl-def: ASIDLEN
     range: [0, 16]
   - name: NO_IMPL_DEF
+    long-name: NO_IMPL_DEF parameter
     note: This is a note for a parameter without any implementation-defined behavior. Here's an 2^32^ exponent.
     type: bit
     description: Parameter intentionally defined without implementation-defined behavior.
   - name: MOCK_INST_X
+    long-name: MOCK_INST_X parameter
     impl-def: MOCK_INST_X
     type: boolean
     note: This is a Mock "X" instruction parameter.
   - name: BASE_RV32I
+    long-name: BASE_RV32I parameter
     impl-def: BASE_RV32I
     type: boolean
     note: This is a base RV32I parameter.
   - name: BASE_RV32I_RV64I
+    long-name: BASE_RV32I_RV64I parameter
     impl-def: BASE_RV32I_RV64I
     type: boolean
     note: This is a base RV32I or RV64I parameter.
   - name: MOCK_CSR_X
+    long-name: MOCK_CSR_X parameter
     impl-def: MOCK_CSR_X
     type: boolean
     note: This is a Mock "X" CSR parameter.
   - name: MOCK_CSR_FIELD_Y
+    long-name: MOCK_CSR_FIELD_Y parameter
     impl-def: MOCK_CSR_FIELD_Y
     type: boolean
     note: This is a Mock "Y" CSR field parameter.
   - name: MOCK_EXT_DEP_A_ON_B
+    long-name: MOCK_EXT_DEP_A_ON_B parameter
     impl-def: MOCK_EXT_DEP_A_ON_B
     type: boolean
     note: This is a Mock extension dependency parameter (A depends B).

@@ -6,4 +6,4 @@ a|
 Normative Rule(s):
 
 * (none)
-| Supported machine register widths.
+| Supported machine register widths. Doesn't have an impl-def just for testing purposes.

@@ -1,0 +1,14 @@
+---
+$schema: param_schema.json#
+kind: parameter
+name: DWORD
+long_name: DWORD parameter
+description: ''
+schema:
+  type: integer
+  minimum: 0
+  maximum: 18446744073709551615
+definedBy:
+  extension:
+    name: MockExtX
+$source: test-ch1.yaml

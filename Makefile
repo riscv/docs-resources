@@ -54,6 +54,8 @@ CSR_TABLE_VARIANT_FILES := \
 	$(PARAMS_TESTS_DIR)/test-csr-table-full-default.yaml \
 	$(PARAMS_TESTS_DIR)/test-csr-table-reordered.yaml \
 	$(PARAMS_TESTS_DIR)/test-csr-table-minimal.yaml
+EXPORT_PARAMS_TO_UDB_TOOL := $(TOOLS_DIR)/export_params_to_udb.py
+EXPORT_PARAMS_TO_UDB_PYTHON := python3 $(EXPORT_PARAMS_TO_UDB_TOOL)
 
 # Stuff for building test standards document in HTML to have links into it.
 DOCS = test-ch1 test-ch2
@@ -106,6 +108,8 @@ BUILT_PARAM_TABLE_VARIANTS_DIR := $(BUILD_DIR)/test-param-table-variants
 BUILT_PARAM_TABLE_VARIANTS_STAMP := $(BUILD_DIR)/test-param-table-variants.done
 BUILT_CSR_TABLE_VARIANTS_DIR := $(BUILD_DIR)/test-csr-table-variants
 BUILT_CSR_TABLE_VARIANTS_STAMP := $(BUILD_DIR)/test-csr-table-variants.done
+BUILT_EXPORT_PARAMS_TO_UDB_DIR := $(BUILD_DIR)/test-export-params-to-udb
+BUILT_EXPORT_PARAMS_TO_UDB_STAMP := $(BUILD_DIR)/test-export-params-to-udb.done
 
 # Combine separate fnames into lists.
 BUILT_TEST_HTML_FNAMES := $(BUILT_TEST_CH1_HTML_FNAME) $(BUILT_TEST_CH2_HTML_FNAME)
@@ -125,6 +129,7 @@ EXPECTED_CSRS_ADOC := $(PARAMS_EXPECTED_DIR)/test-csr-appendix.adoc
 EXPECTED_CSR_ADOC_DIR := $(PARAMS_EXPECTED_DIR)/test-csr-appendix-adoc-includes
 EXPECTED_PARAM_TABLE_VARIANTS_DIR := $(PARAMS_EXPECTED_DIR)/test-param-table-variants
 EXPECTED_CSR_TABLE_VARIANTS_DIR := $(PARAMS_EXPECTED_DIR)/test-csr-table-variants
+EXPECTED_EXPORT_PARAMS_TO_UDB_DIR := $(PARAMS_EXPECTED_DIR)/test-export-params-to-udb
 
 # Normative rule definition input YAML files.
 GOOD_NORM_RULE_DEF_FILES := $(NORM_RULE_DEF_DIR)/test-ch1.yaml $(NORM_RULE_DEF_DIR)/test-ch2.yaml
@@ -206,17 +211,26 @@ OPTIONS := --trace \
            --failure-level=WARN
 
 
+
 # Default target
 .PHONY: all
 all: test
+
+
 
 # Build tests and compare against expected
 .PHONY: test
 test: build-tests compare-tests test-tag-changes test-adoc2html test-shared-utils test-text-to-html
 
 # Build tests
-.PHONY: build-tests build-test-tags build-test-norm-rules-json build-test-norm-rules-html build-test-tags-without-rules build-test-params-json build-test-params-html build-test-param-adoc build-test-csr-adoc build-test-param-table-variants build-test-csr-table-variants
-build-tests: build-test-tags build-test-norm-rules-json build-test-norm-rules-html build-test-tags-without-rules build-test-params-json build-test-params-html build-test-param-adoc build-test-csr-adoc build-test-param-table-variants build-test-csr-table-variants
+.PHONY: build-tests build-test-tags build-test-norm-rules-json build-test-norm-rules-html
+.PHONY: build-test-tags-without-rules build-test-params-json build-test-params-html
+.PHONY: build-test-param-adoc build-test-csr-adoc build-test-param-table-variants
+.PHONY: build-test-csr-table-variants build-test-export-params-to-udb
+build-tests: build-test-tags build-test-norm-rules-json build-test-norm-rules-html \
+build-test-tags-without-rules build-test-params-json build-test-params-html build-test-param-adoc \
+build-test-csr-adoc build-test-param-table-variants build-test-csr-table-variants \
+build-test-export-params-to-udb
 build-test-tags: $(BUILT_TEST_NORM_TAGS_FNAMES) $(BUILT_DUPLICATE_NORM_TAGS_FNAME)
 build-test-norm-rules-json: $(BUILT_NORM_RULES_JSON)
 build-test-norm-rules-html: $(BUILT_NORM_RULES_HTML)
@@ -227,10 +241,14 @@ build-test-param-adoc: $(BUILT_PARAM_ADOC_STAMP)
 build-test-csr-adoc: $(BUILT_CSR_ADOC_STAMP)
 build-test-param-table-variants: $(BUILT_PARAM_TABLE_VARIANTS_STAMP)
 build-test-csr-table-variants: $(BUILT_CSR_TABLE_VARIANTS_STAMP)
+build-test-export-params-to-udb: $(BUILT_EXPORT_PARAMS_TO_UDB_STAMP)
 
 # Compare tests against expected
 .PHONY: compare-tests
-compare-tests: compare-test-tags compare-test-norm-rules-json compare-test-norm-rules-html compare-test-params-json compare-test-params-html compare-test-params-adoc compare-test-param-adoc-files compare-test-csrs-adoc compare-test-csr-adoc-files compare-test-param-table-variants compare-test-csr-table-variants
+compare-tests: compare-test-tags compare-test-norm-rules-json compare-test-norm-rules-html \
+compare-test-params-json compare-test-params-html compare-test-params-adoc \
+compare-test-param-adoc-files compare-test-csrs-adoc compare-test-csr-adoc-files \
+compare-test-param-table-variants compare-test-csr-table-variants compare-test-export-params-to-udb
 
 .PHONY: compare-test-tags
 compare-test-tags: compare-test-ch1-tags compare-test-ch2-tags
@@ -295,7 +313,13 @@ compare-test-csr-table-variants: $(EXPECTED_CSR_TABLE_VARIANTS_DIR) $(BUILT_CSR_
 	@echo "CHECKING CSR TABLE VARIANT OUTPUTS AGAINST EXPECTED"
 	diff -r $(EXPECTED_CSR_TABLE_VARIANTS_DIR) $(BUILT_CSR_TABLE_VARIANTS_DIR) && echo "diff PASSED" || (echo "diff FAILED"; exit 1)
 
+.PHONY: compare-test-export-params-to-udb
+compare-test-export-params-to-udb: $(EXPECTED_EXPORT_PARAMS_TO_UDB_DIR) $(BUILT_EXPORT_PARAMS_TO_UDB_DIR)
+	@echo "CHECKING GENERATED EXPORT PARAMS TO UDB FILES AGAINST EXPECTED"
+	diff -r $(EXPECTED_EXPORT_PARAMS_TO_UDB_DIR) $(BUILT_EXPORT_PARAMS_TO_UDB_DIR) && echo "diff PASSED" || (echo "diff FAILED"; exit 1)
+#
 # Test tag change detection
+#
 .PHONY: test-tag-changes test-tag-changes-basic test-tag-changes-verbose test-tag-changes-no-changes test-tag-changes-additions-only test-tag-changes-whitespace-only test-tag-changes-formatting-only test-tag-changes-update
 test-tag-changes: test-tag-changes-basic test-tag-changes-verbose test-tag-changes-no-changes test-tag-changes-additions-only test-tag-changes-whitespace-only test-tag-changes-formatting-only test-tag-changes-update
 
@@ -361,9 +385,17 @@ test-tag-text-to-html-unit: $(TAG_TEXT_TO_HTML_UNIT_TEST_SCRIPT) $(TOOLS_DIR)/ta
 	@echo "TESTING TAG_TEXT_TO_HTML UNIT HELPERS"
 	python3 $(TAG_TEXT_TO_HTML_UNIT_TEST_SCRIPT) && echo "test-tag-text-to-html-unit PASSED" || (echo "test-tag-text-to-html-unit FAILED"; exit 1)
 
+#
 # Update expected files from built files
+#
+
 .PHONY: update-expected
-update-expected: update-test-tags update-test-norm-rules-json update-test-norm-rules-html update-test-params-json update-test-params-html update-test-params-adoc update-test-param-adoc-files update-test-csrs-adoc update-test-csr-adoc-files update-test-param-table-variants update-test-csr-table-variants
+update-expected: update-test-tags update-test-norm-rules-json update-test-norm-rules-html update-test-params-json update-test-params-html update-test-params-adoc update-test-param-adoc-files update-test-csrs-adoc update-test-csr-adoc-files update-test-param-table-variants update-test-csr-table-variants update-test-export-params-to-udb
+# Update expected UDB YAMLs from built UDB YAMLs
+.PHONY: update-test-export-params-to-udb
+update-test-export-params-to-udb: build-test-export-params-to-udb
+	rm -rf $(PARAMS_EXPECTED_DIR)/test-export-params-to-udb
+	cp -r $(BUILD_DIR)/test-export-params-to-udb $(PARAMS_EXPECTED_DIR)/test-export-params-to-udb
 
 .PHONY: update-test-tags
 update-test-tags: update-test-ch1-tags update-test-ch2-tags
@@ -527,6 +559,13 @@ $(BUILT_NORM_RULES_TAGS_NO_RULES): $(BUILT_TEST_CH1_NORM_TAGS_FNAME) $(BAD_NORM_
 	$(WORKDIR_SETUP)
 	cp -f $(BUILT_TEST_CH1_NORM_TAGS_FNAME) $@.workdir
 	$(DOCKER_CMD) $(DOCKER_QUOTE) $(CREATE_NORM_RULE_TOOL) $(NORM_TAG_FILE_ARGS) $(BAD_NORM_RULE_DEF_ARGS) $(NORM_RULE_DOC2URL_ARGS) $(BUILD_DIR)/bogus || touch $(BUILT_NORM_RULES_TAGS_NO_RULES) $(DOCKER_QUOTE)
+	$(WORKDIR_TEARDOWN)
+
+$(BUILT_EXPORT_PARAMS_TO_UDB_STAMP): $(BUILT_PARAMS_JSON) $(EXPORT_PARAMS_TO_UDB_TOOL)
+	$(WORKDIR_SETUP)
+	cp -f $(BUILT_PARAMS_JSON) $@.workdir/$(BUILD_DIR)
+	$(DOCKER_CMD) $(DOCKER_QUOTE) $(EXPORT_PARAMS_TO_UDB_PYTHON) --input $(BUILT_PARAMS_JSON) --output-dir $(BUILT_EXPORT_PARAMS_TO_UDB_DIR) && touch $(BUILT_EXPORT_PARAMS_TO_UDB_STAMP) $(DOCKER_QUOTE)
+	mv $@.workdir/$(BUILT_EXPORT_PARAMS_TO_UDB_DIR) $(BUILT_EXPORT_PARAMS_TO_UDB_DIR)
 	$(WORKDIR_TEARDOWN)
 
 # Update docker image to latest

@@ -1,0 +1,14 @@
+---
+$schema: param_schema.json#
+kind: parameter
+name: INT2
+long_name: Signed 2-bit integer
+description: ''
+schema:
+  type: integer
+  minimum: -2
+  maximum: 1
+definedBy:
+  extension:
+    name: MockExtY
+$source: test-ch1.yaml

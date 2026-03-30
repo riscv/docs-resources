@@ -15,6 +15,7 @@ This directory contains command-line generators and shared Python helper modules
 | create_param_appendix.py | CLI tool | Generates parameter-row AsciiDoc fragments plus table include files from params JSON and a table-layout YAML file. |
 | create_csr_appendix.py | CLI tool | Generates CSR-row AsciiDoc fragments plus table include files from the csrs array in params JSON and a CSR table-layout YAML file. |
 | detect_tag_changes.py | CLI tool | Compares two tag JSON files and reports additions, deletions, and modifications. |
+| export_params_to_udb.py | CLI tool | Converts a params.json file (conforming to schemas/params-schema.json) into individual YAML files for each parameter (conforming to schemas/udb_param_schema.json). |
 
 ## Script Details
 
@@ -320,6 +321,23 @@ else
   exit 1
 fi
 ```
+
+### export_params_to_udb.py
+
+Purpose:
+- Converts a params.json file (conforming to schemas/params-schema.json) into individual YAML files for each parameter (conforming to schemas/udb_param_schema.json).
+
+Arguments:
+- `-i`, `--input` (required): Path to params.json input file
+- `-o`, `--output-dir` (required): Directory to write YAML files
+- `-h`, `--help`: Show help message and exit
+
+Usage:
+```bash
+python3 tools/export_params_to_udb.py -i build/test-params.json -o build/test-export-params-to-udb
+```
+
+Each output YAML file will be named `<PARAM_NAME>.yaml` (upper-case) and placed in the specified output directory.
 
 ## Notes
 

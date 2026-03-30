@@ -215,6 +215,11 @@ normative_rule_definitions:
     impl-def-behavior: true
     kind: extension
     instance: MockExtY
+  - name: INT2
+    tag: "norm:int2"
+    impl-def-behavior: true
+    kind: extension
+    instance: MockExtY
   - name: UINT_1TO100
     tag: "norm:uint-1to100"
     impl-def-behavior: true

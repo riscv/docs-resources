@@ -1,0 +1,16 @@
+---
+$schema: param_schema.json#
+kind: parameter
+name: LIST_STR
+long_name: LIST_STR parameter
+description: ''
+schema:
+  type: string
+  enum:
+  - ABC
+  - DEF
+  - GHI
+definedBy:
+  extension:
+    name: MockExtY
+$source: test-ch1.yaml

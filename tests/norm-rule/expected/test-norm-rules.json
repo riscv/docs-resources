@@ -1097,6 +1097,25 @@
       ]
     },
     {
+      "name": "INT2",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "One",
+      "kind": "extension",
+      "impl-def-behavior": true,
+      "instances": [
+        "MockExtY"
+      ],
+      "tags": [
+        {
+          "name": "norm:int2",
+          "context": false,
+          "text": "This is a 2-bit signed integer.",
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
+        }
+      ]
+    },
+    {
       "name": "UINT_1TO100",
       "def_filename": "tests/norm-rule/test-ch1.yaml",
       "chapter_name": "One",

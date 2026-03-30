@@ -1,0 +1,14 @@
+---
+$schema: param_schema.json#
+kind: parameter
+name: ASIDLEN1
+long_name: ASIDLEN parameter
+description: ''
+schema:
+  type: integer
+  minimum: 0
+  maximum: 16
+definedBy:
+  extension:
+    name: MockExtZ
+$source: test-ch2.yaml

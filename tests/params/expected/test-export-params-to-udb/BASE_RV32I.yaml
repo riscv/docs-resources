@@ -1,0 +1,12 @@
+---
+$schema: param_schema.json#
+kind: parameter
+name: BASE_RV32I
+long_name: BASE_RV32I parameter
+description: 'NOTE: This is a base RV32I parameter.'
+schema:
+  type: boolean
+definedBy:
+  extension:
+    name: I
+$source: test-ch2.yaml

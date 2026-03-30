@@ -1,0 +1,14 @@
+---
+$schema: param_schema.json#
+kind: parameter
+name: UINT6
+long_name: UINT6 parameter
+description: ''
+schema:
+  type: integer
+  minimum: 0
+  maximum: 63
+definedBy:
+  extension:
+    name: MockExtX
+$source: test-ch1.yaml

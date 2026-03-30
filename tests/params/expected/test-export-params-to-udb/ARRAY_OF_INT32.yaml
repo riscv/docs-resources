@@ -1,0 +1,18 @@
+---
+$schema: param_schema.json#
+kind: parameter
+name: ARRAY_OF_INT32
+long_name: ARRAY_OF_INT32 parameter
+description: ''
+schema:
+  type: array
+  items:
+    type: integer
+    minimum: -2147483648
+    maximum: 2147483647
+  minItems: 4
+  maxItems: 4
+definedBy:
+  extension:
+    name: MockExtX
+$source: test-ch1.yaml

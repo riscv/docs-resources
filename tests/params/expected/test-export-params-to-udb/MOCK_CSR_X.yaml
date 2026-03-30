@@ -1,0 +1,12 @@
+---
+$schema: param_schema.json#
+kind: parameter
+name: MOCK_CSR_X
+long_name: MOCK_CSR_X parameter
+description: 'NOTE: This is a Mock "X" CSR parameter.'
+schema:
+  type: boolean
+definedBy:
+  extension:
+    name: I
+$source: test-ch2.yaml

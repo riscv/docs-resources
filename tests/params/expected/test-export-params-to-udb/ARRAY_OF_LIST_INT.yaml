@@ -1,0 +1,20 @@
+---
+$schema: param_schema.json#
+kind: parameter
+name: ARRAY_OF_LIST_INT
+long_name: ARRAY_OF_LIST_INT parameter
+description: ''
+schema:
+  type: array
+  items:
+    type: integer
+    enum:
+    - 1
+    - 2
+    - 4
+  minItems: 16
+  maxItems: 16
+definedBy:
+  extension:
+    name: MockExtX
+$source: test-ch1.yaml

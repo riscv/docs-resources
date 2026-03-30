@@ -1,0 +1,14 @@
+---
+$schema: param_schema.json#
+kind: parameter
+name: HWORD
+long_name: HWORD parameter
+description: ''
+schema:
+  type: integer
+  minimum: 0
+  maximum: 65535
+definedBy:
+  extension:
+    name: MockExtX
+$source: test-ch1.yaml

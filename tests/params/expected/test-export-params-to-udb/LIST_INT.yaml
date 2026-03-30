@@ -1,0 +1,18 @@
+---
+$schema: param_schema.json#
+kind: parameter
+name: LIST_INT
+long_name: LIST_INT parameter
+description: ''
+schema:
+  type: integer
+  enum:
+  - 1
+  - 2
+  - 4
+definedBy:
+  extension:
+    anyOf:
+    - name: MockExtX
+    - name: MockExtY
+$source: test-ch1.yaml

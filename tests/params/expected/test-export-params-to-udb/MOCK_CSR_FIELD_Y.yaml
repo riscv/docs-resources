@@ -1,0 +1,12 @@
+---
+$schema: param_schema.json#
+kind: parameter
+name: MOCK_CSR_FIELD_Y
+long_name: MOCK_CSR_FIELD_Y parameter
+description: 'NOTE: This is a Mock "Y" CSR field parameter.'
+schema:
+  type: boolean
+definedBy:
+  extension:
+    name: I
+$source: test-ch2.yaml

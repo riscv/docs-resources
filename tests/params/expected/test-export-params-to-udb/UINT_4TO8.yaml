@@ -1,0 +1,14 @@
+---
+$schema: param_schema.json#
+kind: parameter
+name: UINT_4TO8
+long_name: UINT_4TO8 parameter
+description: ''
+schema:
+  type: integer
+  minimum: 4
+  maximum: 8
+definedBy:
+  extension:
+    name: MockExtY
+$source: test-ch1.yaml

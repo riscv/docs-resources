@@ -1,0 +1,16 @@
+---
+$schema: param_schema.json#
+kind: parameter
+name: ARRAY_OF_BOOLEAN
+long_name: ARRAY_OF_BOOLEAN parameter
+description: ''
+schema:
+  type: array
+  items:
+    type: boolean
+  minItems: 10
+  maxItems: 10
+definedBy:
+  extension:
+    name: MockExtX
+$source: test-ch1.yaml

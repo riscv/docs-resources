@@ -1,0 +1,20 @@
+---
+$schema: param_schema.json#
+kind: parameter
+name: ARRAY_OF_LIST_STR
+long_name: ARRAY_OF_LIST_STR parameter
+description: ''
+schema:
+  type: array
+  items:
+    type: string
+    enum:
+    - A
+    - B
+    - C
+  minItems: 29
+  maxItems: 29
+definedBy:
+  extension:
+    name: MockExtX
+$source: test-ch1.yaml

@@ -1,0 +1,18 @@
+---
+$schema: param_schema.json#
+kind: parameter
+name: MXLEN
+long_name: MXLEN parameter
+description: 'Supported machine register widths. Doesn''t have an impl-def just for
+  testing purposes.
+
+  '
+schema:
+  type: integer
+  enum:
+  - 32
+  - 64
+definedBy:
+  extension:
+    name: I
+$source: test-ch1.yaml

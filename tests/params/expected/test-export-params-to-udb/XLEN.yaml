@@ -1,0 +1,17 @@
+---
+$schema: param_schema.json#
+kind: parameter
+name: XLEN
+long_name: XLEN parameter
+description: ''
+schema:
+  type: integer
+  enum:
+  - 32
+  - 64
+definedBy:
+  extension:
+    anyOf:
+    - name: MockExtZ
+    - name: MockExtZ
+$source: test-ch2.yaml

@@ -1,0 +1,14 @@
+---
+$schema: param_schema.json#
+kind: parameter
+name: ALL_BASES
+long_name: ALL_BASES parameter
+description: ''
+schema:
+  type: integer
+  minimum: -2
+  maximum: 1
+definedBy:
+  extension:
+    name: I
+$source: test-ch1.yaml

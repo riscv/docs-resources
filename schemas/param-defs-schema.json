@@ -25,6 +25,10 @@
             "$ref": "param-common-schema.json#/paramNameArray",
             "description": "Multiple parameter names"
           },
+          "long-name": {
+            "type": "string",
+            "description": "Long name of the parameter (a few words)"
+          },
           "note": {
             "type": "string",
             "$ref": "param-common-schema.json#/noteDesc"

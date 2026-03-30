@@ -425,13 +425,27 @@ def add_parameter_entries(
             "must define description"
         )
 
+
     for name in names:
         impl_defs = normalize_impldef_refs(entry, def_filename, name, "Parameter")
+
+        # Enforce long-name is present and is a string
+        if "long-name" not in entry:
+            fatal(f"Parameter {name} in {def_filename} is missing required 'long-name' property")
+        long_name_val = entry["long-name"]
+        if not isinstance(long_name_val, str):
+            fatal(f"Parameter {name} in {def_filename} has non-string long-name")
+
+        # Enforce chapter_name is present and is a string
+        if not isinstance(chapter_name, str) or not chapter_name:
+            fatal(f"Parameter {name} in {def_filename} is missing or has invalid 'chapter_name' property")
+
 
         out_entry: Dict[str, Any] = {
             "name": name,
             "def_filename": Path(def_filename).name,
             "chapter_name": chapter_name,
+            "long-name": long_name_val,
         }
 
         if has_type:
@@ -843,7 +857,7 @@ def output_html(filename: str, params_hash: Dict[str, List[Dict[str, Any]]]):
 
     try:
         with open(filename, "w", encoding="utf-8") as f:
-            html_head(f, table_names)
+            html_head(f)
             f.write('<body>\n')
             f.write('  <div class="app">\n')
 
@@ -920,10 +934,9 @@ def output_html(filename: str, params_hash: Dict[str, List[Dict[str, Any]]]):
         fatal(f"Error writing HTML to {filename}: {e}")
 
 
-def html_head(f, table_names: List[str]):
+
+def html_head(f):
     """Write HTML head section."""
-    if not isinstance(table_names, list):
-        fatal(f"Need List for table_names but passed a {type(table_names).__name__}")
 
     css = '''<!doctype html>
 <html lang="en">

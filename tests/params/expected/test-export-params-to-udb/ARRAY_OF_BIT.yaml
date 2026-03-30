@@ -1,0 +1,18 @@
+---
+$schema: param_schema.json#
+kind: parameter
+name: ARRAY_OF_BIT
+long_name: ARRAY_OF_BIT parameter
+description: ''
+schema:
+  type: array
+  items:
+    type: integer
+    minimum: 0
+    maximum: 1
+  minItems: 16
+  maxItems: 16
+definedBy:
+  extension:
+    name: MockExtX
+$source: test-ch1.yaml
