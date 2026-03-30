@@ -1,0 +1,14 @@
+---
+$schema: param_schema.json#
+kind: parameter
+name: LIST_INT
+long_name: LIST_INT parameter
+description: ''
+definedBy: One
+schema:
+  type: integer
+  enum:
+    - 1
+    - 2
+    - 4
+$source: test-ch1.yaml

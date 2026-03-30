@@ -1,0 +1,10 @@
+---
+$schema: param_schema.json#
+kind: parameter
+name: FOOBAR
+long_name: FOOBAR parameter
+description: ''
+definedBy: Two
+schema:
+  type: boolean
+$source: test-ch2.yaml

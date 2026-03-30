@@ -1,0 +1,12 @@
+---
+$schema: param_schema.json#
+kind: parameter
+name: UINT6
+long_name: UINT6 parameter
+description: ''
+definedBy: One
+schema:
+  type: integer
+  minimum: 0
+  maximum: 63
+$source: test-ch1.yaml

@@ -1,0 +1,12 @@
+---
+$schema: param_schema.json#
+kind: parameter
+name: BIT
+long_name: BIT
+description: ''
+definedBy: One
+schema:
+  type: integer
+  minimum: 0
+  maximum: 1
+$source: test-ch1.yaml

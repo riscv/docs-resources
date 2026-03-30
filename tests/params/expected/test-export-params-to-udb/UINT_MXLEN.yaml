@@ -1,0 +1,11 @@
+---
+$schema: param_schema.json#
+kind: parameter
+name: UINT_MXLEN
+long_name: UINT_MXLEN parameter
+description: Unsigned integer whose width is MXLEN.
+definedBy: One
+schema:
+  type: integer
+  minimum: 0
+$source: test-ch1.yaml

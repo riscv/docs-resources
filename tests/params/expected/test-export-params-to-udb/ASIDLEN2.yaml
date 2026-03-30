@@ -1,0 +1,12 @@
+---
+$schema: param_schema.json#
+kind: parameter
+name: ASIDLEN2
+long_name: ASIDLEN parameter
+description: ''
+definedBy: Two
+schema:
+  type: integer
+  minimum: 0
+  maximum: 16
+$source: test-ch2.yaml

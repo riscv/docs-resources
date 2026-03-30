@@ -1,0 +1,16 @@
+---
+$schema: param_schema.json#
+kind: parameter
+name: ROSE_COLORS
+long_name: ROSE_COLORS parameter
+description: 'This is a description about the ROSE_COLORS parameter. Here''s some *bold text*.
+
+  NOTE: This is a note about the ROSE_COLORS parameter.'
+definedBy: Two
+schema:
+  type: string
+  enum:
+    - RED
+    - PINK
+    - WHITE
+$source: test-ch2.yaml

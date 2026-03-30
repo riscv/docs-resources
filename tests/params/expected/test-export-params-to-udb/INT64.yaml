@@ -1,0 +1,12 @@
+---
+$schema: param_schema.json#
+kind: parameter
+name: INT64
+long_name: INT64 parameter
+description: ''
+definedBy: One
+schema:
+  type: integer
+  minimum: -9223372036854775808
+  maximum: 9223372036854775807
+$source: test-ch1.yaml

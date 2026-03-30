@@ -1,0 +1,16 @@
+---
+$schema: param_schema.json#
+kind: parameter
+name: ARRAY_OF_WORD
+long_name: ARRAY_OF_WORD parameter
+description: ''
+definedBy: One
+schema:
+  type: array
+  items:
+    type: integer
+    minimum: 0
+    maximum: 4294967295
+  minItems: 32
+  maxItems: 32
+$source: test-ch1.yaml

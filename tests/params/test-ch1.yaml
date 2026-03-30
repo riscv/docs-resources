@@ -6,112 +6,143 @@ $schema: "../../schemas/param-defs-schema.json#"
 chapter_name: One
 
 parameter_definitions:
+
   - name: BOOLEAN
+    long-name: BOOLEAN parameter
     impl-def: BOOLEAN
     type: boolean
   - name: BIT
+    long-name: BIT
     impl-def: BIT
     type: bit
   - name: BYTE
+    long-name: 8-bit unsigned integer
     impl-def: BYTE
     type: byte
-    description: 8-bit unsigned integer
+    description: |
+      Here's a longer description for the BYTE parameter. It is an 8-bit unsigned integer.
   - name: HWORD
+    long-name: HWORD parameter
     impl-def: HWORD
     type: hword
   - name: WORD
+    long-name: HWORD parameter
     impl-def: WORD
     type: word
   - name: DWORD
+    long-name: DWORD parameter
     impl-def: DWORD
     type: dword
   - name: UINT6
+    long-name: UINT6 parameter
     impl-def: UINT6
     type: uint
     width: 6
   - name: UINT32
+    long-name: UINT32 parameter
     impl-def: UINT32
     type: uint
     width: 32
   - name: INT64
+    long-name: INT64 parameter
     impl-def: INT64
     type: int
     width: 64
   - name: MXLEN
+    long-name: MXLEN parameter
     type: [32, 64]
     description: Supported machine register widths.
   - name: UINT_MXLEN
+    long-name: UINT_MXLEN parameter
     type: uint
     width: MXLEN
     description: Unsigned integer whose width is MXLEN.
   - name: INT_MXLEN
+    long-name: INT_MXLEN parameter
     type: int
     width: MXLEN
     description: Signed integer whose width is MXLEN.
   - name: UINT_1TO100
+    long-name: UINT_1TO100 parameter
     impl-def: UINT_1TO100
     range: [1, 100]
   - name: UINT_4TO8
+    long-name: UINT_4TO8 parameter
     impl-def: UINT_4TO8
     range: [4, 8]
   - name: LIST_STR
+    long-name: LIST_STR parameter
     impl-def: LIST_STR
     type: [ABC, DEF, GHI]
   - name: LIST_INT
+    long-name: LIST_INT parameter
     impl-def: LIST_INT
     type: [1, 2, 4]
   - name: ALL_BASES
+    long-name: ALL_BASES parameter
     impl-def: ALL_BASES
     type: int
     width: 2
   - name: ARRAY_OF_LIST_STR
+    long-name: ARRAY_OF_LIST_STR parameter
     impl-def: ARRAY
     type: [A, B, C]
     array: [3, 31]
   - name: ARRAY_OF_LIST_INT
+    long-name: ARRAY_OF_LIST_INT parameter
     impl-def: ARRAY
     type: [1, 2, 4]
     array: [0, 15]
   - name: ARRAY_OF_BOOLEAN
+    long-name: ARRAY_OF_BOOLEAN parameter
     impl-def: ARRAY
     type: boolean
     array: [1, 10]
   - name: ARRAY_OF_BIT
+    long-name: ARRAY_OF_BIT parameter
     impl-def: ARRAY
     type: bit
     array: [0, 15]
   - name: ARRAY_OF_BYTE
+    long-name: ARRAY_OF_BYTE parameter
     impl-def: ARRAY
     type: byte
     array: [0, 3]
   - name: ARRAY_OF_HWORD
+    long-name: ARRAY_OF_HWORD parameter
     impl-def: ARRAY
     type: hword
     array: [0, 3]
   - name: ARRAY_OF_WORD
+    long-name: ARRAY_OF_WORD parameter
     impl-def: ARRAY
     type: word
     array: [0, 31]
   - name: ARRAY_OF_DWORD
+    long-name: ARRAY_OF_DWORD parameter
     impl-def: ARRAY
     type: dword
     array: [0, 31]
   - name: ARRAY_OF_UINT5
+    long-name: ARRAY_OF_UINT5 parameter
     impl-def: ARRAY
     type: uint
     width: 5
     array: [0, 3]
   - name: ARRAY_OF_INT32
+    long-name: ARRAY_OF_INT32 parameter
     impl-def: ARRAY
     type: int
     width: 32
     array: [0, 3]
   - name: ARRAY_OF_UINT64
+    long-name: ARRAY_OF_UINT64 parameter
     impl-def: ARRAY
     type: uint
     width: 64
     array: [0, 3]
   - name: ARRAY_OF_NEG10TO20
+    long-name: ARRAY_OF_NEG10TO20 parameter
     impl-def: ARRAY
     range: [-10, 20]
     array: [0, 3]

@@ -1,0 +1,16 @@
+---
+$schema: param_schema.json#
+kind: parameter
+name: ARRAY_OF_NEG10TO20
+long_name: ARRAY_OF_NEG10TO20 parameter
+description: ''
+definedBy: One
+schema:
+  type: array
+  items:
+    type: integer
+    minimum: -10
+    maximum: 20
+  minItems: 4
+  maxItems: 4
+$source: test-ch1.yaml

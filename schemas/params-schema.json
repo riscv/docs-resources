@@ -11,8 +11,12 @@
         "type": "object",
         "properties": {
           "name": {
-           "type": "string",
-           "description": "Parameter name"
+           "$ref": "param-common-schema.json#/paramName",
+           "description": "Parameter name (all uppercase with underscores for separators)"
+          },
+          "long-name": {
+            "type": "string",
+            "description": "Long name of the parameter (a few words)"
           },
           "def_filename": {
             "type": "string",
@@ -62,7 +66,7 @@
             ]
           }
         },
-        "required": ["name", "def_filename", "chapter_name", "json-schema"],
+        "required": ["name", "long-name", "def_filename", "chapter_name", "json-schema"],
         "allOf": [
           {
             "oneOf": [
@@ -165,7 +169,7 @@
             ]
           }
         },
-        "required": ["reg-name", "def_filename", "chapter_name", "category", "type"],
+        "required": ["reg-name", "long-name", "def_filename", "chapter_name", "category", "type"],
         "allOf": [
           {
             "if": {

@@ -1,0 +1,10 @@
+---
+$schema: param_schema.json#
+kind: parameter
+name: MOCK_EXT_DEP_A_ON_B
+long_name: MOCK_EXT_DEP_A_ON_B parameter
+description: 'NOTE: This is a Mock extension dependency parameter (A depends B).'
+definedBy: Two
+schema:
+  type: boolean
+$source: test-ch2.yaml

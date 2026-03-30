@@ -4,6 +4,7 @@
       "name": "BOOLEAN",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
+      "long-name": "BOOLEAN parameter",
       "type": "boolean",
       "json-schema": {
         "type": "boolean"
@@ -41,6 +42,7 @@
       "name": "BIT",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
+      "long-name": "BIT",
       "type": "bit",
       "json-schema": {
         "type": "integer",
@@ -73,13 +75,14 @@
       "name": "BYTE",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
+      "long-name": "8-bit unsigned integer",
       "type": "byte",
       "json-schema": {
         "type": "integer",
         "minimum": 0,
         "maximum": 255
       },
-      "description": "8-bit unsigned integer",
+      "description": "Here's a longer description for the BYTE parameter. It is an 8-bit unsigned integer.\n",
       "impl-defs": [
         {
           "name": "BYTE",
@@ -106,6 +109,7 @@
       "name": "HWORD",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
+      "long-name": "HWORD parameter",
       "type": "hword",
       "json-schema": {
         "type": "integer",
@@ -138,6 +142,7 @@
       "name": "WORD",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
+      "long-name": "HWORD parameter",
       "type": "word",
       "json-schema": {
         "type": "integer",
@@ -170,6 +175,7 @@
       "name": "DWORD",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
+      "long-name": "DWORD parameter",
       "type": "dword",
       "json-schema": {
         "type": "integer",
@@ -202,6 +208,7 @@
       "name": "UINT6",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
+      "long-name": "UINT6 parameter",
       "type": "uint",
       "width": 6,
       "json-schema": {
@@ -235,6 +242,7 @@
       "name": "UINT32",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
+      "long-name": "UINT32 parameter",
       "type": "uint",
       "width": 32,
       "json-schema": {
@@ -268,6 +276,7 @@
       "name": "INT64",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
+      "long-name": "INT64 parameter",
       "type": "int",
       "width": 64,
       "json-schema": {
@@ -301,6 +310,7 @@
       "name": "MXLEN",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
+      "long-name": "MXLEN parameter",
       "type": [
         32,
         64
@@ -318,6 +328,7 @@
       "name": "UINT_MXLEN",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
+      "long-name": "UINT_MXLEN parameter",
       "type": "uint",
       "width": "MXLEN",
       "json-schema": {
@@ -330,6 +341,7 @@
       "name": "INT_MXLEN",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
+      "long-name": "INT_MXLEN parameter",
       "type": "int",
       "width": "MXLEN",
       "json-schema": {
@@ -341,6 +353,7 @@
       "name": "UINT_1TO100",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
+      "long-name": "UINT_1TO100 parameter",
       "range": [
         1,
         100
@@ -376,6 +389,7 @@
       "name": "UINT_4TO8",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
+      "long-name": "UINT_4TO8 parameter",
       "range": [
         4,
         8
@@ -411,6 +425,7 @@
       "name": "LIST_STR",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
+      "long-name": "LIST_STR parameter",
       "type": [
         "ABC",
         "DEF",
@@ -450,6 +465,7 @@
       "name": "LIST_INT",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
+      "long-name": "LIST_INT parameter",
       "type": [
         1,
         2,
@@ -490,6 +506,7 @@
       "name": "ALL_BASES",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
+      "long-name": "ALL_BASES parameter",
       "type": "int",
       "width": 2,
       "json-schema": {
@@ -523,6 +540,7 @@
       "name": "ARRAY_OF_LIST_STR",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
+      "long-name": "ARRAY_OF_LIST_STR parameter",
       "type": [
         "A",
         "B",
@@ -571,6 +589,7 @@
       "name": "ARRAY_OF_LIST_INT",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
+      "long-name": "ARRAY_OF_LIST_INT parameter",
       "type": [
         1,
         2,
@@ -619,6 +638,7 @@
       "name": "ARRAY_OF_BOOLEAN",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
+      "long-name": "ARRAY_OF_BOOLEAN parameter",
       "type": "boolean",
       "array": [
         1,
@@ -658,6 +678,7 @@
       "name": "ARRAY_OF_BIT",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
+      "long-name": "ARRAY_OF_BIT parameter",
       "type": "bit",
       "array": [
         0,
@@ -699,6 +720,7 @@
       "name": "ARRAY_OF_BYTE",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
+      "long-name": "ARRAY_OF_BYTE parameter",
       "type": "byte",
       "array": [
         0,
@@ -740,6 +762,7 @@
       "name": "ARRAY_OF_HWORD",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
+      "long-name": "ARRAY_OF_HWORD parameter",
       "type": "hword",
       "array": [
         0,
@@ -781,6 +804,7 @@
       "name": "ARRAY_OF_WORD",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
+      "long-name": "ARRAY_OF_WORD parameter",
       "type": "word",
       "array": [
         0,
@@ -822,6 +846,7 @@
       "name": "ARRAY_OF_DWORD",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
+      "long-name": "ARRAY_OF_DWORD parameter",
       "type": "dword",
       "array": [
         0,
@@ -863,6 +888,7 @@
       "name": "ARRAY_OF_UINT5",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
+      "long-name": "ARRAY_OF_UINT5 parameter",
       "type": "uint",
       "array": [
         0,
@@ -905,6 +931,7 @@
       "name": "ARRAY_OF_INT32",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
+      "long-name": "ARRAY_OF_INT32 parameter",
       "type": "int",
       "array": [
         0,
@@ -947,6 +974,7 @@
       "name": "ARRAY_OF_UINT64",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
+      "long-name": "ARRAY_OF_UINT64 parameter",
       "type": "uint",
       "array": [
         0,
@@ -989,6 +1017,7 @@
       "name": "ARRAY_OF_NEG10TO20",
       "def_filename": "test-ch1.yaml",
       "chapter_name": "One",
+      "long-name": "ARRAY_OF_NEG10TO20 parameter",
       "range": [
         -10,
         20
@@ -1033,6 +1062,7 @@
       "name": "ROSE_COLORS",
       "def_filename": "test-ch2.yaml",
       "chapter_name": "Two",
+      "long-name": "ROSE_COLORS parameter",
       "type": [
         "RED",
         "PINK",
@@ -1070,6 +1100,7 @@
       "name": "XLEN",
       "def_filename": "test-ch2.yaml",
       "chapter_name": "Two",
+      "long-name": "XLEN parameter",
       "type": [
         32,
         64
@@ -1126,6 +1157,7 @@
       "name": "FOOBAR",
       "def_filename": "test-ch2.yaml",
       "chapter_name": "Two",
+      "long-name": "FOOBAR parameter",
       "type": "boolean",
       "json-schema": {
         "type": "boolean"
@@ -1175,6 +1207,7 @@
       "name": "ASIDLEN",
       "def_filename": "test-ch2.yaml",
       "chapter_name": "Two",
+      "long-name": "ASIDLEN parameter",
       "range": [
         0,
         16
@@ -1210,6 +1243,7 @@
       "name": "ASIDLEN1",
       "def_filename": "test-ch2.yaml",
       "chapter_name": "Two",
+      "long-name": "ASIDLEN parameter",
       "range": [
         0,
         16
@@ -1245,6 +1279,7 @@
       "name": "ASIDLEN2",
       "def_filename": "test-ch2.yaml",
       "chapter_name": "Two",
+      "long-name": "ASIDLEN parameter",
       "range": [
         0,
         16
@@ -1280,6 +1315,7 @@
       "name": "NO_IMPL_DEF",
       "def_filename": "test-ch2.yaml",
       "chapter_name": "Two",
+      "long-name": "NO_IMPL_DEF parameter",
       "type": "bit",
       "json-schema": {
         "type": "integer",
@@ -1293,6 +1329,7 @@
       "name": "MOCK_INST_X",
       "def_filename": "test-ch2.yaml",
       "chapter_name": "Two",
+      "long-name": "MOCK_INST_X parameter",
       "type": "boolean",
       "json-schema": {
         "type": "boolean"
@@ -1324,6 +1361,7 @@
       "name": "BASE_RV32I",
       "def_filename": "test-ch2.yaml",
       "chapter_name": "Two",
+      "long-name": "BASE_RV32I parameter",
       "type": "boolean",
       "json-schema": {
         "type": "boolean"
@@ -1355,6 +1393,7 @@
       "name": "BASE_RV32I_RV64I",
       "def_filename": "test-ch2.yaml",
       "chapter_name": "Two",
+      "long-name": "BASE_RV32I_RV64I parameter",
       "type": "boolean",
       "json-schema": {
         "type": "boolean"
@@ -1387,6 +1426,7 @@
       "name": "MOCK_CSR_X",
       "def_filename": "test-ch2.yaml",
       "chapter_name": "Two",
+      "long-name": "MOCK_CSR_X parameter",
       "type": "boolean",
       "json-schema": {
         "type": "boolean"
@@ -1418,6 +1458,7 @@
       "name": "MOCK_CSR_FIELD_Y",
       "def_filename": "test-ch2.yaml",
       "chapter_name": "Two",
+      "long-name": "MOCK_CSR_FIELD_Y parameter",
       "type": "boolean",
       "json-schema": {
         "type": "boolean"
@@ -1449,6 +1490,7 @@
       "name": "MOCK_EXT_DEP_A_ON_B",
       "def_filename": "test-ch2.yaml",
       "chapter_name": "Two",
+      "long-name": "MOCK_EXT_DEP_A_ON_B parameter",
       "type": "boolean",
       "json-schema": {
         "type": "boolean"

@@ -1,0 +1,12 @@
+---
+$schema: param_schema.json#
+kind: parameter
+name: UINT32
+long_name: UINT32 parameter
+description: ''
+definedBy: One
+schema:
+  type: integer
+  minimum: 0
+  maximum: 4294967295
+$source: test-ch1.yaml

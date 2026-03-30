@@ -1,0 +1,14 @@
+---
+$schema: param_schema.json#
+kind: parameter
+name: NO_IMPL_DEF
+long_name: NO_IMPL_DEF parameter
+description: 'Parameter intentionally defined without implementation-defined behavior.
+
+  NOTE: This is a note for a parameter without any implementation-defined behavior. Here''s an 2^32^ exponent.'
+definedBy: Two
+schema:
+  type: integer
+  minimum: 0
+  maximum: 1
+$source: test-ch2.yaml

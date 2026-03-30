@@ -425,13 +425,22 @@ def add_parameter_entries(
             "must define description"
         )
 
+
     for name in names:
         impl_defs = normalize_impldef_refs(entry, def_filename, name, "Parameter")
+
+        # Enforce long-name is present and is a string
+        if "long-name" not in entry:
+            fatal(f"Parameter {name} in {def_filename} is missing required 'long-name' property")
+        long_name_val = entry["long-name"]
+        if not isinstance(long_name_val, str):
+            fatal(f"Parameter {name} in {def_filename} has non-string long-name")
 
         out_entry: Dict[str, Any] = {
             "name": name,
             "def_filename": Path(def_filename).name,
             "chapter_name": chapter_name,
+            "long-name": long_name_val,
         }
 
         if has_type:

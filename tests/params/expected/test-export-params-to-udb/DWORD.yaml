@@ -1,0 +1,12 @@
+---
+$schema: param_schema.json#
+kind: parameter
+name: DWORD
+long_name: DWORD parameter
+description: ''
+definedBy: One
+schema:
+  type: integer
+  minimum: 0
+  maximum: 18446744073709551615
+$source: test-ch1.yaml

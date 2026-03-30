@@ -1,0 +1,16 @@
+---
+$schema: param_schema.json#
+kind: parameter
+name: ARRAY_OF_BIT
+long_name: ARRAY_OF_BIT parameter
+description: ''
+definedBy: One
+schema:
+  type: array
+  items:
+    type: integer
+    minimum: 0
+    maximum: 1
+  minItems: 16
+  maxItems: 16
+$source: test-ch1.yaml

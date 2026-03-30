@@ -1,0 +1,12 @@
+---
+$schema: param_schema.json#
+kind: parameter
+name: HWORD
+long_name: HWORD parameter
+description: ''
+definedBy: One
+schema:
+  type: integer
+  minimum: 0
+  maximum: 65535
+$source: test-ch1.yaml

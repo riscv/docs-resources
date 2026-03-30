@@ -1,0 +1,10 @@
+---
+$schema: param_schema.json#
+kind: parameter
+name: BOOLEAN
+long_name: BOOLEAN parameter
+description: ''
+definedBy: One
+schema:
+  type: boolean
+$source: test-ch1.yaml
