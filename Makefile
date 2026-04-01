@@ -38,11 +38,9 @@ DETECT_TAG_CHANGES_TOOL := $(TOOLS_DIR)/detect_tag_changes.py
 DETECT_TAG_CHANGES_PYTHON := python3 $(DETECT_TAG_CHANGES_TOOL)
 CREATE_PARAMS_TOOL := $(TOOLS_DIR)/create_params.py
 CREATE_PARAMS_PYTHON := python3 $(CREATE_PARAMS_TOOL)
-CREATE_PARAM_ADOC_FILES_TOOL := $(TOOLS_DIR)/create_param_appendix.py
-CREATE_PARAM_ADOC_FILES_PYTHON := python3 $(CREATE_PARAM_ADOC_FILES_TOOL)
-CREATE_CSR_ADOC_FILES_TOOL := $(TOOLS_DIR)/create_csr_appendix.py
-CREATE_CSR_ADOC_FILES_PYTHON := python3 $(CREATE_CSR_ADOC_FILES_TOOL)
-PARAMS_ADOC_SOURCE := $(PARAMS_TESTS_DIR)/test-param-appendix.adoc
+CREATE_PARAM_TABLES_TOOL := $(TOOLS_DIR)/create_param_tables.py
+CREATE_PARAM_TABLES_PYTHON := python3 $(CREATE_PARAM_TABLES_TOOL)
+PARAMS_ADOC_SOURCE := $(PARAMS_TESTS_DIR)/test-param-tables.adoc
 CSRS_ADOC_SOURCE := $(PARAMS_TESTS_DIR)/test-csr-appendix.adoc
 PARAM_TABLE_SCHEMA_INPUT := $(TOOLS_DIR)/default_param_table.yaml
 CSR_TABLE_SCHEMA_INPUT := $(TOOLS_DIR)/default_csr_table.yaml
@@ -98,11 +96,9 @@ BUILT_NORM_RULES_HTML := $(BUILD_DIR)/$(NORM_RULE_HTML_OUTPUT_FNAME)
 BUILT_NORM_RULES_TAGS_NO_RULES := $(BUILD_DIR)/$(NORM_RULE_TAGS_NO_RULES_OUTPUT_FNAME)
 BUILT_PARAMS_JSON := $(BUILD_DIR)/$(PARAMS_JSON_OUTPUT_FNAME)
 BUILT_PARAMS_HTML := $(BUILD_DIR)/$(PARAMS_HTML_OUTPUT_FNAME)
-BUILT_PARAM_ADOC_DIR := $(BUILD_DIR)/test-param-appendix-adoc-includes
+BUILT_PARAM_ADOC_DIR := $(BUILD_DIR)/test-param-tables
 BUILT_PARAM_ADOC_STAMP := $(BUILD_DIR)/test-param-adoc.done
-BUILT_PARAMS_ADOC := $(BUILD_DIR)/test-param-appendix.adoc
-BUILT_CSR_ADOC_DIR := $(BUILD_DIR)/test-csr-appendix-adoc-includes
-BUILT_CSR_ADOC_STAMP := $(BUILD_DIR)/test-csr-adoc.done
+BUILT_PARAMS_ADOC := $(BUILD_DIR)/test-param-tables.adoc
 BUILT_CSRS_ADOC := $(BUILD_DIR)/test-csr-appendix.adoc
 BUILT_PARAM_TABLE_VARIANTS_DIR := $(BUILD_DIR)/test-param-table-variants
 BUILT_PARAM_TABLE_VARIANTS_STAMP := $(BUILD_DIR)/test-param-table-variants.done
@@ -123,10 +119,8 @@ EXPECTED_NORM_RULES_JSON := $(NORM_RULE_EXPECTED_DIR)/$(NORM_RULE_JSON_OUTPUT_FN
 EXPECTED_NORM_RULES_HTML := $(NORM_RULE_EXPECTED_DIR)/$(NORM_RULE_HTML_OUTPUT_FNAME)
 EXPECTED_PARAMS_JSON := $(PARAMS_EXPECTED_DIR)/$(PARAMS_JSON_OUTPUT_FNAME)
 EXPECTED_PARAMS_HTML := $(PARAMS_EXPECTED_DIR)/$(PARAMS_HTML_OUTPUT_FNAME)
-EXPECTED_PARAMS_ADOC := $(PARAMS_EXPECTED_DIR)/test-param-appendix.adoc
-EXPECTED_PARAM_ADOC_DIR := $(PARAMS_EXPECTED_DIR)/test-param-appendix-adoc-includes
-EXPECTED_CSRS_ADOC := $(PARAMS_EXPECTED_DIR)/test-csr-appendix.adoc
-EXPECTED_CSR_ADOC_DIR := $(PARAMS_EXPECTED_DIR)/test-csr-appendix-adoc-includes
+EXPECTED_PARAMS_ADOC := $(PARAMS_EXPECTED_DIR)/test-param-tables.adoc
+EXPECTED_PARAM_ADOC_DIR := $(PARAMS_EXPECTED_DIR)/test-param-tables
 EXPECTED_PARAM_TABLE_VARIANTS_DIR := $(PARAMS_EXPECTED_DIR)/test-param-table-variants
 EXPECTED_CSR_TABLE_VARIANTS_DIR := $(PARAMS_EXPECTED_DIR)/test-csr-table-variants
 EXPECTED_EXPORT_PARAMS_TO_UDB_DIR := $(PARAMS_EXPECTED_DIR)/test-export-params-to-udb
@@ -225,11 +219,11 @@ test: build-tests compare-tests test-tag-changes test-adoc2html test-shared-util
 # Build tests
 .PHONY: build-tests build-test-tags build-test-norm-rules-json build-test-norm-rules-html
 .PHONY: build-test-tags-without-rules build-test-params-json build-test-params-html
-.PHONY: build-test-param-adoc build-test-csr-adoc build-test-param-table-variants
+.PHONY: build-test-param-adoc build-test-param-table-variants
 .PHONY: build-test-csr-table-variants build-test-export-params-to-udb
 build-tests: build-test-tags build-test-norm-rules-json build-test-norm-rules-html \
 build-test-tags-without-rules build-test-params-json build-test-params-html build-test-param-adoc \
-build-test-csr-adoc build-test-param-table-variants build-test-csr-table-variants \
+build-test-param-table-variants build-test-csr-table-variants \
 build-test-export-params-to-udb
 build-test-tags: $(BUILT_TEST_NORM_TAGS_FNAMES) $(BUILT_DUPLICATE_NORM_TAGS_FNAME)
 build-test-norm-rules-json: $(BUILT_NORM_RULES_JSON)
@@ -238,7 +232,6 @@ build-test-tags-without-rules: $(BUILT_NORM_RULES_TAGS_NO_RULES)
 build-test-params-json: $(BUILT_PARAMS_JSON)
 build-test-params-html: $(BUILT_PARAMS_HTML)
 build-test-param-adoc: $(BUILT_PARAM_ADOC_STAMP)
-build-test-csr-adoc: $(BUILT_CSR_ADOC_STAMP)
 build-test-param-table-variants: $(BUILT_PARAM_TABLE_VARIANTS_STAMP)
 build-test-csr-table-variants: $(BUILT_CSR_TABLE_VARIANTS_STAMP)
 build-test-export-params-to-udb: $(BUILT_EXPORT_PARAMS_TO_UDB_STAMP)
@@ -247,7 +240,7 @@ build-test-export-params-to-udb: $(BUILT_EXPORT_PARAMS_TO_UDB_STAMP)
 .PHONY: compare-tests
 compare-tests: compare-test-tags compare-test-norm-rules-json compare-test-norm-rules-html \
 compare-test-params-json compare-test-params-html compare-test-params-adoc \
-compare-test-param-adoc-files compare-test-csrs-adoc compare-test-csr-adoc-files \
+compare-test-param-adoc-files \
 compare-test-param-table-variants compare-test-csr-table-variants compare-test-export-params-to-udb
 
 .PHONY: compare-test-tags
@@ -292,16 +285,6 @@ compare-test-params-adoc: $(EXPECTED_PARAMS_ADOC) $(BUILT_PARAMS_ADOC)
 compare-test-param-adoc-files: $(EXPECTED_PARAM_ADOC_DIR) $(BUILT_PARAM_ADOC_DIR)
 	@echo "CHECKING GENERATED PARAM ADOC FILES AGAINST EXPECTED"
 	diff -r $(EXPECTED_PARAM_ADOC_DIR) $(BUILT_PARAM_ADOC_DIR) && echo "diff PASSED" || (echo "diff FAILED"; exit 1)
-
-.PHONY: compare-test-csrs-adoc
-compare-test-csrs-adoc: $(EXPECTED_CSRS_ADOC) $(BUILT_CSRS_ADOC)
-	@echo "CHECKING CSRS ADOC AGAINST EXPECTED"
-	diff $(EXPECTED_CSRS_ADOC) $(BUILT_CSRS_ADOC) && echo "diff PASSED" || (echo "diff FAILED"; exit 1)
-
-.PHONY: compare-test-csr-adoc-files
-compare-test-csr-adoc-files: $(EXPECTED_CSR_ADOC_DIR) $(BUILT_CSR_ADOC_DIR)
-	@echo "CHECKING GENERATED CSR ADOC FILES AGAINST EXPECTED"
-	diff -r $(EXPECTED_CSR_ADOC_DIR) $(BUILT_CSR_ADOC_DIR) && echo "diff PASSED" || (echo "diff FAILED"; exit 1)
 
 .PHONY: compare-test-param-table-variants
 compare-test-param-table-variants: $(EXPECTED_PARAM_TABLE_VARIANTS_DIR) $(BUILT_PARAM_TABLE_VARIANTS_DIR)
@@ -390,7 +373,7 @@ test-tag-text-to-html-unit: $(TAG_TEXT_TO_HTML_UNIT_TEST_SCRIPT) $(TOOLS_DIR)/ta
 #
 
 .PHONY: update-expected
-update-expected: update-test-tags update-test-norm-rules-json update-test-norm-rules-html update-test-params-json update-test-params-html update-test-params-adoc update-test-param-adoc-files update-test-csrs-adoc update-test-csr-adoc-files update-test-param-table-variants update-test-csr-table-variants update-test-export-params-to-udb
+update-expected: update-test-tags update-test-norm-rules-json update-test-norm-rules-html update-test-params-json update-test-params-html update-test-params-adoc update-test-param-adoc-files update-test-param-table-variants update-test-csr-table-variants update-test-export-params-to-udb
 # Update expected UDB YAMLs from built UDB YAMLs
 .PHONY: update-test-export-params-to-udb
 update-test-export-params-to-udb: build-test-export-params-to-udb
@@ -435,16 +418,6 @@ update-test-params-adoc: $(BUILT_PARAMS_ADOC)
 update-test-param-adoc-files: $(BUILT_PARAM_ADOC_DIR)
 	rm -rf $(EXPECTED_PARAM_ADOC_DIR)
 	cp -r $(BUILT_PARAM_ADOC_DIR) $(EXPECTED_PARAM_ADOC_DIR)
-
-.PHONY: update-test-csrs-adoc
-update-test-csrs-adoc: $(BUILT_CSRS_ADOC)
-	mkdir -p $(PARAMS_EXPECTED_DIR)
-	cp -f $(BUILT_CSRS_ADOC) $(EXPECTED_CSRS_ADOC)
-
-.PHONY: update-test-csr-adoc-files
-update-test-csr-adoc-files: $(BUILT_CSR_ADOC_DIR)
-	rm -rf $(EXPECTED_CSR_ADOC_DIR)
-	cp -r $(BUILT_CSR_ADOC_DIR) $(EXPECTED_CSR_ADOC_DIR)
 
 .PHONY: update-test-param-table-variants
 update-test-param-table-variants: $(BUILT_PARAM_TABLE_VARIANTS_DIR)
@@ -497,39 +470,28 @@ $(BUILT_PARAMS_HTML): $(BUILT_NORM_RULES_JSON) $(PARAM_DEF_TEST_FILES) $(CREATE_
 	$(WORKDIR_TEARDOWN)
 
 # Build parameter AsciiDoc row fragments from generated params JSON.
-$(BUILT_PARAM_ADOC_STAMP): $(BUILD_DIR)/$(PARAMS_JSON_OUTPUT_FNAME) $(CREATE_PARAM_ADOC_FILES_TOOL) $(PARAMS_ADOC_SOURCE) $(PARAM_TABLE_SCHEMA_INPUT)
+$(BUILT_PARAM_ADOC_STAMP): $(BUILD_DIR)/$(PARAMS_JSON_OUTPUT_FNAME) $(CREATE_PARAM_TABLES_TOOL) $(PARAMS_ADOC_SOURCE) $(PARAM_TABLE_SCHEMA_INPUT) $(CSR_TABLE_SCHEMA_INPUT)
 	$(WORKDIR_SETUP)
 	cp -f $(BUILD_DIR)/$(PARAMS_JSON_OUTPUT_FNAME) $@.workdir/$(BUILD_DIR)
 	cp -f $(PARAMS_ADOC_SOURCE) $@.workdir/$(BUILT_PARAMS_ADOC)
-	$(DOCKER_CMD) $(DOCKER_QUOTE) $(CREATE_PARAM_ADOC_FILES_PYTHON) --input $(BUILD_DIR)/$(PARAMS_JSON_OUTPUT_FNAME) --param-table $(PARAM_TABLE_SCHEMA_INPUT) --output-dir $(BUILT_PARAM_ADOC_DIR) && touch $(BUILT_PARAM_ADOC_STAMP) $(DOCKER_QUOTE)
+	$(DOCKER_CMD) $(DOCKER_QUOTE) $(CREATE_PARAM_TABLES_PYTHON) --input $(BUILD_DIR)/$(PARAMS_JSON_OUTPUT_FNAME) --param-table $(PARAM_TABLE_SCHEMA_INPUT) --csr-table $(CSR_TABLE_SCHEMA_INPUT) --output-dir $(BUILT_PARAM_ADOC_DIR) && touch $(BUILT_PARAM_ADOC_STAMP) $(DOCKER_QUOTE)
 	rm -rf $(BUILT_PARAM_ADOC_DIR)
 	mv $@.workdir/$(BUILT_PARAM_ADOC_DIR) $(BUILT_PARAM_ADOC_DIR)
 	mv $@.workdir/$(BUILT_PARAMS_ADOC) $(BUILT_PARAMS_ADOC)
 	$(WORKDIR_TEARDOWN)
 
-# Build CSR AsciiDoc row fragments from generated params JSON.
-$(BUILT_CSR_ADOC_STAMP): $(BUILD_DIR)/$(PARAMS_JSON_OUTPUT_FNAME) $(CREATE_CSR_ADOC_FILES_TOOL) $(CSRS_ADOC_SOURCE) $(CSR_TABLE_SCHEMA_INPUT)
+$(BUILT_PARAM_TABLE_VARIANTS_STAMP): $(BUILD_DIR)/$(PARAMS_JSON_OUTPUT_FNAME) $(CREATE_PARAM_TABLES_TOOL) $(PARAM_TABLE_VARIANT_FILES)
 	$(WORKDIR_SETUP)
 	cp -f $(BUILD_DIR)/$(PARAMS_JSON_OUTPUT_FNAME) $@.workdir/$(BUILD_DIR)
-	cp -f $(CSRS_ADOC_SOURCE) $@.workdir/$(BUILT_CSRS_ADOC)
-	$(DOCKER_CMD) $(DOCKER_QUOTE) $(CREATE_CSR_ADOC_FILES_PYTHON) --input $(BUILD_DIR)/$(PARAMS_JSON_OUTPUT_FNAME) --csr-table $(CSR_TABLE_SCHEMA_INPUT) --output-dir $(BUILT_CSR_ADOC_DIR) && touch $(BUILT_CSR_ADOC_STAMP) $(DOCKER_QUOTE)
-	rm -rf $(BUILT_CSR_ADOC_DIR)
-	mv $@.workdir/$(BUILT_CSR_ADOC_DIR) $(BUILT_CSR_ADOC_DIR)
-	mv $@.workdir/$(BUILT_CSRS_ADOC) $(BUILT_CSRS_ADOC)
-	$(WORKDIR_TEARDOWN)
-
-$(BUILT_PARAM_TABLE_VARIANTS_STAMP): $(BUILD_DIR)/$(PARAMS_JSON_OUTPUT_FNAME) $(CREATE_PARAM_ADOC_FILES_TOOL) $(PARAM_TABLE_VARIANT_FILES)
-	$(WORKDIR_SETUP)
-	cp -f $(BUILD_DIR)/$(PARAMS_JSON_OUTPUT_FNAME) $@.workdir/$(BUILD_DIR)
-	$(DOCKER_CMD) $(DOCKER_QUOTE) set -e; rm -rf $(BUILT_PARAM_TABLE_VARIANTS_DIR); mkdir -p $(BUILT_PARAM_TABLE_VARIANTS_DIR); $(foreach f,$(PARAM_TABLE_VARIANT_FILES),python3 $(CREATE_PARAM_ADOC_FILES_TOOL) --input $(BUILD_DIR)/$(PARAMS_JSON_OUTPUT_FNAME) --param-table $(f) --output-dir $(BUILT_PARAM_TABLE_VARIANTS_DIR)/$(basename $(notdir $(f))); ) touch $(BUILT_PARAM_TABLE_VARIANTS_STAMP) $(DOCKER_QUOTE)
+	$(DOCKER_CMD) $(DOCKER_QUOTE) set -e; rm -rf $(BUILT_PARAM_TABLE_VARIANTS_DIR); mkdir -p $(BUILT_PARAM_TABLE_VARIANTS_DIR); $(foreach f,$(PARAM_TABLE_VARIANT_FILES),python3 $(CREATE_PARAM_TABLES_TOOL) --input $(BUILD_DIR)/$(PARAMS_JSON_OUTPUT_FNAME) --param-table $(f) --output-dir $(BUILT_PARAM_TABLE_VARIANTS_DIR)/$(basename $(notdir $(f))); ) touch $(BUILT_PARAM_TABLE_VARIANTS_STAMP) $(DOCKER_QUOTE)
 	rm -rf $(BUILT_PARAM_TABLE_VARIANTS_DIR)
 	mv $@.workdir/$(BUILT_PARAM_TABLE_VARIANTS_DIR) $(BUILT_PARAM_TABLE_VARIANTS_DIR)
 	$(WORKDIR_TEARDOWN)
 
-$(BUILT_CSR_TABLE_VARIANTS_STAMP): $(BUILD_DIR)/$(PARAMS_JSON_OUTPUT_FNAME) $(CREATE_CSR_ADOC_FILES_TOOL) $(CSR_TABLE_VARIANT_FILES)
+$(BUILT_CSR_TABLE_VARIANTS_STAMP): $(BUILD_DIR)/$(PARAMS_JSON_OUTPUT_FNAME) $(CREATE_PARAM_TABLES_TOOL) $(CSR_TABLE_VARIANT_FILES)
 	$(WORKDIR_SETUP)
 	cp -f $(BUILD_DIR)/$(PARAMS_JSON_OUTPUT_FNAME) $@.workdir/$(BUILD_DIR)
-	$(DOCKER_CMD) $(DOCKER_QUOTE) set -e; rm -rf $(BUILT_CSR_TABLE_VARIANTS_DIR); mkdir -p $(BUILT_CSR_TABLE_VARIANTS_DIR); $(foreach f,$(CSR_TABLE_VARIANT_FILES),python3 $(CREATE_CSR_ADOC_FILES_TOOL) --input $(BUILD_DIR)/$(PARAMS_JSON_OUTPUT_FNAME) --csr-table $(f) --output-dir $(BUILT_CSR_TABLE_VARIANTS_DIR)/$(basename $(notdir $(f))); ) touch $(BUILT_CSR_TABLE_VARIANTS_STAMP) $(DOCKER_QUOTE)
+	$(DOCKER_CMD) $(DOCKER_QUOTE) set -e; rm -rf $(BUILT_CSR_TABLE_VARIANTS_DIR); mkdir -p $(BUILT_CSR_TABLE_VARIANTS_DIR); $(foreach f,$(CSR_TABLE_VARIANT_FILES),python3 $(CREATE_PARAM_TABLES_TOOL) --input $(BUILD_DIR)/$(PARAMS_JSON_OUTPUT_FNAME) --csr-table $(f) --output-dir $(BUILT_CSR_TABLE_VARIANTS_DIR)/$(basename $(notdir $(f))); ) touch $(BUILT_CSR_TABLE_VARIANTS_STAMP) $(DOCKER_QUOTE)
 	rm -rf $(BUILT_CSR_TABLE_VARIANTS_DIR)
 	mv $@.workdir/$(BUILT_CSR_TABLE_VARIANTS_DIR) $(BUILT_CSR_TABLE_VARIANTS_DIR)
 	$(WORKDIR_TEARDOWN)

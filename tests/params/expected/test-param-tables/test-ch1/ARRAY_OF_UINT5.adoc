@@ -1,0 +1,9 @@
+a|
+[#param:ARRAY_OF_UINT5]#ARRAY_OF_UINT5#
+
+Normative Rule(s):
+
+* https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#ARRAY[ARRAY]
+| array[0..3] of 5-bit unsigned integer
+| EXT:MockExtX
+| See normative rule

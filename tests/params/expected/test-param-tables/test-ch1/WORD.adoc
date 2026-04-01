@@ -1,0 +1,9 @@
+a|
+[#param:WORD]#WORD#
+
+Normative Rule(s):
+
+* https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#WORD[WORD]
+| word
+| EXT:MockExtX
+| See normative rule

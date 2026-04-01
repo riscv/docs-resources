@@ -1,0 +1,9 @@
+a|
+[#param:MOCK_INST_X]#MOCK_INST_X#
+
+Normative Rule(s):
+
+* https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#MOCK_INST_X[MOCK_INST_X]
+| boolean
+| INST:MockInstX
+| NOTE: This is a Mock "X" instruction parameter.

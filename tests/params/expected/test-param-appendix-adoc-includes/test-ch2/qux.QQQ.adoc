@@ -1,0 +1,6 @@
+| qux.QQQ
+a| Other +
+func-of: foo.GHI
+| FLD:qux.QQQ
+a|
+* https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#QUX_QQQ_WLRL_OTHER[QUX_QQQ_WLRL_OTHER]
