@@ -98,7 +98,6 @@ BUILT_PARAMS_HTML := $(BUILD_DIR)/$(PARAMS_HTML_OUTPUT_FNAME)
 BUILT_PARAM_ADOC_DIR := $(BUILD_DIR)/test-param-tables
 BUILT_PARAM_ADOC_STAMP := $(BUILD_DIR)/test-param-adoc.done
 BUILT_PARAMS_ADOC := $(BUILD_DIR)/test-param-tables.adoc
-BUILT_CSRS_ADOC := $(BUILD_DIR)/test-csr-appendix.adoc
 BUILT_PARAM_TABLE_VARIANTS_DIR := $(BUILD_DIR)/test-param-table-variants
 BUILT_PARAM_TABLE_VARIANTS_STAMP := $(BUILD_DIR)/test-param-table-variants.done
 BUILT_CSR_TABLE_VARIANTS_DIR := $(BUILD_DIR)/test-csr-table-variants
