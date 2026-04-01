@@ -1,1 +1,0 @@
-include::satp.MODE.adoc[]

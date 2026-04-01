@@ -9,7 +9,7 @@ Usage:
 
 - If --param-table is given, generates parameter appendix files (like create_param_appendix.py)
 - If --csr-table is given, generates CSR appendix files (like create_csr_appendix.py)
-- If both are given, generates both in the same output directory
+- If both are given, generates both under separate subdirectories in the output directory
 
 Input JSON must conform to schemas/params-schema.json.
 """
@@ -17,7 +17,7 @@ Input JSON must conform to schemas/params-schema.json.
 import argparse
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 from appendix_shared_utils import (
     infer_normative_rules,
@@ -168,64 +168,38 @@ def write_param_output_files(params: List[Dict[str, Any]], output_dir: Path, col
         def_dir_name = Path(def_filename).stem
         if not def_dir_name:
             fatal(f"def_filename {def_filename!r} for parameter {name!r} has no usable stem for a chapter subdirectory name")
-        param_dir = output_dir / def_dir_name
+        chapter_dir = output_dir / def_dir_name
+        param_dir = chapter_dir / "params"
         param_dir.mkdir(parents=True, exist_ok=True)
         chapter_name = param.get("chapter_name")
         if not isinstance(chapter_name, str) or not chapter_name.strip():
             fatal(f"Expected non-empty chapter_name for parameter {name!r}")
-        if param_dir in chapter_names and chapter_names[param_dir] != chapter_name:
-            fatal(f"Conflicting chapter_name values for def_filename {def_filename!r}: {chapter_names[param_dir]!r} vs {chapter_name!r}")
-        chapter_names[param_dir] = chapter_name
+        if chapter_dir in chapter_names and chapter_names[chapter_dir] != chapter_name:
+            fatal(f"Conflicting chapter_name values for def_filename {def_filename!r}: {chapter_names[chapter_dir]!r} vs {chapter_name!r}")
+        chapter_names[chapter_dir] = chapter_name
         out_path = param_dir / f"{file_stem}.adoc"
         content = render_parameter_row_fragment(param, columns)
         with open(out_path, "w", encoding="utf-8") as f:
             f.write(content)
-        chapter_files.setdefault(param_dir, []).append(f"{file_stem}.adoc")
-    for param_dir, filenames in chapter_files.items():
+        chapter_files.setdefault(chapter_dir, []).append(f"{file_stem}.adoc")
+    for chapter_dir, filenames in chapter_files.items():
         include_lines = "\n".join(f"include::{fname}[]" for fname in filenames)
-        chapter_include_path = param_dir / "all_params.adoc"
+        chapter_include_path = chapter_dir / "params" / "all_params.adoc"
         with open(chapter_include_path, "w", encoding="utf-8") as f:
             f.write(include_lines + "\n")
-    chapter_tables = []
-    for param_dir in chapter_files.keys():
-        chapter_count = len(chapter_files[param_dir])
-        chapter_tables.append(f"=== {chapter_names[param_dir]}")
-        chapter_tables.append("")
-        chapter_tables.append(f".Chapter {chapter_names[param_dir]} Parameter Definitions: {format_param_count_label(chapter_count)}")
-        chapter_tables.append(f"[cols=\"{table_cols}\"]")
-        chapter_tables.append("|===")
-        chapter_tables.append("")
-        chapter_tables.append(table_header)
-        chapter_tables.append("")
-        chapter_tables.append(f"include::{param_dir.name}/all_params.adoc[]")
-        chapter_tables.append("")
-        chapter_tables.append("|===")
-        chapter_tables.append("")
-    top_include_lines = "\n".join(chapter_tables).rstrip()
-    top_include_path = output_dir / "all_params_by_chapter.adoc"
-    with open(top_include_path, "w", encoding="utf-8") as f:
-        f.write(top_include_lines + "\n")
     all_param_entries = [
-        (file_stem, param_dir)
-        for param_dir, filenames in chapter_files.items()
+        (file_stem, chapter_dir)
+        for chapter_dir, filenames in chapter_files.items()
         for file_stem in (Path(f).stem for f in filenames)
     ]
-    a_to_z_include_lines = "\n".join(f"include::{param_dir.name}/{stem}.adoc[]" for stem, param_dir in sorted(all_param_entries, key=lambda e: e[0]))
-    a_to_z_count = len(all_param_entries)
-    a_to_z_lines = "\n".join([
-        f".Parameter Definitions (A-Z): {format_param_count_label(a_to_z_count)}",
-        f"[cols=\"{table_cols}\"]",
-        "|===",
-        "",
-        table_header,
-        "",
-        a_to_z_include_lines,
-        "",
-        "|===",
-    ])
-    a_to_z_path = output_dir / "all_params_a_to_z.adoc"
-    with open(a_to_z_path, "w", encoding="utf-8") as f:
-        f.write(a_to_z_lines + "\n")
+    return {
+        "table_cols": table_cols,
+        "table_header": table_header,
+        "chapter_files": chapter_files,
+        "chapter_names": chapter_names,
+        "chapter_order": list(chapter_files.keys()),
+        "all_entries": all_param_entries,
+    }
 
 def csr_display_name(csr: Dict[str, Any]) -> str:
     reg_name = csr["reg-name"]
@@ -310,7 +284,6 @@ def write_csr_output_files(csrs: List[Dict[str, Any]], output_dir: Path, columns
     table_header = render_table_header_row(columns)
     chapter_files = {}
     chapter_names = {}
-    chapter_category_files = {}
     seen_names = set()
     for csr in csrs:
         name = csr_display_name(csr)
@@ -324,20 +297,21 @@ def write_csr_output_files(csrs: List[Dict[str, Any]], output_dir: Path, columns
         def_dir_name = Path(def_filename).stem
         if not def_dir_name:
             fatal(f"def_filename {def_filename!r} for CSR {name!r} has no usable stem for a chapter subdirectory name")
-        csr_dir = output_dir / def_dir_name
+        chapter_dir = output_dir / def_dir_name
+        csr_dir = chapter_dir / "csrs"
         csr_dir.mkdir(parents=True, exist_ok=True)
         chapter_name_value = csr.get("chapter_name")
         if not isinstance(chapter_name_value, str) or not chapter_name_value.strip():
             fatal(f"Expected non-empty chapter_name for CSR {name!r}")
         chapter_name = str(chapter_name_value)
-        if csr_dir in chapter_names and chapter_names[csr_dir] != chapter_name:
-            fatal(f"Conflicting chapter_name values for def_filename {def_filename!r}: {chapter_names[csr_dir]!r} vs {chapter_name!r}")
-        chapter_names[csr_dir] = chapter_name
+        if chapter_dir in chapter_names and chapter_names[chapter_dir] != chapter_name:
+            fatal(f"Conflicting chapter_name values for def_filename {def_filename!r}: {chapter_names[chapter_dir]!r} vs {chapter_name!r}")
+        chapter_names[chapter_dir] = chapter_name
         out_path = csr_dir / f"{file_stem}.adoc"
         content = render_csr_row_fragment(csr, columns)
         with open(out_path, "w", encoding="utf-8") as f:
             f.write(content)
-        chapter_files.setdefault(csr_dir, []).append(f"{file_stem}.adoc")
+        chapter_files.setdefault(chapter_dir, []).append(f"{file_stem}.adoc")
         category_value = csr.get("category")
         if not isinstance(category_value, str) or not category_value:
             fatal(f"Expected non-empty category for CSR {name!r}")
@@ -345,88 +319,191 @@ def write_csr_output_files(csrs: List[Dict[str, Any]], output_dir: Path, columns
         if category not in IMPLDEF_CATEGORIES:
             allowed_str = ", ".join(IMPLDEF_CATEGORIES)
             fatal(f"Unrecognized category {category!r} for CSR {name!r}; allowed values are: {allowed_str}")
-        chapter_category_files.setdefault((csr_dir, category), []).append(f"{file_stem}.adoc")
-    for csr_dir, filenames in chapter_files.items():
+        # Keep category validation for input quality checks, but top-level outputs list all CSRs.
+    for chapter_dir, filenames in chapter_files.items():
         include_lines = "\n".join(f"include::{fname}[]" for fname in filenames)
-        chapter_include_path = csr_dir / "all_csrs.adoc"
+        chapter_include_path = chapter_dir / "csrs" / "all_csrs.adoc"
         with open(chapter_include_path, "w", encoding="utf-8") as f:
             f.write(include_lines + "\n")
-        for category in IMPLDEF_CATEGORIES:
-            cat_filenames = chapter_category_files.get((csr_dir, category), [])
-            if not cat_filenames:
-                continue
-            cat_include_lines = "\n".join(f"include::{fname}[]" for fname in cat_filenames)
-            cat_include_path = csr_dir / f"{category.lower()}_csrs.adoc"
-            with open(cat_include_path, "w", encoding="utf-8") as f:
-                f.write(cat_include_lines + "\n")
-    chapter_tables = []
-    for csr_dir in chapter_files.keys():
-        chapter_tables.append(f"=== {chapter_names[csr_dir]}")
-        chapter_tables.append("")
-        for category in IMPLDEF_CATEGORIES:
-            cat_filenames = chapter_category_files.get((csr_dir, category), [])
-            if not cat_filenames:
-                continue
-            cat_count = len(cat_filenames)
-            chapter_tables.append(f".Chapter {chapter_names[csr_dir]} {category}: {format_csr_count_label(cat_count)}")
-            chapter_tables.append(f"[cols=\"{table_cols}\"]")
-            chapter_tables.append("|===")
-            chapter_tables.append("")
-            chapter_tables.append(table_header)
-            chapter_tables.append("")
-            chapter_tables.append(f"include::{csr_dir.name}/{category.lower()}_csrs.adoc[]")
-            chapter_tables.append("")
-            chapter_tables.append("|===")
-            chapter_tables.append("")
-    top_include_lines = "\n".join(chapter_tables).rstrip()
-    top_include_path = output_dir / "all_csrs_by_chapter.adoc"
-    with open(top_include_path, "w", encoding="utf-8") as f:
-        f.write(top_include_lines + "\n")
     all_csr_entries = [
-        (file_stem, csr_dir)
-        for csr_dir, filenames in chapter_files.items()
+        (file_stem, chapter_dir)
+        for chapter_dir, filenames in chapter_files.items()
         for file_stem in (Path(f).stem for f in filenames)
     ]
-    a_to_z_include_lines = "\n".join(f"include::{csr_dir.name}/{stem}.adoc[]" for stem, csr_dir in sorted(all_csr_entries, key=lambda e: e[0]))
-    a_to_z_count = len(all_csr_entries)
-    a_to_z_lines = "\n".join([
-        f".WARL/WLRL CSR Definitions (A-Z): {format_csr_count_label(a_to_z_count)}",
-        f"[cols=\"{table_cols}\"]",
-        "|===",
-        "",
-        table_header,
-        "",
-        a_to_z_include_lines,
-        "",
-        "|===",
-    ])
-    a_to_z_path = output_dir / "all_csrs_a_to_z.adoc"
+    return {
+        "table_cols": table_cols,
+        "table_header": table_header,
+        "chapter_files": chapter_files,
+        "chapter_names": chapter_names,
+        "chapter_order": list(chapter_files.keys()),
+        "all_entries": all_csr_entries,
+    }
+
+def write_combined_top_level_files(
+    output_dir: Path,
+    param_summary: Optional[Dict[str, Any]],
+    csr_summary: Optional[Dict[str, Any]],
+):
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    chapter_order: List[Path] = []
+    if param_summary is not None:
+        chapter_order.extend(param_summary["chapter_order"])
+    if csr_summary is not None:
+        for chapter_dir in csr_summary["chapter_order"]:
+            if chapter_dir not in chapter_order:
+                chapter_order.append(chapter_dir)
+
+    # Write per-chapter combined files as standalone tables for params then csrs.
+    for chapter_dir in chapter_order:
+        combined_lines: List[str] = []
+        if param_summary is not None:
+            param_stems = sorted(Path(fname).stem for fname in param_summary["chapter_files"].get(chapter_dir, []))
+            if param_stems:
+                combined_lines.append(f".Parameter Definitions (A-Z): {format_param_count_label(len(param_stems))}")
+                combined_lines.append(f"[cols=\"{param_summary['table_cols']}\"]")
+                combined_lines.append("|===")
+                combined_lines.append("")
+                combined_lines.append(param_summary["table_header"])
+                combined_lines.append("")
+                for stem in param_stems:
+                    combined_lines.append(f"include::params/{stem}.adoc[]")
+                combined_lines.append("")
+                combined_lines.append("|===")
+                combined_lines.append("")
+        if csr_summary is not None:
+            csr_stems = sorted(Path(fname).stem for fname in csr_summary["chapter_files"].get(chapter_dir, []))
+            if csr_stems:
+                combined_lines.append(f".WARL/WLRL CSR Definitions (A-Z): {format_csr_count_label(len(csr_stems))}")
+                combined_lines.append(f"[cols=\"{csr_summary['table_cols']}\"]")
+                combined_lines.append("|===")
+                combined_lines.append("")
+                combined_lines.append(csr_summary["table_header"])
+                combined_lines.append("")
+                for stem in csr_stems:
+                    combined_lines.append(f"include::csrs/{stem}.adoc[]")
+                combined_lines.append("")
+                combined_lines.append("|===")
+                combined_lines.append("")
+        combined_path = chapter_dir / "all_params.adoc"
+        with open(combined_path, "w", encoding="utf-8") as f:
+            if combined_lines:
+                f.write("\n".join(combined_lines).rstrip() + "\n")
+            else:
+                f.write("")
+
+    a_to_z_lines: List[str] = []
+    if param_summary is not None:
+        all_param_entries = [
+            (Path(fname).stem, chapter_dir)
+            for chapter_dir in chapter_order
+            for fname in param_summary["chapter_files"].get(chapter_dir, [])
+        ]
+        a_to_z_lines.append(f".Parameter Definitions (A-Z): {format_param_count_label(len(all_param_entries))}")
+        a_to_z_lines.append(f"[cols=\"{param_summary['table_cols']}\"]")
+        a_to_z_lines.append("|===")
+        a_to_z_lines.append("")
+        a_to_z_lines.append(param_summary["table_header"])
+        a_to_z_lines.append("")
+        for stem, chapter_dir in sorted(all_param_entries, key=lambda e: e[0]):
+            a_to_z_lines.append(f"include::{chapter_dir.name}/params/{stem}.adoc[]")
+        a_to_z_lines.append("")
+        a_to_z_lines.append("|===")
+        a_to_z_lines.append("")
+
+    if csr_summary is not None:
+        all_csr_entries = [
+            (Path(fname).stem, chapter_dir)
+            for chapter_dir in chapter_order
+            for fname in csr_summary["chapter_files"].get(chapter_dir, [])
+        ]
+        a_to_z_lines.append(f".WARL/WLRL CSR Definitions (A-Z): {format_csr_count_label(len(all_csr_entries))}")
+        a_to_z_lines.append(f"[cols=\"{csr_summary['table_cols']}\"]")
+        a_to_z_lines.append("|===")
+        a_to_z_lines.append("")
+        a_to_z_lines.append(csr_summary["table_header"])
+        a_to_z_lines.append("")
+        for stem, chapter_dir in sorted(all_csr_entries, key=lambda e: e[0]):
+            a_to_z_lines.append(f"include::{chapter_dir.name}/csrs/{stem}.adoc[]")
+        a_to_z_lines.append("")
+        a_to_z_lines.append("|===")
+        a_to_z_lines.append("")
+    a_to_z_path = output_dir / "all_params_a_to_z.adoc"
     with open(a_to_z_path, "w", encoding="utf-8") as f:
-        f.write(a_to_z_lines + "\n")
+        f.write("\n".join(a_to_z_lines).rstrip() + "\n")
+
+    chapter_lines: List[str] = []
+    for chapter_dir in chapter_order:
+        chapter_name = None
+        if param_summary is not None:
+            chapter_name = param_summary["chapter_names"].get(chapter_dir)
+        if chapter_name is None and csr_summary is not None:
+            chapter_name = csr_summary["chapter_names"].get(chapter_dir)
+        if chapter_name is None:
+            continue
+        chapter_lines.append(f"=== {chapter_name}")
+        chapter_lines.append("")
+
+        if param_summary is not None:
+            param_filenames = param_summary["chapter_files"].get(chapter_dir, [])
+            if param_filenames:
+                chapter_count = len(param_filenames)
+                chapter_lines.append(f".Chapter {chapter_name} Parameter Definitions: {format_param_count_label(chapter_count)}")
+                chapter_lines.append(f"[cols=\"{param_summary['table_cols']}\"]")
+                chapter_lines.append("|===")
+                chapter_lines.append("")
+                chapter_lines.append(param_summary["table_header"])
+                chapter_lines.append("")
+                chapter_lines.append(f"include::{chapter_dir.name}/params/all_params.adoc[]")
+                chapter_lines.append("")
+                chapter_lines.append("|===")
+                chapter_lines.append("")
+
+        if csr_summary is not None:
+            csr_filenames = csr_summary["chapter_files"].get(chapter_dir, [])
+            if csr_filenames:
+                csr_count = len(csr_filenames)
+                chapter_lines.append(f".Chapter {chapter_name} WARL/WLRL CSR Definitions: {format_csr_count_label(csr_count)}")
+                chapter_lines.append(f"[cols=\"{csr_summary['table_cols']}\"]")
+                chapter_lines.append("|===")
+                chapter_lines.append("")
+                chapter_lines.append(csr_summary["table_header"])
+                chapter_lines.append("")
+                chapter_lines.append(f"include::{chapter_dir.name}/csrs/all_csrs.adoc[]")
+                chapter_lines.append("")
+                chapter_lines.append("|===")
+                chapter_lines.append("")
+
+    by_chapter_path = output_dir / "all_params_by_chapter.adoc"
+    with open(by_chapter_path, "w", encoding="utf-8") as f:
+        f.write("\n".join(chapter_lines).rstrip() + "\n")
 
 def main() -> int:
     args = parse_args()
     data = load_params_json(args.input)
     out_dir = Path(args.output_dir)
     did_any = False
+    param_summary: Optional[Dict[str, Any]] = None
+    csr_summary: Optional[Dict[str, Any]] = None
     if args.param_table:
         if "parameters" not in data or not isinstance(data["parameters"], list):
             fatal("Input JSON does not contain a 'parameters' array.")
         columns = load_param_table_yaml(args.param_table)
         params = data["parameters"]
-        info(f"Writing {len(params)} parameter AsciiDoc files to {out_dir}")
-        write_param_output_files(params, out_dir, columns)
+        info(f"Writing {len(params)} parameter AsciiDoc files under chapter params/ subdirectories in {out_dir}")
+        param_summary = write_param_output_files(params, out_dir, columns)
         did_any = True
     if args.csr_table:
         if "csrs" not in data or not isinstance(data["csrs"], list):
             fatal("Input JSON does not contain a 'csrs' array.")
         columns = load_csr_table_yaml(args.csr_table)
         csrs = data["csrs"]
-        info(f"Writing {len(csrs)} CSR AsciiDoc files to {out_dir}")
-        write_csr_output_files(csrs, out_dir, columns)
+        info(f"Writing {len(csrs)} CSR AsciiDoc files under chapter csrs/ subdirectories in {out_dir}")
+        csr_summary = write_csr_output_files(csrs, out_dir, columns)
         did_any = True
     if not did_any:
         fatal("Must specify at least one of --param-table or --csr-table.")
+    write_combined_top_level_files(out_dir, param_summary, csr_summary)
     return 0
 
 if __name__ == "__main__":

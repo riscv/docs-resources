@@ -6,7 +6,17 @@
 
 | Parameter and Mapping to Normative Rules | Type | Feature(s) | Definition
 
-include::test-ch1/all_params.adoc[]
+include::test-ch1/params/all_params.adoc[]
+
+|===
+
+.Chapter One WARL/WLRL CSR Definitions: 1 CSR
+[cols="20%,20%,15%,45%"]
+|===
+
+| Name | Type | Feature(s) | Implementation-defined Behavior(s)
+
+include::test-ch1/csrs/all_csrs.adoc[]
 
 |===
 
@@ -18,6 +28,16 @@ include::test-ch1/all_params.adoc[]
 
 | Parameter and Mapping to Normative Rules | Type | Feature(s) | Definition
 
-include::test-ch2/all_params.adoc[]
+include::test-ch2/params/all_params.adoc[]
+
+|===
+
+.Chapter Two WARL/WLRL CSR Definitions: 4 CSRs
+[cols="20%,20%,15%,45%"]
+|===
+
+| Name | Type | Feature(s) | Implementation-defined Behavior(s)
+
+include::test-ch2/csrs/all_csrs.adoc[]
 
 |===

@@ -1,0 +1,23 @@
+=== One
+
+.Chapter One WARL/WLRL CSR Definitions: 1 CSR
+[cols="40%,60%"]
+|===
+
+| Name | Implementation-defined Behavior(s)
+
+include::test-ch1/csrs/all_csrs.adoc[]
+
+|===
+
+=== Two
+
+.Chapter Two WARL/WLRL CSR Definitions: 4 CSRs
+[cols="40%,60%"]
+|===
+
+| Name | Implementation-defined Behavior(s)
+
+include::test-ch2/csrs/all_csrs.adoc[]
+
+|===

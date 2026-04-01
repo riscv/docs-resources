@@ -6,7 +6,7 @@
 
 | Type | Feature(s) | Parameter and Mapping to Normative Rules | Definition
 
-include::test-ch1/all_params.adoc[]
+include::test-ch1/params/all_params.adoc[]
 
 |===
 
@@ -18,6 +18,6 @@ include::test-ch1/all_params.adoc[]
 
 | Type | Feature(s) | Parameter and Mapping to Normative Rules | Definition
 
-include::test-ch2/all_params.adoc[]
+include::test-ch2/params/all_params.adoc[]
 
 |===

@@ -1,0 +1,12 @@
+.WARL/WLRL CSR Definitions (A-Z): 4 CSRs
+[cols="20%,20%,15%,45%"]
+|===
+
+| Name | Type | Feature(s) | Implementation-defined Behavior(s)
+
+include::csrs/foo.ABC.adoc[]
+include::csrs/foo.GHI.adoc[]
+include::csrs/qux.QQQ.adoc[]
+include::csrs/zort.XYZ.adoc[]
+
+|===

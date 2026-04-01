@@ -227,16 +227,18 @@ Inputs:
 
 Outputs:
 - Output directory containing:
-  - Per-parameter and/or per-CSR row fragments grouped by AsciiDoc filename.
-  - Per-adoc include files (`<adoc>/all_params.adoc`, `<adoc>/all_csrs.adoc`) in input JSON order.
+  - Per-chapter subdirectories (for example, `<adoc>/`).
+  - Per-parameter and/or per-CSR row fragments grouped by AsciiDoc filename under chapter-local `params/` and `csrs/` subdirectories.
+  - Per-adoc include files (`<adoc>/params/all_params.adoc`, `<adoc>/csrs/all_csrs.adoc`) in input JSON order.
+  - Per-chapter combined include file (`<adoc>/all_params.adoc`) containing all parameter and CSR row includes for that chapter.
   - Top-level include files:
-    - `all_params_a_to_z.adoc`, `all_csrs_a_to_z.adoc` (single tables, sorted by name).
-    - `all_params_by_chapter.adoc`, `all_csrs_by_chapter.adoc` (one table per chapter in input JSON chapter encounter order).
+    - `all_params_a_to_z.adoc` (two global tables across all chapters: one for parameters and one for CSRs, each sorted A-Z).
+    - `all_params_by_chapter.adoc` (chapter-organized, with separate parameter and CSR tables per chapter in input order).
 
 Behavior:
 - If `--param-table` is given, generates parameter appendix files (like the old create_param_appendix.py)
 - If `--csr-table` is given, generates CSR appendix files (like the old create_csr_appendix.py)
-- If both are given, generates both in the same output directory
+- If both are given, generates both under chapter-local `params/` and `csrs/` subdirectories and writes unified top-level `all_params*.adoc` files
 
 Typical commands:
 ```bash
