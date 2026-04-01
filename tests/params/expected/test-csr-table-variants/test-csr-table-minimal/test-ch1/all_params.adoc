@@ -1,0 +1,9 @@
+.WARL/WLRL CSR Definitions (A-Z): 1 CSR
+[cols="40%,60%"]
+|===
+
+| Name | Implementation-defined Behavior(s)
+
+include::csrs/satp.MODE.adoc[]
+
+|===

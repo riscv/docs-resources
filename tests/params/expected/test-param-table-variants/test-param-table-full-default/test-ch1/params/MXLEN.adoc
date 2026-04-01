@@ -1,0 +1,9 @@
+a|
+[#param:MXLEN]#MXLEN#
+
+Normative Rule(s):
+
+* (none)
+| [32, 64]
+| CHAP:One
+| Supported machine register widths. Doesn't have an impl-def just for testing purposes.

@@ -1,0 +1,3 @@
+// Just used to include all generated adoc parameter and WARL/WLRL CSR tables into a single file.
+include::test-param-tables/all_params_a_to_z.adoc[]
+include::test-param-tables/all_params_by_chapter.adoc[]

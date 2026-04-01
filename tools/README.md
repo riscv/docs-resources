@@ -12,8 +12,7 @@ This directory contains command-line generators and shared Python helper modules
 | shared_utils.py | Helper module | Shared constants, logging helpers, YAML/JSON loaders, and common validators/formatters. |
 | create_normative_rules.py | CLI tool | Builds normative-rules JSON or HTML from rule-definition YAML and tag JSON files. |
 | create_params.py | CLI tool | Builds params JSON or HTML from normative-rules JSON and parameter-definition YAML files. |
-| create_param_appendix.py | CLI tool | Generates parameter-row AsciiDoc fragments plus table include files from params JSON and a table-layout YAML file. |
-| create_csr_appendix.py | CLI tool | Generates CSR-row AsciiDoc fragments plus table include files from the csrs array in params JSON and a CSR table-layout YAML file. |
+| create_param_tables.py | CLI tool | Generates parameter and/or CSR AsciiDoc fragments and include files from params JSON and table-layout YAML files. |
 | detect_tag_changes.py | CLI tool | Compares two tag JSON files and reports additions, deletions, and modifications. |
 | export_params_to_udb.py | CLI tool | Converts a params.json file (conforming to schemas/params-schema.json) into individual YAML files for each parameter (conforming to schemas/udb_param_schema.json). |
 
@@ -215,67 +214,53 @@ Examples:
   type: Other
 ```
 
-### create_param_appendix.py
+
+### create_param_tables.py
 
 Purpose:
-- Creates one AsciiDoc table-row fragment file per parameter from params JSON,
-  and generates higher-level AsciiDoc include files for appendix assembly.
+- Generates AsciiDoc table-row fragment files and include files for parameters and/or CSRs from a params JSON file.
 
 Inputs:
-- Params JSON file (-i / --input).
-- Parameter table-layout YAML file (-t / --param-table), conforming to schemas/param-table-schema.json.
+- Params JSON file (`-i` / `--input`).
+- Parameter table-layout YAML file (`--param-table`), conforming to `schemas/param-table-schema.json` (optional).
+- CSR table-layout YAML file (`--csr-table`), conforming to `schemas/csr-table-schema.json` (optional).
+- At least one of `--param-table` or `--csr-table` must be provided.
 
 Outputs:
 - Output directory containing:
-  - Per-parameter row fragments grouped by AsciiDoc filename
-  - Per-adoc include files (`<adoc>/all_params.adoc`) in input JSON parameter order.
+  - Per-chapter subdirectories (for example, `<adoc>/`).
+  - Per-parameter and/or per-CSR row fragments grouped by AsciiDoc filename under chapter-local `params/` and `csrs/` subdirectories.
+  - Per-adoc include files (`<adoc>/params/all_params.adoc`, `<adoc>/csrs/all_csrs.adoc`) in input JSON order.
+  - Per-chapter combined include file (`<adoc>/all_params.adoc`) containing all parameter and CSR row includes for that chapter.
   - Top-level include files:
-    - `all_params_a_to_z.adoc` (single table, sorted by parameter name).
-    - `all_params_by_chapter.adoc` (one table per chapter in input JSON chapter encounter order).
+    - `all_params_a_to_z.adoc` (two global tables across all chapters: one for parameters and one for CSRs, each sorted A-Z).
+    - `all_params_by_chapter.adoc` (chapter-organized, with separate parameter and CSR tables per chapter in input order).
 
-Top-level table behavior:
-- Table columns and widths are driven by the `columns` list in the layout YAML.
-- Table header names come from each column `name` in the layout YAML.
-- Table captions include parameter counts (for example `: 25 Parameters`).
+Behavior:
+- If `--param-table` is given, generates parameter appendix files (like the old create_param_appendix.py)
+- If `--csr-table` is given, generates CSR appendix files (like the old create_csr_appendix.py)
+- If both are given, generates both under chapter-local `params/` and `csrs/` subdirectories and writes unified top-level `all_params*.adoc` files
 
-Typical command:
+Typical commands:
 ```bash
-python3 tools/create_param_appendix.py \
+# Generate parameter appendix only
+python3 tools/create_param_tables.py \
   --input build/test-params.json \
   --param-table tools/default_param_table.yaml \
-  --output-dir build/test-param-appendix-adoc-includes
-```
+  --output-dir build/test-param-tables
 
-### create_csr_appendix.py
-
-Purpose:
-- Creates one AsciiDoc table-row fragment file per CSR from the `csrs` array in params JSON,
-  and generates higher-level AsciiDoc include files for appendix assembly.
-
-Inputs:
-- Params JSON file (-i / --input).
-- CSR table-layout YAML file (-t / --csr-table), conforming to schemas/csr-table-schema.json.
-
-Outputs:
-- Output directory containing:
-  - Per-CSR row fragments grouped by AsciiDoc filename.
-  - Per-adoc include files (`<adoc>/all_csrs.adoc`) in input JSON CSR order.
-  - Top-level include files:
-    - `all_csrs_a_to_z.adoc` (single table, sorted by CSR name).
-    - `all_csrs_by_chapter.adoc` (one table per chapter in input JSON chapter encounter order).
-
-Default columns and order (tools/default_csr_table.yaml):
-- `Name` (from `reg-name`, optionally `reg-name.field-name`)
-- `Type`
-- `Feature(s)`
-- `Implementation-defined Behavior(s)`
-
-Typical command:
-```bash
-python3 tools/create_csr_appendix.py \
+# Generate CSR appendix only
+python3 tools/create_param_tables.py \
   --input build/test-params.json \
   --csr-table tools/default_csr_table.yaml \
   --output-dir build/test-csr-appendix-adoc-includes
+
+# Generate both in the same directory
+python3 tools/create_param_tables.py \
+  --input build/test-params.json \
+  --param-table tools/default_param_table.yaml \
+  --csr-table tools/default_csr_table.yaml \
+  --output-dir build/merged-appendix-adoc-includes
 ```
 
 ### detect_tag_changes.py

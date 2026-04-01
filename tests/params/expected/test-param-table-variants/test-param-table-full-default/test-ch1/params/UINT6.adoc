@@ -1,0 +1,9 @@
+a|
+[#param:UINT6]#UINT6#
+
+Normative Rule(s):
+
+* https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#UINT6[UINT6]
+| 6-bit unsigned integer
+| EXT:MockExtX
+| See normative rule

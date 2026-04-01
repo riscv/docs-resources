@@ -1,0 +1,9 @@
+a|
+[#param:BASE_RV32I_RV64I]#BASE_RV32I_RV64I#
+
+Normative Rule(s):
+
+* https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#BASE_RV32I_RV64I[BASE_RV32I_RV64I]
+| boolean
+| BASE:RV32I, BASE:RV64I
+| NOTE: This is a base RV32I or RV64I parameter.

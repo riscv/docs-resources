@@ -1,0 +1,48 @@
+.Parameter Definitions (A-Z): 30 Parameters
+[cols="30%,10%,10%,50%"]
+|===
+
+| Parameter and Mapping to Normative Rules | Type | Feature(s) | Definition
+
+include::params/ALL_BASES.adoc[]
+include::params/ARRAY_OF_BIT.adoc[]
+include::params/ARRAY_OF_BOOLEAN.adoc[]
+include::params/ARRAY_OF_BYTE.adoc[]
+include::params/ARRAY_OF_DWORD.adoc[]
+include::params/ARRAY_OF_HWORD.adoc[]
+include::params/ARRAY_OF_INT32.adoc[]
+include::params/ARRAY_OF_LIST_INT.adoc[]
+include::params/ARRAY_OF_LIST_STR.adoc[]
+include::params/ARRAY_OF_NEG10TO20.adoc[]
+include::params/ARRAY_OF_UINT5.adoc[]
+include::params/ARRAY_OF_UINT64.adoc[]
+include::params/ARRAY_OF_WORD.adoc[]
+include::params/BIT.adoc[]
+include::params/BOOLEAN.adoc[]
+include::params/BYTE.adoc[]
+include::params/DWORD.adoc[]
+include::params/HWORD.adoc[]
+include::params/INT2.adoc[]
+include::params/INT64.adoc[]
+include::params/INT_MXLEN.adoc[]
+include::params/LIST_INT.adoc[]
+include::params/LIST_STR.adoc[]
+include::params/MXLEN.adoc[]
+include::params/UINT32.adoc[]
+include::params/UINT6.adoc[]
+include::params/UINT_1TO100.adoc[]
+include::params/UINT_4TO8.adoc[]
+include::params/UINT_MXLEN.adoc[]
+include::params/WORD.adoc[]
+
+|===
+
+.WARL/WLRL CSR Definitions (A-Z): 1 CSR
+[cols="20%,20%,15%,45%"]
+|===
+
+| Name | Type | Feature(s) | Implementation-defined Behavior(s)
+
+include::csrs/satp.MODE.adoc[]
+
+|===

@@ -1,3 +1,0 @@
-// Just used to include all generated adoc parameter tables into a single file.
-include::test-param-appendix-adoc-includes/all_params_a_to_z.adoc[]
-include::test-param-appendix-adoc-includes/all_params_by_chapter.adoc[]

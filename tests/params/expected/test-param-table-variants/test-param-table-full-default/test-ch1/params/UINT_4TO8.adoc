@@ -1,0 +1,9 @@
+a|
+[#param:UINT_4TO8]#UINT_4TO8#
+
+Normative Rule(s):
+
+* https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#UINT_4TO8[UINT_4TO8]
+| range 4 to 8
+| EXT:MockExtY
+| See normative rule
