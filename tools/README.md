@@ -224,6 +224,7 @@ Inputs:
 - Params JSON file (`-i` / `--input`).
 - Parameter table-layout YAML file (`--param-table`), conforming to `schemas/param-table-schema.json` (optional).
 - CSR table-layout YAML file (`--csr-table`), conforming to `schemas/csr-table-schema.json` (optional).
+- At least one of `--param-table` or `--csr-table` must be provided.
 
 Outputs:
 - Output directory containing:
