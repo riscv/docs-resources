@@ -16,6 +16,7 @@ font:
       normal: Montserrat-Regular.ttf
       italic: Montserrat-Italic.ttf
       bold: Montserrat-Medium.ttf
+      bold_italic: Montserrat-MediumItalic.ttf
       light: Montserrat-Light.ttf
     code:
       normal: cmunbtl.ttf
