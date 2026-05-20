@@ -125,3 +125,4 @@ if __name__ == '__main__':
         print("Usage: python wavedrom_a11y.py <input.edn> <output.svg>")
         sys.exit(1)
     process(sys.argv[1], sys.argv[2])
+    
