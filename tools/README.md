@@ -277,12 +277,17 @@ python3 tools/detect_tag_changes.py [options] REFERENCE_TAGS.json CURRENT_TAGS.j
 
 Options:
 - -u, --update-reference: update the reference file by merging additions from current.
+- -s, --strict: in addition to modifications/deletions, treat additions as failures and compare prose byte-for-byte (only whitespace is normalized for line-ending portability). Intended for CI gates that require the reference file to exactly mirror the build output.
 - -v, --verbose: print additional processing details.
 - -h, --help: show help message.
 
-Exit codes:
-- 0: no changes or additions only.
+Exit codes (default mode):
+- 0: no changes, or only additions, or only changes that normalize away under AsciiDoc-formatting stripping.
 - 1: one or more modifications or deletions detected.
+
+Exit codes (--strict):
+- 0: no changes (after whitespace normalization only), or additions that were absorbed by --update-reference in the same run.
+- 1: any addition, deletion, or modification (including AsciiDoc-formatting-only changes).
 
 Examples:
 ```bash

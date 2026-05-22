@@ -32,8 +32,9 @@ class TagChanges:
 class TagChangeDetector:
     """Detector for changes in tag files."""
 
-    def __init__(self, verbose: bool = False):
+    def __init__(self, verbose: bool = False, strict: bool = False):
         self.verbose = verbose
+        self.strict = strict
 
     def load_tags(self, filename: str) -> Dict[str, str]:
         """Load tags from a JSON file.
@@ -211,7 +212,11 @@ class TagChangeDetector:
             sys.exit(f"Error: Failed to update {file_path}: {e}")
 
     def _normalize_text(self, text: str) -> str:
-        """Normalize text for comparison (whitespace and AsciiDoc formatting).
+        """Normalize text for comparison.
+
+        In strict mode, only whitespace is normalized (line-ending portability).
+        Otherwise, AsciiDoc formatting marks are also stripped, so e.g. wrapping
+        a term in `monospace` does not count as a modification.
 
         Args:
             text: Text to normalize
@@ -219,8 +224,10 @@ class TagChangeDetector:
         Returns:
             Normalized text
         """
-        # First normalize whitespace, then strip AsciiDoc formatting
-        return self._strip_asciidoc_formatting(self._normalize_whitespace(text))
+        normalized = self._normalize_whitespace(text)
+        if self.strict:
+            return normalized
+        return self._strip_asciidoc_formatting(normalized)
 
     def _normalize_whitespace(self, text: str) -> str:
         """Normalize whitespace for comparison.
@@ -316,6 +323,14 @@ def parse_options() -> argparse.Namespace:
     )
 
     parser.add_argument(
+        '-s', '--strict',
+        action='store_true',
+        help=('Treat additions as failures and compare prose byte-for-byte '
+              '(only whitespace is normalized). Use this in CI when the '
+              'reference file must match the build output exactly.')
+    )
+
+    parser.add_argument(
         '-v', '--verbose',
         action='store_true',
         help='Show verbose output with detailed processing information'
@@ -328,7 +343,7 @@ def main():
     """Main execution."""
     options = parse_options()
 
-    detector = TagChangeDetector(verbose=options.verbose)
+    detector = TagChangeDetector(verbose=options.verbose, strict=options.strict)
 
     # Load both tag files
     reference_tags = detector.load_tags(options.reference_file)
@@ -345,11 +360,17 @@ def main():
     if options.update_reference:
         detector.update_tags_file(options.reference_file, changes)
 
-    # Exit with appropriate status code
-    # Return 0 if no changes or only additions
-    # Return 1 if any modifications or deletions detected
-    has_modifications_or_deletions = bool(changes.modified or changes.deleted)
-    sys.exit(1 if has_modifications_or_deletions else 0)
+    # Exit status:
+    #   * Modifications and deletions always fail (reference is stale).
+    #   * In strict mode, additions also fail unless --update-reference
+    #     absorbed them into the reference file in this run.
+    #   * Otherwise, additions are tolerated (legacy behaviour kept for
+    #     consumers that do not want CI blocked by new tags).
+    additions_remaining = bool(changes.added) and not options.update_reference
+    fail = bool(changes.modified or changes.deleted)
+    if options.strict and additions_remaining:
+        fail = True
+    sys.exit(1 if fail else 0)
 
 
 if __name__ == "__main__":
