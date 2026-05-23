@@ -1159,7 +1159,7 @@ def html_build_descriptions(entry: Dict[str, Any], impl_defs: List[Any]) -> List
                 )
             assert isinstance(tag_name, str)
             html = convert_tag_text_to_html(tag_text, target_html_fname, is_context)
-            if re.search(r"<a\\b", html):
+            if re.search(r"<a\b", html):
                 descriptions.append(html)
             else:
                 descriptions.append(tag2html_link(tag_name, html, target_html_fname))
