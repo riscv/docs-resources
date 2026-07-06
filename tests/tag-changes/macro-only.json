@@ -1,0 +1,10 @@
+{
+  "tags": {
+    "norm:macro-csr": "The csr:mstatus[] register controls the csr::[sum] field.",
+    "norm:macro-csr-field": "Bits csr:mip[meip] and csr:mie[meie] are interrupt bits.",
+    "norm:macro-instruction": "When csr::[tw]=0, the insn:wfi[] instruction may execute.",
+    "norm:macro-extension": "If the ext:sscofpmf[] extension is implemented, csr::[lcofip] is writable.",
+    "norm:macro-range": "Registers f0-f31 and bits 31{endash}1 are reserved.",
+    "norm:macro-alt-csr-field": "When csr:[tm] is clear, access is denied."
+  }
+}

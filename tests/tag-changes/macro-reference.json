@@ -1,0 +1,10 @@
+{
+  "tags": {
+    "norm:macro-csr": "The mstatus register controls the SUM field.",
+    "norm:macro-csr-field": "Bits mip.MEIP and mie.MEIE are interrupt bits.",
+    "norm:macro-instruction": "When TW=0, the WFI instruction may execute.",
+    "norm:macro-extension": "If the Sscofpmf extension is implemented, LCOFIP is writable.",
+    "norm:macro-range": "Registers f0–f31 and bits 31--1 are reserved.",
+    "norm:macro-alt-csr-field": "When TM is clear, access is denied."
+  }
+}

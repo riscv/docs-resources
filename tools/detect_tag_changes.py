@@ -18,15 +18,18 @@ class TagChanges:
     def __init__(self):
         self.added: Dict[str, str] = {}      # Tags present in current but not in reference
         self.deleted: Dict[str, str] = {}    # Tags present in reference but not in current
-        self.modified: Dict[str, Dict[str, str]] = {}   # Tags present in both but with different text
+        self.modified: Dict[str, Dict[str, str]] = {}   # Tags with normative text changes
+        self.markup_only_modified: Dict[str, Dict[str, str]] = {}   # Tags changed only by ignored markup
 
     def any_changes(self) -> bool:
         """Check if any changes were detected."""
-        return bool(self.added or self.deleted or self.modified)
+        return bool(self.added or self.deleted or self.modified or
+                    self.markup_only_modified)
 
     def total_changes(self) -> int:
         """Get total number of changes."""
-        return len(self.added) + len(self.deleted) + len(self.modified)
+        return (len(self.added) + len(self.deleted) + len(self.modified) +
+                len(self.markup_only_modified))
 
 
 class TagChangeDetector:
@@ -95,10 +98,15 @@ class TagChangeDetector:
             normalized_cur = self._normalize_text(current_text)
 
             if normalized_ref != normalized_cur:
-                changes.modified[tag_name] = {
+                change_record = {
                     "reference": reference_text,
                     "current": current_text
                 }
+                if self._normalize_macro_markup(normalized_ref) == \
+                        self._normalize_macro_markup(normalized_cur):
+                    changes.markup_only_modified[tag_name] = change_record
+                else:
+                    changes.modified[tag_name] = change_record
 
         return changes
 
@@ -154,6 +162,17 @@ class TagChangeDetector:
                 print(f'      Current:   "{self._truncate_text(texts["current"])}"')
             print()
 
+        # Display markup-only modified tags
+        if changes.markup_only_modified:
+            count = len(changes.markup_only_modified)
+            print(f"Markup-only modified {count} tag{'s' if count > 1 else ''}:")
+            for tag_name in sorted(changes.markup_only_modified.keys()):
+                texts = changes.markup_only_modified[tag_name]
+                print(f'  * "{tag_name}":')
+                print(f'      Reference: "{self._truncate_text(texts["reference"])}"')
+                print(f'      Current:   "{self._truncate_text(texts["current"])}"')
+            print()
+
         # Summary
         if verbose:
             print("=" * 80)
@@ -161,6 +180,7 @@ class TagChangeDetector:
             print(f"  Added:    {len(changes.added)}")
             print(f"  Deleted:  {len(changes.deleted)}")
             print(f"  Modified: {len(changes.modified)}")
+            print(f"  Markup-only modified: {len(changes.markup_only_modified)}")
             print("=" * 80)
 
     def update_tags_file(self, file_path: str, changes: TagChanges):
@@ -221,6 +241,56 @@ class TagChangeDetector:
         """
         # First normalize whitespace, then strip AsciiDoc formatting
         return self._strip_asciidoc_formatting(self._normalize_whitespace(text))
+
+    def _normalize_macro_markup(self, text: str) -> str:
+        """Normalize RISC-V AsciiDoc macro wrappers for semantic comparison.
+
+        This intentionally handles only presentation macros that commonly wrap
+        existing ISA names. It does not treat changed operands, fields, values,
+        or prose as equivalent.
+        """
+        result = text
+
+        # Common document attributes used as punctuation in extracted text.
+        result = result.replace('{endash}', '-')
+        result = result.replace('{emdash}', '-')
+        result = result.replace('&#8211;', '-')
+        result = result.replace('&#8212;', '-')
+        result = result.replace('–', '-')
+        result = result.replace('—', '-')
+        result = result.replace('--', '-')
+
+        # CSR field shorthand, e.g. csr::[sum] renders like a field name.
+        result = re.sub(
+            r'\bcsr::\[([A-Za-z0-9_.-]+)\]',
+            lambda match: match.group(1).upper(),
+            result
+        )
+
+        # Alternate CSR field shorthand occasionally emitted as csr:[field].
+        result = re.sub(
+            r'\bcsr:\[([A-Za-z0-9_.-]+)\]',
+            lambda match: match.group(1).upper(),
+            result
+        )
+
+        # CSR references with fields, e.g. csr:mip[meip] -> mip.MEIP.
+        result = re.sub(
+            r'\bcsr:([A-Za-z0-9_.-]+)\[([A-Za-z0-9_.-]+)\]',
+            lambda match: f"{match.group(1)}.{match.group(2).upper()}",
+            result
+        )
+
+        # CSR references without fields, e.g. csr:mstatus[] -> mstatus.
+        result = re.sub(r'\bcsr:([A-Za-z0-9_.-]+)\[\]', r'\1', result)
+
+        # Instruction and extension references render as their names.
+        result = re.sub(r'\binsn:([A-Za-z0-9_.-]+)\[\]', r'\1', result)
+        result = re.sub(r'\bext:([A-Za-z0-9_.-]+)\[\]', r'\1', result)
+
+        # Ignore case only after macro wrappers have been removed. This avoids
+        # false positives for WFI vs insn:wfi[] and SUM vs csr::[sum].
+        return self._normalize_whitespace(result).casefold()
 
     def _normalize_whitespace(self, text: str) -> str:
         """Normalize whitespace for comparison.
