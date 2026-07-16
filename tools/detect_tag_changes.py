@@ -164,53 +164,6 @@ class TagChangeDetector:
             print(f"  Modified: {len(changes.modified)}")
             print("=" * 80)
 
-    def update_tags_file(self, file_path: str, changes: TagChanges):
-        """Update a tags file by adding new tags from additions.
-
-        Args:
-            file_path: Path to the file to update
-            changes: Changes detected
-        """
-        if not changes.added:
-            print(f"No additions to merge into {file_path}")
-            if self.verbose:
-                print("Skipping file update - no additions")
-            return
-
-        path = Path(file_path)
-        if not path.exists():
-            sys.exit(f"Error: Cannot update file - not found: {file_path}")
-
-        if self.verbose:
-            print(f"Updating reference file: {file_path}")
-
-        try:
-            with open(path, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-
-            original_count = len(data["tags"])
-
-            # Add new tags
-            for tag_name, tag_text in changes.added.items():
-                if self.verbose:
-                    print(f"  Adding tag: {tag_name}")
-                data["tags"][tag_name] = tag_text
-
-            # Write back to file
-            if self.verbose:
-                print("Writing updated file...")
-
-            with open(path, 'w', encoding='utf-8') as f:
-                json.dump(data, f, indent=2, ensure_ascii=False)
-
-            new_count = len(data["tags"])
-            print(f"Updated {file_path}: added {len(changes.added)} new tags ({original_count} -> {new_count} total tags)")
-
-        except json.JSONDecodeError as e:
-            sys.exit(f"Error: Failed to parse JSON from {file_path}: {e}")
-        except Exception as e:
-            sys.exit(f"Error: Failed to update {file_path}: {e}")
-
     def _normalize_text(self, text: str) -> str:
         """Normalize text for comparison.
 
@@ -317,12 +270,6 @@ def parse_options() -> argparse.Namespace:
     )
 
     parser.add_argument(
-        '-u', '--update-reference',
-        action='store_true',
-        help='Update the reference tags file by adding any additions found in the current file'
-    )
-
-    parser.add_argument(
         '-s', '--strict',
         action='store_true',
         help=('Treat additions as failures and compare prose byte-for-byte '
@@ -356,19 +303,17 @@ def main():
     detector.display_changes(changes, options.reference_file,
                             options.current_file, options.verbose)
 
-    # Update reference file if requested
-    if options.update_reference:
-        detector.update_tags_file(options.reference_file, changes)
-
     # Exit status:
     #   * Modifications and deletions always fail (reference is stale).
-    #   * In strict mode, additions also fail unless --update-reference
-    #     absorbed them into the reference file in this run.
+    #   * In strict mode, additions also fail (the reference must mirror the
+    #     build output exactly).
     #   * Otherwise, additions are tolerated (legacy behaviour kept for
     #     consumers that do not want CI blocked by new tags).
-    additions_remaining = bool(changes.added) and not options.update_reference
+    #
+    # This tool is a reporter, not an updater: regenerate a stale reference by
+    # rebuilding and copying (e.g. `make update-ref` downstream), not from here.
     fail = bool(changes.modified or changes.deleted)
-    if options.strict and additions_remaining:
+    if options.strict and changes.added:
         fail = True
     sys.exit(1 if fail else 0)
 

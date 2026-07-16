@@ -301,8 +301,8 @@ compare-test-export-params-to-udb: $(EXPECTED_EXPORT_PARAMS_TO_UDB_DIR) $(BUILT_
 #
 # Test tag change detection
 #
-.PHONY: test-tag-changes test-tag-changes-basic test-tag-changes-verbose test-tag-changes-no-changes test-tag-changes-additions-only test-tag-changes-whitespace-only test-tag-changes-formatting-only test-tag-changes-update test-tag-changes-strict-additions test-tag-changes-strict-formatting test-tag-changes-strict-whitespace test-tag-changes-strict-update
-test-tag-changes: test-tag-changes-basic test-tag-changes-verbose test-tag-changes-no-changes test-tag-changes-additions-only test-tag-changes-whitespace-only test-tag-changes-formatting-only test-tag-changes-update test-tag-changes-strict-additions test-tag-changes-strict-formatting test-tag-changes-strict-whitespace test-tag-changes-strict-update
+.PHONY: test-tag-changes test-tag-changes-basic test-tag-changes-verbose test-tag-changes-no-changes test-tag-changes-additions-only test-tag-changes-whitespace-only test-tag-changes-formatting-only test-tag-changes-strict-additions test-tag-changes-strict-formatting test-tag-changes-strict-whitespace
+test-tag-changes: test-tag-changes-basic test-tag-changes-verbose test-tag-changes-no-changes test-tag-changes-additions-only test-tag-changes-whitespace-only test-tag-changes-formatting-only test-tag-changes-strict-additions test-tag-changes-strict-formatting test-tag-changes-strict-whitespace
 
 test-tag-changes-basic: $(TAG_CHANGES_TEST_REFERENCE_PATH) $(TAG_CHANGES_TEST_CURRENT_PATH)
 	@echo "TESTING TAG CHANGE DETECTION - BASIC OUTPUT (with modifications/deletions)"
@@ -328,13 +328,6 @@ test-tag-changes-formatting-only: $(TAG_CHANGES_TEST_REFERENCE_PATH)
 	@echo "TESTING TAG CHANGE DETECTION - FORMATTING ONLY (expect exit 0)"
 	$(DETECT_TAG_CHANGES_PYTHON) $(TAG_CHANGES_TEST_REFERENCE_PATH) $(TAG_CHANGES_TESTS_DIR)/formatting-only.json && echo "test-tag-changes-formatting-only PASSED" || echo "test-tag-changes-formatting-only FAILED (formatting-only changes should return exit 0)"
 
-test-tag-changes-update: $(TAG_CHANGES_TEST_REFERENCE_PATH)
-	@echo "TESTING TAG CHANGE DETECTION - UPDATE FILE"
-	@cp -f $(TAG_CHANGES_TEST_REFERENCE_PATH) $(BUILD_DIR)/test-reference.json
-	@$(DETECT_TAG_CHANGES_PYTHON) $(BUILD_DIR)/test-reference.json $(TAG_CHANGES_TESTS_DIR)/additions-only.json --update-reference
-	@python3 -c 'import json; data = json.load(open("$(BUILD_DIR)/test-reference.json")); exit(0 if "norm:added-only-tag" in data["tags"] else 1)' || (echo "test-tag-changes-update FAILED (tag not added)"; exit 1)
-	@$(DETECT_TAG_CHANGES_PYTHON) $(BUILD_DIR)/test-reference.json $(TAG_CHANGES_TESTS_DIR)/additions-only.json > /dev/null 2>&1 && echo "test-tag-changes-update PASSED" || (echo "test-tag-changes-update FAILED (differences detected after update)"; exit 1)
-
 # Strict-mode tests: --strict makes additions and any non-whitespace prose
 # difference fail. This is the mode CI should use to verify that a
 # committed reference file exactly mirrors the build output.
@@ -350,11 +343,6 @@ test-tag-changes-strict-formatting: $(TAG_CHANGES_TEST_REFERENCE_PATH)
 test-tag-changes-strict-whitespace: $(TAG_CHANGES_TEST_REFERENCE_PATH)
 	@echo "TESTING TAG CHANGE DETECTION - STRICT, WHITESPACE ONLY (expect exit 0)"
 	$(DETECT_TAG_CHANGES_PYTHON) --strict $(TAG_CHANGES_TEST_REFERENCE_PATH) $(TAG_CHANGES_TESTS_DIR)/whitespace-only.json && echo "test-tag-changes-strict-whitespace PASSED" || echo "test-tag-changes-strict-whitespace FAILED (strict should still tolerate whitespace-only changes)"
-
-test-tag-changes-strict-update: $(TAG_CHANGES_TEST_REFERENCE_PATH)
-	@echo "TESTING TAG CHANGE DETECTION - STRICT WITH --update-reference (expect exit 0; additions absorbed)"
-	@cp -f $(TAG_CHANGES_TEST_REFERENCE_PATH) $(BUILD_DIR)/test-reference-strict.json
-	@$(DETECT_TAG_CHANGES_PYTHON) --strict --update-reference $(BUILD_DIR)/test-reference-strict.json $(TAG_CHANGES_TESTS_DIR)/additions-only.json && echo "test-tag-changes-strict-update PASSED" || echo "test-tag-changes-strict-update FAILED (additions should be absorbed by --update-reference)"
 
 # Test Adoc2HTML converter behavior in isolation.
 .PHONY: test-adoc2html
