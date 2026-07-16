@@ -56,10 +56,14 @@ class TagsConverter
       # and we started with one so should end with one.
       fail "Tags backend section logic error" if @section_stack.length != 1
 
+      # Emit a trailing newline. `JSON.pretty_generate` does not add one, but
+      # every consumer that commits this output needs it (pre-commit's
+      # end-of-file-fixer requires it), so produce it here rather than making
+      # each consumer append it downstream.
       JSON.pretty_generate({
         "tags": @tag_map,
         "sections": @section_stack.first,
-      })
+      }) + "\n"
     else
 
       # If it's a section add it to the section tree.
