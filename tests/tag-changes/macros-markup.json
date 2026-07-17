@@ -1,0 +1,7 @@
+{
+  "tags": {
+    "norm:csr-plain": "Set csr:mip[] and read csr:vsstatus[sdt] while csr::[fs] and csr:[tm] are checked.",
+    "norm:ext-insn-plain": "The ext:f[] extension defines insn:wrs.sto[].",
+    "norm:binary-endash-plain": "Encode 11b across the 0b00--0b11 span."
+  }
+}

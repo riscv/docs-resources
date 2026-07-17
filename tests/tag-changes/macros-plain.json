@@ -1,0 +1,7 @@
+{
+  "tags": {
+    "norm:csr-plain": "Set mip and read vsstatus.SDT while FS and TM are checked.",
+    "norm:ext-insn-plain": "The F extension defines wrs.sto.",
+    "norm:binary-endash-plain": "Encode 0b11 across the 0b00{endash}0b11 span."
+  }
+}

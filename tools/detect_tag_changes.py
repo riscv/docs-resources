@@ -193,6 +193,59 @@ class TagChangeDetector:
         """
         return re.sub(r'\s+', ' ', text.strip())
 
+    def _normalize_riscv_macros(self, text: str) -> str:
+        """Normalize RISC-V AsciiDoc macros to their plain-text equivalent.
+
+        The tags backend stores raw AsciiDoc (see #169), so a pure markup
+        migration such as ``mip`` -> ``csr:mip[]`` must not be reported as a
+        change to normative text. These are the semantic macros used across
+        the ISA manual:
+
+            csr:NAME[]        -> NAME           (csr:mip[]         -> mip)
+            csr:NAME[FIELD]   -> NAME.FIELD     (csr:vsstatus[sdt] -> vsstatus.SDT)
+            csr:[FIELD]       -> FIELD          (csr:[tm]          -> TM)
+            csr::[FIELD]      -> FIELD          (csr::[fs]         -> FS)
+            ext:NAME[]        -> NAME           (ext:f[]           -> F)
+            insn:NAME[]       -> NAME           (insn:wrs.sto[]    -> wrs.sto)
+
+        CSR names keep their case; CSR field names and extension names render
+        upper-case, matching how they read as prose.
+
+        Note this normalization is for the reviewer-facing change *report*
+        only. It deliberately erases formatting differences, which is correct
+        for "did the normative text change" and wrong for "is this file byte
+        up to date" -- do not reuse it as a freshness check.
+
+        Args:
+            text: Text to normalize
+
+        Returns:
+            Text with RISC-V macros reduced to plain text
+        """
+        def _csr_named(match: "re.Match") -> str:
+            name, field = match.group(1), match.group(2)
+            return f"{name}.{field.upper()}" if field else name
+
+        # csr:NAME[FIELD] and csr:NAME[] (name present, field optional).
+        result = re.sub(r'csr:([\w.]+)\[([\w.]*)\]', _csr_named, text)
+        # csr:[FIELD] and csr::[FIELD] (name absent).
+        result = re.sub(r'csr::?\[([\w.]+)\]',
+                        lambda m: m.group(1).upper(), result)
+        # ext:NAME[] -> NAME (capitalized as prose does: single-letter base
+        # extensions read as "F"/"D"; named ones as "Sscofpmf"/"Zicsr").
+        result = re.sub(r'ext:([\w.]+)\[\]',
+                        lambda m: m.group(1).capitalize(), result)
+        # insn:NAME[] -> NAME.
+        result = re.sub(r'insn:([\w.]+)\[\]', r'\1', result)
+
+        # Binary renotation: normalize both 11b and 0b11 spellings to 0b-prefixed.
+        result = re.sub(r'\b([01]+)b\b', r'0b\1', result)
+
+        # En dash: -- -> {endash} (leave em dash --- untouched).
+        result = re.sub(r'(?<!-)--(?!-)', '{endash}', result)
+
+        return result
+
     def _strip_asciidoc_formatting(self, text: str) -> str:
         """Strip AsciiDoc formatting marks.
 
@@ -202,7 +255,9 @@ class TagChangeDetector:
         Returns:
             Text without AsciiDoc formatting
         """
-        result = text
+        # Reduce RISC-V semantic macros first so a macro wrapped in other
+        # formatting is still recognized before the generic strips run.
+        result = self._normalize_riscv_macros(text)
 
         # Remove bold: **text** (unconstrained) or *text* (constrained)
         result = re.sub(r'\*\*([^\*]+?)\*\*', r'\1', result)

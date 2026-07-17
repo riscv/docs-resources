@@ -5,7 +5,7 @@ import tempfile
 import os
 
 def detect_diagram_type(content):
-    if '[bytefield]' in content:
+    if '[bytefield' in content:
         return 'bytefield'
     elif '[wavedrom' in content:
         return 'wavedrom'
@@ -28,19 +28,33 @@ def extract_content(edn_path):
         comment_title = comment_match.group(1).strip()
     else:
         basename = os.path.splitext(os.path.basename(edn_path))[0]
-        comment_title = basename.replace('-', ' ').replace('_', ' ').upper() + " instruction encoding"
+        clean_name = basename.replace('-', ' ').replace('_', ' ')
+        if diagram_type == 'bytefield':
+            # strip a trailing "reg" (e.g. "misareg" -> "misa") since these are register layouts
+            clean_name = re.sub(r'\s*reg$', '', clean_name, flags=re.IGNORECASE).strip()
+            comment_title = f"{clean_name.upper()} register field layout"
+        else:
+            comment_title = clean_name.upper() + " instruction encoding"
 
     if diagram_type == 'wavedrom':
         match = re.search(r'\.\.\.\.(.+?)\.\.\.\.', content, re.DOTALL)
         if not match:
             raise ValueError(f"No wavedrom JSON found in {edn_path}")
         json_text = match.group(1).strip()
+        bytefield_text = None
+    elif diagram_type == 'bytefield':
+        match = re.search(r'-{4,}(.+?)-{4,}', content, re.DOTALL)
+        if not match:
+            raise ValueError(f"No bytefield body found in {edn_path}")
+        bytefield_text = match.group(1).strip()
+        json_text = None
     else:
         json_text = None
+        bytefield_text = None
 
-    return diagram_type, json_text, comment_title, a11y_desc, content
+    return diagram_type, json_text, bytefield_text, comment_title, a11y_desc, content
 
-def build_accessibility_text(diagram_type, json_text, comment_title=None, a11y_desc=None):
+def build_accessibility_text(diagram_type, json_text, bytefield_text=None, comment_title=None, a11y_desc=None):
     # Get title
     if json_text:
         label_match = re.search(r'label\s*:\s*\{[^}]*right\s*:\s*[\'"]([^\'"]+)[\'"]', json_text)
@@ -60,6 +74,25 @@ def build_accessibility_text(diagram_type, json_text, comment_title=None, a11y_d
         fields = re.findall(r'\{bits\s*:\s*(\d+)\s*,\s*name\s*:\s*[\'"]([^\'"]+)[\'"]', json_text)
         desc_parts = [f"{bits} bit{'s' if int(bits) > 1 else ''}: {name}" for bits, name in fields]
         desc = "Fields from bit 0: " + ", ".join(desc_parts)
+    elif diagram_type == 'bytefield' and bytefield_text:
+        raw_labels = re.findall(r'draw-box\s+(?:\(text\s+)?"([^"]+)"', bytefield_text)
+        seen = set()
+        field_labels = []
+        for label in raw_labels:
+            if label in ('(WARL)', '(WPRI)', '(WLRL)', '(R)', '(RO)'):
+                continue
+            if re.fullmatch(r'-?\d+', label):
+                continue
+            if re.fullmatch(r'[A-Z]*XLEN[+-]?\d*', label):
+                continue
+            if label in seen:
+                continue
+            seen.add(label)
+            field_labels.append(label)
+        if field_labels:
+            desc = "Fields: " + ", ".join(field_labels)
+        else:
+            desc = "No description available. Please add an // a11y-desc: comment to this file."
     else:
         desc = "No description available. Please add an // a11y-desc: comment to this file."
 
@@ -71,12 +104,37 @@ def inject_accessibility(svg_text, title, desc):
                    .replace('>', f'>{insertion}', 1)
 
 def update_edn_alt_text(edn_path, content, title):
-    # Replace [wavedrom, ,svg] with [wavedrom, TITLE, svg]
-    updated = re.sub(
+    # Escape any double quotes in the title so it doesn't break the attribute string
+    safe_title = title.replace('"', '&quot;')
+
+    updated = content
+
+    # wavedrom: [wavedrom, ,svg]  =>  [wavedrom, ,svg, alt="TITLE"]
+    updated, n = re.subn(
         r'\[wavedrom,\s*,\s*svg\]',
-        f'[wavedrom, {title}, svg]',
-        content
+        f'[wavedrom, ,svg, alt="{safe_title}"]',
+        updated
     )
+    if n == 0:
+        updated, n = re.subn(
+            r'(\[wavedrom,\s*,\s*svg,\s*alt=")[^"]*(")',
+            rf'\g<1>{safe_title}\g<2>',
+            updated
+        )
+
+    # bytefield: [bytefield]  =>  [bytefield, ,svg, alt="TITLE"]
+    updated, n2 = re.subn(
+        r'\[bytefield\]',
+        f'[bytefield, ,svg, alt="{safe_title}"]',
+        updated
+    )
+    if n2 == 0:
+        updated, n2 = re.subn(
+            r'(\[bytefield,\s*,\s*svg,\s*alt=")[^"]*(")',
+            rf'\g<1>{safe_title}\g<2>',
+            updated
+        )
+
     if updated != content:
         with open(edn_path, 'w', encoding='utf-8') as f:
             f.write(updated)
@@ -85,13 +143,12 @@ def update_edn_alt_text(edn_path, content, title):
         print(f"Alt text already set or pattern not found in: {edn_path}")
 
 def process(edn_path, output_svg_path):
-    diagram_type, json_text, comment_title, a11y_desc, content = extract_content(edn_path)
+    diagram_type, json_text, bytefield_text, comment_title, a11y_desc, content = extract_content(edn_path)
 
     if diagram_type == 'bytefield' and not a11y_desc:
-        print(f"WARNING: {edn_path} is a bytefield diagram with no a11y-desc comment.")
-        print("Please add: // a11y-desc: <description of this diagram>")
+        print(f"NOTE: {edn_path} has no a11y-desc comment; using auto-generated field list instead.")
 
-    title, desc = build_accessibility_text(diagram_type, json_text, comment_title, a11y_desc)
+    title, desc = build_accessibility_text(diagram_type, json_text, bytefield_text, comment_title, a11y_desc)
 
     # Update alt text in the edn file itself
     update_edn_alt_text(edn_path, content, title)
