@@ -275,8 +275,15 @@ Usage:
 python3 tools/detect_tag_changes.py [options] REFERENCE_TAGS.json CURRENT_TAGS.json
 ```
 
+This tool is a reporter, not an updater. It never writes the reference
+file. To refresh a stale reference, rebuild the tags and copy them into
+place (e.g. `make update-ref` in the consuming repository); to gate on
+freshness, compare a fresh build against the committed reference
+byte-for-byte (e.g. `make check-ref`). Stripping AsciiDoc formatting for
+the report is correct for "did the normative text change" and wrong for
+"is this file up to date" -- do not use this tool as a freshness check.
+
 Options:
-- -u, --update-reference: update the reference file by merging additions from current.
 - -s, --strict: in addition to modifications/deletions, treat additions as failures and compare prose byte-for-byte (only whitespace is normalized for line-ending portability). Intended for CI gates that require the reference file to exactly mirror the build output.
 - -v, --verbose: print additional processing details.
 - -h, --help: show help message.
@@ -286,7 +293,7 @@ Exit codes (default mode):
 - 1: one or more modifications or deletions detected.
 
 Exit codes (--strict):
-- 0: no changes (after whitespace normalization only), or additions that were absorbed by --update-reference in the same run.
+- 0: no changes (after whitespace normalization only).
 - 1: any addition, deletion, or modification (including AsciiDoc-formatting-only changes).
 
 Examples:
@@ -295,11 +302,7 @@ python3 tools/detect_tag_changes.py build/reference-tags.json build/current-tags
 ```
 
 ```bash
-python3 tools/detect_tag_changes.py reference.json current.json --update-reference
-```
-
-```bash
-python3 tools/detect_tag_changes.py -u -v reference.json current.json
+python3 tools/detect_tag_changes.py -v reference.json current.json
 ```
 
 Integration pattern:

@@ -364,11 +364,6 @@ test-tag-changes-strict-whitespace: $(TAG_CHANGES_TEST_REFERENCE_PATH)
 	@echo "TESTING TAG CHANGE DETECTION - STRICT, WHITESPACE ONLY (expect exit 0)"
 	$(DETECT_TAG_CHANGES_PYTHON) --strict $(TAG_CHANGES_TEST_REFERENCE_PATH) $(TAG_CHANGES_TESTS_DIR)/whitespace-only.json && echo "test-tag-changes-strict-whitespace PASSED" || echo "test-tag-changes-strict-whitespace FAILED (strict should still tolerate whitespace-only changes)"
 
-test-tag-changes-strict-update: $(TAG_CHANGES_TEST_REFERENCE_PATH)
-	@echo "TESTING TAG CHANGE DETECTION - STRICT WITH --update-reference (expect exit 0; additions absorbed)"
-	@cp -f $(TAG_CHANGES_TEST_REFERENCE_PATH) $(BUILD_DIR)/test-reference-strict.json
-	@$(DETECT_TAG_CHANGES_PYTHON) --strict --update-reference $(BUILD_DIR)/test-reference-strict.json $(TAG_CHANGES_TESTS_DIR)/additions-only.json && echo "test-tag-changes-strict-update PASSED" || echo "test-tag-changes-strict-update FAILED (additions should be absorbed by --update-reference)"
-
 # Test Adoc2HTML converter behavior in isolation.
 .PHONY: test-adoc2html
 test-adoc2html: $(ADOC2HTML_TEST_SCRIPT) $(TOOLS_DIR)/adoc_to_html.py
