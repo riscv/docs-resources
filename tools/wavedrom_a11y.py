@@ -23,9 +23,21 @@ def extract_content(edn_path):
     a11y_desc = a11y_desc_match.group(1).strip() if a11y_desc_match else None
 
     # Try to extract title from section comment (e.g. //## 9.4 Atomic Memory Operations)
-    comment_match = re.search(r'//#+\s*(.+)', content)
-    if comment_match:
-        comment_title = comment_match.group(1).strip()
+    comment_matches = re.findall(r'^(//#+)\s*(.+)', content, re.MULTILINE)
+    if comment_matches:
+        # Prefer the most specific (deepest '#' level) comment, e.g. "///" over "//" or "//##"
+        comment_matches.sort(key=lambda m: len(m[0]), reverse=True)
+        basename = os.path.splitext(os.path.basename(edn_path))[0]
+        norm_basename = re.sub(r'[-_]', '', basename).lower()
+        comment_title = None
+        for _, text in comment_matches:
+            text = text.strip()
+            norm_text = re.sub(r'[-_\s]', '', text).lower()
+            if norm_text != norm_basename:
+                comment_title = text
+                break
+        if comment_title is None:
+            comment_title = comment_matches[0][1].strip()
     else:
         basename = os.path.splitext(os.path.basename(edn_path))[0]
         clean_name = basename.replace('-', ' ').replace('_', ' ')
