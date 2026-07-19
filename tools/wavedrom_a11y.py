@@ -119,6 +119,18 @@ def update_edn_alt_text(edn_path, content, title):
     # Escape any double quotes in the title so it doesn't break the attribute string
     safe_title = title.replace('"', '&quot;')
 
+    # Guard: if this file has more than one wavedrom/bytefield macro block,
+    # we can't compute distinct per-panel titles from one file-level title.
+    # Skip rather than silently collapsing all panels to the same alt text.
+    panel_count = len(re.findall(r'\[wavedrom,\s*,\s*svg(?:,\s*alt="[^"]*")?\]', content)) + \
+                  len(re.findall(r'\[bytefield(?:,\s*,\s*svg,\s*alt="[^"]*")?\]', content))
+    if panel_count > 1:
+        print(f"SKIPPED (multi-panel, {panel_count} blocks): {edn_path} - "
+              f"has multiple macro blocks with distinct alt text; "
+              f"automatic single-title substitution would overwrite all of them. "
+              f"Edit alt text manually per panel if needed.")
+        return
+
     updated = content
 
     # wavedrom: [wavedrom, ,svg]  =>  [wavedrom, ,svg, alt="TITLE"]
