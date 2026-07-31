@@ -56,6 +56,7 @@ jobs:
                 'https://github.com/riscv/docs-spec-template/blob/main/CONTRIBUTING.md';
 
               const possiblePaths = [
+                'docs-resources/CONTRIBUTING.md',
                 'CONTRIBUTING.md',
                 '.github/CONTRIBUTING.md',
                 'docs/CONTRIBUTING.md',
