@@ -44,10 +44,25 @@ jobs:
             const isBot = (user) =>
               !!user && (user.type === 'Bot' || /\[bot\]$/.test(user.login || ''));
 
+            // Accepting a review suggestion in the GitHub web UI produces a
+            // commit the contributor never gets to sign off: the message is
+            // generated ('Update <file>' or 'Apply suggestions from code
+            // review') and the dialog offers no way to add a trailer. Such
+            // commits are committed by 'web-flow', GitHub's web identity,
+            // which is a User rather than a Bot so isBot() does not catch it.
+            // GitHub attributes the suggestion's author with a Co-authored-by
+            // trailer, and that trailer is what distinguishes an accepted
+            // suggestion from an ordinary web-editor edit, which stays subject
+            // to the DCO requirement.
+            const isAcceptedSuggestion = (commit) =>
+              (commit.committer && commit.committer.login) === 'web-flow' &&
+              /^Co-authored-by:/m.test(commit.commit.message);
+
             const dcoFailedCommits = commits.filter(
               (commit) =>
                 !isBot(commit.author) &&
                 !isBot(commit.committer) &&
+                !isAcceptedSuggestion(commit) &&
                 !/Signed-off-by:/.test(commit.commit.message)
             );
 
