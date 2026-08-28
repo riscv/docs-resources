@@ -31,11 +31,14 @@ font:
       bold_italic: mplus-1mn-medium.ttf
     # M+ 1p supports Latin, Latin-1 Supplement, Latin Extended, Greek, Cyrillic, Vietnamese, Japanese & an assortment of symbols
     # It also provides arrows for ->, <-, => and <= replacements in case these glyphs are missing from font
+    # Use the copy bundled with Asciidoctor PDF: unlike the copy in fonts/, it maps
+    # the line feed used for hard line breaks, so a taller fallback (Noto Sans) is
+    # never reached for it and hard-broken lines keep the body font's line height
     M+ 1p Fallback:
-      normal: mplus-1p-regular-fallback.ttf
-      bold: mplus-1p-regular-fallback.ttf
-      italic: mplus-1p-regular-fallback.ttf
-      bold_italic: mplus-1p-regular-fallback.ttf
+      normal: GEM_FONTS_DIR/mplus1p-regular-fallback.ttf
+      bold: GEM_FONTS_DIR/mplus1p-regular-fallback.ttf
+      italic: GEM_FONTS_DIR/mplus1p-regular-fallback.ttf
+      bold_italic: GEM_FONTS_DIR/mplus1p-regular-fallback.ttf
     JetBrainsMono:
       normal: JetBrainsMono-Regular.ttf
       italic: JetBrainsMono-Italic.ttf
