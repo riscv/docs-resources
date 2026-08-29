@@ -262,11 +262,20 @@ list:
     font-family: JetBrainsMono
 ulist:
   marker:
+    # Markers must be glyphs JetBrainsMono itself maps, so they never fall
+    # through to the fallback chain. U+26AB, used previously, is absent from
+    # every font in that chain and rendered as a missing-glyph box.
     disc:
-      content: ⚫
+      font_size: $base_font_size * 0.66
+      line_height: 1.6
+      content: ●
     circle:
-      content: ⚫
+      font_size: $base_font_size * 0.66
+      line_height: 1.6
+      content: ●
     square:
+      font_size: $base_font_size * 0.55
+      line_height: 2.0
       content: ■
     font-family: JetBrainsMono
 # List of figures settings
