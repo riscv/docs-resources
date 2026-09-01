@@ -110,6 +110,12 @@ normative_rule_definitions:
     tag: "norm:unicode_char"
   - name: macro_call
     tag: "norm:macro_call"
+  - name: attribute_in_formatting
+    tag: "norm:attribute_in_formatting"
+  - name: attribute_with_hyperlink
+    tag: "norm:attribute_with_hyperlink"
+  - name: attribute_undefined
+    tag: "norm:attribute_undefined"
   - name: hyperlink1
     tag: "norm:hyperlink1"
   - name: hyperlink2

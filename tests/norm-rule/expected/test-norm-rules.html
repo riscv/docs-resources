@@ -155,11 +155,11 @@
   </aside>
     <main>
       <style>.grand-total-heading { font-size: 24px; font-weight: bold; }</style>
-      <h1 class="grand-total-heading">95 Normative Rules: Includes 32 Implementation-Defined Behaviors (27 No Category, 3 WARL, 2 WLRL)</h1>
+      <h1 class="grand-total-heading">98 Normative Rules: Includes 32 Implementation-Defined Behaviors (27 No Category, 3 WARL, 2 WLRL)</h1>
 
       <section id="table-norm-rules-ch-1" class="section">
         <table>
-          <caption class="sticky-caption">Chapter One: 75 Normative Rules: Includes 17 Implementation-Defined Behaviors (16 No Category, 1 WARL)</caption>
+          <caption class="sticky-caption">Chapter One: 78 Normative Rules: Includes 17 Implementation-Defined Behaviors (16 No Category, 1 WARL)</caption>
           <colgroup>
             <col class="col-name">
             <col class="col-description">
@@ -394,8 +394,23 @@
             </tr>
             <tr>
               <td rowspan=1 id="macro_call">macro_call</td>
-              <td>200 {ge} 100</td>
+              <td>200 &#8805; 100</td>
               <td><a href="test-ch1.html#norm:macro_call">norm:macro_call</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1 id="attribute_in_formatting">attribute_in_formatting</td>
+              <td>&#8805; and &#8805;</td>
+              <td><a href="test-ch1.html#norm:attribute_in_formatting">norm:attribute_in_formatting</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1 id="attribute_with_hyperlink">attribute_with_hyperlink</td>
+              <td>It isn't 100, it's &#8805; <a href="test-ch1.html#norm:superscript">norm:superscript</a></td>
+              <td><a href="test-ch1.html#norm:attribute_with_hyperlink">norm:attribute_with_hyperlink</a></td>
+            </tr>
+            <tr>
+              <td rowspan=1 id="attribute_undefined">attribute_undefined</td>
+              <td>200 {no-such-attribute} 100</td>
+              <td><a href="test-ch1.html#norm:attribute_undefined">norm:attribute_undefined</a></td>
             </tr>
             <tr>
               <td rowspan=1 id="hyperlink1">hyperlink1</td>

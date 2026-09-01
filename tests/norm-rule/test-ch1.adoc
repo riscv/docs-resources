@@ -105,6 +105,12 @@ Unicode character [#norm:unicode_char]#MNO ≥ PQR# outside.
 
 Macro call [#norm:macro_call]#200 {ge} 100# outside.
 
+Attribute in formatting [#norm:attribute_in_formatting]#*{ge}* and _{ge}_# outside.
+
+Attribute with hyperlink [#norm:attribute_with_hyperlink]#It isn't 100, it's {ge} <<norm:superscript>># outside.
+
+Undefined attribute [#norm:attribute_undefined]#200 {no-such-attribute} 100# outside.
+
 Before hyperlink [#norm:hyperlink1]#ABC <<norm:superscript>> DEF# outside.
 
 Before hyperlink [#norm:hyperlink2]#DEF <<norm:superscript,custom text>> GHI# outside.
