@@ -50,10 +50,22 @@ font:
       italic: GEM_FONTS_DIR/notosans-italic-subset.ttf
       bold_italic: GEM_FONTS_DIR/notosans-bold_italic-subset.ttf
     Noto Emoji: GEM_FONTS_DIR/notoemoji-subset.ttf
+    # The copy of M+ 1p in fonts/ and the copy bundled with Asciidoctor PDF have
+    # disjoint coverage: the bundled one maps U+000A and a wider CJK range, the
+    # local one maps ~1240 codepoints the bundled one lacks, including IPA
+    # extensions and dingbats such as U+2718. Keep the bundled copy first so it
+    # continues to decide line feed and CJK, and consult the local copy last,
+    # only for codepoints no other font in the chain provides.
+    M+ 1p Fallback Extra:
+      normal: mplus-1p-regular-fallback.ttf
+      bold: mplus-1p-regular-fallback.ttf
+      italic: mplus-1p-regular-fallback.ttf
+      bold_italic: mplus-1p-regular-fallback.ttf
   fallbacks:
     - M+ 1p Fallback
     - Noto Sans
     - Noto Emoji
+    - M+ 1p Fallback Extra
   svg:
     fallback-font-family: M+ 1mn
 page:
