@@ -157,10 +157,33 @@ class TagsConverter
         # Separate table sections by ===.
       end.join("\n===\n")
     else
-      node.inline? ? node.text : ["\n", node.content].compact.join
+      node.inline? ? inline_text(node) : ["\n", node.content].compact.join
     end
 
     content_or_nil.nil? ? "" : content_or_nil
+  end
+
+  # Return the text of an inline node with attribute references (e.g. `{ge}`)
+  # resolved.
+  #
+  # Asciidoctor applies substitutions at the block level, in this order:
+  # specialcharacters, quotes, attributes, replacements, macros,
+  # post_replacements. Inline nodes are created by the *quotes* pass, so their
+  # text has only had specialcharacters applied - everything from attributes
+  # onwards still sits in the text unresolved, and there is no built-in way to
+  # ask an inline node for its substituted text.
+  #
+  # Applying the parent block's full sub list here would resolve `{ge}`, but it
+  # would also run the remaining passes over text that was never meant to see
+  # them: `replacements` rewrites apostrophes to `&#8217;`, and `macros` deletes
+  # cross references such as `<<foo>>` outright. That is what made the first
+  # attempt at this a net loss (see #169), so restrict it to attributes only.
+  #
+  # Nested formatting (bold, italics, underline, ...) is untouched: those are
+  # separate inline nodes that reach this method in their own right.
+  def inline_text(node)
+    text = node.text
+    text.nil? ? nil : node.sub_attributes(text)
   end
 
   # Convert newlines to spaces.

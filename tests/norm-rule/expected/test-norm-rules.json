@@ -508,7 +508,52 @@
         {
           "name": "norm:macro_call",
           "context": false,
-          "text": "200 {ge} 100",
+          "text": "200 &amp;#8805; 100",
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
+        }
+      ]
+    },
+    {
+      "name": "attribute_in_formatting",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
+      "tags": [
+        {
+          "name": "norm:attribute_in_formatting",
+          "context": false,
+          "text": "&amp;#8805; and &amp;#8805;",
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
+        }
+      ]
+    },
+    {
+      "name": "attribute_with_hyperlink",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
+      "tags": [
+        {
+          "name": "norm:attribute_with_hyperlink",
+          "context": false,
+          "text": "It isn't 100, it's &amp;#8805; &lt;&lt;norm:superscript&gt;&gt;",
+          "tag_filename": "/build/test-ch1-norm-tags.json",
+          "stds_doc_url": "test-ch1.html"
+        }
+      ]
+    },
+    {
+      "name": "attribute_undefined",
+      "def_filename": "tests/norm-rule/test-ch1.yaml",
+      "chapter_name": "One",
+      "impl-def-behavior": false,
+      "tags": [
+        {
+          "name": "norm:attribute_undefined",
+          "context": false,
+          "text": "200 {no-such-attribute} 100",
           "tag_filename": "/build/test-ch1-norm-tags.json",
           "stds_doc_url": "test-ch1.html"
         }
