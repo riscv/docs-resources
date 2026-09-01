@@ -13,7 +13,6 @@ This directory contains command-line generators and shared Python helper modules
 | create_normative_rules.py | CLI tool | Builds normative-rules JSON or HTML from rule-definition YAML and tag JSON files. |
 | create_params.py | CLI tool | Builds params JSON or HTML from normative-rules JSON and parameter-definition YAML files. |
 | create_param_tables.py | CLI tool | Generates parameter and/or CSR AsciiDoc fragments and include files from params JSON and table-layout YAML files. |
-| detect_tag_changes.py | CLI tool | Compares two tag JSON files and reports additions, deletions, and modifications. |
 | export_params_to_udb.py | CLI tool | Converts a params.json file (conforming to schemas/params-schema.json) into individual YAML files for each parameter (conforming to schemas/udb_param_schema.json). |
 
 ## Script Details
@@ -261,58 +260,6 @@ python3 tools/create_param_tables.py \
   --param-table tools/default_param_table.yaml \
   --csr-table tools/default_csr_table.yaml \
   --output-dir build/merged-appendix-adoc-includes
-```
-
-### detect_tag_changes.py
-
-This section contains the content moved from the former README_detect_tag_changes.md, integrated into this consolidated README.
-
-Purpose:
-- Detects additions, deletions, and modifications between two normative-tag JSON files.
-
-Usage:
-```bash
-python3 tools/detect_tag_changes.py [options] REFERENCE_TAGS.json CURRENT_TAGS.json
-```
-
-This tool is a reporter, not an updater. It never writes the reference
-file. To refresh a stale reference, rebuild the tags and copy them into
-place (e.g. `make update-ref` in the consuming repository); to gate on
-freshness, compare a fresh build against the committed reference
-byte-for-byte (e.g. `make check-ref`). Stripping AsciiDoc formatting for
-the report is correct for "did the normative text change" and wrong for
-"is this file up to date" -- do not use this tool as a freshness check.
-
-Options:
-- -s, --strict: in addition to modifications/deletions, treat additions as failures and compare prose byte-for-byte (only whitespace is normalized for line-ending portability). Intended for CI gates that require the reference file to exactly mirror the build output.
-- -v, --verbose: print additional processing details.
-- -h, --help: show help message.
-
-Exit codes (default mode):
-- 0: no changes, or only additions, or only changes that normalize away under AsciiDoc-formatting stripping.
-- 1: one or more modifications or deletions detected.
-
-Exit codes (--strict):
-- 0: no changes (after whitespace normalization only).
-- 1: any addition, deletion, or modification (including AsciiDoc-formatting-only changes).
-
-Examples:
-```bash
-python3 tools/detect_tag_changes.py build/reference-tags.json build/current-tags.json
-```
-
-```bash
-python3 tools/detect_tag_changes.py -v reference.json current.json
-```
-
-Integration pattern:
-```bash
-if python3 tools/detect_tag_changes.py reference-tags.json current-tags.json; then
-  echo "No breaking tag changes detected"
-else
-  echo "Tag modifications/deletions detected; review required"
-  exit 1
-fi
 ```
 
 ### export_params_to_udb.py
