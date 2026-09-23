@@ -41,6 +41,33 @@ they don’t inadvertently get broken.  However, it creates an additional mainte
 to intermittently rebase the link and verify that nothing has been broken.  Project maintainers need to
 understand this and plan accordingly.
 
+## Antora extensions
+The `docs-resources/antora-extensions/` directory holds Antora extensions shared by the
+specification repositories, so that each repo can use them in the Antora builds it runs
+itself: the local preview (`npm run preview`), the pull-request preview, and its GitHub
+Pages site. The central site (docs.riscv.org) registers its own copies in the
+[site playbook](https://github.com/riscv-admin/antora.riscv.org).
+
+`xref_text_extension.js` fills in the link text for a cross-page reference written without
+any, for example `<<chapter.adoc#some-id>>` or `xref:chapter.adoc#some-id[]`. A
+specification that is single-sourced for both the PDF and the site writes its
+cross-chapter links this way: the PDF build generates the link text itself ("Section 2.3"),
+whereas Antora renders the raw target unless an extension supplies the text. The extension
+uses the target's reftext, or its section or table title.
+
+To use it, register the extension in the repo's `antora-playbook.yml`:
+
+```yaml
+antora:
+  extensions:
+    - require: ./docs-resources/antora-extensions/xref_text_extension.js
+      style: short
+```
+
+**Note:** register it only once this submodule points at a commit that contains the
+extension, otherwise the Antora build fails with `Cannot find module`. Bump the submodule
+in the same pull request that adds the registration.
+
 ## Updating the main AsciiDoc source file
 From the `Makefile`, find the main AsciiDoc file that is used to build the project.
 It usually has the same base name as the .pdf which is generated.
