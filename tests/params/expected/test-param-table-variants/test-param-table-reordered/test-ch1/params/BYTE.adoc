@@ -1,9 +1,0 @@
-| byte
-| EXT:MockExtX
-a|
-[#param:BYTE]#BYTE#
-
-Normative Rule(s):
-
-* https://riscv.github.io/riscv-isa-manual/snapshot/norm-rules/norm-rules.html#BYTE[BYTE]
-| Here's a longer description for the BYTE parameter. It is an 8-bit unsigned integer.

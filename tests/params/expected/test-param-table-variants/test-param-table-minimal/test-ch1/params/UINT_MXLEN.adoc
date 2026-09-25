@@ -1,7 +1,0 @@
-a|
-[#param:UINT_MXLEN]#UINT_MXLEN#
-
-Normative Rule(s):
-
-* (none)
-| Unsigned integer whose width is MXLEN.

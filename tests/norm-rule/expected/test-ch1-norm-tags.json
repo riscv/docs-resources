@@ -81,10 +81,12 @@
       {
         "title": "Chapter 1",
         "id": "_chapter_1",
+        "level": 1,
         "children": [
           {
             "title": "Chapter 1.1 - Inline Tagging",
             "id": "_chapter_1_1_inline_tagging",
+            "level": 2,
             "children": [],
             "tags": [
               "norm:inline",
@@ -100,6 +102,7 @@
           {
             "title": "Chapter 1.2 - Paragraph Tagging",
             "id": "_chapter_1_2_paragraph_tagging",
+            "level": 2,
             "children": [],
             "tags": [
               "norm:paragraph:no-inline-anchors",
@@ -113,6 +116,7 @@
           {
             "title": "Chapter 1.3 - AsciiDoc Formatting",
             "id": "_chapter_1_3_asciidoc_formatting",
+            "level": 2,
             "children": [],
             "tags": [
               "norm:bold",
@@ -141,6 +145,7 @@
           {
             "title": "Chapter 1.4 - Table Tagging",
             "id": "_chapter_1_4_table_tagging",
+            "level": 2,
             "children": [],
             "tags": [
               "norm:table:no-anchors-in-cells:entire-table",
@@ -155,6 +160,7 @@
           {
             "title": "Chapter 1.5 - Tagging Unordered Lists",
             "id": "_chapter_1_5_tagging_unordered_lists",
+            "level": 2,
             "children": [],
             "tags": [
               "norm:unordered-list:no-anchors-in-items:entire-list",
@@ -167,6 +173,7 @@
           {
             "title": "Chapter 1.6 - Tagging Ordered Lists",
             "id": "_chapter_1_6_tagging_ordered_lists",
+            "level": 2,
             "children": [],
             "tags": [
               "norm:ordered-list:no-anchors-in-items:entire-list",
@@ -178,6 +185,7 @@
           {
             "title": "Chapter 1.7 - Tagging Description Lists",
             "id": "_chapter_1_7_tagging_description_lists",
+            "level": 2,
             "children": [],
             "tags": [
               "norm:description-list:no-anchors-in-items:entire-list",
@@ -192,10 +200,12 @@
       {
         "title": "Chapter 2 - Implementation-Defined Behaviors",
         "id": "_chapter_2_implementation_defined_behaviors",
+        "level": 1,
         "children": [
           {
             "title": "Chapter 2.1 - WARL",
             "id": "_chapter_2_1_warl",
+            "level": 2,
             "children": [],
             "tags": [
               "norm:satp_asid_warl_asidlen"

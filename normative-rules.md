@@ -24,17 +24,14 @@ Normative rules specify the behaviors an implementation must meet in order to be
 
 RISC-V International standards are written in an open-source markup language known as [AsciiDoc](https://docs.asciidoctor.org/asciidoc/latest). If normative rules are not explicitly listed in the visible content of a standard (usually in tables with a unique ID for each normative rule), the AsciiDoc anchor facility is used to "tag" normative text. This latter case is the focus of the remainder of this document.
 
-When normative rules aren't explicitly listed by a standard, it is likely the standard was written without easy identification of normative rules in mind. This can lead to multiple normative rules being located in one tag (tag = anchored section of normative text) known as a "many:1" mapping (many normative rules mapped to one tag) or a normative rule needing to reference multiple tags known as a "1:many" mapping (one normative rule mapped to multiple tags). Here's examples of these cases:
-* "many:1" (normative rules for ANDI, ORI, and XORI instructions mapped to one tag)<br>
+Each tag (tag = anchored section of normative text) is one normative rule, and the rule's name is the tag's anchor name without the `norm:` prefix. There is no separate definition of normative rules and no mapping between normative rules and tags, so one normative rule never spans several tags and one tag never holds several normative rules. When a sentence states several behaviors at once, tag it once and name the tag for all of them. For example, one tag named `norm:andi_ori_xori_op` covers:<br>
 `ANDI, ORI, XORI are logical operations that perform bitwise AND, OR, and XOR on register rs1 and the sign-extended 12-bit immediate and place the result in rd.`
-* "1:many"<br>
-TBD: waiting for ideal example
 
-Quite often there is a "1:1" mapping between normative rules and tags, but not always! Because of this "not always" reality, standards provide YAML files that provide the mapping between normative rules and tags. This repository contains a simple Ruby script that uses these YAML files to create the canonical list of normative rules for its associated standard. This script can output these normative rules in formats suitable for both human-friendly and machine-readable formats.
+This repository contains a Python script (`tools/create_normative_rules.py`) that reads the tags extracted from a standard and creates the canonical list of normative rules for that standard. This script can output these normative rules in formats suitable for both human-friendly and machine-readable formats.
 
 ## AsciiDoc Anchor Background
 
-AsciiDoc provides facilities to create invisible anchors associated with an entire paragraph or portions of a paragraph. These anchors are only visible in raw AsciiDoc files and are invisible in the PDF and GitHub AsciiDoc previewer. Each "tag" added to an AsciiDoc file to identify normative text (remember, not always a 1:1 mapping from normative rules to tags) has an associated anchor name. These anchor names must be unique across all the AsciiDoc files used by a particular standard but aren't required to be unique across standards. Each RISC-V standard defines the naming convention of these anchor names but the anchor names must start with the prefix of "norm:" so they can be readily located by tools.
+AsciiDoc provides facilities to create invisible anchors associated with an entire paragraph or portions of a paragraph. These anchors are only visible in raw AsciiDoc files and are invisible in the PDF and GitHub AsciiDoc previewer. Each "tag" added to an AsciiDoc file to identify normative text is one normative rule and has an associated anchor name. These anchor names must be unique across all the AsciiDoc files used by a particular standard but aren't required to be unique across standards. Each RISC-V standard defines the naming convention of these anchor names but the anchor names must start with the prefix of "norm:" so they can be readily located by tools.
 
 AsciiDoc supports several styles of anchors:
 * _inline anchor_ such as:<br>

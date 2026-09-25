@@ -1,22 +1,18 @@
 #!/usr/bin/env python3
-"""Create normative rules from tag and definition files."""
+"""Create normative rules from tag files.
+
+Every normative tag (an AsciiDoc anchor whose name starts with "norm:") is one normative rule.
+The rule's name is the tag's name without the "norm:" prefix. There is no separate definition
+of normative rules and no mapping between rules and tags.
+"""
 
 import json
 import sys
-import re
 import argparse
-from pathlib import Path
 from typing import Dict, List, Optional, Any, Tuple
-from def_text_to_html import (
-    convert_def_text_to_html,
-    tag2html_link,
-)
+from def_text_to_html import tag2html_link
 from shared_utils import (
-    IMPLDEF_CATEGORIES,
-    check_impldef_cat,
-    check_kind,
     load_json_object,
-    load_yaml_object,
     make_log_helpers,
 )
 from tag_text_to_html import convert_tag_text_to_html
@@ -27,268 +23,42 @@ NORM_PREFIX = "norm:"
 
 # Names/prefixes for tables in HTML output.
 NORM_RULES_CH_TABLE_NAME_PREFIX = "table-norm-rules-ch-"
-IMPLDEFS_NO_CAT_TABLE_NAME_PREFIX = "table-impldefs-no-cat"
-IMPLDEFS_CAT_TABLE_NAME_PREFIX = "table-impldefs-impl-cat-"
-IMPLDEFS_CH_TABLE_NAME_PREFIX = "table-impldefs-ch-"
 
-# Norm rule name checking
-NORM_RULE_NAME_PATTERN = r"^[a-zA-Z][a-zA-Z0-9_-]+$"
-IMPLDEF_NAME_PATTERN = r"^[A-Z][A-Z0-9_]+$"
+# AsciiDoc section level of a chapter. Level 0 sections are parts (e.g., the volumes of a book).
+CHAPTER_LEVEL = 1
 
 error, info, fatal = make_log_helpers(PN)
 
 
-###################################
-# Classes for Normative Rule Tags #
-###################################
+class NormativeRule:
+    """Holds all information for one normative rule (i.e., one normative tag)."""
 
-
-class NormativeTag:
-    """Holds all information for one tag."""
-
-    def __init__(self, name: str, tag_filename: str, text: str):
-        if not isinstance(name, str):
-            fatal(f"Need String for name but passed a {type(name).__name__}")
+    def __init__(self, tag_name: str, tag_filename: str, text: str, chapter_name: str, chapter_key: str):
+        if not isinstance(tag_name, str):
+            fatal(f"Need String for tag_name but passed a {type(tag_name).__name__}")
         if not isinstance(tag_filename, str):
             fatal(f"Need String for tag_filename but passed a {type(tag_filename).__name__}")
         if not isinstance(text, str):
             fatal(f"Need String for text but passed a {type(text).__name__}")
+        if not isinstance(chapter_name, str):
+            fatal(f"Need String for chapter_name but passed a {type(chapter_name).__name__}")
+        if not isinstance(chapter_key, str):
+            fatal(f"Need String for chapter_key but passed a {type(chapter_key).__name__}")
 
-        self.name = name
+        self.tag_name = tag_name
+        self.name = tag_name[len(NORM_PREFIX):]
         self.tag_filename = tag_filename
         self.text = text
-
-
-class NormativeTags:
-    """Holds all the normative rule tags for a RISC-V standard."""
-
-    def __init__(self):
-        # Contains tag entries as a flat hash for the entire standard (across multiple tag files).
-        # The hash key is the tag name and the hash value is a NormativeTag object
-        # The tag names must be unique across the standard.
-        self.tag_map: Dict[str, NormativeTag] = {}
-
-    def add_tags(self, tag_filename: str, tags: Dict[str, str]):
-        """Add tags for specified standards document.
-
-        Args:
-            tag_filename: Name of the tag file
-            tags: Hash key is tag name (AKA anchor name) and value is tag text.
-        """
-        if not isinstance(tag_filename, str):
-            fatal(f"Need String for tag_filename but was passed a {type(tag_filename).__name__}")
-        if not isinstance(tags, dict):
-            fatal(f"Need Dict for tags but was passed a {type(tags).__name__}")
-
-        for name, text in tags.items():
-            if not isinstance(name, str):
-                fatal(f"Tag name {name} in file {tag_filename} is a {type(name).__name__} instead of a String")
-
-            if not isinstance(text, str):
-                fatal(f"Tag name {name} in file {tag_filename} is a {type(text).__name__} instead of a String\n"
-                      f"{PN}:   If the AsciiDoc anchor for {name} is before an AsciiDoc 'Description List' term, "
-                      f"move to after term on its own line.")
-
-            if name in self.tag_map:
-                fatal(f"Tag name {name} in file {tag_filename} already defined in file {self.tag_map[name].tag_filename}")
-
-            self.tag_map[name] = NormativeTag(name, tag_filename, text)
-
-    def get_tag(self, name: str) -> Optional[NormativeTag]:
-        """Get normative tag object corresponding to tag name. Returns None if not found."""
-        return self.tag_map.get(name)
-
-    def get_tags(self) -> List[NormativeTag]:
-        """Return all normative tags for the standard."""
-        return list(self.tag_map.values())
-
-
-##########################################
-# Classes for Normative Rule Definitions #
-##########################################
-
-
-class TagRef:
-    """Holds reference to one tag in a normative rule definition."""
-
-    def __init__(self, name: str, context: bool = False):
-        if not isinstance(name, str):
-            fatal(f"Need String for name but was passed a {type(name).__name__}")
-        if not isinstance(context, bool):
-            fatal(f"Need Boolean for context but was passed a {type(context).__name__}")
-
-        self.name = name
-        self._context = context
-
-    def is_context(self) -> bool:
-        return self._context
-
-
-class NormativeRuleDef:
-    """Holds one normative rule definition."""
-
-    def __init__(self, name: str, def_filename: str, chapter_name: str, data: Dict[str, Any]):
-        if not isinstance(name, str):
-            fatal(f"Need String for name but was passed a {type(name).__name__}")
-        if not isinstance(def_filename, str):
-            fatal(f"Need String for def_filename but was passed a {type(def_filename).__name__}")
-        if not isinstance(chapter_name, str):
-            fatal(f"Need String for chapter_name but was passed a {type(chapter_name).__name__}")
-        if not isinstance(data, dict):
-            fatal(f"Need Dict for data but was passed a {type(data).__name__}")
-
-        self.name = name
-        self.def_filename = def_filename
         self.chapter_name = chapter_name
-
-        self.summary = data.get("summary")
-        if self.summary is not None and not isinstance(self.summary, str):
-            fatal(f"Provided {type(self.summary).__name__} class for summary in normative rule {name} but need a String")
-
-        self.note = data.get("note")
-        if self.note is not None and not isinstance(self.note, str):
-            fatal(f"Provided {type(self.note).__name__} class for note in normative rule {name} but need a String")
-
-        self.clarification_link = data.get("clarification-link")
-        if self.clarification_link is not None and not isinstance(self.clarification_link, str):
-            fatal(f"Provided {type(self.clarification_link).__name__} class for clarification_link in normative rule {name} but need a String")
-
-        self.clarification_text = data.get("clarification-text")
-        if self.clarification_text is not None and not isinstance(self.clarification_text, str):
-            fatal(f"Provided {type(self.clarification_text).__name__} class for clarification_text in normative rule {name} but need a String")
-
-        self.description = data.get("description")
-        if self.description is not None and not isinstance(self.description, str):
-            fatal(f"Provided {type(self.description).__name__} class for description in normative rule {name} but need a String")
-
-        self.kind = data.get("kind")
-        if self.kind is not None:
-            if not isinstance(self.kind, str):
-                fatal(f"Provided {type(self.kind).__name__} class for kind in normative rule {name} but need a String")
-            check_kind(self.kind, self.name, None, fatal, PN)
-
-        self.impldef = data.get("impl-def-behavior", False)
-        if not isinstance(self.impldef, bool):
-            fatal(f"Provided {type(self.impldef).__name__} class for impl-def-behavior in normative rule {name} but need a Boolean")
-
-        self.impldef_cat = data.get("impl-def-category")
-        if self.impldef_cat is not None:
-            if not isinstance(self.impldef_cat, str):
-                fatal(f"Provided {type(self.impldef_cat).__name__} class for impldef_cat in normative rule {name} but need a String")
-            check_impldef_cat(self.impldef_cat, self.name, None, fatal, PN)
-
-            if not self.impldef:
-                fatal(f"Normative rule {name} has impl-def-category property but impl-def-behavior isn't true")
-
-        self.instances: List[str] = []
-        if "instance" in data and data["instance"] is not None:
-            self.instances.append(data["instance"])
-        if "instances" in data and data["instances"] is not None:
-            instances = data["instances"]
-            if not isinstance(instances, list):
-                fatal(f"Normative rule {name} has non-list instances. Use \"instance\" instead.")
-            if not instances:
-                fatal(f"Normative rule {name} has empty instances")
-            self.instances.extend(instances)
-
-        if self.kind is None:
-            # Not allowed to have instances without a kind.
-            if self.instances:
-                fatal(f"Normative rule {name} defines instances but no kind")
-        else:
-            if not isinstance(self.instances, list):
-                fatal(f"Provided {type(self.instances).__name__} class for instances in normative rule {name} but need a List")
-
-        self.tag_refs: List[TagRef] = []
-        if "tag" in data and data["tag"] is not None:
-            self.tag_refs.append(TagRef(data["tag"]))
-        if "tags" in data and data["tags"] is not None:
-            tags_data = data["tags"]
-            if not isinstance(tags_data, list):
-                fatal(f"Normative rule {name} has non-list tags. Use \"tag\" instead.")
-            if not tags_data:
-                fatal(f"Normative rule {name} has empty tags")
-            for tag_data in tags_data:
-                if isinstance(tag_data, str):
-                    self.tag_refs.append(TagRef(tag_data))
-                elif isinstance(tag_data, dict):
-                    tag_name = tag_data.get("name")
-                    if tag_name is None:
-                        fatal(f"Normative rule {name} tag reference {tag_data} missing name")
-                    if not isinstance(tag_name, str):
-                        fatal(f"Normative rule {name} tag reference {tag_data} has non-string name")
-
-                    context = tag_data.get("context", False)
-                    self.tag_refs.append(TagRef(tag_name, context))
-                else:
-                    fatal(f"Normative rule {name} has tag reference that's a {type(tag_data).__name__} instead of a String or Dict: {tag_data}")
-
-        # Validate name (function of impldef).
-        pattern = IMPLDEF_NAME_PATTERN if self.impldef else NORM_RULE_NAME_PATTERN
-        if not re.match(pattern, self.name):
-            fatal(f"Normative rule '{name}' doesn't match regex pattern '{pattern}'")
+        # Unique key for the chapter (chapter titles such as "Introduction" can repeat).
+        self.chapter_key = chapter_key
 
 
-class NormativeRuleDefs:
-    """Holds all the information for all normative rule definition files."""
-
-    def __init__(self):
-        self.norm_rule_defs: List[NormativeRuleDef] = []
-        self._defs_by_name: Dict[str, NormativeRuleDef] = {}
-
-    def add_file_contents(self, def_filename: str, chapter_name: str, array_data: List[Any]):
-        if not isinstance(def_filename, str):
-            fatal(f"Need String for def_filename but passed a {type(def_filename).__name__}")
-        if not isinstance(chapter_name, str):
-            fatal(f"Need String for chapter_name but passed a {type(chapter_name).__name__}")
-        if not isinstance(array_data, list):
-            fatal(f"Need List for array_data but passed a {type(array_data).__name__}")
-        if not array_data:
-            fatal(f"Need non-empty List for array_data in {def_filename}")
-
-        for data in array_data:
-            if not isinstance(data, dict):
-                fatal(f"File {def_filename} entry isn't a dict: {data}")
-
-            if "name" in data and data["name"] is not None:
-                # Add one definition object
-                self._add_def(data["name"], def_filename, chapter_name, data)
-            elif "names" in data and data["names"] is not None:
-                # Add one definition object for each name in array
-                names = data["names"]
-                if not isinstance(names, list):
-                    fatal(f"File {def_filename} has non-list names in normative rule definition entry: {data} (Use \"name\" instead.)")
-                if not names:
-                    fatal(f"File {def_filename} has empty names in normative rule definition entry: {data}")
-                for name in names:
-                    self._add_def(name, def_filename, chapter_name, data)
-            else:
-                fatal(f"File {def_filename} missing name/names in normative rule definition entry: {data}")
-
-    def _add_def(self, name: str, def_filename: str, chapter_name: str, data: Dict[str, Any]):
-        if not isinstance(name, str):
-            fatal(f"Need String for name but passed a {type(name).__name__}")
-        if not isinstance(def_filename, str):
-            fatal(f"Need String for def_filename but passed a {type(def_filename).__name__}")
-        if not isinstance(chapter_name, str):
-            fatal(f"Need String for chapter_name but passed a {type(chapter_name).__name__}")
-        if not isinstance(data, dict):
-            fatal(f"Need Dict for data but passed a {type(data).__name__}")
-
-        if name in self._defs_by_name:
-            fatal(f"Normative rule definition {name} in file {def_filename} already defined in file {self._defs_by_name[name].def_filename}")
-
-        # Create definition object and store reference to it in array (to maintain order) and defs_by_name (for convenient lookup by name).
-        norm_rule_def = NormativeRuleDef(name, def_filename, chapter_name, data)
-        self.norm_rule_defs.append(norm_rule_def)
-        self._defs_by_name[name] = norm_rule_def
-
-
-def parse_argv() -> Tuple[List[str], List[str], Dict[str, str], str, str, bool]:
+def parse_argv() -> Tuple[List[str], Dict[str, str], str, str]:
     """Parse command line arguments.
 
     Returns:
-        Tuple of (def_fnames, tag_fnames, tag_fname2url, output_fname, output_format, warn_if_tags_no_rules)
+        Tuple of (tag_fnames, tag_fname2url, output_fname, output_format)
     """
     parser = argparse.ArgumentParser(
         description='Creates list of normative rules and stores them in <output-filename> (JSON format).',
@@ -298,10 +68,6 @@ def parse_argv() -> Tuple[List[str], List[str], Dict[str, str], str, str, bool]:
                         default='json', help='Set output format to JSON (default)')
     parser.add_argument('--html', action='store_const', const='html', dest='output_format',
                         help='Set output format to HTML')
-    parser.add_argument('-w', action='store_true', dest='warn_if_tags_no_rules',
-                        help='Warning instead of error if tags found without rules (Only use for debugging!)')
-    parser.add_argument('-d', action='append', dest='def_fnames', metavar='fname',
-                        help='Normative rule definition filename (YAML format)')
     parser.add_argument('-t', action='append', dest='tag_fnames', metavar='fname',
                         help='Normative tag filename (JSON format)')
     parser.add_argument('-tag2url', action='append', nargs=2, dest='tag2url_list',
@@ -312,11 +78,6 @@ def parse_argv() -> Tuple[List[str], List[str], Dict[str, str], str, str, bool]:
     args = parser.parse_args()
 
     # Validate required arguments
-    if not args.def_fnames:
-        info("Missing normative rule definition filename(s)")
-        parser.print_help()
-        sys.exit(1)
-
     if not args.tag_fnames:
         info("Missing normative tag filename(s)")
         parser.print_help()
@@ -328,25 +89,64 @@ def parse_argv() -> Tuple[List[str], List[str], Dict[str, str], str, str, bool]:
         for tag_fname, url in args.tag2url_list:
             tag_fname2url[tag_fname] = url
 
-    if (args.output_format in ['json', 'html']) and not tag_fname2url:
+    if not tag_fname2url:
         info("Missing -tag2url command line options")
         parser.print_help()
         sys.exit(1)
 
-    return (args.def_fnames, args.tag_fnames, tag_fname2url,
-            args.output_fname, args.output_format, args.warn_if_tags_no_rules)
+    return (args.tag_fnames, tag_fname2url, args.output_fname, args.output_format)
 
 
-def load_tags(tag_fnames: List[str]) -> NormativeTags:
-    """Load the contents of all normative rule tag files in JSON format.
+def find_tag_chapters(tag_fname: str, sections: Dict[str, Any]) -> Dict[str, Tuple[str, str]]:
+    """Return a Dict from tag name to (chapter name, chapter key) using the section tree in a tag file.
+
+    A tag's chapter is its nearest enclosing section of level CHAPTER_LEVEL. A tag outside any
+    chapter (e.g., directly in a part or in the preamble) uses its nearest enclosing section instead.
+    """
+    if not isinstance(sections, dict):
+        fatal(f"'sections' must be an object in {tag_fname}")
+
+    tag2chapter: Dict[str, Tuple[str, str]] = {}
+
+    def walk(node: Dict[str, Any], chapter: Optional[Dict[str, Any]], nearest: Optional[Dict[str, Any]]):
+        for key in ("children", "tags"):
+            if not isinstance(node.get(key), list):
+                fatal(f"Section {node.get('title')!r} in {tag_fname} has no '{key}' list")
+
+        if node is not sections:
+            nearest = node
+            level = node.get("level")
+            if not isinstance(level, int):
+                fatal(f"Section {node.get('title')!r} in {tag_fname} has no integer 'level'. "
+                      f"Rebuild the tag file with the current tags.rb backend.")
+            if level == CHAPTER_LEVEL:
+                chapter = node
+
+        owner = chapter if chapter is not None else nearest
+        for tag_name in node["tags"]:
+            if owner is None:
+                tag2chapter[tag_name] = ("", f"{tag_fname}#")
+            else:
+                tag2chapter[tag_name] = (owner.get("title") or "", f"{tag_fname}#{owner.get('id')}")
+
+        for child in node["children"]:
+            walk(child, chapter, nearest)
+
+    walk(sections, None, None)
+    return tag2chapter
+
+
+def load_rules(tag_fnames: List[str]) -> List[NormativeRule]:
+    """Load the contents of all normative tag files in JSON format.
 
     Returns:
-        NormativeTags class with all the contents.
+        List of NormativeRule objects in tag file order and document order within each tag file.
     """
     if not isinstance(tag_fnames, list):
         fatal(f"Need List[String] for tag_fnames but passed a {type(tag_fnames).__name__}")
 
-    tags = NormativeTags()
+    rules: List[NormativeRule] = []
+    tag_name2fname: Dict[str, str] = {}
 
     for tag_fname in tag_fnames:
         info(f"Loading tag file {tag_fname}")
@@ -359,186 +159,65 @@ def load_tags(tag_fnames: List[str]) -> NormativeTags:
             fatal(f"'tags' must be an object in {tag_fname}")
         assert isinstance(tags_data, dict)
 
-        # Add tags from JSON file to Python class.
-        tags.add_tags(tag_fname, tags_data)
+        sections = file_data.get("sections")
+        if sections is None:
+            fatal(f"Missing 'sections' key in {tag_fname}")
+        tag2chapter = find_tag_chapters(tag_fname, sections)
 
-    return tags
+        for tag_name, text in tags_data.items():
+            if not isinstance(tag_name, str):
+                fatal(f"Tag name {tag_name} in file {tag_fname} is a {type(tag_name).__name__} instead of a String")
 
+            if not isinstance(text, str):
+                fatal(f"Tag name {tag_name} in file {tag_fname} is a {type(text).__name__} instead of a String\n"
+                      f"{PN}:   If the AsciiDoc anchor for {tag_name} is before an AsciiDoc 'Description List' term, "
+                      f"move to after term on its own line.")
 
-def load_definitions(def_fnames: List[str]) -> NormativeRuleDefs:
-    """Load the contents of all normative rule definition files in YAML format.
+            if not tag_name.startswith(NORM_PREFIX):
+                fatal(f"Tag name {tag_name} in file {tag_fname} doesn't start with \"{NORM_PREFIX}\"")
 
-    Returns:
-        NormativeRuleDefs class with all the contents.
-    """
-    if not isinstance(def_fnames, list):
-        fatal(f"Need List[String] for def_fnames but passed a {type(def_fnames).__name__}")
+            if tag_name in tag_name2fname:
+                fatal(f"Tag name {tag_name} in file {tag_fname} already defined in file {tag_name2fname[tag_name]}")
+            tag_name2fname[tag_name] = tag_fname
 
-    defs = NormativeRuleDefs()
+            if tag_name not in tag2chapter:
+                fatal(f"Tag name {tag_name} in file {tag_fname} isn't in the file's section tree")
+            chapter_name, chapter_key = tag2chapter[tag_name]
 
-    for def_fname in def_fnames:
-        info(f"Loading definition file {def_fname}")
-        yaml_hash = load_yaml_object(def_fname, fatal)
+            rules.append(NormativeRule(tag_name, tag_fname, text, chapter_name, chapter_key))
 
-        chapter_name = yaml_hash.get("chapter_name")
-        if chapter_name is None:
-            fatal(f"Missing 'chapter_name' key in {def_fname}")
-        if not isinstance(chapter_name, str):
-            fatal(f"'chapter_name' isn't a string in {def_fname}")
-        assert isinstance(chapter_name, str)
-
-        array_data = yaml_hash.get("normative_rule_definitions")
-        if array_data is None:
-            fatal(f"Missing 'normative_rule_definitions' key in {def_fname}")
-        if not isinstance(array_data, list) or not array_data:
-            fatal(f"'normative_rule_definitions' isn't a non-empty list in {def_fname}")
-        assert isinstance(array_data, list)
-
-        defs.add_file_contents(def_fname, chapter_name, array_data)
-
-    return defs
+    return rules
 
 
-def create_normative_rules_hash(defs: NormativeRuleDefs, tags: NormativeTags,
-                                 tag_fname2url: Dict[str, str]) -> Dict[str, List[Dict[str, Any]]]:
+def create_normative_rules_hash(rules: List[NormativeRule],
+                                tag_fname2url: Dict[str, str]) -> Dict[str, List[Dict[str, Any]]]:
     """Returns a Dict with just one entry called "normative_rules" that contains a List of Dicts of all normative rules.
 
     Dict is suitable for JSON/YAML serialization.
     """
-    if not isinstance(defs, NormativeRuleDefs):
-        fatal(f"Need NormativeRuleDefs for defs but was passed a {type(defs).__name__}")
-    if not isinstance(tags, NormativeTags):
-        fatal(f"Need NormativeTags for tags but was passed a {type(tags).__name__}")
+    if not isinstance(rules, list):
+        fatal(f"Need List[NormativeRule] for rules but was passed a {type(rules).__name__}")
     if not isinstance(tag_fname2url, dict):
         fatal(f"Need Dict for tag_fname2url but passed a {type(tag_fname2url).__name__}")
 
-    info("Creating normative rules from definition files")
+    info("Creating normative rules from tag files")
 
     ret: Dict[str, List[Dict[str, Any]]] = {"normative_rules": []}
 
-    for d in defs.norm_rule_defs:
-        # Create dict with mandatory definition file arguments.
-        hash_entry: Dict[str, Any] = {
-            "name": d.name,
-            "def_filename": d.def_filename,
-            "chapter_name": d.chapter_name
-        }
+    for nr in rules:
+        url = tag_fname2url.get(nr.tag_filename)
+        if url is None:
+            fatal(f"No fname tag to URL mapping (-tag2url cmd line arg) for tag fname {nr.tag_filename} for tag name {nr.tag_name}")
 
-        # Now add optional arguments.
-        if d.kind is not None:
-            hash_entry["kind"] = d.kind
-        hash_entry["impl-def-behavior"] = d.impldef
-        if d.instances:
-            hash_entry["instances"] = d.instances
-        if d.impldef_cat is not None:
-            hash_entry["impl-def-category"] = d.impldef_cat
-        if d.summary is not None:
-            hash_entry["summary"] = d.summary
-        if d.note is not None:
-            hash_entry["note"] = d.note
-        if d.clarification_text is not None:
-            hash_entry["clarification-text"] = d.clarification_text
-        if d.clarification_link is not None:
-            hash_entry["clarification-link"] = d.clarification_link
-        if d.description is not None:
-            hash_entry["description"] = d.description
-
-        # Add tag entries
-        resolved_tags: List[Dict[str, Any]] = []
-        for tag_ref in d.tag_refs:
-            # Lookup tag
-            tag = tags.get_tag(tag_ref.name)
-            if tag is None:
-                fatal(f"Normative rule {d.name} defined in file {d.def_filename} references non-existent tag {tag_ref.name}")
-            assert tag is not None
-
-            url = tag_fname2url.get(tag.tag_filename)
-            if url is None:
-                fatal(f"No fname tag to URL mapping (-tag2url cmd line arg) for tag fname {tag.tag_filename} for tag name {tag.name}")
-
-            resolved_tag = {
-                "name": tag.name,
-                "context": tag_ref.is_context(),
-                "text": tag.text,
-                "tag_filename": tag.tag_filename,
-                "stds_doc_url": url
-            }
-
-            resolved_tags.append(resolved_tag)
-        if resolved_tags:
-            hash_entry["tags"] = resolved_tags
-
-        ret["normative_rules"].append(hash_entry)
+        ret["normative_rules"].append({
+            "name": nr.name,
+            "chapter_name": nr.chapter_name,
+            "text": nr.text,
+            "tag_filename": nr.tag_filename,
+            "stds_doc_url": url
+        })
 
     return ret
-
-
-def validate_defs_and_tags(defs: NormativeRuleDefs, tags: NormativeTags, warn_if_tags_no_rules: bool):
-    """Fatal error if any normative rule references a non-existent tag.
-
-    Fatal error or warning (controlled by cmd line switch) if there are tags that no rule references.
-    """
-    if not isinstance(defs, NormativeRuleDefs):
-        fatal(f"Need NormativeRuleDefs for defs but passed a {type(defs).__name__}")
-    if not isinstance(tags, NormativeTags):
-        fatal(f"Need NormativeTags for tags but was passed a {type(tags).__name__}")
-
-    missing_tag_cnt = 0
-    bad_norm_rule_name_cnt = 0
-    unref_cnt = 0
-    referenced_tags = {}  # Key is tag name and value is any non-None value
-
-    # Go through each normative rule definition. Look for:
-    #   - References to non-existent tags
-    #   - Normative rule names starting with NORM_PREFIX (should only be for tags)
-    for d in defs.norm_rule_defs:
-        for tag_ref in d.tag_refs:
-            # Lookup tag by its name
-            tag = tags.get_tag(tag_ref.name)
-
-            if tag is None:
-                missing_tag_cnt += 1
-                error(f"Normative rule {d.name} references non-existent tag {tag_ref.name} in file {d.def_filename}")
-            else:
-                referenced_tags[tag.name] = 1  # Any non-None value
-
-        if d.name.startswith(NORM_PREFIX):
-            bad_norm_rule_name_cnt += 1
-            error(f"Normative rule {d.name} starts with \"{NORM_PREFIX}\" prefix. This prefix is only for tag names, not rule names.")
-
-        if d.clarification_text is not None:
-            if d.clarification_link is None:
-                error(f"Normative rule {d.name} has clarification-text but no clarification-link")
-
-        if d.clarification_link is not None:
-            if not re.match(r'^https://(www\.)?github\.com/riscv/.+/issues/[0-9]+$', d.clarification_link):
-                error(f"Normative rule {d.name} clarification-link of '{d.clarification_link}' doesn't look like a RISC-V GitHub issue link")
-
-    # Look for any unreferenced tags.
-    for tag in tags.get_tags():
-        if tag.name not in referenced_tags:
-            msg = f"Tag {tag.name} not referenced by any normative rule. Did you forget to define a normative rule?"
-            if warn_if_tags_no_rules:
-                info(msg)
-            else:
-                error(msg)
-            unref_cnt += 1
-
-    if missing_tag_cnt > 0:
-        error(f"{missing_tag_cnt} reference{'s' if missing_tag_cnt != 1 else ''} to non-existing tags")
-
-    if bad_norm_rule_name_cnt > 0:
-        error(f"{bad_norm_rule_name_cnt} illegal normative rule name{'s' if bad_norm_rule_name_cnt != 1 else ''}")
-
-    if unref_cnt > 0:
-        msg = f"{unref_cnt} tag{'s' if unref_cnt != 1 else ''} have no normative rules referencing them"
-        if warn_if_tags_no_rules:
-            info(msg)
-        else:
-            error(msg)
-
-    if (missing_tag_cnt > 0) or (bad_norm_rule_name_cnt > 0) or ((unref_cnt > 0) and not warn_if_tags_no_rules):
-        fatal("Exiting due to errors")
 
 
 def output_json(filename: str, normative_rules_hash: Dict[str, List[Dict[str, Any]]]):
@@ -559,80 +238,28 @@ def output_json(filename: str, normative_rules_hash: Dict[str, List[Dict[str, An
         fatal(f"Error writing to {filename}: {e}")
 
 
-def output_html(filename: str, defs: NormativeRuleDefs, tags: NormativeTags,
-                tag_fname2url: Dict[str, str]):
+def output_html(filename: str, rules: List[NormativeRule], tag_fname2url: Dict[str, str]):
     """Store normative rules in HTML output file."""
     if not isinstance(filename, str):
         fatal(f"Need String for filename but passed a {type(filename).__name__}")
-    if not isinstance(defs, NormativeRuleDefs):
-        fatal(f"Need NormativeRuleDefs for defs but passed a {type(defs).__name__}")
-    if not isinstance(tags, NormativeTags):
-        fatal(f"Need NormativeTags for tags but passed a {type(tags).__name__}")
+    if not isinstance(rules, list):
+        fatal(f"Need List[NormativeRule] for rules but passed a {type(rules).__name__}")
     if not isinstance(tag_fname2url, dict):
         fatal(f"Need Dict for tag_fname2url but passed a {type(tag_fname2url).__name__}")
 
-    # Array of all chapter names
-    chapter_names = []
-
-    # Organize rules. Each dict key is chapter name. Each dict entry is a List[NormativeRuleDef].
-    norm_rules_by_chapter_name = {}
-    impldefs_by_chapter_name = {}
-
-    # Are there any impldef normative rules?
-    any_impldefs = False
-
-    # Create list of all impldef normative rules that don't have a category.
-    impldefs_no_cat = []
-
-    # Organize rules by implementation-defined category.
-    impldefs_by_cat = {cat: [] for cat in IMPLDEF_CATEGORIES}
-
-    # Go through all normative rule definitions and put into appropriate data structures.
-    for d in defs.norm_rule_defs:
-        if d.chapter_name not in chapter_names:
-            chapter_names.append(d.chapter_name)
-
-        if d.chapter_name not in norm_rules_by_chapter_name:
-            norm_rules_by_chapter_name[d.chapter_name] = []
-        norm_rules_by_chapter_name[d.chapter_name].append(d)
-
-        if d.impldef:
-            any_impldefs = True
-
-            if d.impldef_cat is None:
-                impldefs_no_cat.append(d)
-            else:
-                impldefs_by_cat[d.impldef_cat].append(d)
-
-            if d.chapter_name not in impldefs_by_chapter_name:
-                impldefs_by_chapter_name[d.chapter_name] = []
-            impldefs_by_chapter_name[d.chapter_name].append(d)
-
-    # Sort alphabetically for consistent output.
-    chapter_names.sort()
-    impldefs_no_cat.sort(key=lambda p: p.name)
-    for cat in IMPLDEF_CATEGORIES:
-        impldefs_by_cat[cat].sort(key=lambda p: p.name)
+    # Organize rules by chapter, keeping document order. Each dict key is a chapter key.
+    chapter_keys: List[str] = []
+    chapter_names: Dict[str, str] = {}
+    rules_by_chapter: Dict[str, List[NormativeRule]] = {}
+    for nr in rules:
+        if nr.chapter_key not in rules_by_chapter:
+            chapter_keys.append(nr.chapter_key)
+            chapter_names[nr.chapter_key] = nr.chapter_name
+            rules_by_chapter[nr.chapter_key] = []
+        rules_by_chapter[nr.chapter_key].append(nr)
 
     # Create list of all table names in order.
-    table_names = []
-    table_num = 1
-    for _ in chapter_names:
-        table_names.append(f"{NORM_RULES_CH_TABLE_NAME_PREFIX}{table_num}")
-        table_num += 1
-
-    if len(impldefs_no_cat) > 0:
-        table_names.append(IMPLDEFS_NO_CAT_TABLE_NAME_PREFIX)
-
-    for cat in IMPLDEF_CATEGORIES:
-        if len(impldefs_by_cat[cat]) > 0:
-            table_names.append(f"{IMPLDEFS_CAT_TABLE_NAME_PREFIX}{cat}")
-
-    table_num = 1
-    for chapter_name in chapter_names:
-        if chapter_name in impldefs_by_chapter_name:
-            table_names.append(f"{IMPLDEFS_CH_TABLE_NAME_PREFIX}{table_num}")
-        table_num += 1
+    table_names = [f"{NORM_RULES_CH_TABLE_NAME_PREFIX}{table_num}" for table_num in range(1, len(chapter_keys) + 1)]
 
     try:
         with open(filename, 'w', encoding='utf-8') as f:
@@ -640,39 +267,14 @@ def output_html(filename: str, defs: NormativeRuleDefs, tags: NormativeTags,
             f.write('<body>\n')
             f.write('  <div class="app">\n')
 
-            html_sidebar(f, chapter_names, defs.norm_rule_defs, any_impldefs,
-                        impldefs_no_cat, impldefs_by_cat, impldefs_by_chapter_name)
+            html_sidebar(f, [chapter_names[key] for key in chapter_keys])
             f.write('    <main>\n')
             f.write('      <style>.grand-total-heading { font-size: 24px; font-weight: bold; }</style>\n')
+            f.write(f'      <h1 class="grand-total-heading">{get_counts_str(rules)}</h1>\n')
 
-            counts_str = get_impldefs_counts_str(defs.norm_rule_defs)
-            f.write(f'      <h1 class="grand-total-heading">{counts_str}</h1>\n')
-
-            table_num = 1
-            for chapter_name in chapter_names:
-                nr_defs = norm_rules_by_chapter_name[chapter_name]
+            for table_num, key in enumerate(chapter_keys, start=1):
                 html_norm_rule_table(f, f"{NORM_RULES_CH_TABLE_NAME_PREFIX}{table_num}",
-                                   chapter_name, nr_defs, tags, tag_fname2url)
-                table_num += 1
-
-            if any_impldefs:
-                if len(impldefs_no_cat) > 0:
-                    html_impldef_table(f, IMPLDEFS_NO_CAT_TABLE_NAME_PREFIX,
-                                     "No Category (A-Z)", impldefs_no_cat, tags, tag_fname2url)
-
-                for cat in IMPLDEF_CATEGORIES:
-                    nr_defs = impldefs_by_cat[cat]
-                    if len(nr_defs) > 0:
-                        html_impldef_cat_table(f, f"{IMPLDEFS_CAT_TABLE_NAME_PREFIX}{cat}",
-                                             f"{cat} Category (A-Z)", nr_defs, tags, tag_fname2url)
-
-                table_num = 1
-                for chapter_name in chapter_names:
-                    if chapter_name in impldefs_by_chapter_name:
-                        nr_defs = impldefs_by_chapter_name[chapter_name]
-                        html_impldef_table(f, f"{IMPLDEFS_CH_TABLE_NAME_PREFIX}{table_num}",
-                                         f"Chapter {chapter_name}", nr_defs, tags, tag_fname2url)
-                    table_num += 1
+                                     chapter_names[key], rules_by_chapter[key], tag_fname2url)
 
             f.write('    </main>\n')
             f.write('  </div>\n')
@@ -830,120 +432,39 @@ def html_head(f, table_names: List[str]):
 ''')
 
 
-def html_sidebar(f, chapter_names: List[str], nrs: List[NormativeRuleDef],
-                any_impldefs: bool, impldefs_no_cat: List[NormativeRuleDef],
-                impldefs_by_cat: Dict[str, List[NormativeRuleDef]],
-                impldefs_by_chapter_name: Dict[str, List[NormativeRuleDef]]):
+
+def html_sidebar(f, chapter_names: List[str]):
     """Write HTML sidebar section."""
     if not isinstance(chapter_names, list):
         fatal(f"Need List for chapter_names but passed a {type(chapter_names).__name__}")
-    if not isinstance(nrs, list):
-        fatal(f"Need List[NormativeRuleDef] for nrs but passed a {type(nrs).__name__}")
-    if not isinstance(any_impldefs, bool):
-        fatal(f"Need Boolean for any_impldefs but passed a {type(any_impldefs).__name__}")
-    if not isinstance(impldefs_no_cat, list):
-        fatal(f"Need List[NormativeRuleDef] for impldefs_no_cat but passed a {type(impldefs_no_cat).__name__}")
-    if not isinstance(impldefs_by_cat, dict):
-        fatal(f"Need Dict for impldefs_by_cat but passed a {type(impldefs_by_cat).__name__}")
-    if not isinstance(impldefs_by_chapter_name, dict):
-        fatal(f"Need Dict for impldefs_by_chapter_name but passed a {type(impldefs_by_chapter_name).__name__}")
 
     f.write('\n')
     f.write('  <aside class="sidebar">\n')
     f.write('    <h2>All Normative Rules</h2>\n')
     f.write('    <nav class="nav" id="nav-chapters">\n')
 
-    table_num = 1
-    for chapter_name in chapter_names:
+    for table_num, chapter_name in enumerate(chapter_names, start=1):
         f.write(f'      <a href="#{NORM_RULES_CH_TABLE_NAME_PREFIX}{table_num}" data-target="{NORM_RULES_CH_TABLE_NAME_PREFIX}{table_num}">{chapter_name}</a>\n')
-        table_num += 1
 
-    if any_impldefs:
-        f.write('    </nav>\n')
-        f.write('    <h2>Implementation-Defined Behaviors</h2>\n')
-        f.write('    <nav class="nav" id="nav-impldefs-no-cat">\n')
-
-        if len(impldefs_no_cat) > 0:
-            f.write(f'      <a href="#{IMPLDEFS_NO_CAT_TABLE_NAME_PREFIX}" data-target="{IMPLDEFS_NO_CAT_TABLE_NAME_PREFIX}">No category</a>\n')
-
-        for cat in IMPLDEF_CATEGORIES:
-            count = len(impldefs_by_cat.get(cat, []))
-            if count > 0:
-                f.write(f'      <a href="#{IMPLDEFS_CAT_TABLE_NAME_PREFIX}{cat}" data-target="{IMPLDEFS_CAT_TABLE_NAME_PREFIX}{cat}">{cat} category</a>\n')
-
-        table_num = 1
-        for chapter_name in chapter_names:
-            if chapter_name in impldefs_by_chapter_name:
-                f.write(f'      <a href="#{IMPLDEFS_CH_TABLE_NAME_PREFIX}{table_num}" data-target="{IMPLDEFS_CH_TABLE_NAME_PREFIX}{table_num}">{chapter_name}</a>\n')
-            table_num += 1
-
-        f.write('    </nav>\n')
-
+    f.write('    </nav>\n')
     f.write('  </aside>\n')
 
 
 def html_norm_rule_table(f, table_name: str, chapter_name: str,
-                        nr_defs: List[NormativeRuleDef], tags: NormativeTags,
-                        tag_fname2url: Dict[str, str]):
+                         rules: List[NormativeRule], tag_fname2url: Dict[str, str]):
     """Write HTML table for normative rules."""
     if not isinstance(table_name, str):
         fatal(f"Need String for table_name but passed a {type(table_name).__name__}")
     if not isinstance(chapter_name, str):
         fatal(f"Need String for chapter_name but passed a {type(chapter_name).__name__}")
-    if not isinstance(nr_defs, list):
-        fatal(f"Need List for nr_defs but passed a {type(nr_defs).__name__}")
-    if not isinstance(tags, NormativeTags):
-        fatal(f"Need NormativeTags for tags but passed a {type(tags).__name__}")
+    if not isinstance(rules, list):
+        fatal(f"Need List for rules but passed a {type(rules).__name__}")
     if not isinstance(tag_fname2url, dict):
         fatal(f"Need Dict for tag_fname2url but passed a {type(tag_fname2url).__name__}")
 
-    counts_str = get_impldefs_counts_str(nr_defs)
-
-    html_table_header(f, table_name, f"Chapter {chapter_name}: {counts_str}")
-    for nr in nr_defs:
-        html_norm_rule_table_row(f, nr, tags, tag_fname2url)
-    html_table_footer(f)
-
-
-def html_impldef_table(f, table_name: str, caption_prefix: str,
-                      nr_defs: List[NormativeRuleDef], tags: NormativeTags,
-                      tag_fname2url: Dict[str, str]):
-    """Write HTML table for implementation-defined behaviors."""
-    if not isinstance(table_name, str):
-        fatal(f"Need String for table_name but passed a {type(table_name).__name__}")
-    if not isinstance(caption_prefix, str):
-        fatal(f"Need String for caption_prefix but passed a {type(caption_prefix).__name__}")
-    if not isinstance(nr_defs, list):
-        fatal(f"Need List for nr_defs but passed a {type(nr_defs).__name__}")
-    if not isinstance(tags, NormativeTags):
-        fatal(f"Need NormativeTags for tags but passed a {type(tags).__name__}")
-    if not isinstance(tag_fname2url, dict):
-        fatal(f"Need Dict for tag_fname2url but passed a {type(tag_fname2url).__name__}")
-
-    html_table_header(f, table_name, f"{caption_prefix}: All {len(nr_defs)} Implementation-Defined Behaviors")
-    for nr in nr_defs:
-        html_impldef_table_row(f, nr, tags, tag_fname2url)
-    html_table_footer(f)
-
-
-def html_impldef_cat_table(f, table_name: str, caption_prefix: str,
-                           nr_defs: List[NormativeRuleDef], tags: NormativeTags,
-                           tag_fname2url: Dict[str, str]):
-    """Write HTML table for implementation-defined behaviors by category."""
-    if not isinstance(table_name, str):
-        fatal(f"Need String for table_name but passed a {type(table_name).__name__}")
-    if not isinstance(caption_prefix, str):
-        fatal(f"Need String for caption_prefix but passed a {type(caption_prefix).__name__}")
-    if not isinstance(nr_defs, list):
-        fatal(f"Need List for nr_defs but passed a {type(nr_defs).__name__}")
-    if not isinstance(tags, NormativeTags):
-        fatal(f"Need NormativeTags for tags but passed a {type(tags).__name__}")
-    if not isinstance(tag_fname2url, dict):
-        fatal(f"Need Dict for tag_fname2url but passed a {type(tag_fname2url).__name__}")
-
-    html_table_header(f, table_name, f"{caption_prefix}: All {len(nr_defs)} Implementation-Defined Behaviors")
-    for nr in nr_defs:
-        html_impldef_cat_table_row(f, nr, tags, tag_fname2url)
+    html_table_header(f, table_name, f"Chapter {chapter_name}: {get_counts_str(rules)}")
+    for nr in rules:
+        html_norm_rule_table_row(f, nr, tag_fname2url)
     html_table_footer(f)
 
 
@@ -964,206 +485,30 @@ def html_table_header(f, table_name: str, table_caption: str):
     f.write('            <col class="col-location">\n')
     f.write('          </colgroup>\n')
     f.write('          <thead>\n')
-    f.write('            <tr><th>Name</th><th>Information</th><th>Information Source</th></tr>\n')
+    f.write('            <tr><th>Name</th><th>Text</th><th>Location</th></tr>\n')
     f.write('          </thead>\n')
     f.write('          <tbody>\n')
 
 
-def html_norm_rule_table_row(f, nr: NormativeRuleDef, tags: NormativeTags,
-                             tag_fname2url: Dict[str, str]):
+def html_norm_rule_table_row(f, nr: NormativeRule, tag_fname2url: Dict[str, str]):
     """Write HTML table row for normative rule."""
-    if not isinstance(nr, NormativeRuleDef):
-        fatal(f"Need NormativeRuleDef for nr but passed a {type(nr).__name__}")
-    if not isinstance(tags, NormativeTags):
-        fatal(f"Need NormativeTags for tags but passed a {type(tags).__name__}")
+    if not isinstance(nr, NormativeRule):
+        fatal(f"Need NormativeRule for nr but passed a {type(nr).__name__}")
     if not isinstance(tag_fname2url, dict):
         fatal(f"Need Dict for tag_fname2url but passed a {type(tag_fname2url).__name__}")
 
-    name_is_anchor = True  # Rule name is an anchor link in chapter tables
-    omit = {}  # Don't omit anything
+    target_html_fname = tag_fname2url.get(nr.tag_filename)
+    if target_html_fname is None:
+        fatal(f"No fname tag to HTML mapping (-tag2url cmd line arg) for tag fname {nr.tag_filename} for tag name {nr.tag_name}")
 
-    html_table_row(f, nr, name_is_anchor, omit, tags, tag_fname2url)
+    tag_text = convert_tag_text_to_html(nr.text, target_html_fname)
+    tag_link = tag2html_link(nr.tag_name, nr.tag_name, target_html_fname)
 
-
-def html_impldef_table_row(f, nr: NormativeRuleDef, tags: NormativeTags,
-                           tag_fname2url: Dict[str, str]):
-    """Write HTML table row for implementation-defined behavior."""
-    if not isinstance(nr, NormativeRuleDef):
-        fatal(f"Need NormativeRuleDef for nr but passed a {type(nr).__name__}")
-    if not isinstance(tags, NormativeTags):
-        fatal(f"Need NormativeTags for tags but passed a {type(tags).__name__}")
-    if not isinstance(tag_fname2url, dict):
-        fatal(f"Need Dict for tag_fname2url but passed a {type(tag_fname2url).__name__}")
-
-    name_is_anchor = False
-    omit = {"impldef": True}  # Redundant
-
-    html_table_row(f, nr, name_is_anchor, omit, tags, tag_fname2url)
-
-
-def html_impldef_cat_table_row(f, nr: NormativeRuleDef, tags: NormativeTags,
-                               tag_fname2url: Dict[str, str]):
-    """Write HTML table row for implementation-defined behavior by category."""
-    if not isinstance(nr, NormativeRuleDef):
-        fatal(f"Need NormativeRuleDef for nr but passed a {type(nr).__name__}")
-    if not isinstance(tags, NormativeTags):
-        fatal(f"Need NormativeTags for tags but passed a {type(tags).__name__}")
-    if not isinstance(tag_fname2url, dict):
-        fatal(f"Need Dict for tag_fname2url but passed a {type(tag_fname2url).__name__}")
-
-    name_is_anchor = False
-    omit = {
-        "impldef": True,      # Redundant
-        "impldef_cat": True   # Redundant
-    }
-
-    html_table_row(f, nr, name_is_anchor, omit, tags, tag_fname2url)
-
-
-def html_table_row(f, nr: NormativeRuleDef, name_is_anchor: bool, omit: Dict[str, bool],
-                  tags: NormativeTags, tag_fname2url: Dict[str, str]):
-    """Write HTML table row."""
-    if not isinstance(nr, NormativeRuleDef):
-        fatal(f"Need NormativeRuleDef for nr but passed a {type(nr).__name__}")
-    if not isinstance(name_is_anchor, bool):
-        fatal(f"Need Boolean for name_is_anchor but passed a {type(name_is_anchor).__name__}")
-    if not isinstance(omit, dict):
-        fatal(f"Need Dict for omit but passed a {type(omit).__name__}")
-    if not isinstance(tags, NormativeTags):
-        fatal(f"Need NormativeTags for tags but passed a {type(tags).__name__}")
-    if not isinstance(tag_fname2url, dict):
-        fatal(f"Need Dict for tag_fname2url but passed a {type(tag_fname2url).__name__}")
-
-    omit_impldef = omit.get("impldef", False)
-    omit_impldef_cat = omit.get("impldef_cat", False)
-
-    name_row_span = (
-        (0 if nr.summary is None else 1) +
-        (0 if nr.note is None else 1) +
-        (0 if nr.clarification_link is None else 1) +
-        (0 if nr.description is None else 1) +
-        (0 if nr.kind is None else 1) +
-        (0 if not nr.instances else 1) +
-        (0 if omit_impldef or not nr.impldef else 1) +
-        (0 if omit_impldef_cat or nr.impldef_cat is None else 1) +
-        len(nr.tag_refs)
-    )
-
-    # Tracks if this is the first row for the normative rule.
-    first_row = True
-
-    # Output the normative rule name cell with rowspan.
     f.write('            <tr>\n')
-    if name_is_anchor:
-        f.write(f'              <td rowspan={name_row_span} id="{nr.name}">{nr.name}</td>\n')
-    else:
-        f.write(f'              <td rowspan={name_row_span}><a href="#{nr.name}">{nr.name}</a></td>\n')
-
-    if nr.summary is not None:
-        text = convert_def_text_to_html(nr.summary)
-
-        if not first_row:
-            f.write('            <tr>\n')
-        f.write(f'              <td>{text}</td>\n')
-        f.write('              <td>Summary</td>\n')
-        f.write('            </tr>\n')
-        first_row = False
-
-    if nr.note is not None:
-        text = convert_def_text_to_html(nr.note)
-
-        if not first_row:
-            f.write('            <tr>\n')
-        f.write(f'              <td>{text}</td>\n')
-        f.write('              <td>Note</td>\n')
-        f.write('            </tr>\n')
-        first_row = False
-
-    if nr.description is not None:
-        text = convert_def_text_to_html(nr.description)
-
-        if not first_row:
-            f.write('            <tr>\n')
-        f.write(f'              <td>{text}</td>\n')
-        f.write('              <td>Description</td>\n')
-        f.write('            </tr>\n')
-        first_row = False
-
-    if nr.kind is not None:
-        if not first_row:
-            f.write('            <tr>\n')
-        f.write(f'              <td>{nr.kind}</td>\n')
-        f.write('              <td>Kind</td>\n')
-        f.write('            </tr>\n')
-        first_row = False
-
-    if nr.instances:
-        if len(nr.instances) == 1:
-            instances_str = nr.instances[0]
-            rule_name = "Instance"
-        else:
-            instances_str = "[" + ', '.join(nr.instances) + "]"
-            rule_name = "Instances"
-
-        if not first_row:
-            f.write('            <tr>\n')
-        f.write(f'              <td>{instances_str}</td>\n')
-        f.write(f'              <td>{rule_name}</td>\n')
-        f.write('            </tr>\n')
-        first_row = False
-
-    if not omit_impldef and nr.impldef:
-        if not first_row:
-            f.write('            <tr>\n')
-        f.write('              <td>Implementation-defined behavior</td>\n')
-        f.write('              <td>Implementation-defined behavior</td>\n')
-        f.write('            </tr>\n')
-        first_row = False
-
-    if not omit_impldef_cat and nr.impldef_cat is not None:
-        if not first_row:
-            f.write('            <tr>\n')
-        f.write(f'              <td>{nr.impldef_cat}</td>\n')
-        f.write('              <td>Implementation-defined behavior category</td>\n')
-        f.write('            </tr>\n')
-        first_row = False
-
-    for tag_ref in nr.tag_refs:
-        tag = tags.get_tag(tag_ref.name)
-        if tag is None:
-            fatal(f"Normative rule {nr.name} defined in file {nr.def_filename} references non-existent tag {tag_ref.name}")
-        assert tag is not None
-
-        target_html_fname = tag_fname2url.get(tag.tag_filename)
-        if target_html_fname is None:
-            fatal(f"No fname tag to HTML mapping (-tag2url cmd line arg) for tag fname {tag.tag_filename} for tag name {tag.name}")
-
-        tag_text = convert_tag_text_to_html(tag.text, target_html_fname, tag_ref.is_context())
-
-        tag_link = tag2html_link(tag_ref.name, tag_ref.name, target_html_fname)
-
-        if not first_row:
-            f.write('            <tr>\n')
-        f.write(f'              <td>{tag_text}</td>\n')
-        f.write(f'              <td>{tag_link}</td>\n')
-        f.write('            </tr>\n')
-        first_row = False
-
-    if nr.clarification_link is not None:
-        # The clarification text can only exist if the clarification link also exists.
-        if nr.clarification_text is None:
-            text = "(No clarification text available)"
-        else:
-            text = convert_def_text_to_html(nr.clarification_text)
-
-        link = f'<a href="{nr.clarification_link}">GitHub Issue</a>'
-
-        if not first_row:
-            f.write('            <tr>\n')
-        f.write(f'              <td>[CLARIFICATION] {text}</td>\n')
-        f.write(f'              <td>{link}</td>\n')
-        f.write('            </tr>\n')
-        first_row = False
+    f.write(f'              <td id="{nr.name}">{nr.name}</td>\n')
+    f.write(f'              <td>{tag_text}</td>\n')
+    f.write(f'              <td>{tag_link}</td>\n')
+    f.write('            </tr>\n')
 
 
 def html_table_footer(f):
@@ -1206,98 +551,37 @@ def html_script(f):
     f.write(script)
 
 
-def get_impldefs_counts_str(nr_defs: List[NormativeRuleDef]) -> str:
-    """Get string describing implementation-defined counts."""
-    if not isinstance(nr_defs, list):
-        fatal(f"Need List for nr_defs but passed a {type(nr_defs).__name__}")
 
-    num_rules = len(nr_defs)
-    counts_str = f"{num_rules} Normative Rule{'s' if num_rules != 1 else ''}"
+def get_counts_str(rules: List[NormativeRule]) -> str:
+    """Get string describing the number of normative rules."""
+    if not isinstance(rules, list):
+        fatal(f"Need List for rules but passed a {type(rules).__name__}")
 
-    num_impldefs = count_impldefs(nr_defs)
-    if num_impldefs > 0:
-        counts_str += f": Includes {num_impldefs} Implementation-Defined Behavior{'s' if num_impldefs != 1 else ''}"
-
-        num_impldefs_no_cat = num_impldefs  # Start with total and subtract out categorized counts
-
-        any_impldef_cats = False
-        num_impldef_cats = {}
-        for cat in IMPLDEF_CATEGORIES:
-            num_impldef_cats[cat] = count_impldef_cats(nr_defs, cat)
-            if num_impldef_cats[cat] > 0:
-                any_impldef_cats = True
-                num_impldefs_no_cat -= num_impldef_cats[cat]
-
-        if any_impldef_cats:
-            counts_str += " ("
-
-            cats_str = [f"{num_impldefs_no_cat} No Category"]
-            for cat in IMPLDEF_CATEGORIES:
-                if num_impldef_cats[cat] > 0:
-                    cats_str.append(f"{num_impldef_cats[cat]} {cat}")
-
-            counts_str += ", ".join(cats_str)
-            counts_str += ")"
-
-    return counts_str
-
-
-def count_impldefs(nrs: List[NormativeRuleDef]) -> int:
-    """Count implementation-defined behaviors."""
-    if not isinstance(nrs, list):
-        raise TypeError(f"Need List[NormativeRuleDef] for nrs but passed a {type(nrs).__name__}")
-
-    count = 0
-    for nr in nrs:
-        if nr.impldef:
-            count += 1
-
-    return count
-
-
-def count_impldef_cats(nrs: List[NormativeRuleDef], impldef_cat: str) -> int:
-    """Count implementation-defined behaviors by category."""
-    if not isinstance(nrs, list):
-        raise TypeError(f"Need List[NormativeRuleDef] for nrs but passed a {type(nrs).__name__}")
-    if not isinstance(impldef_cat, str):
-        raise TypeError(f"Need String for impldef_cat but passed a {type(impldef_cat).__name__}")
-
-    count = 0
-    for nr in nrs:
-        if nr.impldef_cat == impldef_cat:
-            count += 1
-
-    return count
+    num_rules = len(rules)
+    return f"{num_rules} Normative Rule{'s' if num_rules != 1 else ''}"
 
 
 def main():
     """Main function."""
     info(f"Passed command-line: {' '.join(sys.argv[1:])}")
 
-    def_fnames, tag_fnames, tag_fname2url, output_fname, output_format, warn_if_tags_no_rules = parse_argv()
+    tag_fnames, tag_fname2url, output_fname, output_format = parse_argv()
 
-    info(f"Normative rule definition filenames = {def_fnames}")
     info(f"Normative tag filenames = {tag_fnames}")
     for tag_fname, url in tag_fname2url.items():
         info(f"Normative tag file {tag_fname} links to URL {url}")
     info(f"Output filename = {output_fname}")
     info(f"Output format = {output_format}")
 
-    defs = load_definitions(def_fnames)
-    tags = load_tags(tag_fnames)
-    validate_defs_and_tags(defs, tags, warn_if_tags_no_rules)
+    rules = load_rules(tag_fnames)
 
-    info(f"Storing {len(defs.norm_rule_defs)} normative rules into file {output_fname}")
-    info(f"Includes {count_impldefs(defs.norm_rule_defs)} implementation-defined behavior normative rules")
-    for cat in IMPLDEF_CATEGORIES:
-        count = count_impldef_cats(defs.norm_rule_defs, cat)
-        info(f"Includes {count} {cat} normative rule{'s' if count != 1 else ''}")
+    info(f"Storing {len(rules)} normative rules into file {output_fname}")
 
     if output_format == "json":
-        normative_rules_hash = create_normative_rules_hash(defs, tags, tag_fname2url)
+        normative_rules_hash = create_normative_rules_hash(rules, tag_fname2url)
         output_json(output_fname, normative_rules_hash)
     elif output_format == "html":
-        output_html(output_fname, defs, tags, tag_fname2url)
+        output_html(output_fname, rules, tag_fname2url)
     else:
         raise ValueError(f"Unknown output_format of {output_format}")
 

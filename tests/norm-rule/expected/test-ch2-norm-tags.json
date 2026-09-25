@@ -29,10 +29,12 @@
       {
         "title": "Chapter 2",
         "id": "_chapter_2",
+        "level": 1,
         "children": [
           {
             "title": "Chapter 2.1 - Tagging Admonitions",
             "id": "_chapter_2_1_tagging_admonitions",
+            "level": 2,
             "children": [],
             "tags": [
               "norm:admonition:single-paragraph-note",
@@ -47,6 +49,7 @@
           {
             "title": "Chapter 2.2 - Implementation-Defined Behaviors",
             "id": "_chapter_2_2_implementation_defined_behaviors",
+            "level": 2,
             "children": [],
             "tags": [
               "norm:ROSE_COLORS",
@@ -64,6 +67,7 @@
           {
             "title": "Chapter 2.3 - CSR Field Types",
             "id": "_chapter_2_3_csr_field_types",
+            "level": 2,
             "children": [],
             "tags": [
               "norm:foo_abc_warl_enum",

@@ -1,9 +1,0 @@
-| MXLEN-bit signed integer
-| CHAP:One
-a|
-[#param:INT_MXLEN]#INT_MXLEN#
-
-Normative Rule(s):
-
-* (none)
-| Signed integer whose width is MXLEN.

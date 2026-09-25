@@ -1,4 +1,4 @@
-// This file contains test AsciiDoc to test the custom AsciiDoctor "tags" backend and the "create_normative_rules" Ruby
+// This file contains test AsciiDoc to test the custom AsciiDoctor "tags" backend and the "create_normative_rules" Python
 // script that consumes the tags to create a list of normative rules.
 
 == Chapter 1
