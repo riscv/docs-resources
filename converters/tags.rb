@@ -13,6 +13,7 @@ class TagsConverter
   #
   #  * title: String            - Section title.
   #  * id: String               - Generated ID for the title which can be used for HTML links.
+  #  * level: Integer           - Section level (0 for a part of a book, 1 for a chapter, ...).
   #  * children: Array<Section> - Child sections.
   #  * tags: Array<String>      - List of tags in this section directly (not in children).
   #
@@ -71,6 +72,7 @@ class TagsConverter
         section = {
           "title" => node.title,
           "id" => node.id,
+          "level" => node.level,
           "children" => [],
           "tags" => [],
         }

@@ -9,11 +9,8 @@ This directory contains command-line generators and shared Python helper modules
 | adoc_to_html.py | Helper module | Converts inline AsciiDoc formatting and entities to HTML. |
 | def_text_to_html.py | Helper module | Converts definition text to HTML, including table and anchor-link handling. |
 | tag_text_to_html.py | Helper module | Converts tag text to HTML and applies tag-specific display behavior. |
-| shared_utils.py | Helper module | Shared constants, logging helpers, YAML/JSON loaders, and common validators/formatters. |
-| create_normative_rules.py | CLI tool | Builds normative-rules JSON or HTML from rule-definition YAML and tag JSON files. |
-| create_params.py | CLI tool | Builds params JSON or HTML from normative-rules JSON and parameter-definition YAML files. |
-| create_param_tables.py | CLI tool | Generates parameter and/or CSR AsciiDoc fragments and include files from params JSON and table-layout YAML files. |
-| export_params_to_udb.py | CLI tool | Converts a params.json file (conforming to schemas/params-schema.json) into individual YAML files for each parameter (conforming to schemas/udb_param_schema.json). |
+| shared_utils.py | Helper module | Shared logging helpers and JSON loader. |
+| create_normative_rules.py | CLI tool | Builds normative-rules JSON or HTML from tag JSON files. |
 
 ## Script Details
 
@@ -43,7 +40,7 @@ Key capabilities:
 - Newline conversion and link helper utilities.
 
 Usage:
-- Imported by create_normative_rules.py, create_params.py, and tag_text_to_html.py.
+- Imported by create_normative_rules.py and tag_text_to_html.py.
 
 ### tag_text_to_html.py
 
@@ -53,231 +50,39 @@ Purpose:
 Key capabilities:
 - Pipeline conversion via convert_tag_text_to_html.
 - Returns a "(No text available)" placeholder for empty tag text.
-- Prefixes context-only tag text with "[CONTEXT]".
 
 Usage:
-- Imported by create_normative_rules.py and create_params.py.
+- Imported by create_normative_rules.py.
 
 ### shared_utils.py
 
 Purpose:
-- Provides shared constants, logging helpers, file loaders, and common validators/formatters used across tools scripts.
+- Provides shared logging helpers and a JSON file loader used across tools scripts.
 
 Key capabilities:
 - make_log_helpers: creates script-scoped error/info/fatal callable helpers.
-- load_json_object / load_yaml_object: safe JSON and YAML file loaders with error reporting.
-- infer_param_type_string: renders human-readable parameter type strings for table output.
-- format_param_feature: renders a parameter feature string from chapter name and impl-defs.
-- Constants for standards object kinds, impl-def categories, and CSR category mappings.
+- load_json_object: safe JSON file loader with error reporting.
 
 Usage:
-- Imported by create_normative_rules.py, create_params.py, and create_param_appendix.py.
+- Imported by create_normative_rules.py.
 
-### create_params.py
-
-Purpose:
-- Creates params JSON/HTML outputs from normative-rules JSON plus parameter-definition YAML files.
-
-Inputs:
-- Normative-rules JSON file (-n / --norm-rules)
-- Parameter definition files (-d / --param-def)
-
-Outputs:
-- JSON (default) or HTML file.
-```bash
-python3 tools/create_params.py \
-  --norm-rules build/test-norm-rules.json \
-  --param-def tests/params/test-ch1.yaml \
-  --param-def tests/params/test-ch2.yaml \
-  --output build/test-params.json
-```
-
-```bash
-python3 tools/create_params.py --html \
-  --norm-rules build/test-norm-rules.json \
-  --param-def tests/params/test-ch1.yaml \
-  --param-def tests/params/test-ch2.yaml \
-  --output build/test-params.html
-```
-
-Parameter Type Encoding:
-- Each parameter definition must include exactly one of `type` or `range`.
-- `type` may be one of:
-  - Unsigned integers: `boolean`, `bit`, `byte`, `hword`, `word`, `dword`, `uint`
-  - Signed integers: `int`
-  - Enum composed of strings (e.g. `[ABC, DEF]`) or integers (e.g., `[32, 64]`)
-- `width` (in bits) is required when `type` is `int` or `uint`.
-  - Integer width: `2..64` (inclusive, use `bit` for 1-bit integers)
-  - Or the name of another parameter that supplies the bit width
-- `array` is optional and, when present, wraps the base integer/range/list as a fixed-length array.
-  - Format: `[lo, hi]` where `lo >= 0` and `lo <= hi`
-- `range` is an inclusive integer range of two integers.
-  - Format: `[lo, hi]` where `lo < hi` (negative values are allowed)
-
-Examples:
-```yaml
-# Scalar fixed-width integer
-- name: UINT_OF_WIDTH_32
-  impl-def: UINT32
-  type: uint
-  width: 32
-
-# Scalar width derived from another parameter
-- name: MXLEN
-  type: [32, 64]
-  description: Supported machine register widths.
-- name: INT_MXLEN
-  type: int
-  width: MXLEN
-  description: Signed integer whose width is MXLEN.
-
-# Lists (AKA enums) values
-- name: MODE
-  impl-def: MODE
-  type: [A, B, C]
-- name: XLEN
-  impl-defs: [XLEN1, XLEN2]
-  type: [32, 64]
-
-# Range form (inclusive)
-- name: PRIORITY
-  impl-def: PRIORITY
-  range: [-10, 20]
-
-# Array of uint values with fixed element count
-- name: ARRAY_OF_UINT5
-  impl-def: ARRAY
-  type: uint
-  width: 5
-  array: [0, 3]
-
-# Array of ranged integers
-- name: ARRAY_OF_NEG10TO20
-  impl-def: ARRAY
-  range: [-10, 20]
-  array: [0, 3]
-```
-
-CSR Definition Encoding:
-- Use `csr_definitions` entries for CSRs, with `reg-name` (single CSR) or `reg-names` (multiple CSRs).
-- Every CSR/field entry must include `type` with one of:
-  - `LegalEnum` - Standard defines legal values and implementation supports a subset that doesn't use all possible bit encodings (e.g., 10 values in a 4-bit field). Implementation's config file provides:
-    - A list of supported legal write values. An empty list indicates the CSR/field is treated as read-only zero.
-    - An indication of whether illegal write values are ignored or how they map to legal values
-  - `VarWidth` - CSR/field is variable width and the `width-parameter` property provides the name of the parameter that provides its value.
-  - `ConstMask` - CSR/field allows implementation to treat some bits as constant values. Writes are ignored and reads return the constant value. Implementation's config file provides:
-    - mask: A bit mask (1 = constant, 0 = variable) of constant bits
-    - value: The value of those constant bits. If they are all zero the value can be omitted.
-  - `Other` - CSR/field doesn't match any of the other `type` choices
-- Every CSR entry must include `impl-def` or `impl-defs`.
-  - At least one referenced normative rule must provide `impl-def-category`.
-  - Any provided `impl-def-category` values across referenced impl-defs must agree.
-  - The category is mapped into CSR category (`WARL`/`WLRL`) for output grouping.
-- If CSR/field type values are a function of another CSR/field:
-  - `func-of-reg-name`: Name of other CSR register (can be omitted if same CSR as this one)
-  - `func-of-field-name`: Name of other CSR field (can be omitted if entire CSR value)
-- In HTML and AsciiDoc output, the `Type` column adds `func-of: <reg>[.<field>]` on a new line when either of these properties is present.
-
-Examples:
-```yaml
-# Implementation supports a list of legal values (specified in config file)
-- reg-name: mtvec
-  field-name: MODE
-  impl-def: MTVEC_MODE_WARL
-  type: LegalEnum
-
-# Implementation has field legal values a function of another field (specified in config file)
-- reg-name: mtvec
-  field-name: BASE
-  impl-def: MTVEC_BASE_WARL
-  type: LegalEnum
-  func-of-reg-name: mtvec
-  func-of-field-name: MODE
-
-# Width-based CSR field (VarWidth parameter name provided by `width-parameter` property)
-- reg-name: satp
-  field-name: ASID
-  impl-def: SATP_ASID_WARL
-  type: VarWidth
-  width-parameter: ASIDLEN
-
-# Implementation's config file provides bit mask of constant bits and their value (if not all 0).
-- reg-name: zort
-  impl-def: ZORT_IMPL
-  type: ConstMask
-
-# Explicitly "Other" (doesn't match other `type` values)
-- reg-name: mstatus
-  field-name: MPP
-  impl-def: MSTATUS_MPP_WLRL
-  type: Other
-```
-
-
-### create_param_tables.py
+### create_normative_rules.py
 
 Purpose:
-- Generates AsciiDoc table-row fragment files and include files for parameters and/or CSRs from a params JSON file.
+- Creates the normative-rules JSON/HTML outputs for a standard from the tag JSON files that the tags.rb Asciidoctor backend extracts.
+- Every tag is one normative rule. The rule name is the tag name without the "norm:" prefix; there is no separate rule definition and no mapping between rules and tags.
 
-Inputs:
-- Params JSON file (`-i` / `--input`).
-- Parameter table-layout YAML file (`--param-table`), conforming to `schemas/param-table-schema.json` (optional).
-- CSR table-layout YAML file (`--csr-table`), conforming to `schemas/csr-table-schema.json` (optional).
-- At least one of `--param-table` or `--csr-table` must be provided.
-
-Outputs:
-- Output directory containing:
-  - Per-chapter subdirectories (for example, `<adoc>/`).
-  - Per-parameter and/or per-CSR row fragments grouped by AsciiDoc filename under chapter-local `params/` and `csrs/` subdirectories.
-  - Per-adoc include files (`<adoc>/params/all_params.adoc`, `<adoc>/csrs/all_csrs.adoc`) in input JSON order.
-  - Per-chapter combined include file (`<adoc>/all_params.adoc`) containing all parameter and CSR row includes for that chapter.
-  - Top-level include files:
-    - `all_params_a_to_z.adoc` (two global tables across all chapters: one for parameters and one for CSRs, each sorted A-Z).
-    - `all_params_by_chapter.adoc` (chapter-organized, with separate parameter and CSR tables per chapter in input order).
-
-Behavior:
-- If `--param-table` is given, generates parameter appendix files (like the old create_param_appendix.py)
-- If `--csr-table` is given, generates CSR appendix files (like the old create_csr_appendix.py)
-- If both are given, generates both under chapter-local `params/` and `csrs/` subdirectories and writes unified top-level `all_params*.adoc` files
-
-Typical commands:
-```bash
-# Generate parameter appendix only
-python3 tools/create_param_tables.py \
-  --input build/test-params.json \
-  --param-table tools/default_param_table.yaml \
-  --output-dir build/test-param-tables
-
-# Generate CSR appendix only
-python3 tools/create_param_tables.py \
-  --input build/test-params.json \
-  --csr-table tools/default_csr_table.yaml \
-  --output-dir build/test-csr-appendix-adoc-includes
-
-# Generate both in the same directory
-python3 tools/create_param_tables.py \
-  --input build/test-params.json \
-  --param-table tools/default_param_table.yaml \
-  --csr-table tools/default_csr_table.yaml \
-  --output-dir build/merged-appendix-adoc-includes
-```
-
-### export_params_to_udb.py
-
-Purpose:
-- Converts a params.json file (conforming to schemas/params-schema.json) into individual YAML files for each parameter (conforming to schemas/udb_param_schema.json).
-
-Arguments:
-- `-i`, `--input` (required): Path to params.json input file
-- `-o`, `--output-dir` (required): Directory to write YAML files
-- `-h`, `--help`: Show help message and exit
+Key capabilities:
+- Uses each tag file's section tree to give every rule the title of the chapter (level-1 section) containing its tag.
+- JSON output conforms to schemas/norm-rules-schema.json (name, chapter_name, text, tag_filename, and stds_doc_url for each rule).
+- HTML output has one table per chapter in document order, with an anchor per rule name and a link from each rule to its tag in the standard.
+- Fails on duplicate tag names and on tag names without the "norm:" prefix.
 
 Usage:
 ```bash
-python3 tools/export_params_to_udb.py -i build/test-params.json -o build/test-export-params-to-udb
+python3 tools/create_normative_rules.py -j -t build/test-ch1-norm-tags.json -tag2url build/test-ch1-norm-tags.json test-ch1.html build/test-norm-rules.json
+python3 tools/create_normative_rules.py --html -t build/test-ch1-norm-tags.json -tag2url build/test-ch1-norm-tags.json test-ch1.html build/test-norm-rules.html
 ```
-
-Each output YAML file will be named `<PARAM_NAME>.yaml` (upper-case) and placed in the specified output directory.
 
 ## Notes
 
