@@ -1,12 +1,5 @@
 {
   "tags": {
-    "norm:admonition:single-paragraph-note": "Single paragraph note\nthat spans lines.",
-    "norm:admonition:no-anchors-in-notes:entire-note": "Paragraph A\n\nParagraph B\n\nParagraph C",
-    "norm:admonition:anchors-in-notes:note1": "Paragraph 0",
-    "norm:admonition:anchors-in-notes:note3": "Paragraph 2",
-    "norm:admonition:anchors-in-notes:entire-note": "Paragraph 0\n\nParagraph 1\n\nParagraph 2",
-    "norm:admonition:only-anchors-in-notes:note1": "Paragraph X",
-    "norm:admonition:only-anchors-in-notes:note3": "Paragraph Z",
     "norm:ROSE_COLORS": "You can use red or yellow roses. The tags backend removes some adoc formating so I don't see bold text but I can see ^superscript^ as long as I use the inline anchor and not the paragraph anchor.",
     "norm:XLEN": "We use the term XLEN to refer to the width of an integer register in bits (either 32 or 64). No superscript in paragraph anchors for some reason.",
     "norm:ASIDLEN": "The number of ASID bits is UNSPECIFIED and may be zero. The number of implemented ASID bits, termed ASIDLEN, may be determined by writing one to every bit position in the ASID field, then reading back the value in satp to see which bit positions in the ASID field hold a one.",
@@ -32,23 +25,8 @@
         "level": 1,
         "children": [
           {
-            "title": "Chapter 2.1 - Tagging Admonitions",
-            "id": "_chapter_2_1_tagging_admonitions",
-            "level": 2,
-            "children": [],
-            "tags": [
-              "norm:admonition:single-paragraph-note",
-              "norm:admonition:no-anchors-in-notes:entire-note",
-              "norm:admonition:anchors-in-notes:note1",
-              "norm:admonition:anchors-in-notes:note3",
-              "norm:admonition:anchors-in-notes:entire-note",
-              "norm:admonition:only-anchors-in-notes:note1",
-              "norm:admonition:only-anchors-in-notes:note3"
-            ]
-          },
-          {
-            "title": "Chapter 2.2 - Implementation-Defined Behaviors",
-            "id": "_chapter_2_2_implementation_defined_behaviors",
+            "title": "Chapter 2.1 - Implementation-Defined Behaviors",
+            "id": "_chapter_2_1_implementation_defined_behaviors",
             "level": 2,
             "children": [],
             "tags": [
@@ -65,8 +43,8 @@
             ]
           },
           {
-            "title": "Chapter 2.3 - CSR Field Types",
-            "id": "_chapter_2_3_csr_field_types",
+            "title": "Chapter 2.2 - CSR Field Types",
+            "id": "_chapter_2_2_csr_field_types",
             "level": 2,
             "children": [],
             "tags": [

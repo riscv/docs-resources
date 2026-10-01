@@ -125,7 +125,7 @@ If you'd like to see detailed AsciiDoc examples of tagging cases, see https://gi
         This also includes text followed by a list (ordered, unordered, description) since there has to be
         a blank line between the text the list.
     > * Must have text next to the 2nd hash symbol (i.e., can't have newline after `[#<anchor-name]#`).
-    > * Can't put inside admonitions such as [NOTE] (see #4 below for solution).
+    > * Can't put inside admonitions such as [NOTE] (see #4 below).
     > * Can't have `.` in anchor-name (replace with hyphen)
 
 3. Tagging description lists
@@ -146,7 +146,6 @@ If you'd like to see detailed AsciiDoc examples of tagging cases, see https://gi
     > `Bananas::`<br>
     > `Generally yellow in color`
 
-4. Tagging admonitions (e.g. `[NOTE]`):
-* Can tag entire admonition by putting ``[[anchor-name]]`` before `[NOTE]`
-* Can also tag individual paragraphs in admonition using `[[<anchor-name]]` before each paragraph
-* Only use `NOTE: [#<anchor-name]#Here's some note text.#` for this style of admonition
+4. Admonitions (e.g. `[NOTE]`, `NOTE:`, `[WARNING]`) are non-normative, so they can't contain normative rules:
+* The tags backend reports an error for a tag inside an admonition, or on the line just above one (which tags the admonition itself).
+* If the admonition is the only place a requirement is stated, move that text out of the admonition and tag it there. Otherwise, remove the tag.

@@ -1,55 +1,6 @@
 {
   "normative_rules": [
     {
-      "name": "admonition:single-paragraph-note",
-      "chapter_name": "Chapter 2",
-      "text": "Single paragraph note\nthat spans lines.",
-      "tag_filename": "/build/test-ch2-norm-tags.json",
-      "stds_doc_url": "test-ch2.html"
-    },
-    {
-      "name": "admonition:no-anchors-in-notes:entire-note",
-      "chapter_name": "Chapter 2",
-      "text": "Paragraph A\n\nParagraph B\n\nParagraph C",
-      "tag_filename": "/build/test-ch2-norm-tags.json",
-      "stds_doc_url": "test-ch2.html"
-    },
-    {
-      "name": "admonition:anchors-in-notes:note1",
-      "chapter_name": "Chapter 2",
-      "text": "Paragraph 0",
-      "tag_filename": "/build/test-ch2-norm-tags.json",
-      "stds_doc_url": "test-ch2.html"
-    },
-    {
-      "name": "admonition:anchors-in-notes:note3",
-      "chapter_name": "Chapter 2",
-      "text": "Paragraph 2",
-      "tag_filename": "/build/test-ch2-norm-tags.json",
-      "stds_doc_url": "test-ch2.html"
-    },
-    {
-      "name": "admonition:anchors-in-notes:entire-note",
-      "chapter_name": "Chapter 2",
-      "text": "Paragraph 0\n\nParagraph 1\n\nParagraph 2",
-      "tag_filename": "/build/test-ch2-norm-tags.json",
-      "stds_doc_url": "test-ch2.html"
-    },
-    {
-      "name": "admonition:only-anchors-in-notes:note1",
-      "chapter_name": "Chapter 2",
-      "text": "Paragraph X",
-      "tag_filename": "/build/test-ch2-norm-tags.json",
-      "stds_doc_url": "test-ch2.html"
-    },
-    {
-      "name": "admonition:only-anchors-in-notes:note3",
-      "chapter_name": "Chapter 2",
-      "text": "Paragraph Z",
-      "tag_filename": "/build/test-ch2-norm-tags.json",
-      "stds_doc_url": "test-ch2.html"
-    },
-    {
       "name": "ROSE_COLORS",
       "chapter_name": "Chapter 2",
       "text": "You can use red or yellow roses. The tags backend removes some adoc formating so I don't see bold text but I can see ^superscript^ as long as I use the inline anchor and not the paragraph anchor.",

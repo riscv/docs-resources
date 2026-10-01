@@ -90,6 +90,7 @@ class TagsConverter
         if node.id.start_with?(@prefix)
           node.document.logger.error "Duplicate tag name '#{node.id}'" unless @tag_map[node.id].nil?
           node.document.logger.error "Tag '#{node.id}' content should be a String but it is #{content.class}" unless content.is_a?(String)
+          node.document.logger.error "Tag '#{node.id}' is in an admonition, which is non-normative" if in_admonition?(node)
 
           @tag_map[node.id] = content.strip()
           @section_stack.last["tags"] << node.id
@@ -107,6 +108,19 @@ class TagsConverter
   end
 
   private
+
+  # Return true if the node is an admonition (e.g. a tag on the line above
+  # `[NOTE]`) or is inside one. Inline nodes reach their block via `parent`.
+  #
+  # node: AbstractNode
+  # returns: Boolean
+  def in_admonition?(node)
+    until node.nil? || node.context == :document
+      return true if node.context == :admonition
+      node = node.parent
+    end
+    false
+  end
 
   # Return the text content of a node. Adapted from `text-converter.rb`
   # in the docs: https://docs.asciidoctor.org/asciidoctor/latest/convert/custom/

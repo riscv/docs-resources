@@ -1,0 +1,27 @@
+// Used to test that the tags backend reports an error for every tag in or on an admonition,
+// since admonitions are non-normative. Each tag below must be reported.
+
+== Chapter 1
+
+[#admonition:ok-inline]#Normative text outside any admonition.#
+
+NOTE: [#admonition:bad-paragraph-note]#Inline tag in a paragraph admonition.#
+
+[[admonition:bad-entire-note]]
+[NOTE]
+====
+An anchor on the line above an admonition tags the admonition itself.
+====
+
+[WARNING]
+====
+[[admonition:bad-paragraph-in-block]]
+A tagged paragraph in a delimited admonition of another type.
+
+* [#admonition:bad-list-item-in-block]#A tagged list item in an admonition.#
+====
+
+TIP: An inline anchor [[admonition:bad-inline-anchor]] in a paragraph admonition.
+
+[[admonition:ok-paragraph]]
+A tagged paragraph outside any admonition.
