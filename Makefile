@@ -50,6 +50,9 @@ NORM_RULE_HTML_OUTPUT_FNAME := test-norm-rules.html
 # Tag extraction test files
 DUPLICATE_TEST_ADOC_INPUT_FNAME := duplicate.adoc
 DUPLICATE_NORM_TAGS_OUTPUT_FNAME := duplicate-tags.json
+ADMONITION_TEST_ADOC_INPUT_FNAME := admonition.adoc
+ADMONITION_NORM_TAGS_OUTPUT_FNAME := admonition-admonition-tags.json
+ADMONITION_ERRORS_FNAME := admonition-errors.txt
 
 # Built output files
 BUILT_TEST_CH1_HTML_FNAME := $(BUILD_DIR)/$(TEST_CH1_HTML_FNAME)
@@ -57,6 +60,7 @@ BUILT_TEST_CH2_HTML_FNAME := $(BUILD_DIR)/$(TEST_CH2_HTML_FNAME)
 BUILT_TEST_CH1_NORM_TAGS_FNAME := $(BUILD_DIR)/$(TEST_CH1_NORM_TAGS_OUTPUT_FNAME)
 BUILT_TEST_CH2_NORM_TAGS_FNAME := $(BUILD_DIR)/$(TEST_CH2_NORM_TAGS_OUTPUT_FNAME)
 BUILT_DUPLICATE_NORM_TAGS_FNAME := $(BUILD_DIR)/$(DUPLICATE_NORM_TAGS_OUTPUT_FNAME)
+BUILT_ADMONITION_NORM_TAGS_FNAME := $(BUILD_DIR)/$(ADMONITION_NORM_TAGS_OUTPUT_FNAME)
 BUILT_NORM_RULES_JSON := $(BUILD_DIR)/$(NORM_RULE_JSON_OUTPUT_FNAME)
 BUILT_NORM_RULES_HTML := $(BUILD_DIR)/$(NORM_RULE_HTML_OUTPUT_FNAME)
 
@@ -151,7 +155,7 @@ test: build-tests compare-tests test-adoc2html test-shared-utils test-text-to-ht
 # Build tests
 .PHONY: build-tests build-test-tags build-test-norm-rules-json build-test-norm-rules-html
 build-tests: build-test-tags build-test-norm-rules-json build-test-norm-rules-html
-build-test-tags: $(BUILT_TEST_NORM_TAGS_FNAMES) $(BUILT_DUPLICATE_NORM_TAGS_FNAME)
+build-test-tags: $(BUILT_TEST_NORM_TAGS_FNAMES) $(BUILT_DUPLICATE_NORM_TAGS_FNAME) $(BUILT_ADMONITION_NORM_TAGS_FNAME)
 build-test-norm-rules-json: $(BUILT_NORM_RULES_JSON)
 build-test-norm-rules-html: $(BUILT_NORM_RULES_HTML)
 
@@ -256,6 +260,15 @@ $(BUILT_TEST_CH2_NORM_TAGS_FNAME): $(NORM_RULE_TESTS_DIR)/$(TEST_CH2_INPUT_ADOC_
 $(BUILT_DUPLICATE_NORM_TAGS_FNAME): $(TAGS_TESTS_DIR)/$(DUPLICATE_TEST_ADOC_INPUT_FNAME) $(CONVERTERS_DIR)/$(TAGS_BACKEND)
 	$(WORKDIR_SETUP)
 	$(DOCKER_CMD) $(DOCKER_QUOTE) $(ASCIIDOCTOR_TAGS) $(OPTIONS) -a tags-match-prefix='duplicate:' -a tags-output-suffix='-duplicate-tags.json' $< || touch $(BUILT_DUPLICATE_NORM_TAGS_FNAME) $(DOCKER_QUOTE)
+	$(WORKDIR_TEARDOWN)
+
+# Build tags with admonition adoc input.
+# Tags in or on an admonition are errors, so Asciidoctor must fail and report each "bad" tag.
+$(BUILT_ADMONITION_NORM_TAGS_FNAME): $(TAGS_TESTS_DIR)/$(ADMONITION_TEST_ADOC_INPUT_FNAME) $(CONVERTERS_DIR)/$(TAGS_BACKEND)
+	$(WORKDIR_SETUP)
+	$(DOCKER_CMD) $(DOCKER_QUOTE) ! $(ASCIIDOCTOR_TAGS) $(OPTIONS) -a tags-match-prefix='admonition:' -a tags-output-suffix='-admonition-tags.json' $< 2> $(ADMONITION_ERRORS_FNAME) $(DOCKER_QUOTE)
+	test "$$(grep -c "^asciidoctor: ERROR: Tag 'admonition:bad-.*' is in an admonition" $@.workdir/$(ADMONITION_ERRORS_FNAME))" -eq 5
+	! grep -q "admonition:ok-" $@.workdir/$(ADMONITION_ERRORS_FNAME)
 	$(WORKDIR_TEARDOWN)
 
 # Build normative rules with JSON output format

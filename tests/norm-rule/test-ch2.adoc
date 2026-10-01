@@ -3,52 +3,7 @@
 
 == Chapter 2
 
-=== Chapter 2.1 - Tagging Admonitions
-
-// PASSES
-NOTE: [#norm:admonition:single-paragraph-note]#Single paragraph note
-that spans lines.#
-
-// PASSES - Tag contains entire list
-[[norm:admonition:no-anchors-in-notes:entire-note]]
-[NOTE]
-====
-Paragraph A
-
-Paragraph B
-
-Paragraph C
-====
-
-// PASSES - Tag contains entire list
-[[norm:admonition:anchors-in-notes:entire-note]]
-[NOTE]
-====
-// PASSES - Tag contains paragraph
-[[norm:admonition:anchors-in-notes:note1]]
-Paragraph 0
-
-Paragraph 1
-
-// PASSES - Tag contains paragraph
-[[norm:admonition:anchors-in-notes:note3]]
-Paragraph 2
-====
-
-[NOTE]
-====
-// PASSES - Tag contains paragraph
-[[norm:admonition:only-anchors-in-notes:note1]]
-Paragraph X
-
-Paragraph Y
-
-// PASSES - Tag contains paragraph
-[[norm:admonition:only-anchors-in-notes:note3]]
-Paragraph Z
-====
-
-=== Chapter 2.2 - Implementation-Defined Behaviors
+=== Chapter 2.1 - Implementation-Defined Behaviors
 
 [#norm:ROSE_COLORS]#You can use red or yellow roses. The tags backend removes some adoc formating so I don't see *bold* text but I can see ^superscript^ as long as I use the inline anchor and not the paragraph anchor.#
 
@@ -80,7 +35,7 @@ Here's a normative rule for mock CSR field "Y".
 [[norm:mock-ext-dep-A-on-B]]
 Here's a normative rule for mock extension dependency of extension A on extension B.
 
-=== Chapter 2.3 - CSR Field Types
+=== Chapter 2.2 - CSR Field Types
 
 [#norm:foo_abc_warl_enum]#An implementation may support any or all of the following values for the 4-bit `foo.ABC` field: When `foo.GHI` is 0, legal values are 0, 4, 15. When `foo.GHI` is non-zero, legal values are 1, 2, 3.#
 
