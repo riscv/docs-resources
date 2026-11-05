@@ -344,6 +344,27 @@
       "stds_doc_url": "test-ch1.html"
     },
     {
+      "name": "paragraph_hyperlink1",
+      "chapter_name": "Chapter 1",
+      "text": "A paragraph tag with ABC &lt;&lt;norm:superscript&gt;&gt; DEF.",
+      "tag_filename": "/build/test-ch1-norm-tags.json",
+      "stds_doc_url": "test-ch1.html"
+    },
+    {
+      "name": "paragraph_hyperlink2",
+      "chapter_name": "Chapter 1",
+      "text": "A paragraph tag with ABC &lt;&lt;non-norm-anchor&gt;&gt; DEF.",
+      "tag_filename": "/build/test-ch1-norm-tags.json",
+      "stds_doc_url": "test-ch1.html"
+    },
+    {
+      "name": "paragraph_hyperlink3",
+      "chapter_name": "Chapter 1",
+      "text": "A paragraph tag with DEF custom text GHI.",
+      "tag_filename": "/build/test-ch1-norm-tags.json",
+      "stds_doc_url": "test-ch1.html"
+    },
+    {
       "name": "table:no-anchors-in-cells:entire-table",
       "chapter_name": "Chapter 1",
       "text": "Header 1|Header 2\n===\nCell in column 1, row 1|Cell in column 2, row 1¶Cell in column 1, row 2|Cell in column 2, row 2\n===",
