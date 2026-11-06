@@ -197,8 +197,18 @@ class TagsConverter
   #
   # Nested formatting (bold, italics, underline, ...) is untouched: those are
   # separate inline nodes that reach this method in their own right.
+  #
+  # A cross reference without text (`<<foo>>`) has no text of its own. Inside
+  # an inline tag it is never converted (it is still source text), but inside a
+  # paragraph, list or table it is, and it would vanish, leaving "as shown in ."
+  # Return it in the same escaped form that an inline tag records, so that
+  # create_normative_rules.py turns both into the same link.
   def inline_text(node)
     text = node.text
+    if text.nil? && node.node_name == "inline_anchor" && node.type == :xref
+      refid = node.attributes["refid"]
+      return refid.nil? ? nil : "&lt;&lt;#{refid}&gt;&gt;"
+    end
     text.nil? ? nil : node.sub_attributes(text)
   end
 

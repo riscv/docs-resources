@@ -123,6 +123,15 @@ Before hyperlink [#norm:hyperlink5]#GHI <<norm:superscript>> and <<norm:subscrip
 
 Before hyperlink [#norm:hyperlink6]#JKL <<norm:superscript ,hello>> and <<norm:subscript, goodbye>> MNO# outside.
 
+[[norm:paragraph_hyperlink1]]
+A paragraph tag with ABC <<norm:superscript>> DEF.
+
+[[norm:paragraph_hyperlink2]]
+A paragraph tag with ABC <<non-norm-anchor>> DEF.
+
+[[norm:paragraph_hyperlink3]]
+A paragraph tag with DEF <<non-norm-anchor,custom text>> GHI.
+
 [[non-norm-anchor]]
 Here's some text that isn't normative but the normatively tagged text has an existing link into it.
 

@@ -35,6 +35,9 @@
     "norm:hyperlink4": "DEF &lt;&lt;non-norm-anchor,custom text&gt;&gt; GHI",
     "norm:hyperlink5": "GHI &lt;&lt;norm:superscript&gt;&gt; and &lt;&lt;norm:subscript&gt;&gt; JKL",
     "norm:hyperlink6": "JKL &lt;&lt;norm:superscript ,hello&gt;&gt; and &lt;&lt;norm:subscript, goodbye&gt;&gt; MNO",
+    "norm:paragraph_hyperlink1": "A paragraph tag with ABC &lt;&lt;norm:superscript&gt;&gt; DEF.",
+    "norm:paragraph_hyperlink2": "A paragraph tag with ABC &lt;&lt;non-norm-anchor&gt;&gt; DEF.",
+    "norm:paragraph_hyperlink3": "A paragraph tag with DEF custom text GHI.",
     "norm:table:no-anchors-in-cells:entire-table": "Header 1|Header 2\n===\nCell in column 1, row 1|Cell in column 2, row 1¶Cell in column 1, row 2|Cell in column 2, row 2\n===",
     "norm:table:anchors-in-cells:entire-table-tagged:cell": "WITH anchor",
     "norm:table:anchors-in-cells:entire-table": "===\nWITH anchor¶WITHOUT anchor\n===",
@@ -139,7 +142,10 @@
               "norm:hyperlink3",
               "norm:hyperlink4",
               "norm:hyperlink5",
-              "norm:hyperlink6"
+              "norm:hyperlink6",
+              "norm:paragraph_hyperlink1",
+              "norm:paragraph_hyperlink2",
+              "norm:paragraph_hyperlink3"
             ]
           },
           {
