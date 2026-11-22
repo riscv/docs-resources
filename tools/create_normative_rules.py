@@ -34,7 +34,7 @@ class NormativeRule:
     """Holds all information for one normative rule (i.e., one normative tag)."""
 
     def __init__(self, tag_name: str, tag_filename: str, text: str, chapter_name: str, chapter_key: str,
-                 context: Optional[str] = None, decode_entities: bool = False):
+                 context: Optional[str] = None):
         if not isinstance(tag_name, str):
             fatal(f"Need String for tag_name but passed a {type(tag_name).__name__}")
         if not isinstance(tag_filename, str):
@@ -45,13 +45,14 @@ class NormativeRule:
             fatal(f"Need String for chapter_name but passed a {type(chapter_name).__name__}")
         if not isinstance(chapter_key, str):
             fatal(f"Need String for chapter_key but passed a {type(chapter_key).__name__}")
+        if context is not None and not isinstance(context, str):
+            fatal(f"Need String for context but passed a {type(context).__name__}")
 
         self.tag_name = tag_name
         self.name = tag_name[len(NORM_PREFIX):]
         self.tag_filename = tag_filename
         self.text = text
         self.context = context
-        self.decode_entities = decode_entities
         self.chapter_name = chapter_name
         # Unique key for the chapter (chapter titles such as "Introduction" can repeat).
         self.chapter_key = chapter_key
@@ -197,7 +198,6 @@ def load_rules(tag_fnames: List[str]) -> List[NormativeRule]:
             rules.append(NormativeRule(
                 tag_name, tag_fname, text, chapter_name, chapter_key,
                 context=tag_context.get("context"),
-                decode_entities=tag_context.get("decode_entities", tag_context.get("specialcharacters", False)),
             ))
 
     return rules
@@ -520,9 +520,7 @@ def html_norm_rule_table_row(f, nr: NormativeRule, tag_fname2url: Dict[str, str]
     if target_html_fname is None:
         fatal(f"No fname tag to HTML mapping (-tag2url cmd line arg) for tag fname {nr.tag_filename} for tag name {nr.tag_name}")
 
-    tag_text = convert_tag_text_to_html(
-        nr.text, target_html_fname, context=nr.context, decode_entities=nr.decode_entities,
-    )
+    tag_text = convert_tag_text_to_html(nr.text, target_html_fname, context=nr.context)
     tag_link = tag2html_link(nr.tag_name, nr.tag_name, target_html_fname)
 
     f.write('            <tr>\n')

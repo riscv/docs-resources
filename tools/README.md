@@ -51,6 +51,8 @@ Purpose:
 
 Key capabilities:
 - Pipeline conversion via convert_tag_text_to_html.
+- Renders tags whose context is "listing" or "literal" as preformatted code, so code such as
+  Sail keeps its line breaks, indentation, and operators.
 - Returns a "(No text available)" placeholder for empty tag text.
 
 Usage:
@@ -78,6 +80,10 @@ Key capabilities:
 - Uses each tag file's section tree to give every rule the title of the chapter (level-1 section) containing its tag.
 - JSON output conforms to schemas/norm-rules-schema.json (name, chapter_name, text, tag_filename, and stds_doc_url for each rule).
 - HTML output has one table per chapter in document order, with an anchor per rule name and a link from each rule to its tag in the standard.
+- Reads the optional `tag_contexts` object of a tag file, which tags.rb writes when it tags a listing or
+  literal block, as `{"norm:name": {"context": "listing"}}`. Blocks whose substitutions include macros are
+  left out so their cross references still become links. The HTML uses it to render code; the JSON
+  output does not include it.
 - Fails on duplicate tag names and on tag names without the "norm:" prefix.
 
 Usage:

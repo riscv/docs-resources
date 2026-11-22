@@ -96,13 +96,11 @@ class TagsConverter
           node.document.logger.error "Tag '#{node.id}' is in an admonition, which is non-normative" if in_admonition?(node)
 
           @tag_map[node.id] = content.strip()
-          if node.context == :listing || node.context == :literal
-            # Asciidoctor's HTML backend interprets entities emitted by
-            # either substitution, including entities in attribute values.
-            @tag_contexts[node.id] = {
-              "context" => node.context.to_s,
-              "decode_entities" => node.subs.include?(:specialcharacters) || node.subs.include?(:attributes),
-            }
+          # Record verbatim blocks so the rules HTML can show them as code.
+          # Blocks that enable macros contain converted cross references,
+          # so they keep the prose rendering that turns those into links.
+          if (node.context == :listing || node.context == :literal) && !node.subs.include?(:macros)
+            @tag_contexts[node.id] = { "context" => node.context.to_s }
           end
           @section_stack.last["tags"] << node.id
         end

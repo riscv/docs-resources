@@ -12,13 +12,12 @@ def convert_tag_text_to_html(
     target_html_fname: Optional[str] = None,
     *,
     context: Optional[str] = None,
-    decode_entities: bool = False,
 ) -> str:
     """Convert tag text to HTML and apply tag-specific display behavior."""
-    if context in ("listing", "literal"):
-        # Preserve the display of Asciidoctor entities and keep all code as text.
-        text = unescape(tag_text) if decode_entities else tag_text
-        return f"<pre><code>{escape(text, quote=False)}</code></pre>"
+    if context in ("listing", "literal") and tag_text.strip() != "":
+        # Show the code as a browser displays Asciidoctor's HTML output: decode the
+        # entities the substitutions emitted, then escape everything as text.
+        return f"<pre><code>{escape(unescape(tag_text), quote=False)}</code></pre>"
 
     text = convert_def_text_to_html(tag_text, target_html_fname)
 

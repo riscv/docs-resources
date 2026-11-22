@@ -63,4 +63,22 @@ raw: &lt; &#60; <b>
 expanded: {code-comparison}, {code-entity}
 ----
 
+[[norm:replacements-only]]
+[source,c,subs=replacements]
+----
+Copyright (C) and trademark (TM).
+----
+
+[[norm:macros-listing]]
+[source,c,subs="+macros"]
+----
+x = (a << 1) | (b >> 2); see <<norm:shift-listing>>
+----
+
+[[norm:empty-listing]]
+----
+----
+
+The shift control is [#norm:prose-shift]#the result is `(a << 1) | (b >> 2)` here.#
+
 The prose control is [#norm:prose-xref]#see <<norm:shift-listing,listing rule>> for the operation.#

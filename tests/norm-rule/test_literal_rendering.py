@@ -49,7 +49,7 @@ def main():
     )
     assert rule_cell(rendered, "shift-unescaped") == (
         '<pre><code>result = (word &lt;&lt; 1) | (word &gt;&gt; 3);\n'
-        'print("&lt;b&gt;&amp;lt;&lt;/b&gt;");\n'
+        'print("&lt;b&gt;&lt;&lt;/b&gt;");\n'
         "unexpanded: {code-comparison}, {code-entity}</code></pre>"
     )
     assert rule_cell(rendered, "attributes-only") == (
@@ -69,25 +69,41 @@ def main():
         "<pre><code>raw: &amp;lt; &amp;#60; &lt;b&gt;\n"
         "expanded: a &amp;lt; b &amp;amp; c &amp;gt; d, &amp;amp;lt;</code></pre>"
     )
+    assert rule_cell(rendered, "replacements-only") == (
+        "<pre><code>Copyright © and trademark ™.</code></pre>"
+    )
+    assert rule_cell(rendered, "macros-listing") == (
+        'x = (a &#60;&#60; 1) | (b &#62;&#62; 2); see '
+        '<a href="spec.html#norm:shift-listing">norm:shift-listing</a>'
+    )
+    assert rule_cell(rendered, "empty-listing") == "(No text available)"
+    assert rule_cell(rendered, "prose-shift") == (
+        "the result is (a &#60;&#60; 1) | (b &#62;&#62; 2) here."
+    )
     assert rule_cell(rendered, "prose-xref") == (
         'see <a href="spec.html#norm:shift-listing">listing rule</a> for the operation.'
     )
     assert extracted["tag_contexts"] == {
-        "norm:shift-listing": {"context": "listing", "decode_entities": True},
-        "norm:shift-literal": {"context": "literal", "decode_entities": True},
-        "norm:shift-substituted": {"context": "listing", "decode_entities": True},
-        "norm:shift-unescaped": {"context": "listing", "decode_entities": False},
-        "norm:attributes-only": {"context": "listing", "decode_entities": True},
-        "norm:attributes-and-callouts": {"context": "listing", "decode_entities": True},
-        "norm:specialcharacters-first": {"context": "listing", "decode_entities": True},
-        "norm:specialcharacters-last": {"context": "listing", "decode_entities": True},
+        f"norm:{name}": {"context": context}
+        for name, context in (
+            ("shift-listing", "listing"),
+            ("shift-literal", "literal"),
+            ("shift-substituted", "listing"),
+            ("shift-unescaped", "listing"),
+            ("attributes-only", "listing"),
+            ("attributes-and-callouts", "listing"),
+            ("specialcharacters-first", "listing"),
+            ("specialcharacters-last", "listing"),
+            ("replacements-only", "listing"),
+            ("empty-listing", "listing"),
+        )
     }
-    assert set(published) == {"normative_rules"}
+    # The context only affects the HTML: the published rules keep the extracted text.
+    assert "tag_contexts" not in published
     assert {
         f"norm:{rule['name']}": rule["text"] for rule in published["normative_rules"]
     } == extracted["tags"]
-    for rule in published["normative_rules"]:
-        assert set(rule) == {"name", "chapter_name", "text", "tag_filename", "stds_doc_url"}
+    assert not any("context" in rule for rule in published["normative_rules"])
     print("test_literal_rendering.py: all tests passed")
 
 
