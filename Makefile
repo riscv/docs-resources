@@ -150,7 +150,7 @@ all: test
 
 # Build tests and compare against expected
 .PHONY: test
-test: build-tests compare-tests test-adoc2html test-shared-utils test-text-to-html
+test: build-tests compare-tests test-adoc2html test-shared-utils test-text-to-html test-literal-rendering
 
 # Build tests
 .PHONY: build-tests build-test-tags build-test-norm-rules-json build-test-norm-rules-html
@@ -216,6 +216,16 @@ test-def-text-to-html-unit: $(DEF_TEXT_TO_HTML_UNIT_TEST_SCRIPT) $(TOOLS_DIR)/de
 test-tag-text-to-html-unit: $(TAG_TEXT_TO_HTML_UNIT_TEST_SCRIPT) $(TOOLS_DIR)/tag_text_to_html.py $(TOOLS_DIR)/def_text_to_html.py $(TOOLS_DIR)/adoc_to_html.py
 	@echo "TESTING TAG_TEXT_TO_HTML UNIT HELPERS"
 	python3 $(TAG_TEXT_TO_HTML_UNIT_TEST_SCRIPT) && echo "test-tag-text-to-html-unit PASSED" || (echo "test-tag-text-to-html-unit FAILED"; exit 1)
+
+.PHONY: test-literal-rendering
+test-literal-rendering: $(BUILD_DIR)/test-literal-rendering.ok
+
+$(BUILD_DIR)/test-literal-rendering.ok: $(NORM_RULE_TESTS_DIR)/test_literal_rendering.py $(NORM_RULE_TESTS_DIR)/literal-rendering.adoc \
+		$(CONVERTERS_DIR)/$(TAGS_BACKEND) $(CREATE_NORM_RULE_TOOL) $(TOOLS_DIR)/tag_text_to_html.py \
+		$(TOOLS_DIR)/def_text_to_html.py $(TOOLS_DIR)/adoc_to_html.py $(TOOLS_DIR)/shared_utils.py
+	$(WORKDIR_SETUP)
+	$(DOCKER_CMD) $(DOCKER_QUOTE) python3 $< && touch $@ $(DOCKER_QUOTE)
+	$(WORKDIR_TEARDOWN)
 
 #
 # Update expected files from built files
