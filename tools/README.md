@@ -36,7 +36,9 @@ Purpose:
 Key capabilities:
 - Pipeline conversion via convert_def_text_to_html.
 - Conversion of tagged-table blocks into HTML tables.
-- Conversion of AsciiDoc anchor links (for example <<tag>> and <<tag,text>>).
+- Conversion of AsciiDoc anchor links (for example <<tag>> and <<tag,text>>). As in
+  Asciidoctor, the target must start with a word character or one of `#/.:{`, so shift
+  operators such as `a << b | c >> d` stay text.
 - Newline conversion and link helper utilities.
 
 Usage:
