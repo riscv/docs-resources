@@ -115,7 +115,9 @@ def convert_adoc_links_to_html(text: str, target_html_fname: Optional[str] = Non
         else:
             return link_content
 
-    # Note that I'm using the non-greedy regular expression (? after +) otherwise the regular expression
+    # Note that I'm using the non-greedy regular expression (? after *) otherwise the regular expression
     # will return multiple <<link>> in the same text as one.
-    pattern = rf'(<<|{re.escape(LT_UNICODE_STR)}{re.escape(LT_UNICODE_STR)})(.+?)(>>|{re.escape(GT_UNICODE_STR)}{re.escape(GT_UNICODE_STR)})'
+    # Like Asciidoctor's cross-reference syntax, the target must start with a word character or one of
+    # "#/.:{", so shift operators such as "a << b | c >> d" stay text.
+    pattern = rf'(<<|{re.escape(LT_UNICODE_STR)}{re.escape(LT_UNICODE_STR)})([\w#/.:{{].*?)(>>|{re.escape(GT_UNICODE_STR)}{re.escape(GT_UNICODE_STR)})'
     return re.sub(pattern, replacer, text)

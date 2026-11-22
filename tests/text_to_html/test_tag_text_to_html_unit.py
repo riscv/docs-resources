@@ -25,9 +25,22 @@ def test_tag_text_conversion_with_link_target():
     assert convert_tag_text_to_html(text, target_html_fname="rules.html") == expected
 
 
+def test_code_context_renders_preformatted_text():
+    text = "x = (a &lt;&lt; 1) | (b &gt;&gt; 2);\n    y = &#169; &amp;lt;"
+    expected = "<pre><code>x = (a &lt;&lt; 1) | (b &gt;&gt; 2);\n    y = © &amp;lt;</code></pre>"
+    assert convert_tag_text_to_html(text, context="listing") == expected
+    assert convert_tag_text_to_html(text, context="literal") == expected
+
+
+def test_empty_code_context_returns_placeholder():
+    assert convert_tag_text_to_html("", context="listing") == "(No text available)"
+
+
 def main() -> int:
     test_empty_tag_text_returns_placeholder()
     test_tag_text_conversion_with_link_target()
+    test_code_context_renders_preformatted_text()
+    test_empty_code_context_returns_placeholder()
     print("test_tag_text_to_html_unit.py: all tests passed")
     return 0
 

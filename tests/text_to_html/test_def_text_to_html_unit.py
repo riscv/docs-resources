@@ -48,6 +48,22 @@ def test_convert_adoc_links_to_html_with_unicode_escaped_delimiters():
     assert convert_adoc_links_to_html(text, "spec.html") == expected
 
 
+def test_convert_adoc_links_to_html_ignores_shift_operators():
+    for text in (
+        "(rs1 << shamt) | (rs1 >> (32 - shamt))",
+        "(rs1 &#60;&#60; shamt) | (rs1 &#62;&#62; (32 - shamt))",
+        "(rs1 << shamt) | (rs1 &#62;&#62; 1) and <<norm:r1>>",
+    ):
+        expected = text.replace("<<norm:r1>>", '<a href="#norm:r1">norm:r1</a>')
+        assert convert_adoc_links_to_html(text) == expected
+
+
+def test_convert_adoc_links_to_html_target_start_characters():
+    for target in ("_sec", "#frag", "/doc", ".rel", ":colon", "{attr}"):
+        assert convert_adoc_links_to_html(f"<<{target}>>").endswith(f'{target}">{target}</a>')
+    assert convert_adoc_links_to_html("<< sec>>") == "<< sec>>"
+
+
 def test_convert_tags_tables_to_html():
     text = "Col A | Col B===\n1 | 2¶3 | 4\n==="
     html = convert_tags_tables_to_html(text)
@@ -68,6 +84,8 @@ def main() -> int:
     test_extract_tags_table_cells_and_newlines()
     test_convert_adoc_links_to_html_default_and_custom_text()
     test_convert_adoc_links_to_html_with_unicode_escaped_delimiters()
+    test_convert_adoc_links_to_html_ignores_shift_operators()
+    test_convert_adoc_links_to_html_target_start_characters()
     test_convert_tags_tables_to_html()
     test_convert_def_text_to_html_pipeline()
     print("test_def_text_to_html_unit.py: all tests passed")

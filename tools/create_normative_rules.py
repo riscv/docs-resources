@@ -33,7 +33,8 @@ error, info, fatal = make_log_helpers(PN)
 class NormativeRule:
     """Holds all information for one normative rule (i.e., one normative tag)."""
 
-    def __init__(self, tag_name: str, tag_filename: str, text: str, chapter_name: str, chapter_key: str):
+    def __init__(self, tag_name: str, tag_filename: str, text: str, chapter_name: str, chapter_key: str,
+                 context: Optional[str] = None):
         if not isinstance(tag_name, str):
             fatal(f"Need String for tag_name but passed a {type(tag_name).__name__}")
         if not isinstance(tag_filename, str):
@@ -44,11 +45,14 @@ class NormativeRule:
             fatal(f"Need String for chapter_name but passed a {type(chapter_name).__name__}")
         if not isinstance(chapter_key, str):
             fatal(f"Need String for chapter_key but passed a {type(chapter_key).__name__}")
+        if context is not None and not isinstance(context, str):
+            fatal(f"Need String for context but passed a {type(context).__name__}")
 
         self.tag_name = tag_name
         self.name = tag_name[len(NORM_PREFIX):]
         self.tag_filename = tag_filename
         self.text = text
+        self.context = context
         self.chapter_name = chapter_name
         # Unique key for the chapter (chapter titles such as "Introduction" can repeat).
         self.chapter_key = chapter_key
@@ -159,6 +163,10 @@ def load_rules(tag_fnames: List[str]) -> List[NormativeRule]:
             fatal(f"'tags' must be an object in {tag_fname}")
         assert isinstance(tags_data, dict)
 
+        tag_contexts = file_data.get("tag_contexts", {})
+        if not isinstance(tag_contexts, dict):
+            fatal(f"'tag_contexts' must be an object in {tag_fname}")
+
         sections = file_data.get("sections")
         if sections is None:
             fatal(f"Missing 'sections' key in {tag_fname}")
@@ -184,7 +192,13 @@ def load_rules(tag_fnames: List[str]) -> List[NormativeRule]:
                 fatal(f"Tag name {tag_name} in file {tag_fname} isn't in the file's section tree")
             chapter_name, chapter_key = tag2chapter[tag_name]
 
-            rules.append(NormativeRule(tag_name, tag_fname, text, chapter_name, chapter_key))
+            tag_context = tag_contexts.get(tag_name, {})
+            if not isinstance(tag_context, dict):
+                fatal(f"Context for tag {tag_name} must be an object in {tag_fname}")
+            rules.append(NormativeRule(
+                tag_name, tag_fname, text, chapter_name, chapter_key,
+                context=tag_context.get("context"),
+            ))
 
     return rules
 
@@ -382,6 +396,11 @@ def html_head(f, table_names: List[str]):
       white-space: normal;
     }
 
+    main td > pre {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
     th {
       background:#f3f7fb;
       font-weight:700
@@ -501,7 +520,7 @@ def html_norm_rule_table_row(f, nr: NormativeRule, tag_fname2url: Dict[str, str]
     if target_html_fname is None:
         fatal(f"No fname tag to HTML mapping (-tag2url cmd line arg) for tag fname {nr.tag_filename} for tag name {nr.tag_name}")
 
-    tag_text = convert_tag_text_to_html(nr.text, target_html_fname)
+    tag_text = convert_tag_text_to_html(nr.text, target_html_fname, context=nr.context)
     tag_link = tag2html_link(nr.tag_name, nr.tag_name, target_html_fname)
 
     f.write('            <tr>\n')

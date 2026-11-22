@@ -1,0 +1,84 @@
+= Normative rule literal regression
+:amount: 4
+:shift: <<
+:code-comparison: a < b & c > d
+:code-entity: &lt;
+
+== Operations
+
+[[norm:shift-listing]]
+[source,c]
+----
+result = (word << 1) | (word >> 3);
+    if (left < right && right > 0) print("<b>&lt;</b>");
+----
+
+[[norm:shift-literal]]
+....
+result = (word << 1) | (word >> 3);
+    if (left < right && right > 0) print("<b>&lt;</b>");
+....
+
+[[norm:shift-substituted]]
+[source,c,subs="+attributes"]
+----
+result = (word << {amount}) | (word >> 3);
+----
+
+[[norm:shift-unescaped]]
+[source,c,subs=none]
+----
+result = (word << 1) | (word >> 3);
+print("<b>&lt;</b>");
+unexpanded: {code-comparison}, {code-entity}
+----
+
+[[norm:attributes-only]]
+[source,c,subs=attributes]
+----
+x = value {shift} 1;
+raw: &lt; &#60; <b>
+expanded: {code-comparison}, {code-entity}
+{set:dynamic-code:left & right}
+state: {dynamic-code}, {counter:literal-sequence}
+----
+
+[[norm:attributes-and-callouts]]
+[source,c,subs="attributes,callouts"]
+----
+state: {dynamic-code}, {counter:literal-sequence}
+----
+
+[[norm:specialcharacters-first]]
+[source,c,subs="specialchars,attributes"]
+----
+raw: &lt; &#60; <b>
+expanded: {code-comparison}, {code-entity}
+----
+
+[[norm:specialcharacters-last]]
+[source,c,subs="attributes,specialchars"]
+----
+raw: &lt; &#60; <b>
+expanded: {code-comparison}, {code-entity}
+----
+
+[[norm:replacements-only]]
+[source,c,subs=replacements]
+----
+Copyright (C) and trademark (TM).
+----
+
+[[norm:macros-listing]]
+[source,c,subs="+macros"]
+----
+x = (a << 1) | (b >> 2); see <<norm:shift-listing>>
+----
+
+[[norm:empty-listing]]
+----
+----
+
+The shift control is [#norm:prose-shift]#the result is `(a << 1) | (b >> 2)` here.#
+
+The prose control is [#norm:prose-xref]#see <<norm:shift-listing,listing rule>> for the operation.#

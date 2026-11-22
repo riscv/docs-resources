@@ -38,6 +38,7 @@ class TagsConverter
     if transform == "document" then
       # This is the top level node. First clear the outputs.
       @tag_map = {}
+      @tag_contexts = {}
       # Root node of the section tree. For simplicity we always
       # have one root node with an empty title.
       @section_stack = [{
@@ -61,10 +62,12 @@ class TagsConverter
       # every consumer that commits this output needs it (pre-commit's
       # end-of-file-fixer requires it), so produce it here rather than making
       # each consumer append it downstream.
-      JSON.pretty_generate({
+      result = {
         "tags": @tag_map,
         "sections": @section_stack.first,
-      }) + "\n"
+      }
+      result["tag_contexts"] = @tag_contexts unless @tag_contexts.empty?
+      JSON.pretty_generate(result) + "\n"
     else
 
       # If it's a section add it to the section tree.
@@ -93,6 +96,12 @@ class TagsConverter
           node.document.logger.error "Tag '#{node.id}' is in an admonition, which is non-normative" if in_admonition?(node)
 
           @tag_map[node.id] = content.strip()
+          # Record verbatim blocks so the rules HTML can show them as code.
+          # Blocks that enable macros contain converted cross references,
+          # so they keep the prose rendering that turns those into links.
+          if (node.context == :listing || node.context == :literal) && !node.subs.include?(:macros)
+            @tag_contexts[node.id] = { "context" => node.context.to_s }
+          end
           @section_stack.last["tags"] << node.id
         end
       end
